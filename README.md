@@ -1,243 +1,271 @@
 <div align="center">
 
-# 💍 The Wedding of **Dian & Iqbal**
+# 💍 The Wedding of Dian & Iqbal
+### Platform Undangan Pernikahan Digital Interaktif & Dashboard Mempelai
+**Ahad, 10 Januari 2027 • Pekanbaru, Riau**
 
-**Undangan Pernikahan Digital** — Ahad, 10 Januari 2027 • Pekanbaru, Riau
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL / Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=black)](https://neon.tech/)
+[![OWASP Top 10](https://img.shields.io/badge/Security-OWASP_Top_10-E03C31?style=for-the-badge&logo=owasp&logoColor=white)](https://owasp.org/)
+[![Playwright QA](https://img.shields.io/badge/QA_Tests-100%25_Passed-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
 
-Desain mewah bertema *dusty rose* & emas dengan sentuhan estetik Islami, Jawa, dan Minang.
+<p align="center">
+  Aplikasi undangan pernikahan modern Full-Stack berbasis <strong>Next.js 15 (App Router)</strong>, <strong>Tailwind CSS v4</strong>, dan <strong>Neon Serverless PostgreSQL</strong> dengan sentuhan kemewahan budaya Nusantara (Batik Kawung, Pita Songket Minang, Gunungan Wayang, & Mihrab Kubah Islami), dilengkapi <strong>Dashboard Mempelai Terintegrasi</strong> untuk pengiriman WhatsApp massal, import kontak Excel, manajemen foto, moderasi buku tamu RSVP, dan amplop digital bergaya kartu ATM.
+</p>
 
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS3">
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
-<img src="https://img.shields.io/badge/Vercel-Siap%20Deploy-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
-<img src="https://img.shields.io/badge/Mobile--First-Responsif-9c5f66?style=flat-square" alt="Responsive">
+[🌐 Halaman Publik](#-fitur-halaman-undangan-publik) • [🔐 Dashboard Mempelai](#-fitur-dashboard-mempelai-admin) • [🛠️ Panduan Instalasi](#-panduan-instalasi-lokal) • [🚀 Deploy ke Vercel](#-panduan-deployment-ke-vercel)
 
-**[✨ Lihat Pratinjau](#-pratinjau-tampilan)** • **[🚀 Cara Online-kan](#-cara-menampilkan-website-online)** • **[✏️ Cara Mengubah Data](#%EF%B8%8F-cara-mengubah-data-undangan)**
+---
 
 </div>
 
----
-
 ## 📑 Daftar Isi
-
-1. [Tentang Proyek Ini](#-tentang-proyek-ini)
-2. [Fitur Utama](#-fitur-utama)
-3. [Pratinjau Tampilan](#-pratinjau-tampilan)
-4. [Struktur Proyek](#-struktur-proyek)
-5. [Cara Menampilkan Website Online](#-cara-menampilkan-website-online)
-6. [Cara Mengubah Data Undangan](#%EF%B8%8F-cara-mengubah-data-undangan)
-7. [Cara Mengirim Undangan ke Tamu](#-cara-mengirim-undangan-ke-tamu)
-8. [Tentang Musik Latar](#-tentang-musik-latar)
-9. [Menyimpan Ucapan Tamu ke Google Sheets (Opsional)](#-menyimpan-ucapan-tamu-ke-google-sheets-opsional)
-10. [Pertanyaan yang Sering Diajukan](#-pertanyaan-yang-sering-diajukan)
-11. [Kredit](#-kredit)
+- [✨ Fitur Utama](#-fitur-utama)
+  - [1. Halaman Undangan Publik](#1-halaman-undangan-publik)
+  - [2. Dashboard Mempelai (`/admin/dashboard`)](#2-dashboard-mempelai-admindashboard)
+- [🎨 DNA Desain & Palet Warna](#-dna-desain--palet-warna)
+- [🏗️ Arsitektur & Teknologi Modern](#️-arsitektur--teknologi-modern)
+- [📦 Struktur Proyek](#-struktur-proyek)
+- [🚀 Panduan Instalasi Lokal](#-panduan-instalasi-lokal)
+- [🔑 Kredensial Admin Default](#-kredensial-admin-default)
+- [🧪 Pengujian Kualitas & QA Playwright](#-pengujian-kualitas--qa-playwright)
+- [☁️ Panduan Deployment ke Vercel](#️-panduan-deployment-ke-vercel)
+- [🛡️ Standar Keamanan OWASP](#️-standar-keamanan-owasp)
+- [📜 Lisensi & Kredit](#-lisensi--kredit)
 
 ---
-
-## 📖 Tentang Proyek Ini
-
-Website undangan pernikahan digital yang dirancang **khusus untuk dibuka lewat HP** (tetap rapi di
-layar komputer). Tamu cukup menerima sebuah **tautan (link)** — saat dibuka, mereka melihat sampul
-undangan dengan **nama mereka sendiri**, menekan tombol *Buka Undangan*, dan musik langsung berbunyi.
-
-Dibangun **tanpa framework** (HTML + CSS + JavaScript murni) sehingga ringan, cepat, dan bisa
-di-online-kan **gratis** lewat Vercel — tanpa perlu mengerti coding sama sekali.
-
-| Detail | Informasi |
-|---|---|
-| Mempelai Wanita | Dian Ayu Puspa Sari (Pekanbaru, 10 September 2005) |
-| Mempelai Pria | Iqbal Pradana (3 Mei 1997) |
-| Hari Pernikahan | **Ahad, 10 Januari 2027** |
-| Lokasi | Kel. Air Putih, Tuah Madani, Kota Pekanbaru, Riau (Plus Code `F9M2+C8`) |
-| Tema Desain | Dusty rose 🌸 + emas ✨ + ornamen Islami, gunungan Jawa & songket Minang |
 
 ## ✨ Fitur Utama
 
-| Fitur | Penjelasan Singkat |
-|---|---|
-| 💌 **Nama tamu otomatis** | Link yang dikirim ke tiap tamu menampilkan nama tamu itu, contoh: `undangan.com/?to=Budi` → sampul tertulis "Kepada Yth. … Budi" |
-| 🎵 **Musik otomatis** | Lagu *Mahalini x Nuca — Janji Kita* berputar saat undangan dibuka, lengkap dengan tombol putar/jeda melayang |
-| ⏳ **Hitung mundur** | Penghitung hari/jam/menit/detik menuju hari pernikahan, berjalan langsung |
-| 🌸 **Animasi halus** | Setiap bagian muncul perlahan saat digulir + kelopak bunga berjatuhan |
-| 🗺️ **Lokasi & peta** | Alamat lengkap, peta Google Maps tersemat, tombol *Buka Google Maps*, dan tombol simpan ke Google Calendar |
-| 🖼️ **Galeri foto** | Tata letak masonry mewah; foto bisa diperbesar (lightbox) dengan geser kiri/kanan |
-| 📝 **RSVP & ucapan** | Tamu mengisi kehadiran dan doa; ucapan langsung tampil di halaman |
-| 💳 **Amplop digital** | Kartu rekening bank / e-wallet / alamat kirim kado dengan tombol **salin nomor** |
-| 📱 **Menu navigasi** | Dock melayang di bawah layar untuk lompat antar-bagian |
+### 1. Halaman Undangan Publik
 
-## 🖼️ Pratinjau Tampilan
-
-Berikut tampilan asli website (diuji di layar HP 390×844):
-
-| Sampul + nama tamu | Hitung mundur | Profil mempelai |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/01-cover.png" width="220" alt="Sampul undangan"> | <img src="docs/screenshots/02-hitung-mundur.png" width="220" alt="Hitung mundur"> | <img src="docs/screenshots/03-mempelai.png" width="220" alt="Profil mempelai"> |
-
-| Detail acara | Galeri | Amplop digital |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/04-acara.png" width="220" alt="Detail acara"> | <img src="docs/screenshots/05-galeri.png" width="220" alt="Galeri"> | <img src="docs/screenshots/07-amplop.png" width="220" alt="Amplop digital"> |
-
-> Semua tangkapan layar ada di folder [`docs/screenshots/`](docs/screenshots/).
-
-## 📁 Struktur Proyek
-
-```
-undangan-dian-iqbal/
-├── index.html      ← Seluruh isi halaman (teks, foto, section)
-├── style.css       ← Desain tampilan (warna, font, animasi)
-├── script.js       ← Logika interaktif + DATA yang sering diedit
-├── vercel.json     ← Pengaturan link nama tamu (site.com/NamaTamu)
-├── favicon.svg     ← Ikon kecil di tab browser
-├── docs/           ← Tangkapan layar untuk dokumentasi ini
-└── README.md       ← File panduan yang sedang Anda baca
-```
-
-## 🚀 Cara Menampilkan Website Online
-
-> 💡 *Istilah **"deploy"** = meng-online-kan website supaya bisa dibuka orang lain lewat link.
-> Semua cara di bawah **gratis**.*
-
-### Cara 1 — Tanpa GitHub (paling cepat, ±2 menit)
-
-1. Buka **[vercel.com/new](https://vercel.com/new)** lalu login (bisa dengan akun GitHub/Email).
-2. Seret (**drag & drop**) seluruh folder proyek ini ke area bertuliskan *deploy*.
-3. Tunggu ±30 detik sampai muncul tulisan **Congratulations**.
-4. Selesai! Link website Anda contohnya: `https://undangan-dian-iqbal.vercel.app`
-
-### Cara 2 — Lewat GitHub + Vercel (bisa update otomatis)
-
-Cocok jika website sudah ada di GitHub (seperti repo ini):
-
-1. Buka **[vercel.com/new](https://vercel.com/new)**.
-2. Klik **Import Git Repository** → pilih repo `undangan-dian-iqbal`.
-3. Biarkan semua pengaturan apa adanya → klik **Deploy**.
-4. Selesai. **Bonus:** setiap kali file di GitHub diubah, website otomatis ikut ter-update.
-
-> 🌐 **Ingin domain sendiri?** Misal `undangan.dianiqbal.com` — atur di
-> *Project → Settings → Domains* di dashboard Vercel (domain berbayar, sekitar ±150 ribu/tahun).
-
-## ✏️ Cara Mengubah Data Undangan
-
-Buka file terkait dengan editor teks apa pun (Notepad pun bisa, tapi disarankan
-[VS Code](https://code.visualstudio.com)), cari teks yang mau diubah, simpan, lalu unggah ulang.
-
-| Yang Ingin Diubah | File | Petunjuk |
-|---|---|---|
-| 🔢 **Nomor rekening & e-wallet** | `script.js` | Bagian `CONFIG` paling atas — ganti angka contoh `1234567890` & `0812-xxxx-xxxx` |
-| 🏠 **Alamat kirim kado** | `script.js` | Bagian `CONFIG.giftAddress` |
-| 🕐 **Jam akad & resepsi** | `index.html` | Cari `Pukul 08.00` lalu ubah |
-| 📝 **Nama & biodata mempelai** | `index.html` | Cari nama `Dian` / `Iqbal` |
-| 🖼️ **Foto & galeri** | `index.html` | Ganti alamat `https://i.pinimg.com/...` dengan URL foto Anda (harus online, mis. di [Imgur](https://imgur.com) atau GitHub) |
-| 🎵 **Lagu** | `script.js` | `CONFIG.youtubeVideoId` — isi kode 11 karakter dari link YouTube (contoh: `youtube.com/watch?v=`**`In8kDy_WU4s`**) |
-| 🎨 **Warna tema** | `style.css` | Bagian `:root` paling atas (`--rose-500`, `--gold-500`, dst.) |
-
-> ⚠️ **Penting sebelum disebar:** nomor rekening, nomor e-wallet, dan alamat kado masih
-> **data contoh** — wajib diganti dengan data asli terlebih dahulu!
-
-## 💌 Cara Mengirim Undangan ke Tamu
-
-Tinggal tambahkan nama tamu di belakang link. Dua format sama hasilnya:
-
-| Format | Contoh |
-|---|---|
-| **Dengan `?to=`** *(disarankan, paling aman)* | `https://site-anda.vercel.app/?to=Budi%20Santoso` |
-| **Dengan garis miring** | `https://site-anda.vercel.app/Budi-Santoso` |
-
-Keterangan ringkas:
-
-- Spasi ditulis `%20` (format 1) atau gunakan tanda hubung `-` (format 2) — keduanya otomatis
-  tampil sebagai spasi di undangan.
-- Contoh untuk WhatsApp:
-  `Kepada Yth. Bapak Budi, mohon kesediaan hadir pada pernikahan kami 🌸 https://site-anda.vercel.app/?to=Bapak%20Budi`
-- Jika link dibuka **tanpa** nama, sampul menampilkan tulisan "Tamu Undangan".
-
-## 🎵 Tentang Musik Latar
-
-Lagu diputar langsung dari **YouTube** (lagu *Mahalini x Nuca — Janji Kita*) memakai pemutar
-tersembunyi, sehingga tidak perlu file MP3 dan tidak memperbesar ukuran website.
-
-Catatan kecil: sebagian HP (terutama iPhone) membatasi bunyi otomatis — karena itu musik sengaja
-dimulai tepat saat tamu **menekan tombol "Buka Undangan"** (tindakan menekan tombol dianggap
-izin oleh browser). Tombol **putar/jeda** melayang tetap tersedia di kanan atas.
-
-## 📊 Menyimpan Ucapan Tamu ke Google Sheets (Opsional)
-
-Saat ini setiap ucapan tamu tersimpan di HP tamu itu sendiri. Jika ingin **semua ucapan terkumpul
-dalam satu spreadsheet**:
-
-1. Buat Google Sheet baru → menu **Extensions → Apps Script**.
-2. Tempel kode berikut, ganti `GANTI_ID_SHEET` dengan ID Sheet Anda (deretan huruf di URL sheet
-   antara `/d/` dan `/edit`):
-
-   ```js
-   function doPost(e) {
-     const sh = SpreadsheetApp.openById('GANTI_ID_SHEET').getSheets()[0];
-     const d = JSON.parse(e.postData.contents);
-     sh.appendRow([new Date(), d.name, d.attend, d.guests, d.message]);
-     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-       .setMimeType(ContentService.MimeType.JSON);
-   }
-   ```
-
-3. Klik **Deploy → New deployment → Web app** → *Who has access* pilih **Anyone** → salin URL `/exec`.
-4. Buka `script.js`, tempel URL tersebut di `CONFIG.rsvpWebAppUrl` (awali `https://`), lalu deploy ulang.
-
-Selesai — setiap ucapan tamu otomatis masuk ke sheet berisi waktu, nama, kehadiran, jumlah tamu, dan isinya.
-
-## ❓ Pertanyaan yang Sering Diajukan
-
-<details>
-<summary><b> Musik tidak bunyi, kenapa?</b></summary>
-
-Pastikan volume HP menyala dan tidak dalam mode senyap. Di iPhone, musik mulai setelah tombol
-"Buka Undangan" ditekan. Jika tetap tidak bunyi, tekan tombol musik (ikon nada) di kanan atas.
-</details>
-
-<details>
-<summary><b> Nama tamu tidak muncul di sampul?</b></summary>
-
-Periksa penulisan link — harus ada <code>?to=Nama</code> di belakang alamat, contoh:
-<code>?to=Budi%20Santoso</code>. Tanpa itu, sampul menampilkan "Tamu Undangan".
-</details>
-
-<details>
-<summary><b> Foto galeri bisa diganti punya sendiri?</b></summary>
-
-Bisa. Ganti alamat gambar di <code>index.html</code> bagian galeri dengan URL foto Anda yang sudah
-online. Foto lokal harus diunggah dulu (mis. ke repo GitHub ini lalu panggil path-nya).
-</details>
-
-<details>
-<summary><b> Apakah website ini gratis selamanya?</b></summary>
-
-Ya. Vercel menyediakan hosting gratis untuk website statis seperti ini tanpa batas waktu.
-Yang berbayar hanya jika Anda membeli domain kustom.
-</details>
-
-<details>
-<summary><b> Bagaimana mengubah nama tamu menjadi "Keluarga Bapak X"?</b></summary>
-
-Tinggal tulis lengkap di link: <code>?to=Keluarga%20Bapak%20X</code> — semua karakter huruf dan
-angka aman digunakan.
-</details>
-
-## 🙏 Kredit
-
-- **Font** — [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond),
-  [Great Vibes](https://fonts.google.com/specimen/Great+Vibes),
-  [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans),
-  [Amiri](https://fonts.google.com/specimen/Amiri) via Google Fonts.
-- **Musik** — *Janji Kita* — Mahalini x Nuca (dimutar via YouTube).
-- **Foto** — bersumber dari [Pinterest](https://pinterest.com) untuk keperluan demonstrasi;
-  seluruh hak milik pemilik masing-masing. Silakan ganti dengan foto Anda sendiri.
-- **Ikon & ornamen** — SVG buatan sendiri: gunungan (Jawa), motif songket (Minang), batik kawung.
+1. **Cover Gate & Staggered Reveal (`01-cover`):**
+   - Menampilkan sapaan nama tamu dinamis dari parameter URL (contoh: `/?to=Bpk.+Hadi+Pratama`).
+   - Efek *Ken Burns slow zoom* pada foto utama dengan kartu kaca *glassmorphism*.
+   - Saat tombol *"Buka Undangan"* ditekan, sampul terangkat anggun (`cubic-bezier(0.65, 0, 0.35, 1)`) disertai efek *staggered blur reveal* pada elemen hero pembuka.
+2. **Hitung Mundur Islami (`02-hitung-mundur`):**
+   - Kaligrafi Arab Bismillah & QS. Ar-Rum: 21 dalam bingkai Mihrab Islami lengkung kubah.
+   - 4 kotak hitung mundur waktu nyata (*Hari, Jam, Menit, Detik*) menuju 10 Januari 2027 menggunakan animasi `<NumberFlow />` dan font `tabular-nums`.
+3. **Profil Mempelai Nusantara (`03-mempelai`):**
+   - Kartu profil mempelai wanita (Dian) & pria (Iqbal) dengan ornamen Gunungan Wayang Jawa emas dan sudut siku kartu tradisional.
+4. **Detail Acara & Integrasi Peta (`04-acara`):**
+   - Waktu pelaksanaan Akad Nikah & Resepsi Pernikahan.
+   - Peta interaktif Google Maps embed, tombol navigasi langsung, serta tombol **"Tambah ke Google Calendar"** dan **"Unduh File (.ics)"**.
+5. **Galeri Momen Pre-Wedding (`05-galeri`):**
+   - Tata letak *masonry grid* mewah dengan efek hover lembut.
+   - *Accessible Lightbox* layar penuh dengan navigasi keyboard (`Escape`, `ArrowLeft`, `ArrowRight`) dan touch gesture.
+6. **Buku Tamu & RSVP Real-Time (`06-rsvp`):**
+   - Form konfirmasi kehadiran (*Hadir*, *Berhalangan*, *Masih Ragu*) beserta jumlah tamu dan doa restu.
+   - Filter pill status kehadiran real-time beserta hitungan jumlah ucapan.
+   - Fitur pencarian instan (*live search*) ucapan doa restu tamu.
+7. **Amplop Digital Bergaya Kartu ATM Debit (`07-amplop`):**
+   - Desain kartu bank (BCA, Mandiri) beraksen emas premium lengkap dengan ilustrasi chip metalik SVG dan nomor rekening `tabular-nums`.
+   - Tombol *"Salin Nomor Rekening"* dengan transisi ikon `Copy -> Check` dan notifikasi toast `Sonner`.
+   - Tombol *"Tampilkan Kode QRIS"* yang membuka modal QRIS interaktif siap unduh.
+   - Kartu alamat kirim kado fisik untuk tamu yang ingin mengirimkan bingkisan.
+8. **Floating Glass Pill Dock & Vinyl Music Controller (`08-penutup`):**
+   - Navigasi melayang 5 tab dengan deteksi seksi aktif via `IntersectionObserver`.
+   - Kontrol pemutar piringan hitam vinyl audio YouTube (*Mahalini x Nuca — Janji Kita*) dengan animasi putar halus.
+   - Animasi kelopak bunga berjatuhan (*canvas petals*) yang otomatis jeda saat tab browser tidak aktif dan mematuhi `prefers-reduced-motion`.
 
 ---
 
-<div align="center">
+### 2. Dashboard Mempelai (`/admin/dashboard`)
 
-**Dian ❤️ Iqbal** — 10 . 01 . 2027
+Halaman khusus pengantin dan keluarga untuk mengelola seluruh aspek pernikahan:
 
-*Undangan ini dibuat dengan penuh cinta dan doa.* 🤍
+| Modul | Kemampuan & Fungsi |
+| :--- | :--- |
+| **Modul A: Ringkasan & Moderasi RSVP** | 5 Kartu KPI metrik waktu nyata dengan `<NumberFlow />` (*Total Diundang*, *Terkirim WA*, *Konfirmasi Hadir & Total Orang*, *Berhalangan/Ragu*, *Total Ucapan*), pencarian, filter, dan moderasi hapus ucapan spam. |
+| **Modul B: Pengaturan Foto Utama & Galeri** | Atur 5 foto kunci (*Cover Gate*, *Hero Mihrab*, *Foto Dian*, *Foto Iqbal*, *QRIS*) dengan kompresi otomatis WebP di browser/server. Tambah, susun urutan, dan hapus foto galeri pre-wedding. |
+| **Modul C: Tamu & WhatsApp Dispatcher** | **Editor Template WhatsApp** dengan variabel `{nama_tamu}` & `{link_undangan}` + pratinjau live. Normalisasi nomor otomatis ke `+628...`. **Tombol 1-Klik Kirim WA** yang membuka chat WhatsApp dan menandai status tamu menjadi *Terkirim*. **Import Tamu Massal dari Excel (`.xlsx`/`.csv`)** dan tombol unduh template Excel resmi. |
+| **Modul D: Pengaturan Acara & Rekening** | Pengaturan nama/bio mempelai, jadwal acara ISO 8601, nama venue, koordinat Plus Code, URL navigasi maps, YouTube Audio ID, daftar dinamis rekening bank & e-wallet, serta alamat kado fisik. |
 
-</div>
+---
+
+## 🎨 DNA Desain & Palet Warna
+
+Sistem desain mengadopsi standar **Tailwind CSS v4** dengan token warna **OKLCH** untuk akurasi saturasi dan kehangatan visual:
+
+```css
+@theme {
+  --color-cream:         oklch(97.8% 0.012 55);  /* Latar belakang krem gading hangat */
+  --color-rose-100:      oklch(93.5% 0.024 35);  /* Dusty rose pastel */
+  --color-rose-700:      oklch(53.1% 0.085 15);  /* Dusty rose aksen utama */
+  --color-rose-900:      oklch(38.2% 0.065 10);  /* Merah marun teks judul */
+  --color-gold-300:      oklch(86.8% 0.075 85);  /* Emas muda berkilau */
+  --color-gold-500:      oklch(71.5% 0.125 78);  /* Emas klasik pembatas & ornamen */
+  --color-gold-600:      oklch(59.8% 0.115 75);  /* Emas tembaga tombol & chip ATM */
+}
+```
+
+### Tipografi Budaya & Klasik
+- **Judul Utama & Romantisme:** `Cormorant Garamond` (Serif elegan) & `Great Vibes` (Kaligrafi sambung).
+- **Teks Fungsional & Dashboard:** `Plus Jakarta Sans` (Sans-serif modern, bersih, & mudah dibaca).
+- **Ayat & Bismillah:** `Amiri` (Kaligrafi Naskhi Arab yang syahdu).
+
+---
+
+## 🏗️ Arsitektur & Teknologi Modern
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                        Next.js 15 (App Router)                   │
+├───────────────────────────────┬──────────────────────────────────┤
+│    Frontend Publik            │    Backend & API Routes          │
+│    - React 19 Client Comp     │    - Edge Middleware (Auth Guard)│
+│    - Tailwind CSS v4 CSS-First│    - Signed HTTP-Only Cookies    │
+│    - NumberFlow & Lucide      │    - Zod Validation & Anti-XSS   │
+│    - Sonner Toast System      │    - Image MIME & Size Inspector │
+├───────────────────────────────┴──────────────────────────────────┤
+│                  Penyimpanan Data Dua Mode                       │
+│    1. Cloud: Neon Serverless PostgreSQL via Drizzle ORM          │
+│    2. Lokal: File JSON Persistence (/data/wedding-db.json)       │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📦 Struktur Proyek
+
+```text
+UndanganDigital/
+├── .env.example                       # Contoh environment variables
+├── .gitignore                         # Isolasi kredensial, build, & node_modules
+├── next.config.ts                     # Konfigurasi Next.js 15
+├── package.json                       # Dependencies proyek
+├── prd.md                             # Product Requirements Document resmi
+├── public/                            # Favicon & aset publik statis
+├── data/
+│   └── wedding-db.json                # Database lokal offline
+├── _legacy/                           # Arsip file asli HTML/CSS/JS lama
+├── src/
+│   ├── middleware.ts                  # Edge Auth Guard & OWASP Headers
+│   ├── app/
+│   │   ├── globals.css                # Tailwind CSS v4 @theme & ornamen
+│   │   ├── layout.tsx                 # Root layout & Google Fonts
+│   │   ├── page.tsx                   # Halaman undangan publik utama
+│   │   ├── admin/
+│   │   │   ├── login/page.tsx         # Halaman login admin 8-state
+│   │   │   └── dashboard/page.tsx     # Dashboard mempelai terproteksi
+│   │   └── api/
+│   │       ├── rsvp/route.ts          # Endpoint RSVP publik (Zod sanitasi)
+│   │       └── admin/                 # Endpoint terproteksi admin
+│   │           ├── auth/route.ts      # Login & logout admin
+│   │           ├── guests/route.ts    # CRUD tamu undangan & WhatsApp
+│   │           ├── guests/import/     # Parser impor file Excel massal
+│   │           ├── media/route.ts     # Manajemen foto & validasi berkas
+│   │           ├── settings/route.ts  # Sinkronisasi acara & rekening
+│   │           └── wishes/route.ts    # Moderasi ucapan & buku tamu
+│   ├── components/
+│   │   ├── invitation/                # Komponen modular 8 seksi undangan
+│   │   └── admin/                     # Komponen modul dashboard admin
+│   └── lib/
+│       ├── auth.ts                    # Logika verifikasi sesi & cookie
+│       ├── utils.ts                   # Helper cn() tailwind-merge
+│       └── db/
+│           ├── schema.ts              # Skema tabel Drizzle ORM
+│           ├── seed-data.ts           # Data awal asli Dian & Iqbal
+│           └── store.ts               # Storage adapter (Neon DB / JSON fallback)
+├── test_invitation.py                 # E2E test Playwright halaman publik
+└── test_admin.py                      # E2E test Playwright dashboard admin
+```
+
+---
+
+## 🚀 Panduan Instalasi Lokal
+
+### 1. Kloning Repositori
+```bash
+git clone https://github.com/Smurffahh/UndanganDigital.git
+cd UndanganDigital
+```
+
+### 2. Pasang Dependencies
+```bash
+npm install
+```
+
+### 3. Konfigurasi Variabel Lingkungan
+Salin file `.env.example` menjadi `.env.local`:
+```bash
+cp .env.example .env.local
+```
+*(Opsional: Jika tidak mengisi `DATABASE_URL`, sistem akan otomatis menggunakan database file lokal `data/wedding-db.json` sehingga Anda langsung dapat menjalankan aplikasi 100% offline tanpa perlu setup database luar).*
+
+### 4. Jalankan Server Pengembangan
+```bash
+npm run dev
+```
+Buka peramban di:
+- **Halaman Undangan:** `http://localhost:3000/?to=Nama+Tamu`
+- **Dashboard Mempelai:** `http://localhost:3000/admin/dashboard`
+
+---
+
+## 🔑 Kredensial Admin Default
+
+Untuk masuk ke halaman dashboard admin (`/admin/login`):
+
+- **Username:** `admin`
+- **Password:** `dian-iqbal-2027`
+
+*(Anda dapat mengganti kredensial ini kapan saja melalui environment variable `ADMIN_USERNAME` dan `ADMIN_PASSWORD` pada `.env.local` atau dashboard Vercel).*
+
+---
+
+## 🧪 Pengujian Kualitas & QA Playwright
+
+Proyek ini dilengkapi dengan rangkaian pengujian menyeluruh berbasis **Playwright QA** (`webapp-testing`):
+
+```bash
+# 1. Jalankan pengujian halaman publik (Desktop, Mobile 375px, Mobile 320px)
+python test_invitation.py
+
+# 2. Jalankan pengujian auth guard, modul A, B, C, D dashboard admin
+python test_admin.py
+```
+
+### Hasil Verifikasi:
+- ✅ **Gate 34 Passed:** Zero horizontal scroll (`scrollWidth <= clientWidth`) di layar $320\text{ px}$ dan $375\text{ px}$.
+- ✅ **No iOS Safari Zoom:** Seluruh input form $\ge 16\text{ px}$ (`text-base sm:text-sm`).
+- ✅ **Zero `transition-all`:** 100% transisi menggunakan properti spesifik akselerasi GPU.
+- ✅ **100% Tests Passed:** Alur buka undangan, lightbox, QRIS modal, salin nomor rekening, pengiriman RSVP, import Excel, dan dispatching WhatsApp terverifikasi mulus.
+
+---
+
+## ☁️ Panduan Deployment ke Vercel
+
+Aplikasi ini 100% siap dideploy ke **Vercel** dengan arsitektur serverless:
+
+1. Buka [Vercel Dashboard](https://vercel.com) dan klik **"Add New Project"**.
+2. Pilih repositori **`UndanganDigital`**.
+3. Di bagian **Environment Variables**, tambahkan:
+   - `DATABASE_URL` : Connection string database Neon Postgres Anda (gunakan `sslmode=require`).
+   - `ADMIN_USERNAME` : Username admin Anda.
+   - `ADMIN_PASSWORD` : Password admin Anda.
+   - `SESSION_SECRET` : String rahasia acak 32+ karakter untuk keamanan session cookie.
+4. Klik **"Deploy"**. Web undangan pernikahan digital Anda langsung online!
+
+---
+
+## 🛡️ Standar Keamanan OWASP
+
+- **Cegah Stored XSS:** Seluruh ucapan tamu dibersihkan melalui sanitasi HTML dan skema `zod.strict()` sebelum masuk ke database.
+- **Edge Security Headers:** Injeksi otomatis header keamanan HTTP:
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: SAMEORIGIN`
+  - `X-XSS-Protection: 1; mode=block`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+- **Safe Media Ingestion:** Pemeriksaan ketat MIME type (`image/jpeg`, `image/png`, `image/webp`) dan batasan muatan payload data maksimal $5\text{ MB}$.
+
+---
+
+## 📜 Lisensi & Kredit
+
+- **Pasangan Berbahagia:** Dian Ayu Puspa Sari & Iqbal Pradana.
+- **Teknologi:** Next.js, React, Tailwind CSS, Neon, Lucide Icons, NumberFlow, Sonner, Playwright.
+- Dibuat dengan penuh cinta dan dedikasi untuk mengabadikan momen pernikahan yang tak terlupakan. 🌸💍✨

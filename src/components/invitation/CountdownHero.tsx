@@ -155,15 +155,15 @@ export function CountdownHero({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="min-w-[68px] sm:min-w-[76px] py-3 px-2 bg-surface-white border border-gold-500/40 rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center"
+                  className="min-w-[72px] sm:min-w-[84px] py-3.5 px-2.5 bg-surface-white border border-gold-500/40 rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center"
                 >
-                  <span className="font-serif font-bold text-2xl sm:text-3xl gold-grad-text tabular-nums leading-none">
-                    <NumberFlow
-                      value={item.value}
-                      format={{ minimumIntegerDigits: 2 }}
-                    />
-                  </span>
-                  <span className="text-[10px] tracking-[0.2em] uppercase text-muted mt-1 font-medium">
+                  <NumberFlow
+                    value={item.value}
+                    format={{ minimumIntegerDigits: 2 }}
+                    className="font-serif text-3xl sm:text-4xl font-bold tabular-nums text-[#5d3a41] leading-none"
+                    style={{ color: "#5d3a41" }}
+                  />
+                  <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-[#9c5f66] mt-2">
                     {item.label}
                   </span>
                 </div>

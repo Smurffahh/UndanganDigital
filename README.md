@@ -81,7 +81,7 @@ Halaman khusus pengantin dan keluarga untuk mengelola seluruh aspek pernikahan:
 | :--- | :--- |
 | **Modul A: Ringkasan & Moderasi RSVP** | 5 Kartu KPI metrik waktu nyata dengan `<NumberFlow />` (*Total Diundang*, *Terkirim WA*, *Konfirmasi Hadir & Total Orang*, *Berhalangan/Ragu*, *Total Ucapan*), pencarian, filter, dan moderasi hapus ucapan spam. |
 | **Modul B: Pengaturan Foto Utama & Galeri** | Atur 5 foto kunci (*Cover Gate*, *Hero Mihrab*, *Foto Sinta*, *Foto Fauzan*, *QRIS*) dengan kompresi otomatis WebP di browser/server. Tambah, susun urutan, dan hapus foto galeri pre-wedding. |
-| **Modul C: Tamu & WhatsApp Dispatcher** | **Editor Template WhatsApp** dengan variabel `{nama_tamu}` & `{link_undangan}` + pratinjau live. Normalisasi nomor otomatis ke `+628...`. **Tombol 1-Klik Kirim WA** yang membuka chat WhatsApp dan menandai status tamu menjadi *Terkirim*. **Import Tamu Massal dari Excel (`.xlsx`/`.csv`)** dan tombol unduh template Excel resmi. |
+| **Modul C: Tamu & WhatsApp Dispatcher** | **Editor Template WhatsApp** dengan variabel `{nama_tamu}` & `{link_undangan}` + pratinjau live. Normalisasi nomor otomatis ke `+628...` (termasuk koreksi angka 0 terpotong Excel). **Distribusi 1-by-1 Aman Anti-Blokir** dengan pencatatan waktu otomatis & tab Riwayat Terkirim. **Import Tamu Massal dari Excel (`.xlsx`/`.csv`)**, generator unduh berkas contoh resmi (.xlsx dan .csv UTF-8 BOM), serta panel panduan pengisian format WhatsApp. |
 | **Modul D: Pengaturan Acara & Rekening** | Pengaturan nama/bio mempelai, jadwal acara ISO 8601, nama venue, koordinat Plus Code, URL navigasi maps, YouTube Audio ID, daftar dinamis rekening bank & e-wallet, serta alamat kado fisik. |
 
 ---

@@ -3,25 +3,29 @@
 Thumbs.db
 desktop.ini
 
-# Next.js & Build
+# Next.js & Build Outputs
 .next/
 out/
 build/
-tsconfig.tsbuildinfo
+dist/
+*.tsbuildinfo
 next-env.d.ts
 
-# Vercel
+# Vercel Deployment
 .vercel
 
-# Node
+# Node Dependencies & Logs
 node_modules/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Environment
+# Environment Variables
 .env
-.env.local
-.env.production
-.env.development
+.env.*
+!.env.example
 
-# QA Test Artifacts
+# Playwright & QA Test Artifacts
 test-results/
+playwright-report/
+blob-report/

@@ -141,7 +141,6 @@ UndanganDigital/
 ├── public/                            # Favicon & aset publik statis
 ├── data/
 │   └── wedding-db.json                # Database lokal offline
-├── _legacy/                           # Arsip file asli HTML/CSS/JS lama
 ├── src/
 │   ├── middleware.ts                  # Edge Auth Guard & OWASP Headers
 │   ├── app/

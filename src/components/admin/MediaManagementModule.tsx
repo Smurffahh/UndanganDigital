@@ -11,7 +11,6 @@ import {
   ArrowDown,
   Save,
   Loader2,
-  Check,
 } from "lucide-react";
 import type { GalleryPhotoData, WeddingSettingsData } from "@/lib/db/store";
 

@@ -47,7 +47,7 @@ export function CountdownHero({
   }, [weddingDateIso]);
 
   // Staggered Blur Reveal helper classes
-  const getRevealClass = (delayMs: number) => {
+  const getRevealClass = () => {
     if (!isRevealed) {
       return "opacity-0 translate-y-3 blur-sm";
     }
@@ -59,9 +59,7 @@ export function CountdownHero({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
         {/* 1. Bismillah */}
         <p
-          className={`font-arabic text-2xl sm:text-3xl text-rose-700 leading-loose ${getRevealClass(
-            0
-          )}`}
+          className={`font-arabic text-2xl sm:text-3xl text-rose-700 leading-loose ${getRevealClass()}`}
           dir="rtl"
           style={{ transitionDelay: isRevealed ? "0ms" : "0ms" }}
         >
@@ -70,9 +68,7 @@ export function CountdownHero({
 
         {/* 2. Quote Card QS Ar-Rum: 21 */}
         <figure
-          className={`card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center ${getRevealClass(
-            100
-          )}`}
+          className={`card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center ${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "100ms" : "0ms" }}
         >
           <p className="font-arabic text-lg sm:text-xl leading-loose text-rose-900" dir="rtl">
@@ -88,7 +84,7 @@ export function CountdownHero({
 
         {/* 3. Divider */}
         <div
-          className={`${getRevealClass(200)}`}
+          className={`${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "200ms" : "0ms" }}
         >
           <Divider />
@@ -96,9 +92,7 @@ export function CountdownHero({
 
         {/* 4. Hero Photo in Mihrab Arch */}
         <div
-          className={`arch w-[min(76%,320px)] aspect-[4/5] mx-auto mt-2 overflow-hidden shadow-lg ${getRevealClass(
-            300
-          )}`}
+          className={`arch w-[min(76%,320px)] aspect-[4/5] mx-auto mt-2 overflow-hidden shadow-lg ${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -112,7 +106,7 @@ export function CountdownHero({
 
         {/* 5. Names and Date */}
         <div
-          className={`${getRevealClass(400)} mt-6`}
+          className={`${getRevealClass()} mt-6`}
           style={{ transitionDelay: isRevealed ? "400ms" : "0ms" }}
         >
           <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
@@ -125,7 +119,7 @@ export function CountdownHero({
 
         {/* 6. Countdown Timer with NumberFlow & Tabular Numbers */}
         <div
-          className={`mt-6 ${getRevealClass(500)}`}
+          className={`mt-6 ${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "500ms" : "0ms" }}
         >
           {!timeLeft.isDone ? (

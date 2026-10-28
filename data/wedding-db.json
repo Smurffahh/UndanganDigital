@@ -136,6 +136,15 @@
   ],
   "wishes": [
     {
+      "id": 8,
+      "guestName": "Budi Santoso Testing",
+      "attendanceStatus": "Hadir",
+      "paxCount": 2,
+      "message": "Selamat menempuh hidup baru Dian &amp; Iqbal! Semoga samawa selalu.",
+      "isApproved": true,
+      "createdAt": "2026-10-28T08:03:19.110Z"
+    },
+    {
       "id": 7,
       "guestName": "Budi Santoso Testing",
       "attendanceStatus": "Hadir",
@@ -200,6 +209,16 @@
     }
   ],
   "guests": [
+    {
+      "id": 6,
+      "name": "Bpk. Ir. Bambang Soediro",
+      "slugQuery": "Bpk.%2BIr.%2BBambang%2BSoediro",
+      "whatsappNumber": "6281298765432",
+      "category": "Keluarga",
+      "waSentStatus": false,
+      "waSentAt": null,
+      "createdAt": "2026-10-28T08:03:38.931Z"
+    },
     {
       "id": 5,
       "name": "Bpk. Ir. Bambang Soediro",

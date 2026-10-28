@@ -70,6 +70,10 @@ export function CoverGate({
           {formattedDate}
         </p>
 
+        <p className="mt-2 text-[11px] tracking-[0.25em] uppercase text-gold-300 font-semibold drop-shadow-sm">
+          #SINgkatceritaFAUZAN
+        </p>
+
         {/* Guest Name Glass Card */}
         <div className="glass my-7 px-8 py-4 rounded-2xl w-full max-w-[340px] border border-gold-300/40">
           <p className="text-[10px] tracking-[0.3em] uppercase text-gold-300">

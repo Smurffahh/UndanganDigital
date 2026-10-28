@@ -66,6 +66,9 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               Galeri Momen
             </h2>
             <SongketRibbon />
+            <p className="mt-2.5 text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600">
+              #SINgkatceritaFAUZAN
+            </p>
           </ScrollReveal>
         </header>
 

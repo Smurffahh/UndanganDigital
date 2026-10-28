@@ -1,9 +1,59 @@
+import type { Metadata } from "next";
 import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/store";
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const rawParam =
+    resolvedParams.to || resolvedParams.nama || resolvedParams.tamu || "";
+  const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
+
+  let guestName = "";
+  if (paramStr) {
+    guestName = decodeURIComponent(paramStr)
+      .replace(/[+_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 60);
+  }
+
+  const title = "The Wedding of Fauzan & Sinta";
+  const description =
+    "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN";
+
+  return {
+    title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+    description,
+    openGraph: {
+      type: "website",
+      locale: "id_ID",
+      siteName: "The Wedding of Fauzan & Sinta",
+      title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+      description,
+      images: [
+        {
+          url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+          width: 1200,
+          height: 630,
+          alt: "The Wedding of Fauzan & Sinta",
+          type: "image/jpeg",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+      description,
+      images: [
+        "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+      ],
+    },
+  };
 }
 
 export default async function InvitationPage({ searchParams }: PageProps) {

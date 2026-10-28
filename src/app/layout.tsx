@@ -32,21 +32,37 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "The Wedding of Fauzan & Sinta — Minggu, 3 Januari 2027",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://undangan-digital-fauzan-sinta.vercel.app"
+  ),
+  title: "The Wedding of Fauzan & Sinta",
   description:
-    "Undangan pernikahan digital Fauzan Pratama & Sinta Maharani — Minggu, 3 Januari 2027, Pekanbaru, Riau.",
+    "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
   openGraph: {
     type: "website",
+    locale: "id_ID",
+    url: "/",
+    siteName: "The Wedding of Fauzan & Sinta",
     title: "The Wedding of Fauzan & Sinta",
     description:
-      "Minggu, 3 Januari 2027 — Pekanbaru, Riau. Merupakan kehormatan bagi kami apabila Anda berkenan hadir.",
+      "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
     images: [
       {
         url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
         width: 1200,
         height: 630,
         alt: "The Wedding of Fauzan & Sinta",
+        type: "image/jpeg",
       },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Wedding of Fauzan & Sinta",
+    description:
+      "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
+    images: [
+      "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
     ],
   },
   icons: {

@@ -41,6 +41,22 @@ export function CoupleProfile({
             </h2>
             <SongketRibbon />
           </ScrollReveal>
+
+          {/* Narasi Behind Story (Satset Story) */}
+          <ScrollReveal delay={150} variant="fade-up">
+            <div className="mt-5 max-w-[540px] mx-auto px-5 py-4 rounded-2xl bg-surface-white/85 border border-gold-500/30 shadow-[0_12px_24px_-10px_rgba(93,58,65,0.12)]">
+              <p className="font-serif italic text-sm sm:text-base text-rose-950 leading-relaxed">
+                &ldquo;Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit&mdash;satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.&rdquo;
+              </p>
+              <div className="mt-2.5 flex items-center justify-center gap-2">
+                <span className="w-6 h-px bg-gold-500/50" />
+                <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold-600 font-sans">
+                  #SINgkatceritaFAUZAN
+                </span>
+                <span className="w-6 h-px bg-gold-500/50" />
+              </div>
+            </div>
+          </ScrollReveal>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-9 md:gap-7">

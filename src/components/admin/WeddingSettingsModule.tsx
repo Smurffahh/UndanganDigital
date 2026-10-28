@@ -999,7 +999,7 @@ export function WeddingSettingsModule({
                 type="text"
                 value={formData.brideName || ""}
                 onChange={(e) => handleFieldChange("brideName", e.target.value)}
-                placeholder="Sinta Maharani"
+                placeholder="Sinta Maria Utami"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
@@ -1052,7 +1052,7 @@ export function WeddingSettingsModule({
                 type="text"
                 value={formData.groomName || ""}
                 onChange={(e) => handleFieldChange("groomName", e.target.value)}
-                placeholder="Fauzan Pratama"
+                placeholder="Fauzan Ma'ruf"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
@@ -1288,7 +1288,7 @@ export function WeddingSettingsModule({
               type="text"
               value={giftAddress.receiver}
               onChange={(e) => handleGiftAddressChange("receiver", e.target.value)}
-              placeholder="Sinta Maharani"
+              placeholder="Sinta Maria Utami"
               className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
             />
           </div>

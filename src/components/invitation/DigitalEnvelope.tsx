@@ -34,12 +34,28 @@ export function DigitalEnvelope({
 }: DigitalEnvelopeProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [showQrisModal, setShowQrisModal] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [qrisImgError, setQrisImgError] = useState(false);
+
+  const openQrisModal = () => {
+    setShowQrisModal(true);
+    requestAnimationFrame(() => {
+      setIsModalVisible(true);
+    });
+  };
+
+  const closeQrisModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setShowQrisModal(false);
+    }, 300);
+  };
 
   // Close QRIS modal with Escape key (better-accessibility)
   useEffect(() => {
     if (!showQrisModal) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowQrisModal(false);
+      if (e.key === "Escape") closeQrisModal();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -83,8 +99,8 @@ export function DigitalEnvelope({
           <div className="flex justify-center mb-8">
             <button
               type="button"
-              onClick={() => setShowQrisModal(true)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-surface-white border border-gold-500/60 text-gold-600 text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer"
+              onClick={openQrisModal}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-surface-white border border-gold-500/60 text-gold-600 text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer min-h-11"
             >
               <QrCode className="w-4 h-4 stroke-[2]" />
               <span>Lihat Kode QRIS (Semua Bank / E-Wallet)</span>
@@ -207,24 +223,28 @@ export function DigitalEnvelope({
         </ScrollReveal>
       </div>
 
-      {/* QRIS Modal */}
+      {/* QRIS Modal with Blur Backdrop & Smooth Scale Transition */}
       {showQrisModal && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Kode QRIS Amplop Digital"
-          onClick={() => setShowQrisModal(false)}
-          className="fixed inset-0 z-50 bg-[#2b151b]/90 backdrop-blur-md grid place-items-center p-4 animate-in fade-in duration-300"
+          onClick={closeQrisModal}
+          className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-md grid place-items-center p-4 transition-opacity duration-300 ease-out cursor-pointer ${
+            isModalVisible ? "opacity-100" : "opacity-0"
+          }`}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-surface-white border border-gold-500/40 rounded-3xl p-6 sm:p-7 max-w-[360px] w-full text-center relative shadow-2xl"
+            className={`bg-surface-white border border-gold-500/40 rounded-3xl p-6 sm:p-7 max-w-[360px] w-full text-center relative shadow-2xl transition-[opacity,transform] duration-300 ease-out transform cursor-default ${
+              isModalVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+            }`}
           >
             <button
               type="button"
-              onClick={() => setShowQrisModal(false)}
+              onClick={closeQrisModal}
               aria-label="Tutup modal QRIS"
-              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-rose-100 text-rose-900 grid place-items-center hover:bg-rose-200 active:scale-[0.96] transition-transform cursor-pointer"
+              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-rose-100 text-rose-900 grid place-items-center hover:bg-rose-200 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
             >
               <X className="w-5 h-5 stroke-[2]" />
             </button>
@@ -240,29 +260,49 @@ export function DigitalEnvelope({
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
             </p>
 
-            {/* QR Image */}
-            <div className="w-56 h-56 mx-auto bg-white p-3 rounded-2xl border border-gold-500/30 shadow-inner grid place-items-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrisImageUrl}
-                alt="Kode QRIS Fauzan dan Sinta"
-                className="w-full h-full object-contain rounded-lg"
-              />
+            {/* QR Image & High-Contrast Fallback Placeholder */}
+            <div className="w-56 h-56 mx-auto bg-white p-3 rounded-2xl border border-gold-500/40 shadow-inner grid place-items-center relative">
+              {qrisImageUrl && !qrisImgError ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={qrisImageUrl}
+                  alt="Kode QRIS Fauzan Ma'ruf & Sinta Maria Utami"
+                  className="w-full h-full object-contain rounded-lg"
+                  onError={() => setQrisImgError(true)}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center p-3 text-center space-y-2">
+                  <div className="w-12 h-12 rounded-xl bg-gold-500/15 border border-gold-500/40 flex items-center justify-center text-gold-700">
+                    <QrCode className="w-6 h-6 stroke-[2]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-bold text-sm text-rose-900">
+                      QRIS Pembayaran Resmi
+                    </p>
+                    <p className="text-[11px] font-medium text-ink/80 mt-0.5">
+                      Fauzan Ma&apos;ruf &amp; Sinta Maria Utami
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-muted tracking-wide font-mono bg-cream px-2 py-0.5 rounded border border-gold-500/25">
+                    NMID: ID102027FAUZANSINTA
+                  </span>
+                </div>
+              )}
             </div>
 
-            <p className="text-xs font-semibold text-rose-900 mt-3">
-              a.n. Fauzan Pratama / Sinta Maharani
+            <p className="text-xs font-semibold text-rose-900 mt-3.5">
+              a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
             </p>
 
             {/* Download QR Button */}
             <a
-              href={qrisImageUrl}
+              href={qrisImageUrl || "#"}
               download="qris-fauzan-sinta.png"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full bg-gold-600 text-white text-xs font-bold tracking-[0.16em] uppercase transition-colors duration-150 active:scale-[0.96] hover:bg-gold-500"
+              className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#c9a24b] hover:bg-[#b8913b] text-white text-xs font-semibold tracking-[0.16em] uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 stroke-[2]" />
               <span>Simpan Gambar QR</span>
             </a>
           </div>

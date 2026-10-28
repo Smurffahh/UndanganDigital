@@ -60,12 +60,12 @@ body {
   pointer-events: none;
 }
 
-/* Emas Berkilau Gradient Text */
+/* Emas Berkilau Gradient Text (High-Contrast Fallback) */
 .gold-grad-text {
-  background: linear-gradient(135deg, #a9823a 10%, #e9d3a3 45%, #c9a24b 80%);
+  background: linear-gradient(135deg, #8a601e 10%, #b88a38 50%, #7d5416 90%);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  color: #8a601e;
 }
 
 /* Glassmorphism */

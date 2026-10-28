@@ -476,13 +476,14 @@ export function WeddingSettingsModule({
                       key={item.label}
                       className="p-2.5 rounded-xl bg-surface-white border border-gold-500/30 shadow-2xs"
                     >
-                      <span className="font-serif font-bold text-xl sm:text-2xl text-rose-900 tabular-nums block leading-none">
+                      <span className="font-serif font-bold text-xl sm:text-2xl text-[#5d3a41] tabular-nums block leading-none">
                         <NumberFlow
                           value={item.value}
                           format={{ minimumIntegerDigits: 2 }}
+                          style={{ color: "#5d3a41" }}
                         />
                       </span>
-                      <span className="text-[9px] tracking-wider uppercase text-muted mt-1 block">
+                      <span className="text-[10px] font-semibold tracking-wider uppercase text-[#9c5f66] mt-1 block">
                         {item.label}
                       </span>
                     </div>

@@ -108,7 +108,7 @@ export function RsvpModerationModule({
             <Users className="w-4 h-4 text-gold-600" />
           </div>
           <p className="font-serif font-bold text-2xl sm:text-3xl text-rose-900 tabular-nums">
-            <NumberFlow value={stats.totalGuests} />
+            <NumberFlow value={stats.totalGuests} style={{ color: "#5d3a41" }} />
           </p>
           <span className="text-[10px] text-muted">Kontak tamu terdaftar</span>
         </div>
@@ -120,7 +120,7 @@ export function RsvpModerationModule({
             <CheckCheck className="w-4 h-4 text-emerald-600" />
           </div>
           <p className="font-serif font-bold text-2xl sm:text-3xl text-emerald-700 tabular-nums">
-            <NumberFlow value={stats.sentGuests} />
+            <NumberFlow value={stats.sentGuests} style={{ color: "#047857" }} />
           </p>
           <span className="text-[10px] text-muted">
             {stats.totalGuests > 0
@@ -136,7 +136,7 @@ export function RsvpModerationModule({
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
           <p className="font-serif font-bold text-2xl sm:text-3xl text-emerald-800 tabular-nums">
-            <NumberFlow value={stats.hadirCount} />
+            <NumberFlow value={stats.hadirCount} style={{ color: "#065f46" }} />
           </p>
           <span className="text-[10px] font-semibold text-emerald-700">
             Total {stats.totalPax} Orang
@@ -150,7 +150,7 @@ export function RsvpModerationModule({
             <XCircle className="w-4 h-4 text-rose-600" />
           </div>
           <p className="font-serif font-bold text-2xl sm:text-3xl text-rose-800 tabular-nums">
-            <NumberFlow value={stats.berhalanganCount + stats.raguCount} />
+            <NumberFlow value={stats.berhalanganCount + stats.raguCount} style={{ color: "#9f1239" }} />
           </p>
           <span className="text-[10px] text-muted">
             {stats.berhalanganCount} berhalangan, {stats.raguCount} ragu
@@ -164,7 +164,7 @@ export function RsvpModerationModule({
             <MessageSquare className="w-4 h-4 text-gold-600" />
           </div>
           <p className="font-serif font-bold text-2xl sm:text-3xl text-rose-900 tabular-nums">
-            <NumberFlow value={stats.totalWishes} />
+            <NumberFlow value={stats.totalWishes} style={{ color: "#5d3a41" }} />
           </p>
           <span className="text-[10px] text-muted">Doa restu masuk</span>
         </div>

@@ -27,11 +27,11 @@ export function EventDetails({
     const icsContent = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//Dian & Iqbal//Pernikahan Dian & Iqbal//ID",
+      "PRODID:-//Fauzan & Sinta//Pernikahan Fauzan & Sinta//ID",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
       "BEGIN:VEVENT",
-      "SUMMARY:Pernikahan Dian & Iqbal",
+      "SUMMARY:Pernikahan Fauzan & Sinta",
       "DESCRIPTION:Akad Nikah 08.00 WIB — Resepsi 11.00 WIB di Kelurahan Air Putih, Tuah Madani, Pekanbaru",
       "LOCATION:Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru, Riau",
       "DTSTART:20270110T010000Z",
@@ -45,7 +45,7 @@ export function EventDetails({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "pernikahan-dian-iqbal.ics");
+    link.setAttribute("download", "pernikahan-fauzan-sinta.ics");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -53,7 +53,7 @@ export function EventDetails({
   };
 
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-    "Pernikahan Dian & Iqbal"
+    "Pernikahan Fauzan & Sinta"
   )}&dates=20270110T010000Z/20270110T070000Z&location=${encodeURIComponent(
     `${venueName}, ${venueAddress}`
   )}&details=${encodeURIComponent(
@@ -140,7 +140,7 @@ export function EventDetails({
         {/* Peta Google Maps Embed */}
         <div className="mt-5 h-[280px] sm:h-[340px] rounded-2xl overflow-hidden border border-gold-500/40 shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)]">
           <iframe
-            title="Peta Lokasi Pernikahan Dian & Iqbal"
+            title="Peta Lokasi Pernikahan Fauzan & Sinta"
             src={googleMapsEmbed}
             className="w-full h-full border-0 [filter:sepia(0.12)_saturate(1.02)]"
             loading="lazy"

@@ -6,7 +6,6 @@ import {
   integer,
   boolean,
   timestamp,
-  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const weddingSettings = pgTable("wedding_settings", {
@@ -30,9 +29,9 @@ export const weddingSettings = pgTable("wedding_settings", {
   googleMapsUrl: text("google_maps_url"),
   googleMapsEmbed: text("google_maps_embed"),
   youtubeVideoId: varchar("youtube_video_id", { length: 50 }),
-  bankAccounts: jsonb("bank_accounts"),
-  ewallets: jsonb("ewallets"),
-  giftAddress: jsonb("gift_address"),
+  bankAccounts: text("bank_accounts"),
+  ewallets: text("ewallets"),
+  giftAddress: text("gift_address"),
   qrisImageUrl: text("qris_image_url"),
   waMessageTemplate: text("wa_message_template"),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -49,10 +48,12 @@ export const galleryPhotos = pgTable("gallery_photos", {
 
 export const guests = pgTable("guests", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 100 }).notNull(),
+  name: text("name").notNull(),
   slugQuery: varchar("slug_query", { length: 100 }).notNull(),
-  whatsappNumber: varchar("whatsapp_number", { length: 30 }),
-  category: varchar("category", { length: 50 }).default("Reguler"),
+  whatsappNumber: text("whatsapp_number"),
+  category: text("category").default("Reguler"),
+  nameBindex: varchar("name_bindex", { length: 64 }),
+  waBindex: varchar("wa_bindex", { length: 64 }),
   waSentStatus: boolean("wa_sent_status").default(false),
   waSentAt: timestamp("wa_sent_at"),
   createdAt: timestamp("created_at").defaultNow(),
@@ -60,7 +61,7 @@ export const guests = pgTable("guests", {
 
 export const rsvpWishes = pgTable("rsvp_wishes", {
   id: serial("id").primaryKey(),
-  guestName: varchar("guest_name", { length: 100 }).notNull(),
+  guestName: text("guest_name").notNull(),
   attendanceStatus: varchar("attendance_status", { length: 20 }).notNull(),
   paxCount: integer("pax_count").default(1),
   message: text("message").notNull(),

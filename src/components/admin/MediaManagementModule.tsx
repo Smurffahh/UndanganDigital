@@ -262,14 +262,14 @@ export function MediaManagementModule({
                 Seksi 03-Mempelai
               </span>
               <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
-                Foto Dian (Mempelai Wanita)
+                Foto Sinta (Mempelai Wanita)
               </h3>
 
               <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={mainPhotos.bridePhotoUrl}
-                  alt="Dian"
+                  alt="Sinta"
                   className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
                 />
               </div>
@@ -306,14 +306,14 @@ export function MediaManagementModule({
                 Seksi 03-Mempelai
               </span>
               <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
-                Foto Iqbal (Mempelai Pria)
+                Foto Fauzan (Mempelai Pria)
               </h3>
 
               <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={mainPhotos.groomPhotoUrl}
-                  alt="Iqbal"
+                  alt="Fauzan"
                   className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
                 />
               </div>
@@ -500,7 +500,7 @@ export function MediaManagementModule({
                 </label>
                 <input
                   type="text"
-                  placeholder="Contoh: Dian &amp; Iqbal berbaring di padang rumput"
+                  placeholder="Contoh: Fauzan &amp; Sinta berbaring di padang rumput"
                   value={newGalleryCaption}
                   onChange={(e) => setNewGalleryCaption(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"

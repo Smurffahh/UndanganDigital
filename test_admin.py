@@ -35,7 +35,7 @@ def run_admin_tests():
         # ==========================================
         print("\n=== [2] Testing Admin Login Flow ===")
         page.fill("input#username", "admin")
-        page.fill("input#password", "dian-iqbal-2027")
+        page.fill("input#password", "fauzan-sinta-2027")
         page.click("button[type='submit']")
 
         # Wait for redirect to /admin/dashboard
@@ -80,7 +80,9 @@ def run_admin_tests():
         page.wait_for_timeout(600)
 
         assert page.locator("text=Template Pengantar Undangan WhatsApp").count() > 0, "WA template editor must exist"
-        assert page.locator("text=Daftar Tamu Undangan").count() > 0, "Guest list section must exist"
+        assert page.locator("text=Daftar Undangan").count() > 0, "Guest list section must exist"
+        assert page.locator("text=Keamanan Distribusi Undangan WhatsApp").count() > 0, "Security tip banner must exist"
+        print("[OK] WhatsApp security anti-blocking banner verified")
 
         # Test adding a new guest
         test_guest_name = "Bpk. Ir. Bambang Soediro"
@@ -100,6 +102,18 @@ def run_admin_tests():
         kirim_wa_btn = page.locator("button:has-text('Kirim WA')").first
         assert kirim_wa_btn.count() > 0, "Kirim WA button should exist"
         print("[OK] WhatsApp dispatch button confirmed")
+
+        # Test Switching to 'Riwayat Terkirim' Tab
+        btn_history_tab = page.locator("button:has-text('Riwayat Terkirim')")
+        assert btn_history_tab.count() > 0, "Riwayat Terkirim tab button must exist"
+        btn_history_tab.click()
+        page.wait_for_timeout(400)
+        assert page.locator("text=Riwayat Tamu yang Telah Dikirimi Undangan").count() > 0, "History section must display"
+        print("[OK] Riwayat Terkirim tab verified")
+
+        # Switch back to 'Daftar Undangan' Tab
+        page.locator("button:has-text('Daftar Undangan')").click()
+        page.wait_for_timeout(400)
         page.screenshot(path="test-results/admin_04_guest_module.png")
 
         # ==========================================

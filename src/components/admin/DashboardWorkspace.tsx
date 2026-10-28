@@ -101,7 +101,7 @@ export function DashboardWorkspace({
             </div>
             <div>
               <h1 className="font-serif text-lg font-bold tracking-tight text-slate-900 dark:text-cream leading-tight">
-                Dian & Iqbal
+                Fauzan & Sinta
               </h1>
               <p className="text-[11px] text-gold-600 dark:text-gold-400 font-medium flex items-center gap-1 mt-0.5">
                 <Sparkles className="w-3 h-3" />
@@ -189,7 +189,7 @@ export function DashboardWorkspace({
           </div>
           <div>
             <h1 className="font-serif text-sm font-bold text-slate-900 dark:text-cream leading-none">
-              Dian & Iqbal
+              Fauzan & Sinta
             </h1>
             <p className="text-[10px] text-gold-600 dark:text-gold-400 mt-0.5">
               Dashboard Mempelai

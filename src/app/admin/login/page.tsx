@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
 
   const handleFillDemo = () => {
     setUsername("admin");
-    setPassword("dian-iqbal-2027");
+    setPassword("fauzan-sinta-2027");
     setErrorMessage(null);
   };
 
@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
             Dashboard Mempelai
           </h1>
           <p className="text-xs text-muted mt-1 font-light tracking-wide">
-            The Wedding of Dian &amp; Iqbal &middot; Portal Admin
+            The Wedding of Fauzan &amp; Sinta &middot; Portal Admin
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function AdminLoginPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-100/70 border border-gold-500/30 text-xs font-mono text-ink">
             <span>User: <strong>admin</strong></span>
             <span>&middot;</span>
-            <span>Sandi: <strong>dian-iqbal-2027</strong></span>
+            <span>Sandi: <strong>fauzan-sinta-2027</strong></span>
           </div>
           <div className="mt-3">
             <button

@@ -1,0 +1,167 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import NumberFlow from "@number-flow/react";
+import { Divider } from "./Ornaments";
+
+interface CountdownHeroProps {
+  weddingDateIso: string;
+  heroPhotoUrl: string;
+  isRevealed: boolean;
+}
+
+export function CountdownHero({
+  weddingDateIso,
+  heroPhotoUrl,
+  isRevealed,
+}: CountdownHeroProps) {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isDone: false,
+  });
+
+  useEffect(() => {
+    const target = new Date(weddingDateIso).getTime();
+
+    function updateCountdown() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isDone: true });
+        return;
+      }
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      setTimeLeft({ days, hours, minutes, seconds, isDone: false });
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, [weddingDateIso]);
+
+  // Staggered Blur Reveal helper classes
+  const getRevealClass = (delayMs: number) => {
+    if (!isRevealed) {
+      return "opacity-0 translate-y-3 blur-sm";
+    }
+    return `opacity-100 translate-y-0 blur-none transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]`;
+  };
+
+  return (
+    <section id="beranda" className="py-20 relative" aria-label="Beranda dan Hitung Mundur">
+      <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
+        {/* 1. Bismillah */}
+        <p
+          className={`font-arabic text-2xl sm:text-3xl text-rose-700 leading-loose ${getRevealClass(
+            0
+          )}`}
+          dir="rtl"
+          style={{ transitionDelay: isRevealed ? "0ms" : "0ms" }}
+        >
+          بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
+        </p>
+
+        {/* 2. Quote Card QS Ar-Rum: 21 */}
+        <figure
+          className={`card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center ${getRevealClass(
+            100
+          )}`}
+          style={{ transitionDelay: isRevealed ? "100ms" : "0ms" }}
+        >
+          <p className="font-arabic text-lg sm:text-xl leading-loose text-rose-900" dir="rtl">
+            وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
+          </p>
+          <blockquote className="mt-4 text-xs sm:text-sm font-light text-muted leading-relaxed">
+            &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
+          </blockquote>
+          <figcaption className="mt-3 font-serif italic text-sm sm:text-base text-gold-600">
+            &mdash; QS. Ar-Rum : 21 &mdash;
+          </figcaption>
+        </figure>
+
+        {/* 3. Divider */}
+        <div
+          className={`${getRevealClass(200)}`}
+          style={{ transitionDelay: isRevealed ? "200ms" : "0ms" }}
+        >
+          <Divider />
+        </div>
+
+        {/* 4. Hero Photo in Mihrab Arch */}
+        <div
+          className={`arch w-[min(76%,320px)] aspect-[4/5] mx-auto mt-2 overflow-hidden shadow-lg ${getRevealClass(
+            300
+          )}`}
+          style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={heroPhotoUrl}
+            alt="Dian dan Iqbal berbaring di padang rumput berbingkai bunga"
+            className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+            loading="eager"
+          />
+        </div>
+
+        {/* 5. Names and Date */}
+        <div
+          className={`${getRevealClass(400)} mt-6`}
+          style={{ transitionDelay: isRevealed ? "400ms" : "0ms" }}
+        >
+          <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            Dian <span className="font-script text-gold-500 font-normal px-1">&amp;</span> Iqbal
+          </h2>
+          <p className="mt-2 text-xs tracking-[0.3em] uppercase text-gold-600 font-medium">
+            Ahad, 10 Januari 2027
+          </p>
+        </div>
+
+        {/* 6. Countdown Timer with NumberFlow & Tabular Numbers */}
+        <div
+          className={`mt-6 ${getRevealClass(500)}`}
+          style={{ transitionDelay: isRevealed ? "500ms" : "0ms" }}
+        >
+          {!timeLeft.isDone ? (
+            <div
+              className="flex justify-center items-center gap-2.5 sm:gap-3"
+              aria-label="Hitung mundur pernikahan"
+            >
+              {[
+                { label: "Hari", value: timeLeft.days },
+                { label: "Jam", value: timeLeft.hours },
+                { label: "Menit", value: timeLeft.minutes },
+                { label: "Detik", value: timeLeft.seconds },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="min-w-[68px] sm:min-w-[76px] py-3 px-2 bg-surface-white border border-gold-500/40 rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center"
+                >
+                  <span className="font-serif font-bold text-2xl sm:text-3xl gold-grad-text tabular-nums leading-none">
+                    <NumberFlow
+                      value={item.value}
+                      format={{ minimumIntegerDigits: 2 }}
+                    />
+                  </span>
+                  <span className="text-[10px] tracking-[0.2em] uppercase text-muted mt-1 font-medium">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="font-serif italic text-lg text-gold-600 mt-4">
+              Alhamdulillah, hari bahagia telah tiba 🤍
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}

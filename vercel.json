@@ -1,9 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/:guest([A-Za-z0-9._%-]+)",
-      "destination": "/index.html"
-    }
-  ]
-}

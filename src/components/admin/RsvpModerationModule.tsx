@@ -190,7 +190,7 @@ export function RsvpModerationModule({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari pengirim / pesan..."
-              className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
+              className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
             />
           </div>
         </div>

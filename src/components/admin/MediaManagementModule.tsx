@@ -194,7 +194,7 @@ export function MediaManagementModule({
             type="button"
             onClick={handleSaveMainPhotos}
             disabled={isSavingMain}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#e9d3a3] to-[#c9a24b] text-[#443114] text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 shrink-0"
+            className="w-full sm:w-auto min-h-11 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-white text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform active:scale-[0.96] cursor-pointer disabled:opacity-50 shrink-0"
           >
             {isSavingMain ? (
               <>
@@ -239,7 +239,7 @@ export function MediaManagementModule({
                 onChange={(e) =>
                   setMainPhotos((p) => ({ ...p, coverPhotoUrl: e.target.value }))
                 }
-                className="w-full px-3 py-1.5 rounded-lg border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
+                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
             </div>
 
@@ -283,7 +283,7 @@ export function MediaManagementModule({
                 onChange={(e) =>
                   setMainPhotos((p) => ({ ...p, bridePhotoUrl: e.target.value }))
                 }
-                className="w-full px-3 py-1.5 rounded-lg border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
+                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
             </div>
 
@@ -327,7 +327,7 @@ export function MediaManagementModule({
                 onChange={(e) =>
                   setMainPhotos((p) => ({ ...p, groomPhotoUrl: e.target.value }))
                 }
-                className="w-full px-3 py-1.5 rounded-lg border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
+                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
             </div>
 
@@ -371,7 +371,7 @@ export function MediaManagementModule({
                 onChange={(e) =>
                   setMainPhotos((p) => ({ ...p, heroPhotoUrl: e.target.value }))
                 }
-                className="w-full px-3 py-1.5 rounded-lg border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
+                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
             </div>
 
@@ -415,7 +415,7 @@ export function MediaManagementModule({
                 onChange={(e) =>
                   setMainPhotos((p) => ({ ...p, qrisImageUrl: e.target.value }))
                 }
-                className="w-full px-3 py-1.5 rounded-lg border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
+                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
             </div>
 
@@ -451,7 +451,7 @@ export function MediaManagementModule({
           <button
             type="button"
             onClick={() => setIsAddingGallery(!isAddingGallery)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-rose-700 text-white text-xs font-semibold tracking-wider transition-transform active:scale-[0.96] hover:bg-rose-800 cursor-pointer shrink-0"
+            className="w-full sm:w-auto min-h-11 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-rose-700 text-white text-xs font-semibold tracking-wider transition-transform active:scale-[0.96] hover:bg-rose-800 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4 stroke-[2]" />
             <span>Tambah Foto Galeri</span>
@@ -478,7 +478,7 @@ export function MediaManagementModule({
                   placeholder="https://..."
                   value={newGalleryUrl}
                   onChange={(e) => setNewGalleryUrl(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
                 />
                 <div className="mt-2">
                   <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer">
@@ -503,7 +503,7 @@ export function MediaManagementModule({
                   placeholder="Contoh: Fauzan &amp; Sinta berbaring di padang rumput"
                   value={newGalleryCaption}
                   onChange={(e) => setNewGalleryCaption(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
                 />
 
                 <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mt-3 mb-1">
@@ -512,7 +512,7 @@ export function MediaManagementModule({
                 <select
                   value={newGalleryAspect}
                   onChange={(e) => setNewGalleryAspect(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
                 >
                   <option value="3/4">Portrait (3:4)</option>
                   <option value="1/1">Square (1:1)</option>

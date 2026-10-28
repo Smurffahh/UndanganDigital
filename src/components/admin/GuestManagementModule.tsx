@@ -534,7 +534,7 @@ export function GuestManagementModule({
               rows={8}
               value={template}
               onChange={(e) => setTemplate(e.target.value)}
-              className="w-full p-3.5 rounded-2xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink font-mono leading-relaxed focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 resize-y"
+              className="w-full p-3.5 rounded-2xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink font-mono leading-relaxed focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 resize-y"
             />
           </div>
 
@@ -796,7 +796,7 @@ export function GuestManagementModule({
                 placeholder="Contoh: Bpk. H. Ahmad Fauzi &amp; Keluarga"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
 
@@ -810,7 +810,7 @@ export function GuestManagementModule({
                 placeholder="081234567890 (atau 628...)"
                 value={newPhone}
                 onChange={(e) => setNewPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink tabular-nums focus:outline-none focus:border-rose-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink tabular-nums focus:outline-none focus:border-rose-500"
               />
             </div>
 
@@ -821,7 +821,7 @@ export function GuestManagementModule({
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                className="w-full px-3 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               >
                 <option value="Keluarga Fauzan">Keluarga Fauzan</option>
                 <option value="Keluarga Sinta">Keluarga Sinta</option>
@@ -913,7 +913,7 @@ export function GuestManagementModule({
                   placeholder="Cari nama, WhatsApp, kategori..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-full border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                  className="w-full pl-9 pr-3 py-2 rounded-full border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
                 />
               </div>
 
@@ -958,7 +958,7 @@ export function GuestManagementModule({
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="px-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white text-[11px] text-ink focus:outline-none focus:border-rose-500"
+                    className="px-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white text-base sm:text-[11px] text-ink focus:outline-none focus:border-rose-500"
                   >
                     <option value="all">Semua Kategori</option>
                     {availableCategories.map((cat) => (
@@ -971,8 +971,114 @@ export function GuestManagementModule({
               </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto rounded-2xl border border-gold-500/25">
+            {/* Mobile Card View (< 768px / md:hidden) */}
+            <div className="md:hidden space-y-3">
+              {filteredGuests.length === 0 ? (
+                <div className="py-8 text-center text-muted text-xs bg-surface-white rounded-2xl border border-gold-500/25 p-4">
+                  Tidak ada tamu yang cocok dengan filter atau pencarian.
+                </div>
+              ) : (
+                filteredGuests.map((guest) => {
+                  const isCopied = copiedGuestId === guest.id;
+
+                  return (
+                    <article
+                      key={guest.id}
+                      className="p-4 rounded-2xl bg-surface-white border border-gold-500/25 shadow-xs space-y-3"
+                    >
+                      {/* Baris Atas: Nama Tamu, Kategori, & Badge Status */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
+                            {guest.name}
+                          </h4>
+                          <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-cream border border-gold-500/30 text-[10px] font-medium text-gold-700">
+                            {guest.category || "Reguler"}
+                          </span>
+                        </div>
+                        <div className="shrink-0">
+                          {guest.waSentStatus ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300">
+                              <CheckCircle className="w-3 h-3 text-emerald-600" />
+                              <span>Terkirim</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold border border-amber-300">
+                              <Clock className="w-3 h-3 text-amber-600" />
+                              <span>Belum Dikirim</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Baris Tengah: Nomor WhatsApp */}
+                      <div className="flex items-center gap-2 text-sm text-[#8d757c] tabular-nums font-mono">
+                        <span>WhatsApp:</span>
+                        <strong className="text-[#4b3a3e] font-semibold">
+                          {guest.whatsappNumber ? `+${guest.whatsappNumber}` : "— (Belum diisi)"}
+                        </strong>
+                      </div>
+
+                      {/* Baris Bawah: Tombol Aksi Thumb-Friendly */}
+                      <div className="flex items-center gap-2 pt-1 border-t border-gold-500/15">
+                        {guest.whatsappNumber ? (
+                          <button
+                            type="button"
+                            onClick={() => handleSendWhatsApp(guest)}
+                            className="flex-1 min-h-11 inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs active:scale-[0.96] transition-transform duration-150 cursor-pointer shadow-xs"
+                          >
+                            <Send className="w-4 h-4 stroke-[2]" />
+                            <span>{guest.waSentStatus ? "Kirim Ulang" : "Kirim ke WhatsApp"}</span>
+                          </button>
+                        ) : (
+                          <div className="flex-1 min-h-11 inline-flex items-center justify-center px-3 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium">
+                            Nomor Tidak Tersedia
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => handleCopyMessage(guest)}
+                          title="Salin Pesan Pengantar"
+                          aria-label={`Salin pesan pengantar untuk ${guest.name}`}
+                          className={`min-h-11 min-w-11 inline-flex items-center justify-center rounded-xl border text-xs transition-colors duration-150 active:scale-[0.96] cursor-pointer ${
+                            isCopied
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                              : "bg-surface-white text-muted border-gold-500/30 hover:bg-rose-100 hover:text-rose-900"
+                          }`}
+                        >
+                          {isCopied ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
+                        </button>
+
+                        <a
+                          href={`/?to=${guest.slugQuery}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Buka Undangan Tamu Ini"
+                          aria-label={`Buka undangan untuk ${guest.name}`}
+                          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-xl border border-gold-500/30 bg-surface-white text-muted hover:bg-rose-100 hover:text-rose-900 active:scale-[0.96] transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteGuest(guest.id, guest.name)}
+                          title="Hapus Tamu"
+                          aria-label={`Hapus ${guest.name} dari daftar`}
+                          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-xl border border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-600 hover:text-white active:scale-[0.96] transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Desktop Table View (>= 768px / hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto rounded-2xl border border-gold-500/25">
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-cream/80 border-b border-gold-500/30 text-rose-900 font-serif font-bold uppercase tracking-wider text-[11px]">
                   <tr>
@@ -1109,13 +1215,85 @@ export function GuestManagementModule({
                   placeholder="Cari riwayat terkirim..."
                   value={historySearchQuery}
                   onChange={(e) => setHistorySearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-emerald-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-emerald-600"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-emerald-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-emerald-600"
                 />
               </div>
             </div>
 
-            {/* History Table */}
-            <div className="overflow-x-auto rounded-2xl border border-emerald-500/25">
+            {/* Mobile History Card View (< 768px / md:hidden) */}
+            <div className="md:hidden space-y-3">
+              {sentHistoryGuests.length === 0 ? (
+                <div className="py-8 text-center text-muted text-xs bg-surface-white rounded-2xl border border-emerald-500/25 p-4">
+                  Belum ada undangan yang tercatat dikirim. Silakan kirim undangan melalui tab Daftar Undangan.
+                </div>
+              ) : (
+                sentHistoryGuests.map((guest) => (
+                  <article
+                    key={guest.id}
+                    className="p-4 rounded-2xl bg-surface-white border border-emerald-500/25 shadow-xs space-y-3"
+                  >
+                    {/* Baris Atas: Nama Tamu, Kategori, & Badge Status */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
+                          {guest.name}
+                        </h4>
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-cream border border-gold-500/30 text-[10px] font-medium text-gold-700">
+                          {guest.category || "Reguler"}
+                        </span>
+                      </div>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300 shrink-0">
+                        <CheckCircle className="w-3 h-3 text-emerald-600" />
+                        <span>✓ Terkirim</span>
+                      </span>
+                    </div>
+
+                    {/* Baris Tengah: Nomor WhatsApp & Waktu Kirim */}
+                    <div className="flex flex-col gap-1 text-xs text-[#8d757c]">
+                      <div className="flex items-center gap-2">
+                        <span>WhatsApp:</span>
+                        <strong className="text-[#4b3a3e] font-semibold tabular-nums font-mono">
+                          {guest.whatsappNumber ? `+${guest.whatsappNumber}` : "—"}
+                        </strong>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>Waktu Kirim:</span>
+                        <span className="text-[#4b3a3e] tabular-nums font-mono text-[11px]">
+                          {formatSentDate(guest.waSentAt)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Baris Bawah: Tombol Aksi Thumb-Friendly */}
+                    <div className="flex items-center gap-2 pt-1 border-t border-emerald-500/15">
+                      {guest.whatsappNumber ? (
+                        <button
+                          type="button"
+                          onClick={() => handleSendWhatsApp(guest)}
+                          className="flex-1 min-h-11 inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs active:scale-[0.96] transition-transform duration-150 cursor-pointer shadow-xs"
+                        >
+                          <Send className="w-4 h-4 stroke-[2]" />
+                          <span>Kirim Ulang WA</span>
+                        </button>
+                      ) : null}
+
+                      <button
+                        type="button"
+                        onClick={() => handleRevertSentStatus(guest)}
+                        title="Kembalikan ke Status Belum Dikirim"
+                        className="min-h-11 px-3.5 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-600/40 text-amber-800 bg-amber-50 hover:bg-amber-100 text-xs font-medium active:scale-[0.96] transition-colors cursor-pointer"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5 text-amber-700" />
+                        <span>Kembalikan</span>
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+
+            {/* Desktop History Table View (>= 768px / hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto rounded-2xl border border-emerald-500/25">
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-[#e7f2ea]/70 border-b border-emerald-500/30 text-emerald-950 font-serif font-bold uppercase tracking-wider text-[11px]">
                   <tr>
@@ -1184,7 +1362,7 @@ export function GuestManagementModule({
                               title="Kembalikan ke Status Belum Dikirim"
                               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-amber-600/40 text-amber-800 bg-amber-50 hover:bg-amber-100 text-[11px] font-medium transition-colors cursor-pointer"
                             >
-                              <RotateCcw className="w-3 h-3 text-amber-700" />
+                              <RotateCcw className="w-3.5 h-3.5 text-amber-700" />
                               <span>Kembalikan ke Belum Dikirim</span>
                             </button>
                           </div>

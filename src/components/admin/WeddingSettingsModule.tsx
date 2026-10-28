@@ -17,11 +17,13 @@ import {
   CheckCircle2,
   RefreshCw,
   Play,
+  Pause,
   Square,
   Clock,
   Sparkles,
   Volume2,
   VolumeX,
+  Upload,
 } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import type { WeddingSettingsData } from "@/lib/db/store";
@@ -52,6 +54,16 @@ interface GiftAddressData {
   address: string;
 }
 
+function extractYouTubeVideoId(input?: string): string {
+  if (!input) return "In8kDy_WU4s";
+  const trimmed = input.trim();
+  if (trimmed.length === 11 && !trimmed.includes("/") && !trimmed.includes(".")) {
+    return trimmed;
+  }
+  const match = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  return match ? match[1] : "In8kDy_WU4s";
+}
+
 export function WeddingSettingsModule({
   initialSettings,
   onSettingsUpdate,
@@ -59,6 +71,18 @@ export function WeddingSettingsModule({
   const [formData, setFormData] = useState<WeddingSettingsData | any>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
   const [isResolvingMaps, setIsResolvingMaps] = useState(false);
+
+  // Audio Source Calculations
+  const isCurrentYouTube =
+    formData.musicSourceType === "youtube" ||
+    (typeof formData.musicUrl === "string" && formData.musicUrl.includes("youtube.com"));
+  const currentYoutubeId =
+    formData.youtubeVideoId ||
+    extractYouTubeVideoId(formData.musicUrl) ||
+    "In8kDy_WU4s";
+  const effectiveAudioUrl = !isCurrentYouTube
+    ? formData.musicUrl || "/audio/wedding-instrumental.wav"
+    : "/audio/wedding-instrumental.wav";
 
   // Audio Testing State
   const [isPlayingTest, setIsPlayingTest] = useState(false);
@@ -177,8 +201,59 @@ export function WeddingSettingsModule({
     toast.success(`Lagu preset "${selected.title}" dipilih! ✓`);
   };
 
-  // Test Play / Stop audio
+  // Upload local audio file (.mp3 / .wav) from device
+  const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("audio/") && !file.name.match(/\.(mp3|wav|ogg|m4a)$/i)) {
+      toast.error("File harus berupa berkas audio (.mp3, .wav, atau .m4a)");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Ukuran file audio maksimal 10MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const cleanName = file.name.replace(/\.[^/.]+$/, "");
+      setFormData((prev: any) => ({
+        ...prev,
+        musicSourceType: "audio_url",
+        musicUrl: result,
+        musicTitle: cleanName,
+      }));
+      if (audioTestRef.current) {
+        audioTestRef.current.pause();
+        setIsPlayingTest(false);
+      }
+      toast.success(`File audio "${file.name}" berhasil dimuat! Simpan perubahan untuk menerapkan.`);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Test Play / Stop audio preview in Dashboard (YouTube iframe vs HTML5 Audio)
   const handleToggleTestAudio = () => {
+    if (isCurrentYouTube) {
+      const iframe = document.getElementById("dashboard-yt-preview") as HTMLIFrameElement | null;
+      if (iframe?.contentWindow) {
+        if (isPlayingTest) {
+          iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*");
+          setIsPlayingTest(false);
+        } else {
+          iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*");
+          setIsPlayingTest(true);
+          toast.success("Memutar pratinjau YouTube...");
+        }
+      } else {
+        toast.info("Gunakan tombol putar di dalam jendela pemutar YouTube di bawah.");
+      }
+      return;
+    }
+
     const audio = audioTestRef.current;
     if (!audio) return;
 
@@ -192,7 +267,7 @@ export function WeddingSettingsModule({
         .then(() => setIsPlayingTest(true))
         .catch((err) => {
           console.error("Test audio play failed:", err);
-          toast.error("Gagal memutar audio preview. Periksa URL atau koneksi Anda.");
+          toast.error("Gagal memutar audio preview. Periksa berkas atau gunakan preset audio lokal.");
         });
     }
   };
@@ -329,11 +404,11 @@ export function WeddingSettingsModule({
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 pb-12">
+    <form onSubmit={handleSave} id="wedding-settings-form" className="space-y-8 pb-8">
       {/* Hidden Audio for Dashboard Testing */}
       <audio
         ref={audioTestRef}
-        src={formData.musicUrl || WEDDING_MUSIC_PRESETS[0].url}
+        src={effectiveAudioUrl}
         onEnded={() => setIsPlayingTest(false)}
         className="hidden"
       />
@@ -649,64 +724,103 @@ export function WeddingSettingsModule({
                   />
                 </div>
               ) : (
-                <div>
+                <div className="space-y-2">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
-                    URL File Audio (.mp3):
+                    URL File Audio (.mp3 / .wav) atau Unggah Berkas:
                   </label>
-                  <input
-                    type="url"
-                    value={formData.musicUrl || ""}
-                    onChange={(e) => handleFieldChange("musicUrl", e.target.value)}
-                    placeholder="https://.../lagu-pernikahan.mp3"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
-                  />
+                  <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+                    <input
+                      type="url"
+                      value={formData.musicUrl || ""}
+                      onChange={(e) => handleFieldChange("musicUrl", e.target.value)}
+                      placeholder="https://.../lagu-pernikahan.mp3"
+                      className="flex-1 px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+                    />
+                    <label className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 text-rose-900 border border-gold-500/30 font-semibold text-xs cursor-pointer transition-colors shrink-0">
+                      <Upload className="w-4 h-4 text-rose-800" />
+                      <span>Unggah Audio HP/PC</span>
+                      <input
+                        type="file"
+                        accept="audio/*,.mp3,.wav,.ogg,.m4a"
+                        onChange={handleAudioUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
               )}
             </div>
 
             {/* Live Audio Test Player in Dashboard */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/40 to-cream/70 border border-emerald-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white grid place-items-center shrink-0 shadow-2xs">
-                  {isPlayingTest ? (
-                    <Volume2 className="w-5 h-5 animate-pulse" />
-                  ) : (
-                    <VolumeX className="w-5 h-5 opacity-80" />
-                  )}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/40 to-cream/70 border border-emerald-400/30 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white grid place-items-center shrink-0 shadow-2xs">
+                    {isPlayingTest ? (
+                      <Volume2 className="w-5 h-5 animate-pulse" />
+                    ) : (
+                      <VolumeX className="w-5 h-5 opacity-80" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-emerald-950">
+                      Uji Dengar Musik di Dashboard:
+                    </p>
+                    <p className="text-[11px] text-muted">
+                      {formData.musicTitle || "Belum ada lagu yang dipilih"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-xs text-emerald-950">
-                    Uji Dengar Musik di Dashboard:
-                  </p>
-                  <p className="text-[11px] text-muted">
-                    {formData.musicTitle || "Belum ada lagu yang dipilih"}
-                  </p>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleToggleTestAudio}
+                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-colors cursor-pointer shadow-xs min-h-11 ${
+                      isPlayingTest
+                        ? "bg-rose-700 text-white hover:bg-rose-800"
+                        : "bg-emerald-700 text-white hover:bg-emerald-800"
+                    }`}
+                  >
+                    {isPlayingTest ? (
+                      <>
+                        <Pause className="w-3.5 h-3.5" />
+                        <span>Hentikan Uji Dengar</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3.5 h-3.5 fill-current" />
+                        <span>Tes Putar Musik</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleToggleTestAudio}
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer shadow-xs ${
-                    isPlayingTest
-                      ? "bg-rose-700 text-white hover:bg-rose-800"
-                      : "bg-emerald-700 text-white hover:bg-emerald-800"
-                  }`}
-                >
-                  {isPlayingTest ? (
-                    <>
-                      <Square className="w-3.5 h-3.5 fill-current" />
-                      <span>Hentikan Uji Audio</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>▶ Tes Putar Musik</span>
-                    </>
-                  )}
-                </button>
-              </div>
+              {/* YouTube Interactive Mini-Player for previewing YouTube videos */}
+              {isCurrentYouTube && currentYoutubeId && (
+                <div className="pt-2 border-t border-emerald-400/20 space-y-2">
+                  <div className="relative rounded-xl overflow-hidden aspect-video max-w-sm border border-emerald-500/25 bg-black/90">
+                    <iframe
+                      id="dashboard-yt-preview"
+                      src={`https://www.youtube-nocookie.com/embed/${currentYoutubeId}?enablejsapi=1&playsinline=1&rel=0&modestbranding=1`}
+                      title="YouTube Music Preview"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted">
+                    <span>* Putar video di atas untuk menguji kecocokan lagu YouTube.</span>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectMusicPreset("preset-1")}
+                      className="text-emerald-800 hover:text-emerald-950 font-medium underline cursor-pointer"
+                    >
+                      Beralih ke Musik Lokal (Anti-Error)
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1205,12 +1319,21 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* Floating Bottom Save Action Bar */}
-      <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-20 lg:z-40 max-w-[calc(100vw-2rem)]">
+      {/* Normal Document Flow Bottom Save Action Bar */}
+      <div className="p-5 sm:p-6 bg-surface-white rounded-3xl border border-gold-500/30 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <p className="font-serif font-bold text-base text-rose-900">
+            Selesai Mengatur Acara &amp; Musik?
+          </p>
+          <p className="text-xs text-muted">
+            Klik tombol simpan untuk memperbarui Countdown, Musik Latar, Rekening, dan Lokasi Acara.
+          </p>
+        </div>
+
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 text-white font-bold text-xs tracking-wider uppercase shadow-[0_16px_32px_-10px_rgba(93,58,65,0.65)] hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-2xl bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 text-white font-bold text-xs tracking-wider uppercase shadow-[0_12px_24px_-8px_rgba(93,58,65,0.5)] hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out disabled:opacity-50 cursor-pointer min-h-12"
         >
           {isSaving ? (
             <>

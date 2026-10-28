@@ -13,6 +13,7 @@ import {
   Sparkles,
   Heart,
   Calendar,
+  Save,
 } from "lucide-react";
 import type {
   WeddingSettingsData,
@@ -218,6 +219,18 @@ export function DashboardWorkspace({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {activeTab === "settings" && (
+            <button
+              type="submit"
+              form="wedding-settings-form"
+              className="inline-flex items-center gap-1.5 px-3 min-h-10 rounded-xl text-xs font-bold bg-[#5d3a41] text-white hover:bg-[#4b3a3e] active:scale-[0.96] transition-transform shadow-xs cursor-pointer"
+              title="Simpan Pengaturan Acara & Musik"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>Simpan</span>
+            </button>
+          )}
+
           <a
             href="/"
             target="_blank"
@@ -245,7 +258,7 @@ export function DashboardWorkspace({
       {/* ============================================================ */}
       {/* 3. MAIN WORKSPACE CONTENT AREA                               */}
       {/* ============================================================ */}
-      <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-24 lg:pb-10 min-w-0">
+      <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-28 lg:pb-12 min-w-0">
         {activeTab === "rsvp" && (
           <RsvpModerationModule
             wishes={wishes}

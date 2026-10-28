@@ -13,7 +13,7 @@ export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
     title: "Romantic Piano & Strings Wedding Instrumental",
     artist: "Wedding Studio (Instrumental)",
     sourceType: "audio_url",
-    url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3",
+    url: "/audio/romantic-piano.wav",
   },
   {
     id: "preset-2",
@@ -28,15 +28,14 @@ export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
     title: "Shane Filan — Beautiful In White (Romantic Instrumental)",
     artist: "Shane Filan (Acoustic Piano)",
     sourceType: "audio_url",
-    url: "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3?filename=sweet-piano-wedding-love-112194.mp3",
-    youtubeId: "In8kDy_WU4s",
+    url: "/audio/wedding-instrumental.wav",
   },
   {
     id: "preset-4",
     title: "Javanese / Acoustic Sundanese Instrumental Wedding",
     artist: "Traditional Acoustic Gamelan Strings",
     sourceType: "audio_url",
-    url: "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=ambient-piano-strings-10711.mp3",
+    url: "/audio/javanese-romance.wav",
   },
 ];
 
@@ -72,7 +71,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   musicEnabled: true,
   musicTitle: "Shane Filan - Beautiful In White (Romantic Instrumental)",
   musicSourceType: "preset",
-  musicUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3",
+  musicUrl: "/audio/wedding-instrumental.wav",
   bankAccounts: [
     {
       brand: "Bank BCA",

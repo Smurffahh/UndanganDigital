@@ -20,8 +20,7 @@ declare global {
   }
 }
 
-const DEFAULT_AUDIO_URL =
-  "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3";
+const DEFAULT_AUDIO_URL = "/audio/wedding-instrumental.wav";
 
 export function FloatingControls({
   isOpened,
@@ -76,6 +75,21 @@ export function FloatingControls({
             // YT.PlayerState.PLAYING = 1, PAUSED = 2
             if (event.data === 1) setIsPlaying(true);
             else if (event.data === 2) setIsPlaying(false);
+          },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onError: (event: any) => {
+            console.warn("YouTube player embed error:", event.data);
+            // Error 101/150: Video embed blocked by copyright owner. Auto-fallback to local audio.
+            const audio = audioRef.current;
+            if (audio) {
+              audio.src = "/audio/wedding-instrumental.wav";
+              audio.volume = 0.7;
+              audio.play().then(() => {
+                setIsPlaying(true);
+                setShowTitleBadge(true);
+                setTimeout(() => setShowTitleBadge(false), 5000);
+              }).catch((e) => console.warn("Fallback audio play failed:", e));
+            }
           },
         },
       });

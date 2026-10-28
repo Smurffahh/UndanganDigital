@@ -103,3 +103,8 @@ Mengembangkan ulang (refactor) web undangan pernikahan statis `undangan-dian-iqb
 
 ### Fase 4: Audit Keamanan (`web-security-owasp`) & Audit 5 Domain (`better-interface` + `hallmark`) (v1.0-production)
 - Verifikasi responsivitas `320px–1280px`, disiplin 8-state komponen, pengujian Playwright komprehensif, dan verifikasi deployment Vercel.
+
+### Fase 5: Countdown 3 Januari 2027, Background Music Player, & Google Maps Resolver (v1.1)
+- Penetapan target countdown ke **Minggu, 3 Januari 2027 pukul 08:00 WIB** (`2027-01-03T08:00:00+07:00`) dengan label tanggal tampilan `Minggu · 03 · Januari · 2027`.
+- Pemutar musik latar belakang hybrid HTML5 `<audio>` dengan auto-play volume fade-in saat tombol *"Buka Undangan"* diklik, vinyl controller berputar, badge judul lagu, 4 preset lagu romantis siap pakai, custom MP3 URL, dan fallback YouTube.
+- Integrasi lokasi Google Maps terbaru (`https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8` / `-7.310076, 109.296186`) dan endpoint `/api/admin/resolve-maps` untuk mengurai shortlink peta secara otomatis di Dashboard Mempelai lengkap dengan live embed preview dan uji dengar musik.

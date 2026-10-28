@@ -8,12 +8,14 @@ interface CountdownHeroProps {
   weddingDateIso: string;
   heroPhotoUrl: string;
   isRevealed: boolean;
+  eventDateLabel?: string;
 }
 
 export function CountdownHero({
   weddingDateIso,
   heroPhotoUrl,
   isRevealed,
+  eventDateLabel,
 }: CountdownHeroProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -27,7 +29,8 @@ export function CountdownHero({
     const target = new Date(weddingDateIso).getTime();
 
     function updateCountdown() {
-      const diff = target - Date.now();
+      const now = Date.now();
+      const diff = target - now;
       if (diff <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isDone: true });
         return;
@@ -45,6 +48,23 @@ export function CountdownHero({
     const timer = setInterval(updateCountdown, 1000);
     return () => clearInterval(timer);
   }, [weddingDateIso]);
+
+  // Format date label fallback to Bahasa Indonesia
+  const displayDate =
+    eventDateLabel ||
+    (() => {
+      try {
+        const d = new Date(weddingDateIso);
+        return new Intl.DateTimeFormat("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(d);
+      } catch {
+        return "Minggu, 3 Januari 2027";
+      }
+    })();
 
   // Staggered Blur Reveal helper classes
   const getRevealClass = () => {
@@ -113,7 +133,7 @@ export function CountdownHero({
             Fauzan <span className="font-script text-gold-500 font-normal px-1">&amp;</span> Sinta
           </h2>
           <p className="mt-2 text-xs tracking-[0.3em] uppercase text-gold-600 font-medium">
-            Ahad, 10 Januari 2027
+            {displayDate}
           </p>
         </div>
 
@@ -150,9 +170,11 @@ export function CountdownHero({
               ))}
             </div>
           ) : (
-            <p className="font-serif italic text-lg text-gold-600 mt-4">
-              Alhamdulillah, hari bahagia telah tiba 🤍
-            </p>
+            <div className="p-4 rounded-2xl bg-cream/70 border border-gold-500/30 max-w-md mx-auto">
+              <p className="font-serif italic text-base sm:text-lg text-rose-900">
+                Alhamdulillah, rangkaian acara pernikahan Fauzan &amp; Sinta telah berlangsung 🤍
+              </p>
+            </div>
           )}
         </div>
       </div>

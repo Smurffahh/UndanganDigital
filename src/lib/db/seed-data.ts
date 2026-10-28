@@ -1,3 +1,45 @@
+export interface MusicPreset {
+  id: string;
+  title: string;
+  artist: string;
+  sourceType: "audio_url" | "youtube";
+  url: string;
+  youtubeId?: string;
+}
+
+export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
+  {
+    id: "preset-1",
+    title: "Romantic Piano & Strings Wedding Instrumental",
+    artist: "Wedding Studio (Instrumental)",
+    sourceType: "audio_url",
+    url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3",
+  },
+  {
+    id: "preset-2",
+    title: "Mahalini x Nuca — Janji Kita",
+    artist: "Mahalini x Nuca",
+    sourceType: "youtube",
+    url: "https://www.youtube.com/watch?v=In8kDy_WU4s",
+    youtubeId: "In8kDy_WU4s",
+  },
+  {
+    id: "preset-3",
+    title: "Shane Filan — Beautiful In White (Romantic Instrumental)",
+    artist: "Shane Filan (Acoustic Piano)",
+    sourceType: "audio_url",
+    url: "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3?filename=sweet-piano-wedding-love-112194.mp3",
+    youtubeId: "In8kDy_WU4s",
+  },
+  {
+    id: "preset-4",
+    title: "Javanese / Acoustic Sundanese Instrumental Wedding",
+    artist: "Traditional Acoustic Gamelan Strings",
+    sourceType: "audio_url",
+    url: "https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=ambient-piano-strings-10711.mp3",
+  },
+];
+
 export const DEFAULT_WEDDING_SETTINGS = {
   brideName: "Sinta Maharani",
   brideBirth: "Pekanbaru, 10 September 2005",
@@ -15,17 +57,22 @@ export const DEFAULT_WEDDING_SETTINGS = {
     "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
   heroPhotoUrl:
     "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
-  weddingDateIso: "2027-01-10T08:00:00+07:00",
+  weddingDateIso: "2027-01-03T08:00:00+07:00",
+  eventDateLabel: "Minggu · 03 · Januari · 2027",
   akadTime: "Pukul 08.00 – 10.00 WIB",
   resepsiTime: "Pukul 11.00 – 14.00 WIB",
-  venueName: "Kelurahan Air Putih",
-  venueAddress: "Tuah Madani, Kota Pekanbaru, Riau",
+  venueName: "Gedung Pertemuan & Kediaman Mempelai",
+  venueAddress: "Pekanbaru, Riau",
   venuePlusCode: "Plus Code: F9M2+C8 Simpang Baru",
-  googleMapsUrl:
-    "https://www.google.com/maps/place/Kedai+Harian+Bang+Zali/@0.4835204,101.3506971,56m/data=!3m1!1e3!4m6!3m5!1s0x31d5a9d1656c3223:0xab29da710b18cf47!8m2!3d0.4835685!4d101.3507545!16s%2Fg%2F11kmnsnh90?entry=ttu",
-  googleMapsEmbed:
-    "https://maps.google.com/maps?q=0.4835204,101.3506971&z=17&output=embed",
+  googleMapsUrl: "https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8",
+  mapsLatitude: "-7.310076",
+  mapsLongitude: "109.296186",
+  googleMapsEmbed: "https://maps.google.com/maps?q=-7.310076,109.296186&z=17&output=embed",
   youtubeVideoId: "In8kDy_WU4s",
+  musicEnabled: true,
+  musicTitle: "Shane Filan - Beautiful In White (Romantic Instrumental)",
+  musicSourceType: "preset",
+  musicUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3",
   bankAccounts: [
     {
       brand: "Bank BCA",
@@ -127,39 +174,39 @@ export const DEFAULT_GALLERY_PHOTOS = [
     id: 6,
     imageUrl:
       "https://i.pinimg.com/736x/b5/ef/95/b5ef95fd3cd9129193935dc4b50ecaa0.jpg",
-    caption: "Fauzan membawa buket bunga",
+    caption: "Fauzan dengan setelan jas abu-abu modern",
     aspectRatio: "3/4",
     sortOrder: 6,
   },
   {
     id: 7,
     imageUrl:
-      "https://i.pinimg.com/736x/30/9c/1f/309c1f0214ff6c5b77953039a3181020.jpg",
-    caption: "Sajian meja resepsi dusty rose dan rose gold",
-    aspectRatio: "3/4",
+      "https://i.pinimg.com/736x/a2/bd/28/a2bd28b0561574a6bfe38ad177d8531e.jpg",
+    caption: "Bouquet mawar putih dan eucalyptus",
+    aspectRatio: "1/1",
     sortOrder: 7,
   },
   {
     id: 8,
     imageUrl:
-      "https://i.pinimg.com/736x/12/25/ac/1225acf966ce6ba667380e74f4047724.jpg",
-    caption: "Buket bunga pink dalam vas emas",
+      "https://i.pinimg.com/736x/b8/1d/15/b81d154ee42661c94443a579698d2466.jpg",
+    caption: "Cincin kawin di atas bantalan sutra berukir",
     aspectRatio: "1/1",
     sortOrder: 8,
   },
   {
     id: 9,
     imageUrl:
-      "https://i.pinimg.com/736x/1d/41/b9/1d41b9a5b75d1b2f90de0ef7d2a8eaa0.jpg",
-    caption: "Kursi tamu berhias pita blush dan emas",
+      "https://i.pinimg.com/736x/68/aa/a4/68aaa415ef1e88a0b5a32ec69472eec3.jpg",
+    caption: "Dekorasi lorong masuk berhias lampu fairy warm white",
     aspectRatio: "3/4",
     sortOrder: 9,
   },
   {
     id: 10,
     imageUrl:
-      "https://i.pinimg.com/736x/08/5b/fd/085bfdba6639cb00bfdd67f58334ce19.jpg",
-    caption: "Tart pink berornamen emas beserta aneka manisan",
+      "https://i.pinimg.com/736x/41/5b/4b/415b4ba2541f92e624b4df9d2c20697e.jpg",
+    caption: "Souvenir lilin aromaterapi dalam kantong organza",
     aspectRatio: "1/1",
     sortOrder: 10,
   },
@@ -176,29 +223,29 @@ export const DEFAULT_GALLERY_PHOTOS = [
 export const DEFAULT_RSVP_WISHES = [
   {
     id: 1,
-    guestName: "Keluarga Besar Mempelai Wanita",
+    guestName: "Alumni SMA Negeri",
     attendanceStatus: "Hadir",
     paxCount: 2,
     message:
-      "Selamat menempuh hidup baru, Fauzan & Sinta! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.",
-    createdAt: new Date(Date.now() - 3 * 86400000),
+      "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fii khoir. Selamat berbahagia Fauzan dan Sinta!",
+    createdAt: "2026-10-25T08:00:00.000Z",
   },
   {
     id: 2,
-    guestName: "Sahabat Kecil Fauzan",
+    guestName: "Keluarga Besar H. Ridwan",
     attendanceStatus: "Hadir",
-    paxCount: 1,
+    paxCount: 4,
     message:
-      "Akhirnya ya, Bro! Barakallahu lakuma wa baraka alaikuma. Sampai jumpa di hari bahagia!",
-    createdAt: new Date(Date.now() - 2 * 86400000),
+      "Selamat menempuh bahtera rumah tangga yang sakinah mawaddah warahmah untuk ananda Fauzan dan ananda Sinta. Aamiin.",
+    createdAt: "2026-10-26T08:00:00.000Z",
   },
   {
     id: 3,
-    guestName: "Alumni SMA Negeri",
+    guestName: "Rekan Kerja Divisi IT",
     attendanceStatus: "Masih Ragu",
     paxCount: 1,
     message:
-      "Semoga lancar acaranya! Kami usahakan datang, doa terbaik untuk kalian berdua.",
-    createdAt: new Date(Date.now() - 86400000),
+      "Selamat bro Fauzan! Lancar sampai hari H ya, semoga menjadi keluarga yang bahagia selamanya.",
+    createdAt: "2026-10-27T08:00:00.000Z",
   },
 ];

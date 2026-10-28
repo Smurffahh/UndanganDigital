@@ -63,6 +63,7 @@ export function InvitationOrchestrator({
         guestName={guestName}
         onOpen={handleOpenCover}
         coverPhotoUrl={settings.coverPhotoUrl}
+        eventDateLabel={settings.eventDateLabel}
       />
 
       {/* 3. Hero & Countdown (02-hitung-mundur) */}
@@ -70,6 +71,7 @@ export function InvitationOrchestrator({
         weddingDateIso={settings.weddingDateIso}
         heroPhotoUrl={settings.heroPhotoUrl}
         isRevealed={isRevealed}
+        eventDateLabel={settings.eventDateLabel}
       />
 
       {/* 4. Couple Profiles (03-mempelai) */}
@@ -93,6 +95,8 @@ export function InvitationOrchestrator({
         venuePlusCode={settings.venuePlusCode}
         googleMapsUrl={settings.googleMapsUrl}
         googleMapsEmbed={settings.googleMapsEmbed}
+        weddingDateIso={settings.weddingDateIso}
+        eventDateLabel={settings.eventDateLabel}
       />
 
       {/* 6. Photo Gallery (05-galeri) */}
@@ -118,6 +122,10 @@ export function InvitationOrchestrator({
       {/* 10. Floating Controls (Glass Pill Dock & Vinyl Music Disc) */}
       <FloatingControls
         isOpened={isOpened}
+        musicEnabled={settings.musicEnabled}
+        musicTitle={settings.musicTitle}
+        musicSourceType={settings.musicSourceType}
+        musicUrl={settings.musicUrl}
         youtubeVideoId={settings.youtubeVideoId}
       />
     </main>

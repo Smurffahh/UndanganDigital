@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Users, Calendar, Image as ImageIcon, MessageSquare, Gift, Disc3 } from "lucide-react";
+import { Users, Calendar, Image as ImageIcon, MessageSquare, Gift, Disc3, Music2 } from "lucide-react";
 
 interface FloatingControlsProps {
   isOpened: boolean;
+  musicEnabled?: boolean;
+  musicTitle?: string;
+  musicSourceType?: string;
+  musicUrl?: string;
   youtubeVideoId?: string;
 }
 
@@ -16,18 +20,32 @@ declare global {
   }
 }
 
+const DEFAULT_AUDIO_URL =
+  "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3";
+
 export function FloatingControls({
   isOpened,
+  musicEnabled = true,
+  musicTitle = "Shane Filan - Beautiful In White (Romantic Instrumental)",
+  musicSourceType = "preset",
+  musicUrl,
   youtubeVideoId = "In8kDy_WU4s",
 }: FloatingControlsProps) {
   const [activeSection, setActiveSection] = useState<string>("beranda");
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playerReady, setPlayerReady] = useState(false);
+  const [showTitleBadge, setShowTitleBadge] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const playerRef = useRef<any>(null);
+  const ytPlayerRef = useRef<any>(null);
+  const wasPlayingBeforeHiddenRef = useRef(false);
 
-  // Initialize YouTube IFrame API
+  const isYouTube = musicSourceType === "youtube";
+  const effectiveAudioUrl = musicUrl || DEFAULT_AUDIO_URL;
+
+  // Initialize YouTube IFrame API if YouTube mode is chosen
   useEffect(() => {
+    if (!isYouTube || !musicEnabled) return;
+
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -37,7 +55,7 @@ export function FloatingControls({
 
     window.onYouTubeIframeAPIReady = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      playerRef.current = new (window.YT as any).Player("yt-audio-player", {
+      ytPlayerRef.current = new (window.YT as any).Player("yt-audio-player", {
         videoId: youtubeVideoId,
         playerVars: {
           autoplay: 0,
@@ -51,8 +69,7 @@ export function FloatingControls({
         },
         events: {
           onReady: () => {
-            setPlayerReady(true);
-            playerRef.current?.setVolume?.(80);
+            ytPlayerRef.current?.setVolume?.(80);
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onStateChange: (event: any) => {
@@ -67,23 +84,114 @@ export function FloatingControls({
     if (window.YT && window.YT.Player) {
       window.onYouTubeIframeAPIReady();
     }
-  }, [youtubeVideoId]);
+  }, [isYouTube, musicEnabled, youtubeVideoId]);
 
   // Autoplay music when cover is opened
   useEffect(() => {
-    if (isOpened && playerReady && playerRef.current) {
-      playerRef.current.playVideo?.();
-    }
-  }, [isOpened, playerReady]);
+    if (!isOpened || !musicEnabled) return;
 
-  const toggleMusic = () => {
-    if (!playerRef.current) return;
-    if (isPlaying) {
-      playerRef.current.pauseVideo?.();
+    if (!isYouTube) {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.volume = 0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+              setShowTitleBadge(true);
+              // Fade in volume from 0 to 0.7
+              let vol = 0;
+              const fadeInterval = setInterval(() => {
+                vol += 0.07;
+                if (vol >= 0.7) {
+                  audio.volume = 0.7;
+                  clearInterval(fadeInterval);
+                } else {
+                  audio.volume = vol;
+                }
+              }, 100);
+
+              // Auto-hide title badge after 6 seconds
+              setTimeout(() => {
+                setShowTitleBadge(false);
+              }, 6000);
+            })
+            .catch((err) => {
+              console.warn("Autoplay audio blocked or pending user gesture:", err);
+            });
+        }
+      }
     } else {
-      playerRef.current.playVideo?.();
+      if (ytPlayerRef.current?.playVideo) {
+        ytPlayerRef.current.playVideo();
+        setIsPlaying(true);
+        setShowTitleBadge(true);
+        setTimeout(() => setShowTitleBadge(false), 6000);
+      }
+    }
+  }, [isOpened, musicEnabled, isYouTube]);
+
+  // Toggle play / pause manually
+  const toggleMusic = () => {
+    if (!musicEnabled) return;
+
+    if (!isYouTube) {
+      const audio = audioRef.current;
+      if (!audio) return;
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        audio.play().then(() => {
+          setIsPlaying(true);
+          setShowTitleBadge(true);
+          setTimeout(() => setShowTitleBadge(false), 4000);
+        }).catch(console.error);
+      }
+    } else {
+      if (!ytPlayerRef.current) return;
+      if (isPlaying) {
+        ytPlayerRef.current.pauseVideo?.();
+        setIsPlaying(false);
+      } else {
+        ytPlayerRef.current.playVideo?.();
+        setIsPlaying(true);
+        setShowTitleBadge(true);
+        setTimeout(() => setShowTitleBadge(false), 4000);
+      }
     }
   };
+
+  // Visibility change auto-pause / auto-resume
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (isPlaying) {
+          if (!isYouTube && audioRef.current) {
+            audioRef.current.pause();
+          } else if (isYouTube && ytPlayerRef.current?.pauseVideo) {
+            ytPlayerRef.current.pauseVideo();
+          }
+          wasPlayingBeforeHiddenRef.current = true;
+          setIsPlaying(false);
+        }
+      } else {
+        if (wasPlayingBeforeHiddenRef.current) {
+          if (!isYouTube && audioRef.current) {
+            audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+          } else if (isYouTube && ytPlayerRef.current?.playVideo) {
+            ytPlayerRef.current.playVideo();
+            setIsPlaying(true);
+          }
+          wasPlayingBeforeHiddenRef.current = false;
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [isPlaying, isYouTube]);
 
   // IntersectionObserver for tracking active section
   useEffect(() => {
@@ -119,25 +227,54 @@ export function FloatingControls({
 
   return (
     <>
-      {/* Hidden YouTube IFrame */}
-      <div className="fixed -top-10 -left-10 w-2 h-2 opacity-0 pointer-events-none" aria-hidden="true">
-        <div id="yt-audio-player" />
-      </div>
-
-      {/* Floating Vinyl Music Disc Button */}
-      <button
-        type="button"
-        onClick={toggleMusic}
-        aria-label={isPlaying ? "Jeda musik latar" : "Putar musik latar"}
-        title={isPlaying ? "Jeda musik" : "Putar musik"}
-        className="fixed top-5 right-5 z-40 w-11 h-11 rounded-full bg-surface-white/85 border border-gold-500/50 shadow-[0_12px_26px_-10px_rgba(93,58,65,0.45)] backdrop-blur-md grid place-items-center transition-transform duration-200 active:scale-[0.96] hover:scale-105 cursor-pointer animate-in zoom-in-75 duration-300"
-      >
-        <Disc3
-          className={`w-6 h-6 stroke-[1.8] text-rose-700 ${
-            isPlaying ? "animate-spin-slow text-gold-600" : ""
-          }`}
+      {/* HTML5 Native Audio Player */}
+      {!isYouTube && musicEnabled && (
+        <audio
+          ref={audioRef}
+          src={effectiveAudioUrl}
+          loop
+          preload="auto"
+          aria-hidden="true"
+          className="hidden"
         />
-      </button>
+      )}
+
+      {/* Hidden YouTube IFrame */}
+      {isYouTube && musicEnabled && (
+        <div className="fixed -top-10 -left-10 w-2 h-2 opacity-0 pointer-events-none" aria-hidden="true">
+          <div id="yt-audio-player" />
+        </div>
+      )}
+
+      {/* Floating Vinyl Music Disc Button & Title Badge */}
+      {musicEnabled && (
+        <div className="fixed top-5 right-5 z-40 flex items-center gap-2">
+          {/* Animated Song Title Pill */}
+          {showTitleBadge && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 text-[11px] font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
+              <Music2 className="w-3.5 h-3.5 text-gold-600 animate-pulse" />
+              <span className="max-w-[200px] truncate">{musicTitle}</span>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={toggleMusic}
+            aria-label={isPlaying ? "Jeda musik latar" : "Putar musik latar"}
+            aria-pressed={isPlaying}
+            title={isPlaying ? `Jeda Musik (${musicTitle})` : "Putar Musik Latar"}
+            className="w-11 h-11 rounded-full bg-surface-white/90 border border-gold-500/50 shadow-[0_12px_26px_-10px_rgba(93,58,65,0.45)] backdrop-blur-md grid place-items-center transition-transform duration-200 active:scale-[0.96] hover:scale-105 cursor-pointer animate-in zoom-in-75 duration-300 focus-visible:outline-2 focus-visible:outline-rose-700"
+          >
+            <Disc3
+              className={`w-6 h-6 stroke-[1.8] text-rose-700 transition-colors ${
+                isPlaying
+                  ? "animate-[spin_8s_linear_infinite] text-gold-600 motion-reduce:animate-none"
+                  : "text-muted"
+              }`}
+            />
+          </button>
+        </div>
+      )}
 
       {/* Floating Glass Pill Dock Navigation */}
       <nav

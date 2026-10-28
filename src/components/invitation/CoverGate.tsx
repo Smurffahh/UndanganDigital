@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { RadiantStar } from "./Ornaments";
 import { Mail } from "lucide-react";
+import { formatCoverDate } from "@/lib/dateFormat";
 
 interface CoverGateProps {
   guestName: string;
   onOpen: () => void;
   coverPhotoUrl: string;
+  weddingDateIso?: string;
   eventDateLabel?: string;
 }
 
@@ -15,10 +17,12 @@ export function CoverGate({
   guestName,
   onOpen,
   coverPhotoUrl,
-  eventDateLabel = "Minggu · 03 · Januari · 2027",
+  weddingDateIso,
+  eventDateLabel,
 }: CoverGateProps) {
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
+  const formattedDate = formatCoverDate(weddingDateIso, eventDateLabel);
 
   const handleOpen = () => {
     setLeaving(true);
@@ -63,7 +67,7 @@ export function CoverGate({
         </h1>
 
         <p className="mt-3.5 text-xs tracking-[0.4em] uppercase text-white/90 font-medium">
-          {eventDateLabel}
+          {formattedDate}
         </p>
 
         {/* Guest Name Glass Card */}

@@ -32,14 +32,14 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "The Wedding of Fauzan & Sinta — Ahad, 10 Januari 2027",
+  title: "The Wedding of Fauzan & Sinta — Minggu, 3 Januari 2027",
   description:
-    "Undangan pernikahan digital Fauzan Pratama & Sinta Maharani — Ahad, 10 Januari 2027, Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru, Riau.",
+    "Undangan pernikahan digital Fauzan Pratama & Sinta Maharani — Minggu, 3 Januari 2027, Pekanbaru, Riau.",
   openGraph: {
     type: "website",
     title: "The Wedding of Fauzan & Sinta",
     description:
-      "Ahad, 10 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru, Riau. Merupakan kehormatan bagi kami apabila Anda berkenan hadir.",
+      "Minggu, 3 Januari 2027 — Pekanbaru, Riau. Merupakan kehormatan bagi kami apabila Anda berkenan hadir.",
     images: [
       {
         url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",

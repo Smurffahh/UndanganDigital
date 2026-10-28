@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { SongketRibbon } from "./Ornaments";
 import { toast } from "sonner";
 import { MessageSquare, Send, Search, Users, CheckCircle2, XCircle, HelpCircle, Loader2 } from "lucide-react";
+import { ScrollReveal } from "./ScrollReveal";
 
 interface WishItem {
   id: number;
@@ -118,24 +119,27 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
   return (
     <section id="rsvp" className="py-20 relative bg-gradient-to-b from-rose-100/0 via-rose-100/50 to-rose-100/0" aria-label="Konfirmasi Kehadiran dan Buku Tamu">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
-        <header className="text-center mb-9">
-          <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
-            RSVP &amp; Prayers
-          </p>
-          <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
-            Konfirmasi &amp; Ucapan
-          </h2>
-          <SongketRibbon />
-          <p className="text-xs sm:text-sm text-muted max-w-[400px] mx-auto mt-3">
-            Mohon konfirmasi kehadiran Anda dan tinggalkan doa terbaik untuk kedua mempelai.
-          </p>
-        </header>
+        <ScrollReveal variant="fade-up" delay={0}>
+          <header className="text-center mb-9">
+            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+              RSVP &amp; Prayers
+            </p>
+            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+              Konfirmasi &amp; Ucapan
+            </h2>
+            <SongketRibbon />
+            <p className="text-xs sm:text-sm text-muted max-w-[400px] mx-auto mt-3">
+              Mohon konfirmasi kehadiran Anda dan tinggalkan doa terbaik untuk kedua mempelai.
+            </p>
+          </header>
+        </ScrollReveal>
 
         {/* RSVP Form Card */}
-        <form
-          onSubmit={handleSubmit}
-          className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
-        >
+        <ScrollReveal variant="fade-up" delay={90}>
+          <form
+            onSubmit={handleSubmit}
+            className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
+          >
           {/* Field: Nama */}
           <div>
             <label htmlFor="f-nama" className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600 mb-1.5">
@@ -233,9 +237,11 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             )}
           </button>
         </form>
+        </ScrollReveal>
 
         {/* Section: Daftar Ucapan & Doa */}
-        <div className="mt-10">
+        <ScrollReveal variant="fade-up" delay={180}>
+          <div className="mt-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <h3 className="font-serif font-semibold text-xl text-rose-900 flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-gold-600" />
@@ -331,6 +337,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             )}
           </div>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );

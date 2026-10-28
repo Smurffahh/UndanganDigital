@@ -24,6 +24,7 @@ import { RsvpModerationModule } from "./RsvpModerationModule";
 import { MediaManagementModule } from "./MediaManagementModule";
 import { GuestManagementModule } from "./GuestManagementModule";
 import { WeddingSettingsModule } from "./WeddingSettingsModule";
+import { formatEventCardDate } from "@/lib/dateFormat";
 
 type AdminTab = "rsvp" | "media" | "guests" | "settings";
 
@@ -112,7 +113,7 @@ export function DashboardWorkspace({
           <div className="mt-4 px-3 py-1.5 rounded-lg bg-slate-100/70 dark:bg-black/30 border border-slate-200/60 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-gold-600" />
-              <span>10 Januari 2027</span>
+              <span>{formatEventCardDate(settings.weddingDateIso, settings.eventDateLabel)}</span>
             </span>
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>

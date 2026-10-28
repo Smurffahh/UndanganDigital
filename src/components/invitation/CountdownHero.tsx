@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider } from "./Ornaments";
+import { formatCoverDate } from "@/lib/dateFormat";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
@@ -49,22 +50,8 @@ export function CountdownHero({
     return () => clearInterval(timer);
   }, [weddingDateIso]);
 
-  // Format date label fallback to Bahasa Indonesia
-  const displayDate =
-    eventDateLabel ||
-    (() => {
-      try {
-        const d = new Date(weddingDateIso);
-        return new Intl.DateTimeFormat("id-ID", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }).format(d);
-      } catch {
-        return "Minggu, 3 Januari 2027";
-      }
-    })();
+  // Format date label fallback to Bahasa Indonesia dari Single Source of Truth
+  const displayDate = formatCoverDate(weddingDateIso, eventDateLabel);
 
   // Staggered Blur Reveal helper classes
   const getRevealClass = () => {

@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: oklch(97.8% 0.012 55);
+  --color-rose-100: oklch(93.5% 0.024 35);
+  --color-rose-300: oklch(80.5% 0.045 25);
+  --color-rose-500: oklch(65.2% 0.082 18);
+  --color-rose-700: oklch(53.1% 0.085 15);
+  --color-rose-900: oklch(38.2% 0.065 10);
+  --color-gold-300: oklch(86.8% 0.075 85);
+  --color-gold-500: oklch(71.5% 0.125 78);
+  --color-gold-600: oklch(59.8% 0.115 75);
+  --color-ink: oklch(35.5% 0.035 15);
+  --color-muted: oklch(56.8% 0.038 15);
+  --color-surface-white: oklch(99.2% 0.005 60);
+
+  --font-serif: var(--font-serif), "Cormorant Garamond", "Times New Roman", serif;
+  --font-script: var(--font-script), "Great Vibes", cursive;
+  --font-sans: var(--font-sans), "Plus Jakarta Sans", sans-serif;
+  --font-arabic: var(--font-arabic), "Amiri", serif;
+}
+
+:root {
+  --kawung-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23a9823a' stroke-width='1' opacity='0.10'%3E%3Cellipse cx='28' cy='13' rx='8' ry='12'/%3E%3Cellipse cx='28' cy='43' rx='8' ry='12'/%3E%3Cellipse cx='13' cy='28' rx='12' ry='8'/%3E%3Cellipse cx='43' cy='28' rx='12' ry='8'/%3E%3Ccircle cx='28' cy='28' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  --songket-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='14' viewBox='0 0 26 14'%3E%3Cpath d='M13 2 L21 7 L13 12 L5 7 Z' fill='none' stroke='%23c9a24b' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='7' r='1.1' fill='%23c9a24b'/%3E%3C/svg%3E");
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+  background-color: var(--color-cream);
+  background-image: var(--kawung-pattern);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mihrab Arch (Lengkung Kubah Islami) */
+.arch {
+  padding: 10px;
+  border: 1px solid rgba(201, 162, 75, 0.55);
+  border-radius: 999px 999px 22px 22px;
+  background: linear-gradient(180deg, rgba(233, 211, 163, 0.35), rgba(255, 255, 255, 0.9));
+  position: relative;
+}
+
+.arch::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(201, 162, 75, 0.4);
+  border-radius: 999px 999px 18px 18px;
+  pointer-events: none;
+}
+
+/* Emas Berkilau Gradient Text */
+.gold-grad-text {
+  background: linear-gradient(135deg, #a9823a 10%, #e9d3a3 45%, #c9a24b 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 250, 246, 0.14);
+  border: 1px solid rgba(233, 211, 163, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Pita Songket Minang */
+.songket {
+  height: 14px;
+  width: 148px;
+  margin: 14px auto 0;
+  background-image: var(--songket-pattern);
+  background-repeat: repeat-x;
+  background-position: center;
+  opacity: 0.9;
+}
+
+/* Sudut Siku Ornamen Kartu (26x26px) */
+.card-ornament {
+  position: relative;
+}
+.card-ornament::before,
+.card-ornament::after {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+}
+.card-ornament::before {
+  top: 9px;
+  left: 9px;
+  border-top: 1px solid var(--color-gold-500);
+  border-left: 1px solid var(--color-gold-500);
+}
+.card-ornament::after {
+  bottom: 9px;
+  right: 9px;
+  border-bottom: 1px solid var(--color-gold-500);
+  border-right: 1px solid var(--color-gold-500);
+}
+
+/* Keyframes */
+@keyframes slowZoom {
+  from { transform: scale(1.06); }
+  to { transform: scale(1.16); }
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+.animate-slow-zoom {
+  animation: slowZoom 22s ease-in-out infinite alternate;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

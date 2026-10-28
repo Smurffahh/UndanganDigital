@@ -1,19 +1,45 @@
 import { cookies } from "next/headers";
+import crypto from "crypto";
+import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from "./auth-constants";
+
+export { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN };
 
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "fauzan-sinta-2027";
-export const SESSION_COOKIE_NAME = "wedding_admin_session";
-export const SESSION_SECRET_TOKEN =
-  process.env.SESSION_SECRET || "session_token_fauzan_sinta_luxury_2027";
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+
+function safeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    if (bufA.length !== bufB.length) return false;
+    return crypto.timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
 
 export function checkCredentials(user: string, pass: string): boolean {
   const trimmedUser = user.trim();
   const trimmedPass = pass.trim();
+
+  if (trimmedUser !== ADMIN_USERNAME) {
+    return false;
+  }
+
+  // 1. Verify against SHA-256 hash if configured (OWASP Best Practice)
+  if (ADMIN_PASSWORD_HASH) {
+    const passHash = crypto.createHash("sha256").update(trimmedPass).digest("hex");
+    if (safeCompare(passHash, ADMIN_PASSWORD_HASH)) {
+      return true;
+    }
+  }
+
+  // 2. Direct password comparisons
   return (
-    trimmedUser === ADMIN_USERNAME &&
-    (trimmedPass === ADMIN_PASSWORD ||
-      trimmedPass === "fauzan-sinta-2027" ||
-      trimmedPass === "dian-iqbal-2027")
+    trimmedPass === ADMIN_PASSWORD ||
+    trimmedPass === "fauzan-sinta-2027" ||
+    trimmedPass === "dian-iqbal-2027"
   );
 }
 

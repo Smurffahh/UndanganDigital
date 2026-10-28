@@ -2,7 +2,7 @@ import crypto from "crypto";
 
 // 32-byte key derived from secret
 const ENCRYPTION_SECRET =
-  process.env.ENCRYPTION_KEY || "wedding-encryption-secret-key-32b-fauzan-sinta";
+  process.env.ENCRYPTION_KEY || "fauzan-sinta-wedding-secure-encryption-key-2027-secret";
 const BLIND_INDEX_SECRET =
   process.env.BLIND_INDEX_SECRET || "wedding-blind-index-salt-secret-fauzan-sinta";
 
@@ -102,7 +102,8 @@ export function createBlindIndex(val: string | null | undefined): string {
 }
 
 /**
- * Normalize phone number and generate blind index
+ * Normalize phone number and generate blind index (HMAC-SHA256).
+ * Supports numbers starting with 08, 8, +628, or 628.
  */
 export function createPhoneBlindIndex(phone: string | null | undefined): string {
   if (!phone) return "";
@@ -117,4 +118,69 @@ export function createPhoneBlindIndex(phone: string | null | undefined): string 
     .createHmac("sha256", BLIND_INDEX_SECRET)
     .update(digits)
     .digest("hex");
+}
+
+// -------------------------------------------------------------
+// Transparent Query Wrappers (Drizzle ORM & Local Store)
+// -------------------------------------------------------------
+
+export interface PlainGuestInput {
+  name: string;
+  whatsappNumber?: string | null;
+  category?: string | null;
+  waSentStatus?: boolean;
+  waSentAt?: Date | string | null;
+}
+
+export function encryptGuestRecord(input: PlainGuestInput) {
+  const cleanName = input.name.trim();
+  const slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
+  const cleanPhone = input.whatsappNumber?.trim() || null;
+  const category = input.category?.trim() || "Reguler";
+
+  return {
+    name: encryptField(cleanName),
+    slugQuery,
+    whatsappNumber: cleanPhone ? encryptField(cleanPhone) : null,
+    category: encryptField(category),
+    nameBindex: createBlindIndex(cleanName),
+    waBindex: cleanPhone ? createPhoneBlindIndex(cleanPhone) : null,
+    waSentStatus: input.waSentStatus ?? false,
+    waSentAt: input.waSentAt ? new Date(input.waSentAt) : null,
+  };
+}
+
+export function decryptGuestRecord<T extends { name: string; whatsappNumber?: string | null; category?: string | null }>(row: T): T {
+  return {
+    ...row,
+    name: decryptField(row.name),
+    whatsappNumber: row.whatsappNumber ? decryptField(row.whatsappNumber) : null,
+    category: row.category ? decryptField(row.category) : "Reguler",
+  };
+}
+
+export interface PlainWishInput {
+  guestName: string;
+  attendanceStatus: string;
+  paxCount: number;
+  message: string;
+  isApproved?: boolean;
+}
+
+export function encryptWishRecord(input: PlainWishInput) {
+  return {
+    guestName: encryptField(input.guestName.trim()),
+    attendanceStatus: input.attendanceStatus,
+    paxCount: input.paxCount,
+    message: encryptField(input.message.trim()),
+    isApproved: input.isApproved ?? true,
+  };
+}
+
+export function decryptWishRecord<T extends { guestName: string; message: string }>(row: T): T {
+  return {
+    ...row,
+    guestName: decryptField(row.guestName),
+    message: decryptField(row.message),
+  };
 }

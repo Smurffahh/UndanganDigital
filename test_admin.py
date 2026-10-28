@@ -75,7 +75,7 @@ def run_admin_tests():
         # ==========================================
         # 5. Test Modul C: Tamu Undangan & WhatsApp Dispatcher
         # ==========================================
-        print("\n=== [5] Testing Modul C: Guest Management & WhatsApp ===")
+        print("\n=== [5] Testing Modul C: Guest Management, Templates & WhatsApp ===")
         page.click("button:has-text('Tamu & WhatsApp')")
         page.wait_for_timeout(600)
 
@@ -84,19 +84,47 @@ def run_admin_tests():
         assert page.locator("text=Keamanan Distribusi Undangan WhatsApp").count() > 0, "Security tip banner must exist"
         print("[OK] WhatsApp security anti-blocking banner verified")
 
-        # Test adding a new guest
+        # Verify Official Template Download Buttons
+        btn_download_xlsx = page.locator("button:has-text('Unduh Template Excel (.xlsx)')")
+        assert btn_download_xlsx.count() > 0, "Excel template download button must exist"
+        assert btn_download_xlsx.get_attribute("aria-label") == "Unduh Template Excel resmi .xlsx"
+
+        btn_download_csv = page.locator("button:has-text('Unduh Contoh CSV (.csv)')")
+        assert btn_download_csv.count() > 0, "CSV template download button must exist"
+        assert btn_download_csv.get_attribute("aria-label") == "Unduh Contoh CSV resmi .csv"
+        print("[OK] Both official template download buttons confirmed with accessible labels")
+
+        # Test clicking template download buttons
+        with page.expect_download(timeout=5000):
+            btn_download_xlsx.click()
+        print("[OK] Successfully triggered Excel template (.xlsx) download")
+
+        with page.expect_download(timeout=5000):
+            btn_download_csv.click()
+        print("[OK] Successfully triggered CSV template (.csv) download")
+
+        # Verify WhatsApp Number Formatting Guide Card
+        assert page.locator("text=Panduan Format Berkas & Pengisian Nomor WhatsApp").count() > 0, "Guide card header must exist"
+        assert page.locator("text=Struktur 3 Kolom Utama").count() > 0, "3 Columns rule must exist"
+        assert page.locator("text=Perbandingan Format Nomor WhatsApp").count() > 0, "Phone format comparison must exist"
+        assert page.locator("text=Format Diterima (✓ Valid)").count() > 0, "Valid format box must exist"
+        assert page.locator("text=Format Ditolak (✕ Tidak Valid)").count() > 0, "Invalid format box must exist"
+        assert page.locator("text=Tips Microsoft Excel").count() > 0, "Excel tips must exist"
+        print("[OK] WhatsApp number formatting guide verified with rules, comparison boxes, and Excel tips")
+
+        # Test adding a guest with Excel-trimmed phone number (e.g. 85712345678 without leading 0)
         test_guest_name = "Bpk. Ir. Bambang Soediro"
-        test_guest_phone = "081298765432"
+        test_guest_phone_excel = "85712345678" # stripped leading 0
 
         page.fill("input[placeholder*='Ahmad Fauzi']", test_guest_name)
-        page.fill("input[placeholder*='081234567890']", test_guest_phone)
+        page.fill("input[placeholder*='081234567890']", test_guest_phone_excel)
         page.click("button:has-text('Simpan ke Daftar')")
         page.wait_for_timeout(1000)
 
-        # Verify guest is listed with normalized phone
+        # Verify guest is listed with normalized 628... phone
         assert page.locator(f"text={test_guest_name}").count() > 0, f"Guest '{test_guest_name}' should appear in list"
-        assert page.locator("text=+6281298765432").count() > 0, "Guest phone should be formatted to +6281298765432"
-        print(f"[OK] Successfully added guest: {test_guest_name} with phone +6281298765432")
+        assert page.locator("text=+6285712345678").count() > 0, "Excel stripped number 857... must be auto-normalized to +6285712345678"
+        print(f"[OK] Successfully added guest: {test_guest_name} with auto-normalized phone +6285712345678")
 
         # Verify WhatsApp Dispatch button exists
         kirim_wa_btn = page.locator("button:has-text('Kirim WA')").first

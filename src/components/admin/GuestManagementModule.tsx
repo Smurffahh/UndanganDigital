@@ -22,6 +22,13 @@ import {
   History,
   X,
   ListFilter,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  XCircle,
+  Lightbulb,
+  Upload,
 } from "lucide-react";
 import type { GuestData, WeddingSettingsData } from "@/lib/db/store";
 import {
@@ -29,6 +36,10 @@ import {
   type GuestValidationResult,
   normalizePhoneNumber,
 } from "@/lib/guestValidator";
+import {
+  downloadExcelTemplate,
+  downloadCsvTemplate,
+} from "@/lib/guestTemplate";
 
 interface GuestManagementModuleProps {
   guests: GuestData[];
@@ -45,6 +56,9 @@ export function GuestManagementModule({
 }: GuestManagementModuleProps) {
   // Main view tab: "list" (Semua/Antrean) vs "history" (Riwayat Terkirim)
   const [activeViewTab, setActiveViewTab] = useState<"list" | "history">("list");
+
+  // Format Guide Collapsible State
+  const [isGuideOpen, setIsGuideOpen] = useState(true);
 
   // Template state
   const [template, setTemplate] = useState(settings.waMessageTemplate);
@@ -311,7 +325,7 @@ export function GuestManagementModule({
         const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
 
         if (!rawRows || rawRows.length === 0) {
-          toast.error("File Excel kosong atau tidak terbaca.");
+          toast.error("File Excel / CSV kosong atau tidak terbaca.");
           return;
         }
 
@@ -321,7 +335,7 @@ export function GuestManagementModule({
         setStagingActiveTab(result.validGuests.length > 0 ? "valid" : "invalid");
         setIsStagingModalOpen(true);
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Gagal memproses file Excel";
+        const msg = err instanceof Error ? err.message : "Gagal memproses berkas Excel / CSV";
         toast.error(msg);
       }
     };
@@ -372,20 +386,6 @@ export function GuestManagementModule({
     } finally {
       setIsImportingValid(false);
     }
-  };
-
-  // Download official Excel Template
-  const handleDownloadTemplate = () => {
-    const sampleData = [
-      { "Nama Tamu": "Bpk. H. Ahmad Fauzi & Keluarga", "Nomor WA": "081234567890", "Kategori": "Keluarga" },
-      { "Nama Tamu": "Ibu Siti Nurhaliza & Suami", "Nomor WA": "081987654321", "Kategori": "VIP" },
-      { "Nama Tamu": "Rizky Ramadhan", "Nomor WA": "085678901234", "Kategori": "Sahabat" },
-    ];
-    const ws = XLSX.utils.json_to_sheet(sampleData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Daftar Tamu");
-    XLSX.writeFile(wb, "template-tamu-undangan-fauzan-sinta.xlsx");
-    toast.success("Template Excel resmi berhasil diunduh!");
   };
 
   // Filtered guests in list view
@@ -557,36 +557,52 @@ export function GuestManagementModule({
       {/* ============================================================ */}
       {/* 2. Form Tambah Tamu & Bulk Import Excel dengan Pre-Insert Validation */}
       {/* ============================================================ */}
-      <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+      <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm space-y-6">
+        {/* Section Header & Official Template Download Buttons */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gold-500/20">
           <div>
             <h2 className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-gold-600" />
-              Tambah Tamu &amp; Impor Excel / CSV
+              <span>Kelola Kontak Tamu &amp; Impor Berkas</span>
             </h2>
             <p className="text-xs text-muted mt-0.5">
-              Tambah kontak perorangan atau unggah ratusan nama dengan validasi ketat sebelum disimpan.
+              Tambah kontak perorangan atau gunakan berkas spreadsheet resmi dengan validasi pra-simpan.
             </p>
           </div>
 
-          {/* Excel Actions */}
-          <div className="flex items-center gap-2">
+          {/* Official Template Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Download Excel Template */}
             <button
               type="button"
-              onClick={handleDownloadTemplate}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer"
+              onClick={downloadExcelTemplate}
+              aria-label="Unduh Template Excel resmi .xlsx"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-emerald-600/40 bg-emerald-50/80 text-emerald-900 text-xs font-semibold hover:bg-emerald-100/90 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Template Excel</span>
+              <FileSpreadsheet className="w-4 h-4 text-emerald-700 shrink-0" />
+              <span>Unduh Template Excel (.xlsx)</span>
             </button>
 
+            {/* Download CSV Template */}
+            <button
+              type="button"
+              onClick={downloadCsvTemplate}
+              aria-label="Unduh Contoh CSV resmi .csv"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold-500/40 bg-cream/70 text-rose-950 text-xs font-semibold hover:bg-rose-100/80 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
+            >
+              <Download className="w-4 h-4 text-gold-600 shrink-0" />
+              <span>Unduh Contoh CSV (.csv)</span>
+            </button>
+
+            {/* Upload Excel / CSV Button */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-700 text-white text-xs font-semibold hover:bg-emerald-800 cursor-pointer shadow-xs"
+              aria-label="Unggah berkas Excel atau CSV untuk diimpor"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-700 to-rose-900 text-white text-xs font-bold tracking-wider hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-xs"
             >
-              <FileSpreadsheet className="w-4 h-4" />
-              <span>Import Excel / CSV</span>
+              <Upload className="w-4 h-4" />
+              <span>Unggah Berkas (Excel / CSV)</span>
             </button>
             <input
               ref={fileInputRef}
@@ -598,71 +614,243 @@ export function GuestManagementModule({
           </div>
         </div>
 
-        {/* Input Form Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-2xl bg-cream/50 border border-gold-500/20">
-          <div className="sm:col-span-5">
-            <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
-              Nama Tamu / Gelar:
-            </label>
-            <input
-              type="text"
-              placeholder="Contoh: Bpk. H. Ahmad Fauzi &amp; Keluarga"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
-            />
-          </div>
+        {/* ============================================================ */}
+        {/* PANEL PANDUAN PENGISIAN NOMOR WHATSAPP & FORMAT FILE */}
+        {/* ============================================================ */}
+        <div className="rounded-2xl border border-gold-500/30 bg-gradient-to-b from-[#fbf8f5] to-cream/40 overflow-hidden shadow-2xs">
+          {/* Collapsible Header */}
+          <button
+            type="button"
+            onClick={() => setIsGuideOpen((prev) => !prev)}
+            aria-expanded={isGuideOpen}
+            className="w-full p-3.5 sm:p-4 flex items-center justify-between gap-3 text-left hover:bg-rose-50/50 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-gold-500/20 text-gold-700 grid place-items-center shrink-0">
+                <HelpCircle className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-xs sm:text-sm text-rose-950 flex items-center gap-2">
+                  <span>Panduan Format Berkas &amp; Pengisian Nomor WhatsApp</span>
+                  <span className="px-2 py-0.5 rounded-full bg-gold-500/20 text-[10px] font-bold text-gold-800 uppercase tracking-wider">
+                    Anti-Gagal
+                  </span>
+                </h3>
+                <p className="text-[11px] text-muted">
+                  Pelajari aturan 3 kolom, format nomor yang diterima, dan solusi angka 0 terpotong di Excel.
+                </p>
+              </div>
+            </div>
 
-          <div className="sm:col-span-4">
-            <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
-              Nomor WhatsApp:
-            </label>
-            <input
-              type="text"
-              inputMode="numeric"
-              placeholder="081234567890 (atau 628...)"
-              value={newPhone}
-              onChange={(e) => setNewPhone(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink tabular-nums focus:outline-none focus:border-rose-500"
-            />
-          </div>
+            <div className="p-1 rounded-md text-muted hover:text-rose-900 transition-colors">
+              {isGuideOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </button>
 
-          <div className="sm:col-span-3">
-            <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
-              Kategori:
-            </label>
-            <select
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
-            >
-              <option value="Keluarga">Keluarga</option>
-              <option value="VIP">VIP</option>
-              <option value="Sahabat">Sahabat</option>
-              <option value="Teman Kantor">Teman Kantor</option>
-              <option value="Tetangga">Tetangga</option>
-              <option value="Reguler">Reguler</option>
-            </select>
-          </div>
+          {/* Collapsible Body */}
+          {isGuideOpen && (
+            <div className="p-4 sm:p-5 pt-1 space-y-4 border-t border-gold-500/20 text-xs text-ink">
+              {/* Aturan 1: Struktur 3 Kolom */}
+              <div>
+                <div className="font-semibold text-rose-900 mb-1 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold grid place-items-center">
+                    1
+                  </span>
+                  <span>Struktur 3 Kolom Utama (Wajib Sesuai Baris Header):</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 mt-2">
+                  <div className="p-3 rounded-xl bg-white border border-gold-500/25 shadow-2xs">
+                    <span className="font-mono font-bold text-[11px] text-rose-800 block mb-0.5">
+                      Nama_Tamu <span className="text-rose-600 font-sans text-[10px]">(Wajib)</span>
+                    </span>
+                    <p className="text-[11px] text-muted leading-relaxed">
+                      Nama lengkap atau instansi tamu, minimal 2 karakter. Contoh: <em>Bpk. H. Budi Santoso &amp; Keluarga</em>
+                    </p>
+                  </div>
 
-          <div className="sm:col-span-12 flex flex-wrap gap-2 justify-end pt-2">
-            <button
-              type="button"
-              onClick={() => handleCreateGuest(false)}
-              disabled={isSavingGuest}
-              className="px-5 py-2 rounded-full border border-gold-600/50 text-gold-600 bg-surface-white text-xs font-semibold hover:bg-rose-100 cursor-pointer disabled:opacity-50"
-            >
-              + Simpan ke Daftar
-            </button>
-            <button
-              type="button"
-              onClick={() => handleCreateGuest(true)}
-              disabled={isSavingGuest || !newPhone}
-              className="px-5 py-2 rounded-full bg-emerald-700 text-white text-xs font-bold tracking-wider hover:bg-emerald-800 cursor-pointer disabled:opacity-50 shadow-xs flex items-center gap-1.5"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>Simpan &amp; Langsung Kirim WA</span>
-            </button>
+                  <div className="p-3 rounded-xl bg-white border border-gold-500/25 shadow-2xs">
+                    <span className="font-mono font-bold text-[11px] text-rose-800 block mb-0.5">
+                      Nomor_WhatsApp <span className="text-rose-600 font-sans text-[10px]">(Wajib)</span>
+                    </span>
+                    <p className="text-[11px] text-muted leading-relaxed">
+                      Nomor WhatsApp aktif penerima undangan (10–15 digit angka). Boleh diawali <code>08...</code>, <code>628...</code>, atau <code>+628...</code>
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white border border-gold-500/25 shadow-2xs">
+                    <span className="font-mono font-bold text-[11px] text-rose-800 block mb-0.5">
+                      Kategori <span className="text-muted font-sans text-[10px]">(Opsional)</span>
+                    </span>
+                    <p className="text-[11px] text-muted leading-relaxed">
+                      Kelompok relasi (misal: <em>Keluarga Fauzan</em>, <em>Keluarga Sinta</em>, <em>VIP</em>, <em>Sahabat</em>). Default: <em>Reguler</em>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Aturan 2: Format Nomor WhatsApp Benar vs Salah */}
+              <div>
+                <div className="font-semibold text-rose-900 mb-1 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold grid place-items-center">
+                    2
+                  </span>
+                  <span>Perbandingan Format Nomor WhatsApp:</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                  {/* Valid Format Column */}
+                  <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-300 shadow-2xs space-y-2">
+                    <div className="flex items-center gap-1.5 font-semibold text-emerald-900 text-xs">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Format Diterima (✓ Valid)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-[11px] text-emerald-950 font-mono">
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-emerald-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">081234567890</strong> — Format nasional umum
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-emerald-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">6281234567890</strong> — Format internasional resmi
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-emerald-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">+62 812-3456-7890</strong> — Spasi &amp; strip dibersihkan otomatis
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-emerald-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">81234567890</strong> — Angka 0 terpotong Excel otomatis dilengkapi ke 628...
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Invalid Format Column */}
+                  <div className="p-3.5 rounded-xl bg-rose-50/70 border border-rose-300 shadow-2xs space-y-2">
+                    <div className="flex items-center gap-1.5 font-semibold text-rose-900 text-xs">
+                      <XCircle className="w-4 h-4 text-rose-700 shrink-0" />
+                      <span>Format Ditolak (✕ Tidak Valid)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-[11px] text-rose-950 font-mono">
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-rose-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">081234</strong> — Terlalu pendek (minimal 10 digit)
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-rose-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">0812345678901234</strong> — Terlalu panjang (&gt; 15 digit)
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-rose-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">0812-budi-ok</strong> — Mengandung huruf / karakter palsu
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-1.5">
+                        <span className="text-rose-700 font-bold shrink-0">•</span>
+                        <span>
+                          <strong className="tabular-nums">021-7654321</strong> — Nomor rumah (PSTN) bukan WhatsApp
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Aturan 3: Tips Excel */}
+              <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-300/80 flex items-start gap-2.5">
+                <Lightbulb className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="text-[11px] text-amber-950 leading-relaxed">
+                  <strong>Tips Microsoft Excel:</strong> Gunakan tombol <strong>Unduh Template Excel (.xlsx)</strong> di atas karena seluruh kolom nomor telepon sudah kami kunci format <em>Teks (@)</em>. Jika Anda mengetik di lembar Excel baru, awali nomor telepon dengan tanda petik tunggal (contoh: <code>&apos;081234567890</code>) agar Excel tidak otomatis menghapus angka nol di depan.
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Input Form Row (Tambah Manual 1 Tamu) */}
+        <div>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-gold-600 mb-2.5 flex items-center gap-1.5">
+            <span>Atau Tambahkan Tamu Manual:</span>
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-2xl bg-cream/50 border border-gold-500/20">
+            <div className="sm:col-span-5">
+              <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
+                Nama Tamu / Gelar:
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: Bpk. H. Ahmad Fauzi &amp; Keluarga"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+              />
+            </div>
+
+            <div className="sm:col-span-4">
+              <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
+                Nomor WhatsApp:
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="081234567890 (atau 628...)"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink tabular-nums focus:outline-none focus:border-rose-500"
+              />
+            </div>
+
+            <div className="sm:col-span-3">
+              <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
+                Kategori:
+              </label>
+              <select
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-xs sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+              >
+                <option value="Keluarga Fauzan">Keluarga Fauzan</option>
+                <option value="Keluarga Sinta">Keluarga Sinta</option>
+                <option value="VIP">VIP</option>
+                <option value="Sahabat">Sahabat</option>
+                <option value="Teman Kantor">Teman Kantor</option>
+                <option value="Tetangga">Tetangga</option>
+                <option value="Reguler">Reguler</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-12 flex flex-wrap gap-2 justify-end pt-2">
+              <button
+                type="button"
+                onClick={() => handleCreateGuest(false)}
+                disabled={isSavingGuest}
+                className="px-5 py-2 rounded-full border border-gold-600/50 text-gold-600 bg-surface-white text-xs font-semibold hover:bg-rose-100 cursor-pointer disabled:opacity-50"
+              >
+                + Simpan ke Daftar
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCreateGuest(true)}
+                disabled={isSavingGuest || !newPhone}
+                className="px-5 py-2 rounded-full bg-emerald-700 text-white text-xs font-bold tracking-wider hover:bg-emerald-800 cursor-pointer disabled:opacity-50 shadow-xs flex items-center gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Simpan &amp; Langsung Kirim WA</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>

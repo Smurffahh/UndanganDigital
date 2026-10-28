@@ -140,6 +140,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     coverPhotoUrl: row.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
     heroPhotoUrl: row.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
     weddingDateIso: row.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+    eventDateLabel: row.eventDateLabel || DEFAULT_WEDDING_SETTINGS.eventDateLabel,
     akadTime: row.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
     resepsiTime: row.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
     venueName: row.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
@@ -147,7 +148,13 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     venuePlusCode: row.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
     googleMapsUrl: row.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
     googleMapsEmbed: row.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
+    mapsLatitude: row.mapsLatitude || DEFAULT_WEDDING_SETTINGS.mapsLatitude,
+    mapsLongitude: row.mapsLongitude || DEFAULT_WEDDING_SETTINGS.mapsLongitude,
     youtubeVideoId: row.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
+    musicEnabled: row.musicEnabled !== undefined ? Boolean(row.musicEnabled) : DEFAULT_WEDDING_SETTINGS.musicEnabled,
+    musicTitle: row.musicTitle || DEFAULT_WEDDING_SETTINGS.musicTitle,
+    musicSourceType: row.musicSourceType || DEFAULT_WEDDING_SETTINGS.musicSourceType,
+    musicUrl: row.musicUrl || DEFAULT_WEDDING_SETTINGS.musicUrl,
     bankAccounts,
     ewallets,
     giftAddress,
@@ -172,6 +179,28 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
     }
     if (data.settings.giftAddress && typeof data.settings.giftAddress !== "string") {
       data.settings.giftAddress = encryptField(JSON.stringify(data.settings.giftAddress));
+      modified = true;
+    }
+    // Update wedding date to Jan 3, 2027 if still on Jan 10
+    if (data.settings.weddingDateIso === "2027-01-10T08:00:00+07:00") {
+      data.settings.weddingDateIso = "2027-01-03T08:00:00+07:00";
+      data.settings.eventDateLabel = "Minggu · 03 · Januari · 2027";
+      modified = true;
+    }
+    // Update new Google Maps URL & coordinates
+    if (!data.settings.googleMapsUrl || data.settings.googleMapsUrl.includes("Kedai+Harian+Bang+Zali")) {
+      data.settings.googleMapsUrl = "https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8";
+      data.settings.mapsLatitude = "-7.310076";
+      data.settings.mapsLongitude = "109.296186";
+      data.settings.googleMapsEmbed = "https://maps.google.com/maps?q=-7.310076,109.296186&z=17&output=embed";
+      modified = true;
+    }
+    // Populate music settings if missing
+    if (data.settings.musicEnabled === undefined) {
+      data.settings.musicEnabled = true;
+      data.settings.musicTitle = "Shane Filan - Beautiful In White (Romantic Instrumental)";
+      data.settings.musicSourceType = "preset";
+      data.settings.musicUrl = "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3";
       modified = true;
     }
   }

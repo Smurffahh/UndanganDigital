@@ -151,12 +151,15 @@ def run_admin_tests():
         page.click("button:has-text('Pengaturan Acara')")
         page.wait_for_timeout(600)
 
+        assert page.locator("text=Waktu Acara & Target Hitung Mundur (Countdown)").count() > 0, "Countdown settings section must exist"
+        assert page.locator("text=Pratinjau Countdown Waktu Nyata").count() > 0, "Live Countdown preview must exist"
+        assert page.locator("text=Musik Latar Belakang & Pemutar Romantis").count() > 0, "Music settings section must exist"
+        assert page.locator("text=Lokasi Acara & Integrasi Google Maps").count() > 0, "Maps settings section must exist"
+        assert page.locator("button:has-text('Ambil Koordinat Otomatis')").count() > 0, "Auto resolve maps button must exist"
         assert page.locator("text=Profil Kedua Mempelai").count() > 0, "Couple profile section must exist"
-        assert page.locator("text=Waktu & Jadwal Acara").count() > 0, "Schedule section must exist"
-        assert page.locator("text=Lokasi & Navigasi Peta").count() > 0, "Venue section must exist"
         assert page.locator("text=Rekening Amplop Digital").count() > 0, "Bank accounts section must exist"
         page.screenshot(path="test-results/admin_05_settings_module.png")
-        print("[OK] Modul D (Wedding Settings & Bank Accounts) verified")
+        print("[OK] Modul D (Wedding Settings, Countdown, Music & Maps) verified")
 
         # ==========================================
         # 7. Test Public Invitation Sync with New Guest

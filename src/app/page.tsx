@@ -42,6 +42,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     coverPhotoUrl: rawSettings.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
     heroPhotoUrl: rawSettings.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
     weddingDateIso: rawSettings.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+    eventDateLabel: rawSettings.eventDateLabel || DEFAULT_WEDDING_SETTINGS.eventDateLabel,
     akadTime: rawSettings.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
     resepsiTime: rawSettings.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
     venueName: rawSettings.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
@@ -49,7 +50,13 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     venuePlusCode: rawSettings.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
     googleMapsUrl: rawSettings.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
     googleMapsEmbed: rawSettings.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
+    mapsLatitude: rawSettings.mapsLatitude || DEFAULT_WEDDING_SETTINGS.mapsLatitude,
+    mapsLongitude: rawSettings.mapsLongitude || DEFAULT_WEDDING_SETTINGS.mapsLongitude,
     youtubeVideoId: rawSettings.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
+    musicEnabled: rawSettings.musicEnabled !== undefined ? rawSettings.musicEnabled : DEFAULT_WEDDING_SETTINGS.musicEnabled,
+    musicTitle: rawSettings.musicTitle || DEFAULT_WEDDING_SETTINGS.musicTitle,
+    musicSourceType: rawSettings.musicSourceType || DEFAULT_WEDDING_SETTINGS.musicSourceType,
+    musicUrl: rawSettings.musicUrl || DEFAULT_WEDDING_SETTINGS.musicUrl,
     bankAccounts:
       (rawSettings?.bankAccounts as typeof DEFAULT_WEDDING_SETTINGS.bankAccounts) ||
       DEFAULT_WEDDING_SETTINGS.bankAccounts,

@@ -45,6 +45,27 @@ def run_tests():
         assert bismillah.count() > 0, "Bismillah should be present"
         print("[OK] Bismillah and QS Ar-Rum confirmed")
 
+        # Verify Countdown Date Label & NumberFlow units
+        date_label = page.locator("text=Minggu · 03 · Januari · 2027")
+        assert date_label.count() > 0, "Event date label 'Minggu · 03 · Januari · 2027' must be present"
+        print("[OK] Countdown date label 'Minggu · 03 · Januari · 2027' verified")
+
+        countdown_units = page.locator("#beranda").locator("text=Hari")
+        assert countdown_units.count() > 0, "Countdown unit 'Hari' should be rendered"
+        print("[OK] Live Countdown timer units confirmed")
+
+        # Verify Floating Music Player button
+        music_btn = page.locator("button[aria-label*='musik']")
+        assert music_btn.count() > 0, "Floating music button must exist"
+        print("[OK] Floating music player button verified")
+
+        # Verify Event Details and Google Maps Link
+        page.locator("#acara").scroll_into_view_if_needed()
+        time.sleep(0.5)
+        maps_link = page.locator("a[href*='maps.app.goo.gl/HFXpTdshy7Vhwoxs8']")
+        assert maps_link.count() > 0, "Google Maps link to 'https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8' must exist"
+        print("[OK] Google Maps button verified with updated location URL")
+
         # Verify Lightbox Galeri
         gallery_items = page.locator("#galeri figure")
         print(f"[OK] Found {gallery_items.count()} gallery items")

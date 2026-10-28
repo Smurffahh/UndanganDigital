@@ -8,9 +8,15 @@ interface CoverGateProps {
   guestName: string;
   onOpen: () => void;
   coverPhotoUrl: string;
+  eventDateLabel?: string;
 }
 
-export function CoverGate({ guestName, onOpen, coverPhotoUrl }: CoverGateProps) {
+export function CoverGate({
+  guestName,
+  onOpen,
+  coverPhotoUrl,
+  eventDateLabel = "Minggu · 03 · Januari · 2027",
+}: CoverGateProps) {
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
@@ -56,8 +62,8 @@ export function CoverGate({ guestName, onOpen, coverPhotoUrl }: CoverGateProps) 
           Fauzan <span className="font-script text-gold-300 text-[0.85em] px-1">&amp;</span> Sinta
         </h1>
 
-        <p className="mt-3.5 text-xs tracking-[0.4em] uppercase text-white/90">
-          Ahad &middot; 10 &middot; Januari &middot; 2027
+        <p className="mt-3.5 text-xs tracking-[0.4em] uppercase text-white/90 font-medium">
+          {eventDateLabel}
         </p>
 
         {/* Guest Name Glass Card */}

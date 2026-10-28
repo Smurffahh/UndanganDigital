@@ -2,7 +2,7 @@
 
 # 💍 The Wedding of Fauzan & Sinta
 ### Platform Undangan Pernikahan Digital Interaktif & Dashboard Mempelai
-**Ahad, 10 Januari 2027 • Pekanbaru, Riau**
+**Minggu, 3 Januari 2027 • Pekanbaru, Riau**
 
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -48,12 +48,12 @@
    - Saat tombol *"Buka Undangan"* ditekan, sampul terangkat anggun (`cubic-bezier(0.65, 0, 0.35, 1)`) disertai efek *staggered blur reveal* pada elemen hero pembuka.
 2. **Hitung Mundur Islami (`02-hitung-mundur`):**
    - Kaligrafi Arab Bismillah & QS. Ar-Rum: 21 dalam bingkai Mihrab Islami lengkung kubah.
-   - 4 kotak hitung mundur waktu nyata (*Hari, Jam, Menit, Detik*) menuju 10 Januari 2027 menggunakan animasi `<NumberFlow />` dan font `tabular-nums`.
+   - 4 kotak hitung mundur waktu nyata (*Hari, Jam, Menit, Detik*) menuju **Minggu, 3 Januari 2027 pukul 08.00 WIB** menggunakan animasi `<NumberFlow />` dan font `tabular-nums`. Target countdown dan label tanggal dapat disesuaikan sewaktu-waktu dari Dashboard Mempelai.
 3. **Profil Mempelai Nusantara (`03-mempelai`):**
    - Kartu profil mempelai wanita (Sinta) & pria (Fauzan) dengan ornamen Gunungan Wayang Jawa emas dan sudut siku kartu tradisional.
 4. **Detail Acara & Integrasi Peta (`04-acara`):**
-   - Waktu pelaksanaan Akad Nikah & Resepsi Pernikahan.
-   - Peta interaktif Google Maps embed, tombol navigasi langsung, serta tombol **"Tambah ke Google Calendar"** dan **"Unduh File (.ics)"**.
+   - Waktu pelaksanaan Akad Nikah & Resepsi Pernikahan pada **Minggu, 3 Januari 2027**.
+   - Integrasi lokasi Google Maps terbaru (`https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8` / koordinat `-7.310076, 109.296186`), tombol navigasi langsung, serta tombol **"Tambah ke Google Calendar"** dan **"Unduh File (.ics)"**.
 5. **Galeri Momen Pre-Wedding (`05-galeri`):**
    - Tata letak *masonry grid* mewah dengan efek hover lembut.
    - *Accessible Lightbox* layar penuh dengan navigasi keyboard (`Escape`, `ArrowLeft`, `ArrowRight`) dan touch gesture.
@@ -68,7 +68,8 @@
    - Kartu alamat kirim kado fisik untuk tamu yang ingin mengirimkan bingkisan.
 8. **Floating Glass Pill Dock & Vinyl Music Controller (`08-penutup`):**
    - Navigasi melayang 5 tab dengan deteksi seksi aktif via `IntersectionObserver`.
-   - Kontrol pemutar piringan hitam vinyl audio YouTube (*Mahalini x Nuca — Janji Kita*) dengan animasi putar halus.
+   - **Pemutar Musik Romantis Multifungsi:** Menggunakan engine HTML5 `<audio>` dengan auto-play volume fade-in saat tombol *"Buka Undangan"* ditekan, vinyl disc berputar, badge judul lagu, serta auto-pause cerdas saat tab browser tidak aktif.
+   - Dilengkapi 4 preset lagu romantis siap pakai (*Shane Filan - Beautiful in White*, *Canon in D Piano*, *A Thousand Years*, *Janji Suci*), opsi kustom berkas MP3 URL, maupun fallback YouTube ID.
    - Animasi kelopak bunga berjatuhan (*canvas petals*) yang otomatis jeda saat tab browser tidak aktif dan mematuhi `prefers-reduced-motion`.
 
 ---
@@ -82,7 +83,7 @@ Halaman khusus pengantin dan keluarga untuk mengelola seluruh aspek pernikahan:
 | **Modul A: Ringkasan & Moderasi RSVP** | 5 Kartu KPI metrik waktu nyata dengan `<NumberFlow />` (*Total Diundang*, *Terkirim WA*, *Konfirmasi Hadir & Total Orang*, *Berhalangan/Ragu*, *Total Ucapan*), pencarian, filter, dan moderasi hapus ucapan spam. |
 | **Modul B: Pengaturan Foto Utama & Galeri** | Atur 5 foto kunci (*Cover Gate*, *Hero Mihrab*, *Foto Sinta*, *Foto Fauzan*, *QRIS*) dengan kompresi otomatis WebP di browser/server. Tambah, susun urutan, dan hapus foto galeri pre-wedding. |
 | **Modul C: Tamu & WhatsApp Dispatcher** | **Editor Template WhatsApp** dengan variabel `{nama_tamu}` & `{link_undangan}` + pratinjau live. Normalisasi nomor otomatis ke `+628...` (termasuk koreksi angka 0 terpotong Excel). **Distribusi 1-by-1 Aman Anti-Blokir** dengan pencatatan waktu otomatis & tab Riwayat Terkirim. **Import Tamu Massal dari Excel (`.xlsx`/`.csv`)**, generator unduh berkas contoh resmi (.xlsx dan .csv UTF-8 BOM), serta panel panduan pengisian format WhatsApp. |
-| **Modul D: Pengaturan Acara & Rekening** | Pengaturan nama/bio mempelai, jadwal acara ISO 8601, nama venue, koordinat Plus Code, URL navigasi maps, YouTube Audio ID, daftar dinamis rekening bank & e-wallet, serta alamat kado fisik. |
+| **Modul D: Pengaturan Acara, Countdown & Musik** | **Target Waktu Countdown** interaktif dengan pemilih tanggal-waktu, pratinjau waktu nyata (*Live Sync*). **Pemutar Musik Latar** dengan sakelar aktif/nonaktif, 4 preset lagu romantis, kolom MP3 eksternal, dan tombol uji dengar langsung di dashboard. **Lokasi Acara & Auto-Resolver Google Maps** yang dapat mengurai shortlink (`maps.app.goo.gl`) menjadi koordinat Latitude & Longitude presisi lengkap dengan live iframe map preview. Profil mempelai, jadwal acara, rekening bank & e-wallet dinamis, serta alamat kirim kado. |
 
 ---
 

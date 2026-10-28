@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import {
   Save,
@@ -16,8 +16,16 @@ import {
   ExternalLink,
   CheckCircle2,
   RefreshCw,
+  Play,
+  Square,
+  Clock,
+  Sparkles,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
+import NumberFlow from "@number-flow/react";
 import type { WeddingSettingsData } from "@/lib/db/store";
+import { WEDDING_MUSIC_PRESETS, type MusicPreset } from "@/lib/db/seed-data";
 
 interface WeddingSettingsModuleProps {
   initialSettings: WeddingSettingsData | any;
@@ -50,6 +58,81 @@ export function WeddingSettingsModule({
 }: WeddingSettingsModuleProps) {
   const [formData, setFormData] = useState<WeddingSettingsData | any>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
+  const [isResolvingMaps, setIsResolvingMaps] = useState(false);
+
+  // Audio Testing State
+  const [isPlayingTest, setIsPlayingTest] = useState(false);
+  const audioTestRef = useRef<HTMLAudioElement | null>(null);
+
+  // Countdown Live Preview State
+  const [countdownPreview, setCountdownPreview] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isDone: false,
+  });
+
+  // Calculate Countdown Preview in real-time
+  useEffect(() => {
+    const targetIso = formData.weddingDateIso || "2027-01-03T08:00:00+07:00";
+    const targetTime = new Date(targetIso).getTime();
+
+    const updatePreview = () => {
+      const diff = targetTime - Date.now();
+      if (diff <= 0) {
+        setCountdownPreview({ days: 0, hours: 0, minutes: 0, seconds: 0, isDone: true });
+        return;
+      }
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      setCountdownPreview({ days, hours, minutes, seconds, isDone: false });
+    };
+
+    updatePreview();
+    const interval = setInterval(updatePreview, 1000);
+    return () => clearInterval(interval);
+  }, [formData.weddingDateIso]);
+
+  // Convert ISO to local datetime-local format (YYYY-MM-DDTHH:mm)
+  const getDatetimeLocalValue = (isoString: string) => {
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return "2027-01-03T08:00";
+      // Adjust for local timezone offset
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      const localISOTime = new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+      return localISOTime;
+    } catch {
+      return "2027-01-03T08:00";
+    }
+  };
+
+  // Handle datetime-local change
+  const handleDatetimeChange = (localVal: string) => {
+    if (!localVal) return;
+    try {
+      const localDate = new Date(localVal);
+      const isoString = localDate.toISOString();
+      const formattedLabel = new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(localDate);
+
+      setFormData((prev: any) => ({
+        ...prev,
+        weddingDateIso: isoString,
+        eventDateLabel: formattedLabel,
+      }));
+    } catch {
+      // Fallback
+    }
+  };
 
   // Parse JSON fields safely with fallback
   const bankAccounts: BankItem[] = Array.isArray(formData.bankAccounts)
@@ -65,22 +148,94 @@ export function WeddingSettingsModule({
       ? (formData.giftAddress as unknown as GiftAddressData)
       : { receiver: "", phone: "", address: "" };
 
-  const handleFieldChange = (
-    field: string,
-    value: string | number | null
-  ) => {
+  const handleFieldChange = (field: string, value: any) => {
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
   };
 
+  // Music preset selection
+  const handleSelectMusicPreset = (presetId: string) => {
+    const selected = WEDDING_MUSIC_PRESETS.find((p) => p.id === presetId);
+    if (!selected) return;
+
+    // Stop current test audio
+    if (audioTestRef.current) {
+      audioTestRef.current.pause();
+      setIsPlayingTest(false);
+    }
+
+    setFormData((prev: any) => ({
+      ...prev,
+      musicTitle: selected.title,
+      musicSourceType: selected.sourceType,
+      musicUrl: selected.url,
+      youtubeVideoId: selected.youtubeId || prev.youtubeVideoId || "In8kDy_WU4s",
+    }));
+
+    toast.success(`Lagu preset "${selected.title}" dipilih! ✓`);
+  };
+
+  // Test Play / Stop audio
+  const handleToggleTestAudio = () => {
+    const audio = audioTestRef.current;
+    if (!audio) return;
+
+    if (isPlayingTest) {
+      audio.pause();
+      setIsPlayingTest(false);
+    } else {
+      audio.volume = 0.8;
+      audio
+        .play()
+        .then(() => setIsPlayingTest(true))
+        .catch((err) => {
+          console.error("Test audio play failed:", err);
+          toast.error("Gagal memutar audio preview. Periksa URL atau koneksi Anda.");
+        });
+    }
+  };
+
+  // Auto-resolve Google Maps Shortlink / Coordinates
+  const handleResolveMaps = async () => {
+    const targetUrl = formData.googleMapsUrl;
+    if (!targetUrl || !targetUrl.trim()) {
+      toast.error("Masukkan tautan Google Maps terlebih dahulu");
+      return;
+    }
+
+    setIsResolvingMaps(true);
+    try {
+      const res = await fetch(`/api/admin/resolve-maps?url=${encodeURIComponent(targetUrl)}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Gagal mengekstrak koordinat peta");
+      }
+
+      setFormData((prev: any) => ({
+        ...prev,
+        mapsLatitude: data.latitude || prev.mapsLatitude || "-7.310076",
+        mapsLongitude: data.longitude || prev.mapsLongitude || "109.296186",
+        googleMapsEmbed: data.embedUrl || prev.googleMapsEmbed,
+      }));
+
+      if (data.latitude && data.longitude) {
+        toast.success(`Koordinat lokasi berhasil diekstrak: ${data.latitude}, ${data.longitude}! ✓`);
+      } else {
+        toast.success("Tautan Google Maps berhasil diverifikasi! ✓");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal mengekstrak peta";
+      toast.error(msg);
+    } finally {
+      setIsResolvingMaps(false);
+    }
+  };
+
   // Bank accounts management
-  const handleBankChange = (
-    index: number,
-    field: keyof BankItem,
-    val: string
-  ) => {
+  const handleBankChange = (index: number, field: keyof BankItem, val: string) => {
     const updated = [...bankAccounts];
     updated[index] = { ...updated[index], [field]: val };
     setFormData((prev: any) => ({
@@ -92,7 +247,7 @@ export function WeddingSettingsModule({
   const addBankAccount = () => {
     const updated = [
       ...bankAccounts,
-      { brand: "Bank Baru", type: "Transfer Bank", number: "", holder: "" },
+      { brand: "Bank BCA", type: "Transfer Bank", number: "", holder: "" },
     ];
     setFormData((prev: any) => ({
       ...prev,
@@ -109,11 +264,7 @@ export function WeddingSettingsModule({
   };
 
   // E-wallets management
-  const handleEwalletChange = (
-    index: number,
-    field: keyof EwalletItem,
-    val: string
-  ) => {
+  const handleEwalletChange = (index: number, field: keyof EwalletItem, val: string) => {
     const updated = [...ewallets];
     updated[index] = { ...updated[index], [field]: val };
     setFormData((prev: any) => ({
@@ -125,7 +276,7 @@ export function WeddingSettingsModule({
   const addEwallet = () => {
     const updated = [
       ...ewallets,
-      { brand: "E-Wallet Baru", type: "E-Wallet", number: "", holder: "" },
+      { brand: "DANA", type: "E-Wallet", number: "", holder: "" },
     ];
     setFormData((prev: any) => ({
       ...prev,
@@ -142,10 +293,7 @@ export function WeddingSettingsModule({
   };
 
   // Gift address management
-  const handleGiftAddressChange = (
-    field: keyof GiftAddressData,
-    val: string
-  ) => {
+  const handleGiftAddressChange = (field: keyof GiftAddressData, val: string) => {
     const updated = { ...giftAddress, [field]: val };
     setFormData((prev: any) => ({
       ...prev,
@@ -167,7 +315,7 @@ export function WeddingSettingsModule({
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Gagal menyimpan pengaturan");
       }
-      toast.success("Pengaturan pernikahan berhasil disimpan dan disinkronkan ke halaman publik!");
+      toast.success("Pengaturan Countdown, Musik, dan Lokasi berhasil disimpan & disinkronkan ke halaman publik! ✓");
       if (onSettingsUpdate && data.data) {
         onSettingsUpdate(data.data);
       }
@@ -182,66 +330,566 @@ export function WeddingSettingsModule({
 
   return (
     <form onSubmit={handleSave} className="space-y-8 pb-12">
+      {/* Hidden Audio for Dashboard Testing */}
+      <audio
+        ref={audioTestRef}
+        src={formData.musicUrl || WEDDING_MUSIC_PRESETS[0].url}
+        onEnded={() => setIsPlayingTest(false)}
+        className="hidden"
+      />
+
       {/* Top Banner Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/80 dark:bg-card-dark/80 p-5 rounded-2xl border border-gold-500/20 shadow-sm backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-white p-5 rounded-2xl border border-gold-500/25 shadow-sm">
         <div>
-          <h2 className="text-xl font-bold font-serif text-slate-900 dark:text-cream">
-            Pengaturan Acara & Pernikahan
+          <h2 className="text-xl font-bold font-serif text-rose-900">
+            Pengaturan Acara, Countdown &amp; Musik
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Kelola profil kedua mempelai, jadwal acara, lokasi maps, musik, rekening digital, dan kado fisik.
+          <p className="text-xs sm:text-sm text-muted mt-1">
+            Kelola target hitung mundur, pemutar musik romantis, lokasi maps, profil kedua mempelai, dan rekening digital.
           </p>
         </div>
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 active:scale-[0.96] text-white font-medium text-sm transition-transform shadow-md disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white font-semibold text-xs tracking-wider uppercase shadow-md active:scale-[0.96] transition-transform duration-150 ease-out hover:brightness-105 disabled:opacity-50 cursor-pointer"
         >
           {isSaving ? (
-            <RefreshCw className="w-4 h-4 animate-spin" />
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Menyimpan...</span>
+            </>
           ) : (
-            <Save className="w-4 h-4" />
+            <>
+              <Save className="w-4 h-4" />
+              <span>Simpan Pengaturan Acara &amp; Musik</span>
+            </>
           )}
-          <span>{isSaving ? "Menyimpan..." : "Simpan Perubahan"}</span>
         </button>
       </div>
 
-      {/* 1. PROFIL MEMPELAI */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
+      {/* ============================================================ */}
+      {/* 1. WAKTU & TARGET HITUNG MUNDUR (COUNTDOWN SETTINGS) */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <Users className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
-              Profil Kedua Mempelai
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Waktu Acara &amp; Target Hitung Mundur (Countdown)
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Data diri, tanggal/tempat lahir, deskripsi bio, dan URL foto profil mempelai.
+            <p className="text-xs text-muted">
+              Atur waktu patokan pernikahan. Countdown di halaman publik otomatis berjalan menuju waktu ini.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Inputs Column */}
+          <div className="lg:col-span-7 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                  Tanggal &amp; Waktu Countdown:
+                </label>
+                <input
+                  type="datetime-local"
+                  value={getDatetimeLocalValue(formData.weddingDateIso)}
+                  onChange={(e) => handleDatetimeChange(e.target.value)}
+                  required
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+                />
+                <p className="text-[11px] text-muted mt-1">
+                  Default: <strong>03 Januari 2027 pukul 08:00 WIB</strong>
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                  Label Tanggal Tampilan:
+                </label>
+                <input
+                  type="text"
+                  value={formData.eventDateLabel || ""}
+                  onChange={(e) => handleFieldChange("eventDateLabel", e.target.value)}
+                  placeholder="Contoh: Minggu · 03 · Januari · 2027"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+                <p className="text-[11px] text-muted mt-1">
+                  Ditampilkan pada cover gate dan kartu waktu acara
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                  Waktu Akad Nikah:
+                </label>
+                <input
+                  type="text"
+                  value={formData.akadTime || ""}
+                  onChange={(e) => handleFieldChange("akadTime", e.target.value)}
+                  placeholder="Pukul 08.00 – 10.00 WIB"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                  Waktu Resepsi Pernikahan:
+                </label>
+                <input
+                  type="text"
+                  value={formData.resepsiTime || ""}
+                  onChange={(e) => handleFieldChange("resepsiTime", e.target.value)}
+                  placeholder="Pukul 11.00 – 14.00 WIB"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Live Preview Column */}
+          <div className="lg:col-span-5 p-4 sm:p-5 rounded-2xl bg-cream/70 border border-gold-500/30 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-gold-600 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Pratinjau Countdown Waktu Nyata</span>
+                </span>
+                <span className="text-[10px] font-medium text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                  Live Sync
+                </span>
+              </div>
+
+              {!countdownPreview.isDone ? (
+                <div className="grid grid-cols-4 gap-2 text-center my-3">
+                  {[
+                    { label: "Hari", value: countdownPreview.days },
+                    { label: "Jam", value: countdownPreview.hours },
+                    { label: "Menit", value: countdownPreview.minutes },
+                    { label: "Detik", value: countdownPreview.seconds },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="p-2.5 rounded-xl bg-surface-white border border-gold-500/30 shadow-2xs"
+                    >
+                      <span className="font-serif font-bold text-xl sm:text-2xl text-rose-900 tabular-nums block leading-none">
+                        <NumberFlow
+                          value={item.value}
+                          format={{ minimumIntegerDigits: 2 }}
+                        />
+                      </span>
+                      <span className="text-[9px] tracking-wider uppercase text-muted mt-1 block">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-6 text-center text-xs text-rose-800 font-serif italic">
+                  Acara pernikahan telah berlangsung 🤍
+                </div>
+              )}
+            </div>
+
+            <p className="text-[11px] text-muted mt-2 border-t border-gold-500/20 pt-2 leading-relaxed">
+              *Tampilan di atas merefleksikan persis apa yang akan dilihat tamu undangan pada seksi pembuka <strong>02-hitung-mundur</strong>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 2. MUSIK LATAR BELAKANG MULTI-SUMBER (MUSIC SETTINGS) */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gold-500/15">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+              <Music2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-rose-900 font-serif">
+                Musik Latar Belakang &amp; Pemutar Romantis
+              </h3>
+              <p className="text-xs text-muted">
+                Pilih lagu pernikahan romantis siap pakai atau masukkan tautan MP3/YouTube sendiri.
+              </p>
+            </div>
+          </div>
+
+          {/* Toggle Music Enable */}
+          <label className="inline-flex items-center gap-2.5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.musicEnabled !== false}
+              onChange={(e) => handleFieldChange("musicEnabled", e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+            <span className="text-xs font-semibold text-rose-950">
+              {formData.musicEnabled !== false ? "Musik Aktif ✓" : "Musik Nonaktif"}
+            </span>
+          </label>
+        </div>
+
+        {formData.musicEnabled !== false && (
+          <div className="space-y-5">
+            {/* Source Type Selector */}
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-2">
+                Pilihan Sumber Audio:
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                {[
+                  {
+                    id: "preset",
+                    label: "1. Preset Lagu Romantis (Rekomendasi)",
+                    desc: "Bebas blokir autoplay & instan",
+                  },
+                  {
+                    id: "audio_url",
+                    label: "2. Tautan File MP3 Sendiri",
+                    desc: "Stream langsung URL berkas audio",
+                  },
+                  {
+                    id: "youtube",
+                    label: "3. Tautan / ID Video YouTube",
+                    desc: "Putar via YouTube IFrame API",
+                  },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleFieldChange("musicSourceType", s.id)}
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                      (formData.musicSourceType || "preset") === s.id
+                        ? "bg-rose-100/90 border-rose-500 shadow-2xs"
+                        : "bg-surface-white border-gold-500/30 hover:bg-cream/50"
+                    }`}
+                  >
+                    <span className="block font-semibold text-xs text-rose-900">
+                      {s.label}
+                    </span>
+                    <span className="block text-[11px] text-muted mt-0.5">
+                      {s.desc}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* If Preset Selected */}
+            {(formData.musicSourceType === "preset" || !formData.musicSourceType) && (
+              <div className="p-4 rounded-2xl bg-cream/40 border border-gold-500/25 space-y-3">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
+                  Pilih Lagu Romantis Siap Pakai:
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {WEDDING_MUSIC_PRESETS.map((preset) => {
+                    const isSelected = formData.musicTitle === preset.title;
+                    return (
+                      <div
+                        key={preset.id}
+                        onClick={() => handleSelectMusicPreset(preset.id)}
+                        className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          isSelected
+                            ? "bg-emerald-50/90 border-emerald-500 shadow-2xs"
+                            : "bg-surface-white border-gold-500/25 hover:bg-rose-50/50"
+                        }`}
+                      >
+                        <div>
+                          <p className="font-semibold text-xs text-rose-950 leading-tight">
+                            {preset.title}
+                          </p>
+                          <p className="text-[11px] text-muted mt-0.5">
+                            {preset.artist} &bull; <span className="uppercase text-[9px] font-mono">{preset.sourceType}</span>
+                          </p>
+                        </div>
+                        {isSelected && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Custom URL or YouTube ID Inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                  Judul Lagu &amp; Artis:
+                </label>
+                <input
+                  type="text"
+                  value={formData.musicTitle || ""}
+                  onChange={(e) => handleFieldChange("musicTitle", e.target.value)}
+                  placeholder="Contoh: Shane Filan - Beautiful In White"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              {formData.musicSourceType === "youtube" ? (
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                    YouTube Video ID (11 Karakter):
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.youtubeVideoId || ""}
+                    onChange={(e) => handleFieldChange("youtubeVideoId", e.target.value)}
+                    placeholder="In8kDy_WU4s"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                    URL File Audio (.mp3):
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.musicUrl || ""}
+                    onChange={(e) => handleFieldChange("musicUrl", e.target.value)}
+                    placeholder="https://.../lagu-pernikahan.mp3"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Live Audio Test Player in Dashboard */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/40 to-cream/70 border border-emerald-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white grid place-items-center shrink-0 shadow-2xs">
+                  {isPlayingTest ? (
+                    <Volume2 className="w-5 h-5 animate-pulse" />
+                  ) : (
+                    <VolumeX className="w-5 h-5 opacity-80" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-semibold text-xs text-emerald-950">
+                    Uji Dengar Musik di Dashboard:
+                  </p>
+                  <p className="text-[11px] text-muted">
+                    {formData.musicTitle || "Belum ada lagu yang dipilih"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleToggleTestAudio}
+                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer shadow-xs ${
+                    isPlayingTest
+                      ? "bg-rose-700 text-white hover:bg-rose-800"
+                      : "bg-emerald-700 text-white hover:bg-emerald-800"
+                  }`}
+                >
+                  {isPlayingTest ? (
+                    <>
+                      <Square className="w-3.5 h-3.5 fill-current" />
+                      <span>Hentikan Uji Audio</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3.5 h-3.5 fill-current" />
+                      <span>▶ Tes Putar Musik</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ============================================================ */}
+      {/* 3. LOKASI ACARA & GOOGLE MAPS RESOLVER (MAPS SETTINGS) */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Lokasi Acara &amp; Integrasi Google Maps
+            </h3>
+            <p className="text-xs text-muted">
+              Masukkan tautan Google Maps (shortlink didukung). Sistem dapat otomatis mengekstrak titik koordinat peta.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Nama Venue / Tempat Acara:
+            </label>
+            <input
+              type="text"
+              value={formData.venueName || ""}
+              onChange={(e) => handleFieldChange("venueName", e.target.value)}
+              placeholder="Contoh: Gedung Pertemuan & Kediaman Mempelai"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Plus Code (Opsional):
+            </label>
+            <input
+              type="text"
+              value={formData.venuePlusCode || ""}
+              onChange={(e) => handleFieldChange("venuePlusCode", e.target.value)}
+              placeholder="Plus Code: F9M2+C8 Simpang Baru"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Alamat Lengkap Venue:
+            </label>
+            <textarea
+              rows={2}
+              value={formData.venueAddress || ""}
+              onChange={(e) => handleFieldChange("venueAddress", e.target.value)}
+              placeholder="Pekanbaru, Riau"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
+            />
+          </div>
+
+          {/* Google Maps Link with Auto-Resolver */}
+          <div className="sm:col-span-2 space-y-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
+              Tautan Google Maps Share URL:
+            </label>
+            <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+              <input
+                type="url"
+                value={formData.googleMapsUrl || ""}
+                onChange={(e) => handleFieldChange("googleMapsUrl", e.target.value)}
+                placeholder="https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8"
+                className="flex-1 px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink font-mono focus:outline-none focus:border-rose-500"
+              />
+              <button
+                type="button"
+                onClick={handleResolveMaps}
+                disabled={isResolvingMaps}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gold-600 text-white text-xs font-semibold tracking-wider hover:bg-gold-700 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50 shrink-0 shadow-2xs"
+              >
+                {isResolvingMaps ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Mengekstrak Koordinat...</span>
+                  </>
+                ) : (
+                  <>
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>Ambil Koordinat Otomatis</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <p className="text-[11px] text-muted">
+              Mendukung link pendek seperti <code>https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8</code>.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Latitude (Titik Lintang):
+            </label>
+            <input
+              type="text"
+              value={formData.mapsLatitude || ""}
+              onChange={(e) => handleFieldChange("mapsLatitude", e.target.value)}
+              placeholder="-7.310076"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Longitude (Titik Bujur):
+            </label>
+            <input
+              type="text"
+              value={formData.mapsLongitude || ""}
+              onChange={(e) => handleFieldChange("mapsLongitude", e.target.value)}
+              placeholder="109.296186"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          {/* Live Google Maps Embed Preview */}
+          <div className="sm:col-span-2 pt-2">
+            <span className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-2">
+              Pratinjau Peta Interaktif (Live Preview):
+            </span>
+            <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl overflow-hidden border border-gold-500/30 shadow-inner bg-cream/40">
+              <iframe
+                src={
+                  formData.googleMapsEmbed ||
+                  `https://maps.google.com/maps?q=${formData.mapsLatitude || "-7.310076"},${formData.mapsLongitude || "109.296186"}&z=17&output=embed`
+                }
+                title="Pratinjau Peta Lokasi"
+                className="w-full h-full border-0"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 4. PROFIL KEDUA MEMPELAI */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <Users className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Profil Kedua Mempelai
+            </h3>
+            <p className="text-xs text-muted">
+              Nama lengkap, tanggal/tempat lahir, bio singkat, dan tautan foto kedua calon pengantin.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Mempelai Wanita */}
-          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 space-y-4">
-            <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-              Pengantin Wanita
+          <div className="p-4 sm:p-5 rounded-2xl bg-cream/40 border border-gold-500/20 space-y-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-900 block border-b border-gold-500/15 pb-2">
+              Mempelai Wanita (Bride)
             </span>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Nama Lengkap
               </label>
               <input
                 type="text"
                 value={formData.brideName || ""}
                 onChange={(e) => handleFieldChange("brideName", e.target.value)}
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                placeholder="Sinta Maharani"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Kelahiran / Info Singkat
               </label>
               <input
@@ -249,54 +897,52 @@ export function WeddingSettingsModule({
                 value={formData.brideBirth || ""}
                 onChange={(e) => handleFieldChange("brideBirth", e.target.value)}
                 placeholder="Pekanbaru, 10 September 2005"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Deskripsi Bio
               </label>
               <textarea
                 rows={3}
                 value={formData.brideBio || ""}
                 onChange={(e) => handleFieldChange("brideBio", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40 resize-y"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 URL Foto Profil Wanita
               </label>
               <input
                 type="url"
                 value={formData.bridePhotoUrl || ""}
-                onChange={(e) =>
-                  handleFieldChange("bridePhotoUrl", e.target.value)
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                onChange={(e) => handleFieldChange("bridePhotoUrl", e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
           </div>
 
           {/* Mempelai Pria */}
-          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 space-y-4">
-            <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-              Pengantin Pria
+          <div className="p-4 sm:p-5 rounded-2xl bg-cream/40 border border-gold-500/20 space-y-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-900 block border-b border-gold-500/15 pb-2">
+              Mempelai Pria (Groom)
             </span>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Nama Lengkap
               </label>
               <input
                 type="text"
                 value={formData.groomName || ""}
                 onChange={(e) => handleFieldChange("groomName", e.target.value)}
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                placeholder="Fauzan Pratama"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Kelahiran / Info Singkat
               </label>
               <input
@@ -304,248 +950,49 @@ export function WeddingSettingsModule({
                 value={formData.groomBirth || ""}
                 onChange={(e) => handleFieldChange("groomBirth", e.target.value)}
                 placeholder="3 Mei 1997"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Deskripsi Bio
               </label>
               <textarea
                 rows={3}
                 value={formData.groomBio || ""}
                 onChange={(e) => handleFieldChange("groomBio", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40 resize-y"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 URL Foto Profil Pria
               </label>
               <input
                 type="url"
                 value={formData.groomPhotoUrl || ""}
-                onChange={(e) =>
-                  handleFieldChange("groomPhotoUrl", e.target.value)
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                onChange={(e) => handleFieldChange("groomPhotoUrl", e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. WAKTU & JADWAL ACARA */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <Calendar className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
-              Waktu & Jadwal Acara
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Tanggal patokan hitung mundur (ISO 8601) dan teks jam pelaksanaan akad & resepsi.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Tanggal Pernikahan ISO (Hitung Mundur)
-            </label>
-            <input
-              type="text"
-              value={formData.weddingDateIso || ""}
-              onChange={(e) => handleFieldChange("weddingDateIso", e.target.value)}
-              placeholder="2027-01-10T08:00:00+07:00"
-              required
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm font-mono text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Waktu Akad Nikah
-            </label>
-            <input
-              type="text"
-              value={formData.akadTime || ""}
-              onChange={(e) => handleFieldChange("akadTime", e.target.value)}
-              placeholder="Pukul 08.00 – 10.00 WIB"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Waktu Resepsi Pernikahan
-            </label>
-            <input
-              type="text"
-              value={formData.resepsiTime || ""}
-              onChange={(e) => handleFieldChange("resepsiTime", e.target.value)}
-              placeholder="Pukul 11.00 – 14.00 WIB"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* 3. LOKASI & GOOGLE MAPS */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <MapPin className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
-              Lokasi & Navigasi Peta
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Nama venue, alamat lengkap, Plus Code, URL navigasi Google Maps, dan URL iframe embed.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Nama Venue / Tempat
-            </label>
-            <input
-              type="text"
-              value={formData.venueName || ""}
-              onChange={(e) => handleFieldChange("venueName", e.target.value)}
-              placeholder="Kelurahan Air Putih"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Plus Code (Opsional)
-            </label>
-            <input
-              type="text"
-              value={formData.venuePlusCode || ""}
-              onChange={(e) =>
-                handleFieldChange("venuePlusCode", e.target.value)
-              }
-              placeholder="Plus Code: F9M2+C8 Simpang Baru"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Alamat Lengkap Venue
-            </label>
-            <textarea
-              rows={2}
-              value={formData.venueAddress || ""}
-              onChange={(e) => handleFieldChange("venueAddress", e.target.value)}
-              placeholder="Tuah Madani, Kota Pekanbaru, Riau"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40 resize-y"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Tautan Google Maps Langsung (Tombol Buka Peta)
-            </label>
-            <input
-              type="url"
-              value={formData.googleMapsUrl || ""}
-              onChange={(e) =>
-                handleFieldChange("googleMapsUrl", e.target.value)
-              }
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              URL Iframe Embed Peta
-            </label>
-            <input
-              type="url"
-              value={formData.googleMapsEmbed || ""}
-              onChange={(e) =>
-                handleFieldChange("googleMapsEmbed", e.target.value)
-              }
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* 4. MUSIK LATAR YOUTUBE */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <Music2 className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
-              Musik Latar Belakang (YouTube)
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Audio latar undangan diputar via YouTube IFrame API tanpa menampilkan video.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              YouTube Video ID (11 Karakter)
-            </label>
-            <input
-              type="text"
-              value={formData.youtubeVideoId || ""}
-              onChange={(e) =>
-                handleFieldChange("youtubeVideoId", e.target.value)
-              }
-              placeholder="In8kDy_WU4s"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm font-mono text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-            />
-            <p className="text-[11px] text-slate-400 mt-1">
-              Contoh dari URL: https://www.youtube.com/watch?v=<strong>In8kDy_WU4s</strong>
-            </p>
-          </div>
-          {formData.youtubeVideoId && (
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-slate-800 dark:text-cream">
-                  Video ID Terpasang
-                </p>
-                <code className="text-xs text-gold-600 dark:text-gold-400">
-                  {formData.youtubeVideoId}
-                </code>
-              </div>
-              <a
-                href={`https://www.youtube.com/watch?v=${formData.youtubeVideoId}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-colors"
-              >
-                <span>Cek Video</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          )}
-        </div>
-      </section>
-
+      {/* ============================================================ */}
       {/* 5. REKENING BANK & E-WALLET AMPLOPT DIGITAL */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-gold-500/15">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-              <CreditCard className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+              <CreditCard className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
+              <h3 className="text-base font-bold text-rose-900 font-serif">
                 Rekening Amplop Digital
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-muted">
                 Kartu ATM debit beraksen emas di seksi amplop digital.
               </p>
             </div>
@@ -553,7 +1000,7 @@ export function WeddingSettingsModule({
           <button
             type="button"
             onClick={addBankAccount}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gold-500/10 text-gold-700 dark:text-gold-300 hover:bg-gold-500/20 active:scale-[0.96] transition-transform"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gold-500/15 text-gold-700 hover:bg-gold-500/25 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Tambah Rekening</span>
@@ -562,64 +1009,58 @@ export function WeddingSettingsModule({
 
         {/* Bank Accounts List */}
         <div className="space-y-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-gold-600">
             Daftar Rekening Bank
           </h4>
           {bankAccounts.length === 0 ? (
-            <p className="text-xs text-slate-400 italic">Belum ada rekening bank yang ditambahkan.</p>
+            <p className="text-xs text-muted italic">Belum ada rekening bank yang ditambahkan.</p>
           ) : (
             bankAccounts.map((bank, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 items-end"
+                className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-3.5 rounded-2xl bg-cream/30 border border-gold-500/25 items-end"
               >
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Nama Bank
                   </label>
                   <input
                     type="text"
                     value={bank.brand}
-                    onChange={(e) =>
-                      handleBankChange(idx, "brand", e.target.value)
-                    }
+                    onChange={(e) => handleBankChange(idx, "brand", e.target.value)}
                     placeholder="Contoh: Bank BCA"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Nomor Rekening
                   </label>
                   <input
                     type="text"
                     value={bank.number}
-                    onChange={(e) =>
-                      handleBankChange(idx, "number", e.target.value)
-                    }
+                    onChange={(e) => handleBankChange(idx, "number", e.target.value)}
                     placeholder="1234567890"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs font-mono tabular-nums text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Atas Nama
                   </label>
                   <input
                     type="text"
                     value={bank.holder}
-                    onChange={(e) =>
-                      handleBankChange(idx, "holder", e.target.value)
-                    }
+                    onChange={(e) => handleBankChange(idx, "holder", e.target.value)}
                     placeholder="Nama Pemilik Rekening"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div className="flex justify-end sm:justify-start">
                   <button
                     type="button"
                     onClick={() => removeBankAccount(idx)}
-                    className="px-3 py-2 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-700 hover:bg-rose-100/80 flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Hapus</span>
@@ -631,75 +1072,69 @@ export function WeddingSettingsModule({
         </div>
 
         {/* E-Wallets List */}
-        <div className="space-y-4 pt-4 border-t border-slate-200/60 dark:border-white/5">
+        <div className="space-y-4 pt-4 border-t border-gold-500/15">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gold-600">
               Daftar Dompet Digital / E-Wallet
             </h4>
             <button
               type="button"
               onClick={addEwallet}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gold-500/10 text-gold-700 dark:text-gold-300 hover:bg-gold-500/20 active:scale-[0.96] transition-transform"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gold-500/15 text-gold-700 hover:bg-gold-500/25 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Tambah E-Wallet</span>
             </button>
           </div>
           {ewallets.length === 0 ? (
-            <p className="text-xs text-slate-400 italic">Belum ada e-wallet yang ditambahkan.</p>
+            <p className="text-xs text-muted italic">Belum ada e-wallet yang ditambahkan.</p>
           ) : (
             ewallets.map((ewallet, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 items-end"
+                className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-3.5 rounded-2xl bg-cream/30 border border-gold-500/25 items-end"
               >
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Provider
                   </label>
                   <input
                     type="text"
                     value={ewallet.brand}
-                    onChange={(e) =>
-                      handleEwalletChange(idx, "brand", e.target.value)
-                    }
+                    onChange={(e) => handleEwalletChange(idx, "brand", e.target.value)}
                     placeholder="Contoh: DANA / GoPay"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Nomor Akun / HP
                   </label>
                   <input
                     type="text"
                     value={ewallet.number}
-                    onChange={(e) =>
-                      handleEwalletChange(idx, "number", e.target.value)
-                    }
+                    onChange={(e) => handleEwalletChange(idx, "number", e.target.value)}
                     placeholder="0812-xxxx-xxxx"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs font-mono tabular-nums text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-semibold text-gold-600 mb-1">
                     Atas Nama
                   </label>
                   <input
                     type="text"
                     value={ewallet.holder}
-                    onChange={(e) =>
-                      handleEwalletChange(idx, "holder", e.target.value)
-                    }
+                    onChange={(e) => handleEwalletChange(idx, "holder", e.target.value)}
                     placeholder="Nama Pemilik Akun"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-xs text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div className="flex justify-end sm:justify-start">
                   <button
                     type="button"
                     onClick={() => removeEwallet(idx)}
-                    className="px-3 py-2 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-700 hover:bg-rose-100/80 flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Hapus</span>
@@ -711,132 +1146,82 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* 6. MODAL QRIS & ALAMAT KADO FISIK */}
-      <section className="bg-white/80 dark:bg-card-dark/80 rounded-2xl p-6 border border-gold-500/20 shadow-sm space-y-6">
+      {/* ============================================================ */}
+      {/* 6. ALAMAT KIRIM KADO FISIK */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-4">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <Gift className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <Gift className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-cream font-serif">
-              QRIS & Pengiriman Kado Fisik
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Alamat Pengiriman Kado Fisik
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Gambar barcode QRIS untuk modal amplop, serta alamat tujuan bagi tamu yang mengirimkan bingkisan kado.
+            <p className="text-xs text-muted">
+              Alamat domisili penerima kado bagi tamu yang ingin mengirimkan bingkisan pernikahan.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* QRIS Image */}
-          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 space-y-4">
-            <div className="flex items-center gap-2">
-              <QrCode className="w-4 h-4 text-gold-600 dark:text-gold-400" />
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Kode QRIS Pembayaran
-              </h4>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                URL Gambar Kode QRIS
-              </label>
-              <input
-                type="url"
-                value={formData.qrisImageUrl || ""}
-                onChange={(e) =>
-                  handleFieldChange("qrisImageUrl", e.target.value)
-                }
-                placeholder="https://..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-              />
-            </div>
-            {formData.qrisImageUrl && (
-              <div className="mt-2 flex items-center gap-4">
-                <div className="w-20 h-20 rounded-lg overflow-hidden border border-slate-300 dark:border-white/10 bg-white p-1">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={formData.qrisImageUrl}
-                    alt="Preview QRIS"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <span className="text-xs text-slate-500 flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  Pratinjau Kode QRIS
-                </span>
-              </div>
-            )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Nama Penerima Kado:
+            </label>
+            <input
+              type="text"
+              value={giftAddress.receiver}
+              onChange={(e) => handleGiftAddressChange("receiver", e.target.value)}
+              placeholder="Sinta Maharani"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+            />
           </div>
-
-          {/* Gift Address */}
-          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-black/20 border border-slate-200/60 dark:border-white/5 space-y-4">
-            <div className="flex items-center gap-2">
-              <Gift className="w-4 h-4 text-rose-500" />
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Alamat Kirim Kado Fisik
-              </h4>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Nama Penerima
-                </label>
-                <input
-                  type="text"
-                  value={giftAddress.receiver || ""}
-                  onChange={(e) =>
-                    handleGiftAddressChange("receiver", e.target.value)
-                  }
-                  placeholder="Sinta Maharani"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Nomor Telepon
-                </label>
-                <input
-                  type="text"
-                  value={giftAddress.phone || ""}
-                  onChange={(e) =>
-                    handleGiftAddressChange("phone", e.target.value)
-                  }
-                  placeholder="0812-xxxx-xxxx"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm font-mono text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                Alamat Lengkap Rumah / Paket
-              </label>
-              <textarea
-                rows={2}
-                value={giftAddress.address || ""}
-                onChange={(e) =>
-                  handleGiftAddressChange("address", e.target.value)
-                }
-                placeholder="Jl. Contoh Alamat No. 10..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-2 focus:ring-gold-500/40 resize-y"
-              />
-            </div>
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Nomor Telepon Penerima:
+            </label>
+            <input
+              type="text"
+              value={giftAddress.phone}
+              onChange={(e) => handleGiftAddressChange("phone", e.target.value)}
+              placeholder="0812-xxxx-xxxx"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Alamat Lengkap Pengiriman:
+            </label>
+            <textarea
+              rows={3}
+              value={giftAddress.address}
+              onChange={(e) => handleGiftAddressChange("address", e.target.value)}
+              placeholder="Jl. Contoh Alamat No. 10, Kel. Air Putih, Kec. Tuah Madani, Kota Pekanbaru, Riau 28127"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
+            />
           </div>
         </div>
       </section>
 
-      {/* Floating/Bottom Action Bar */}
-      <div className="sticky bottom-6 z-20 flex justify-end">
+      {/* Floating Bottom Save Action Bar */}
+      <div className="fixed bottom-6 right-6 z-40">
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gold-500 hover:bg-gold-600 active:scale-[0.96] text-white font-medium text-sm transition-transform shadow-xl disabled:opacity-50"
+          className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 text-white font-bold text-xs tracking-widest uppercase shadow-[0_16px_32px_-10px_rgba(93,58,65,0.65)] hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out disabled:opacity-50 cursor-pointer"
         >
           {isSaving ? (
-            <RefreshCw className="w-4 h-4 animate-spin" />
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Menyimpan Perubahan...</span>
+            </>
           ) : (
-            <Save className="w-4 h-4" />
+            <>
+              <Save className="w-4 h-4" />
+              <span>Simpan Pengaturan Acara &amp; Musik</span>
+            </>
           )}
-          <span>{isSaving ? "Menyimpan..." : "Simpan Semua Pengaturan"}</span>
         </button>
       </div>
     </form>

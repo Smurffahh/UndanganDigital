@@ -11,6 +11,8 @@ interface EventDetailsProps {
   venuePlusCode: string;
   googleMapsUrl: string;
   googleMapsEmbed: string;
+  weddingDateIso?: string;
+  eventDateLabel?: string;
 }
 
 export function EventDetails({
@@ -21,7 +23,47 @@ export function EventDetails({
   venuePlusCode,
   googleMapsUrl,
   googleMapsEmbed,
+  weddingDateIso = "2027-01-03T08:00:00+07:00",
+  eventDateLabel,
 }: EventDetailsProps) {
+  // Format readable Indonesian date
+  const displayDate =
+    eventDateLabel ||
+    (() => {
+      try {
+        const d = new Date(weddingDateIso);
+        return new Intl.DateTimeFormat("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(d);
+      } catch {
+        return "Minggu, 3 Januari 2027";
+      }
+    })();
+
+  // Calculate calendar UTC timestamps (DTSTART & DTEND)
+  const { dtStartUtc, dtEndUtc } = (() => {
+    try {
+      const start = new Date(weddingDateIso);
+      const end = new Date(start.getTime() + 6 * 60 * 60 * 1000); // 6 hours duration
+
+      const formatUtc = (d: Date) =>
+        d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+      return {
+        dtStartUtc: formatUtc(start),
+        dtEndUtc: formatUtc(end),
+      };
+    } catch {
+      return {
+        dtStartUtc: "20270103T010000Z",
+        dtEndUtc: "20270103T070000Z",
+      };
+    }
+  })();
+
   // Generate downloadable ICS file for offline / Apple / Outlook calendar
   const handleDownloadIcs = () => {
     const icsContent = [
@@ -32,10 +74,10 @@ export function EventDetails({
       "METHOD:PUBLISH",
       "BEGIN:VEVENT",
       "SUMMARY:Pernikahan Fauzan & Sinta",
-      "DESCRIPTION:Akad Nikah 08.00 WIB — Resepsi 11.00 WIB di Kelurahan Air Putih, Tuah Madani, Pekanbaru",
-      "LOCATION:Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru, Riau",
-      "DTSTART:20270110T010000Z",
-      "DTEND:20270110T070000Z",
+      `DESCRIPTION:Akad Nikah: ${akadTime} — Resepsi: ${resepsiTime} di ${venueName}, ${venueAddress}`,
+      `LOCATION:${venueName}, ${venueAddress}`,
+      `DTSTART:${dtStartUtc}`,
+      `DTEND:${dtEndUtc}`,
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -54,7 +96,7 @@ export function EventDetails({
 
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
     "Pernikahan Fauzan & Sinta"
-  )}&dates=20270110T010000Z/20270110T070000Z&location=${encodeURIComponent(
+  )}&dates=${dtStartUtc}/${dtEndUtc}&location=${encodeURIComponent(
     `${venueName}, ${venueAddress}`
   )}&details=${encodeURIComponent(
     `Akad Nikah: ${akadTime} — Resepsi: ${resepsiTime}. Lokasi: ${venueName}, ${venueAddress}`
@@ -82,7 +124,7 @@ export function EventDetails({
             Akad Nikah
           </h3>
           <p className="mt-1.5 text-xs font-semibold tracking-[0.24em] uppercase text-rose-700">
-            Ahad, 10 Januari 2027
+            {displayDate}
           </p>
           <p className="mt-2 text-sm text-ink flex items-center justify-center gap-1.5 font-medium">
             <Clock className="w-4 h-4 text-gold-600 stroke-[1.8]" />
@@ -108,7 +150,7 @@ export function EventDetails({
             Resepsi
           </h3>
           <p className="mt-1.5 text-xs font-semibold tracking-[0.24em] uppercase text-rose-700">
-            Ahad, 10 Januari 2027
+            {displayDate}
           </p>
           <p className="mt-2 text-sm text-ink flex items-center justify-center gap-1.5 font-medium">
             <Clock className="w-4 h-4 text-gold-600 stroke-[1.8]" />
@@ -125,50 +167,50 @@ export function EventDetails({
           </p>
         </article>
 
-        {/* Tombol Buka Google Maps */}
-        <a
-          href={googleMapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#e9d3a3] to-[#c9a24b] text-[#443114] text-xs font-bold tracking-[0.2em] uppercase shadow-[0_14px_30px_-10px_rgba(169,130,58,0.55)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-700"
-        >
-          <MapPin className="w-4 h-4 stroke-[1.8]" />
-          <span>Buka Google Maps</span>
-          <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-        </a>
-
-        {/* Peta Google Maps Embed */}
-        <div className="mt-5 h-[280px] sm:h-[340px] rounded-2xl overflow-hidden border border-gold-500/40 shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)]">
-          <iframe
-            title="Peta Lokasi Pernikahan Fauzan & Sinta"
-            src={googleMapsEmbed}
-            className="w-full h-full border-0 [filter:sepia(0.12)_saturate(1.02)]"
-            loading="lazy"
-            allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
-
         {/* Calendar Action Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
           <a
             href={googleCalendarUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-600/55 text-gold-600 bg-surface-white/80 text-[11px] font-semibold tracking-[0.16em] uppercase transition-colors duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-rose-900 text-xs font-semibold tracking-wider uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs"
           >
-            <CalendarPlus className="w-4 h-4 stroke-[1.8]" />
-            <span>Google Calendar</span>
+            <CalendarPlus className="w-4 h-4 text-gold-600" />
+            <span>Simpan ke Google Calendar</span>
           </a>
 
           <button
             type="button"
             onClick={handleDownloadIcs}
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-600/55 text-gold-600 bg-surface-white/80 text-[11px] font-semibold tracking-[0.16em] uppercase transition-colors duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-rose-900 text-xs font-semibold tracking-wider uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer"
           >
-            <Download className="w-4 h-4 stroke-[1.8]" />
-            <span>Unduh File (.ics)</span>
+            <Download className="w-4 h-4 text-gold-600" />
+            <span>Unduh Pengingat (.ics)</span>
           </button>
+        </div>
+
+        {/* Card 3: Google Maps */}
+        <div className="card-ornament bg-surface-white border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-5 sm:p-6 text-center">
+          <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-gold-500/25 mb-4 shadow-inner">
+            <iframe
+              src={googleMapsEmbed}
+              title={`Peta Lokasi Pernikahan Fauzan dan Sinta di ${venueName}`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full border-0"
+            />
+          </div>
+
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white text-xs font-bold tracking-wider uppercase shadow-[0_12px_24px_-8px_rgba(93,58,65,0.5)] active:scale-[0.96] transition-transform duration-150 hover:brightness-110"
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Buka Google Maps</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+          </a>
         </div>
       </div>
     </section>

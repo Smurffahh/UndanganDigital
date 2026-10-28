@@ -63,6 +63,7 @@ export function InvitationOrchestrator({
         guestName={guestName}
         onOpen={handleOpenCover}
         coverPhotoUrl={settings.coverPhotoUrl}
+        weddingDateIso={settings.weddingDateIso}
         eventDateLabel={settings.eventDateLabel}
       />
 
@@ -117,7 +118,7 @@ export function InvitationOrchestrator({
       />
 
       {/* 9. Closing Footer (08-penutup) */}
-      <ClosingFooter />
+      <ClosingFooter weddingDateIso={settings.weddingDateIso} />
 
       {/* 10. Floating Controls (Glass Pill Dock & Vinyl Music Disc) */}
       <FloatingControls

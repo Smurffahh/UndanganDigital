@@ -40,6 +40,7 @@ import {
   downloadExcelTemplate,
   downloadCsvTemplate,
 } from "@/lib/guestTemplate";
+import { formatWaEventDate } from "@/lib/dateFormat";
 
 interface GuestManagementModuleProps {
   guests: GuestData[];
@@ -122,7 +123,7 @@ export function GuestManagementModule({
         /{nama_mempelai}/g,
         `${settings.brideName.split(" ")[0]} & ${settings.groomName.split(" ")[0]}`
       )
-      .replace(/{tanggal_acara}/g, "Ahad, 10 Januari 2027")
+      .replace(/{tanggal_acara}/g, formatWaEventDate(settings.weddingDateIso))
       .replace(/{lokasi_acara}/g, `${settings.venueName}, ${settings.venueAddress}`);
   };
 

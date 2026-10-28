@@ -787,7 +787,7 @@ export function WeddingSettingsModule({
                   onChange={(e) =>
                     handleGiftAddressChange("receiver", e.target.value)
                   }
-                  placeholder="Dian Ayu Puspa Sari"
+                  placeholder="Sinta Maharani"
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 text-base sm:text-sm text-slate-900 dark:text-cream focus:outline-none focus:ring-1 focus:ring-gold-500"
                 />
               </div>

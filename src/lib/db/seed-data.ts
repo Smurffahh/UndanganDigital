@@ -1,11 +1,11 @@
 export const DEFAULT_WEDDING_SETTINGS = {
-  brideName: "Dian Ayu Puspa Sari",
+  brideName: "Sinta Maharani",
   brideBirth: "Pekanbaru, 10 September 2005",
   brideBio:
-    "Gadis lembut dari Pekanbaru yang tumbuh bersama doa, menantikan hari penuh berkah bersama belahan jiwanya.",
+    "Gadis lembut yang tumbuh bersama doa, menantikan hari penuh berkah bersama belahan jiwanya.",
   bridePhotoUrl:
     "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
-  groomName: "Iqbal Pradana",
+  groomName: "Fauzan Pratama",
   groomBirth: "3 Mei 1997",
   groomBio:
     "Pria berhati tenang yang percaya bahwa pernikahan adalah ikhtiar terindah untuk saling menyempurnakan.",
@@ -31,13 +31,13 @@ export const DEFAULT_WEDDING_SETTINGS = {
       brand: "Bank BCA",
       type: "Transfer Bank",
       number: "1234567890",
-      holder: "Dian Ayu Puspa Sari",
+      holder: "Sinta Maharani",
     },
     {
       brand: "Bank Mandiri",
       type: "Transfer Bank",
       number: "1230007890123",
-      holder: "Iqbal Pradana",
+      holder: "Fauzan Pratama",
     },
   ],
   ewallets: [
@@ -45,17 +45,17 @@ export const DEFAULT_WEDDING_SETTINGS = {
       brand: "DANA",
       type: "E-Wallet",
       number: "0812-xxxx-xxxx",
-      holder: "Dian Ayu Puspa Sari",
+      holder: "Sinta Maharani",
     },
     {
       brand: "GoPay",
       type: "E-Wallet",
       number: "0812-xxxx-xxxx",
-      holder: "Iqbal Pradana",
+      holder: "Fauzan Pratama",
     },
   ],
   giftAddress: {
-    receiver: "Dian Ayu Puspa Sari",
+    receiver: "Sinta Maharani",
     phone: "0812-xxxx-xxxx",
     address:
       "Jl. Contoh Alamat No. 10, Kel. Air Putih, Kec. Tuah Madani, Kota Pekanbaru, Riau 28127",
@@ -69,7 +69,7 @@ _Assalamu’alaikum Warahmatullahi Wabarakatuh_
 
 Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:
 
-*Dian & Iqbal*
+*Fauzan & Sinta*
 
 Informasi lengkap mengenai waktu, lokasi acara, dan konfirmasi kehadiran dapat diakses melalui tautan undangan resmi berikut:
 {link_undangan}
@@ -79,7 +79,7 @@ Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i
 _Wassalamu’alaikum Warahmatullahi Wabarakatuh_
 
 Kami yang berbahagia,
-*Dian & Iqbal*`,
+*Fauzan & Sinta*`,
 };
 
 export const DEFAULT_GALLERY_PHOTOS = [
@@ -87,7 +87,7 @@ export const DEFAULT_GALLERY_PHOTOS = [
     id: 1,
     imageUrl:
       "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
-    caption: "Dian & Iqbal berbaring di padang rumput saat senja",
+    caption: "Fauzan & Sinta berbaring di padang rumput saat senja",
     aspectRatio: "3/4",
     sortOrder: 1,
   },
@@ -103,7 +103,7 @@ export const DEFAULT_GALLERY_PHOTOS = [
     id: 3,
     imageUrl:
       "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
-    caption: "Dian dengan gaun putih di tepi pantai",
+    caption: "Sinta dengan gaun putih di tepi pantai",
     aspectRatio: "3/4",
     sortOrder: 3,
   },
@@ -127,7 +127,7 @@ export const DEFAULT_GALLERY_PHOTOS = [
     id: 6,
     imageUrl:
       "https://i.pinimg.com/736x/b5/ef/95/b5ef95fd3cd9129193935dc4b50ecaa0.jpg",
-    caption: "Iqbal membawa buket bunga",
+    caption: "Fauzan membawa buket bunga",
     aspectRatio: "3/4",
     sortOrder: 6,
   },
@@ -180,12 +180,12 @@ export const DEFAULT_RSVP_WISHES = [
     attendanceStatus: "Hadir",
     paxCount: 2,
     message:
-      "Selamat menempuh hidup baru, Dian & Iqbal! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.",
+      "Selamat menempuh hidup baru, Fauzan & Sinta! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.",
     createdAt: new Date(Date.now() - 3 * 86400000),
   },
   {
     id: 2,
-    guestName: "Sahabat Kecil Iqbal",
+    guestName: "Sahabat Kecil Fauzan",
     attendanceStatus: "Hadir",
     paxCount: 1,
     message:

@@ -9,6 +9,12 @@ import {
   DEFAULT_GALLERY_PHOTOS,
   DEFAULT_RSVP_WISHES,
 } from "./seed-data";
+import {
+  encryptField,
+  decryptField,
+  createBlindIndex,
+  createPhoneBlindIndex,
+} from "../crypto";
 
 // Type definitions
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
@@ -28,20 +34,179 @@ export type GuestData = {
   slugQuery: string;
   whatsappNumber: string | null;
   category: string | null;
+  nameBindex?: string | null;
+  waBindex?: string | null;
   waSentStatus: boolean | null;
   waSentAt: Date | string | null;
   createdAt: Date | string;
 };
 
 interface LocalDatabase {
-  settings: WeddingSettingsData;
+  settings: {
+    [key: string]: any;
+    bankAccounts: any;
+    giftAddress: any;
+  };
   gallery: GalleryPhotoData[];
-  wishes: RsvpWishData[];
-  guests: GuestData[];
+  wishes: any[];
+  guests: any[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
+
+// Helper to decrypt a guest record
+function decryptGuestRecord(r: any): GuestData {
+  return {
+    id: r.id,
+    name: decryptField(r.name),
+    slugQuery: r.slugQuery,
+    whatsappNumber: r.whatsappNumber ? decryptField(r.whatsappNumber) : null,
+    category: r.category ? decryptField(r.category) : "Reguler",
+    nameBindex: r.nameBindex || createBlindIndex(decryptField(r.name)),
+    waBindex: r.waBindex || (r.whatsappNumber ? createPhoneBlindIndex(decryptField(r.whatsappNumber)) : null),
+    waSentStatus: Boolean(r.waSentStatus),
+    waSentAt: r.waSentAt || null,
+    createdAt: r.createdAt || new Date(),
+  };
+}
+
+// Helper to decrypt a wish record
+function decryptWishRecord(r: any): RsvpWishData {
+  return {
+    id: r.id,
+    guestName: decryptField(r.guestName),
+    attendanceStatus: r.attendanceStatus,
+    paxCount: r.paxCount,
+    message: decryptField(r.message),
+    isApproved: r.isApproved ?? true,
+    createdAt: r.createdAt || new Date(),
+  };
+}
+
+// Helper to decrypt settings
+function decryptSettingsRecord(row: any): WeddingSettingsData {
+  let bankAccounts = DEFAULT_WEDDING_SETTINGS.bankAccounts;
+  if (row.bankAccounts) {
+    if (typeof row.bankAccounts === "string") {
+      try {
+        const decryptedStr = decryptField(row.bankAccounts);
+        bankAccounts = JSON.parse(decryptedStr);
+      } catch {
+        bankAccounts = DEFAULT_WEDDING_SETTINGS.bankAccounts;
+      }
+    } else {
+      bankAccounts = row.bankAccounts;
+    }
+  }
+
+  let giftAddress = DEFAULT_WEDDING_SETTINGS.giftAddress;
+  if (row.giftAddress) {
+    if (typeof row.giftAddress === "string") {
+      try {
+        const decryptedStr = decryptField(row.giftAddress);
+        giftAddress = JSON.parse(decryptedStr);
+      } catch {
+        giftAddress = DEFAULT_WEDDING_SETTINGS.giftAddress;
+      }
+    } else {
+      giftAddress = row.giftAddress;
+    }
+  }
+
+  let ewallets = DEFAULT_WEDDING_SETTINGS.ewallets;
+  if (row.ewallets) {
+    if (typeof row.ewallets === "string") {
+      try {
+        const decryptedStr = decryptField(row.ewallets);
+        ewallets = JSON.parse(decryptedStr);
+      } catch {
+        ewallets = DEFAULT_WEDDING_SETTINGS.ewallets;
+      }
+    } else {
+      ewallets = row.ewallets;
+    }
+  }
+
+  return {
+    brideName: row.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
+    brideBirth: row.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,
+    brideBio: row.brideBio || DEFAULT_WEDDING_SETTINGS.brideBio,
+    bridePhotoUrl: row.bridePhotoUrl || DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
+    groomName: row.groomName || DEFAULT_WEDDING_SETTINGS.groomName,
+    groomBirth: row.groomBirth || DEFAULT_WEDDING_SETTINGS.groomBirth,
+    groomBio: row.groomBio || DEFAULT_WEDDING_SETTINGS.groomBio,
+    groomPhotoUrl: row.groomPhotoUrl || DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
+    coverPhotoUrl: row.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
+    heroPhotoUrl: row.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
+    weddingDateIso: row.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+    akadTime: row.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
+    resepsiTime: row.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
+    venueName: row.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
+    venueAddress: row.venueAddress || DEFAULT_WEDDING_SETTINGS.venueAddress,
+    venuePlusCode: row.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
+    googleMapsUrl: row.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
+    googleMapsEmbed: row.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
+    youtubeVideoId: row.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
+    bankAccounts,
+    ewallets,
+    giftAddress,
+    qrisImageUrl: row.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
+    waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
+  };
+}
+
+// Auto-migrate plaintext rows to AES-256-GCM ciphertexts
+function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
+  let modified = false;
+
+  // 1. Settings migration
+  if (data.settings) {
+    if (data.settings.bankAccounts && typeof data.settings.bankAccounts !== "string") {
+      data.settings.bankAccounts = encryptField(JSON.stringify(data.settings.bankAccounts));
+      modified = true;
+    }
+    if (data.settings.ewallets && typeof data.settings.ewallets !== "string") {
+      data.settings.ewallets = encryptField(JSON.stringify(data.settings.ewallets));
+      modified = true;
+    }
+    if (data.settings.giftAddress && typeof data.settings.giftAddress !== "string") {
+      data.settings.giftAddress = encryptField(JSON.stringify(data.settings.giftAddress));
+      modified = true;
+    }
+  }
+
+  // 2. Guests migration
+  if (Array.isArray(data.guests)) {
+    for (const g of data.guests) {
+      if (g.name && !g.name.startsWith("enc:v1:")) {
+        const plainName = g.name;
+        const plainPhone = g.whatsappNumber;
+        const plainCat = g.category || "Reguler";
+
+        g.name = encryptField(plainName);
+        g.whatsappNumber = plainPhone ? encryptField(plainPhone) : null;
+        g.category = encryptField(plainCat);
+        g.nameBindex = createBlindIndex(plainName);
+        g.waBindex = plainPhone ? createPhoneBlindIndex(plainPhone) : null;
+        modified = true;
+      }
+    }
+  }
+
+  // 3. Wishes migration
+  if (Array.isArray(data.wishes)) {
+    for (const w of data.wishes) {
+      if (w.guestName && !w.guestName.startsWith("enc:v1:")) {
+        w.guestName = encryptField(w.guestName);
+        w.message = encryptField(w.message);
+        modified = true;
+      }
+    }
+  }
+
+  return modified;
+}
 
 // Helper to get or initialize local JSON database file
 function getLocalDb(): LocalDatabase {
@@ -51,33 +216,52 @@ function getLocalDb(): LocalDatabase {
     }
     if (fs.existsSync(DB_FILE_PATH)) {
       const content = fs.readFileSync(DB_FILE_PATH, "utf-8");
-      return JSON.parse(content);
+      const parsed: LocalDatabase = JSON.parse(content);
+      const wasMigrated = migrateLocalDbIfNecessary(parsed);
+      if (wasMigrated) {
+        saveLocalDb(parsed);
+      }
+      return parsed;
     }
   } catch (err) {
     console.warn("Failed to read local wedding-db.json, re-initializing:", err);
   }
 
+  // Initial secure encrypted data
   const initialData: LocalDatabase = {
-    settings: { ...DEFAULT_WEDDING_SETTINGS },
+    settings: {
+      ...DEFAULT_WEDDING_SETTINGS,
+      bankAccounts: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.bankAccounts)),
+      ewallets: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.ewallets)),
+      giftAddress: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.giftAddress)),
+    },
     gallery: [...DEFAULT_GALLERY_PHOTOS],
-    wishes: [...DEFAULT_RSVP_WISHES],
+    wishes: DEFAULT_RSVP_WISHES.map((w) => ({
+      ...w,
+      guestName: encryptField(w.guestName),
+      message: encryptField(w.message),
+    })),
     guests: [
       {
         id: 1,
-        name: "Budi Santoso",
+        name: encryptField("Budi Santoso"),
         slugQuery: "Budi+Santoso",
-        whatsappNumber: "6281234567890",
-        category: "Keluarga",
+        whatsappNumber: encryptField("6281234567890"),
+        category: encryptField("Keluarga"),
+        nameBindex: createBlindIndex("Budi Santoso"),
+        waBindex: createPhoneBlindIndex("6281234567890"),
         waSentStatus: false,
         waSentAt: null,
         createdAt: new Date().toISOString(),
       },
       {
         id: 2,
-        name: "Siti Rahma",
+        name: encryptField("Siti Rahma"),
         slugQuery: "Siti+Rahma",
-        whatsappNumber: "6289876543210",
-        category: "Sahabat",
+        whatsappNumber: encryptField("6289876543210"),
+        category: encryptField("Sahabat"),
+        nameBindex: createBlindIndex("Siti Rahma"),
+        waBindex: createPhoneBlindIndex("6289876543210"),
         waSentStatus: true,
         waSentAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
@@ -116,7 +300,7 @@ function getPostgresDb() {
 }
 
 // -------------------------------------------------------------
-// Data-Access Methods with Local JSON Fallback
+// Data-Access Methods with End-to-End Field Decryption/Encryption
 // -------------------------------------------------------------
 
 export async function getWeddingSettings(): Promise<WeddingSettingsData> {
@@ -125,42 +309,29 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
     try {
       const rows = await db.select().from(schema.weddingSettings).limit(1);
       if (rows.length > 0) {
-        const row = rows[0];
-        return {
-          brideName: row.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
-          brideBirth: row.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,
-          brideBio: row.brideBio || DEFAULT_WEDDING_SETTINGS.brideBio,
-          bridePhotoUrl: row.bridePhotoUrl || DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
-          groomName: row.groomName || DEFAULT_WEDDING_SETTINGS.groomName,
-          groomBirth: row.groomBirth || DEFAULT_WEDDING_SETTINGS.groomBirth,
-          groomBio: row.groomBio || DEFAULT_WEDDING_SETTINGS.groomBio,
-          groomPhotoUrl: row.groomPhotoUrl || DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
-          coverPhotoUrl: row.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
-          heroPhotoUrl: row.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
-          weddingDateIso: row.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
-          akadTime: row.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
-          resepsiTime: row.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
-          venueName: row.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
-          venueAddress: row.venueAddress || DEFAULT_WEDDING_SETTINGS.venueAddress,
-          venuePlusCode: row.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
-          googleMapsUrl: row.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
-          googleMapsEmbed: row.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
-          youtubeVideoId: row.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
-          bankAccounts: (row.bankAccounts as typeof DEFAULT_WEDDING_SETTINGS.bankAccounts) || DEFAULT_WEDDING_SETTINGS.bankAccounts,
-          ewallets: (row.ewallets as typeof DEFAULT_WEDDING_SETTINGS.ewallets) || DEFAULT_WEDDING_SETTINGS.ewallets,
-          giftAddress: (row.giftAddress as typeof DEFAULT_WEDDING_SETTINGS.giftAddress) || DEFAULT_WEDDING_SETTINGS.giftAddress,
-          qrisImageUrl: row.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
-          waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
-        };
+        return decryptSettingsRecord(rows[0]);
       }
     } catch (e) {
       console.warn("DB query failed, using local JSON fallback:", e);
     }
   }
-  return getLocalDb().settings;
+  return decryptSettingsRecord(getLocalDb().settings);
 }
 
 export async function updateWeddingSettings(updates: Partial<WeddingSettingsData>): Promise<WeddingSettingsData> {
+  const dbUpdates: any = { ...updates };
+
+  // Encrypt sensitive fields if provided
+  if (updates.bankAccounts) {
+    dbUpdates.bankAccounts = encryptField(JSON.stringify(updates.bankAccounts));
+  }
+  if (updates.ewallets) {
+    dbUpdates.ewallets = encryptField(JSON.stringify(updates.ewallets));
+  }
+  if (updates.giftAddress) {
+    dbUpdates.giftAddress = encryptField(JSON.stringify(updates.giftAddress));
+  }
+
   const db = getPostgresDb();
   if (db) {
     try {
@@ -168,7 +339,7 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
       if (existing.length > 0) {
         await db
           .update(schema.weddingSettings)
-          .set({ ...updates, updatedAt: new Date() })
+          .set({ ...dbUpdates, updatedAt: new Date() })
           .where(eq(schema.weddingSettings.id, existing[0].id));
       }
     } catch (e) {
@@ -177,9 +348,9 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
   }
 
   const local = getLocalDb();
-  local.settings = { ...local.settings, ...updates };
+  local.settings = { ...local.settings, ...dbUpdates };
   saveLocalDb(local);
-  return local.settings;
+  return decryptSettingsRecord(local.settings);
 }
 
 export async function getGalleryPhotos(): Promise<GalleryPhotoData[]> {
@@ -264,22 +435,16 @@ export async function getRsvpWishes(): Promise<RsvpWishData[]> {
         .select()
         .from(schema.rsvpWishes)
         .orderBy(desc(schema.rsvpWishes.createdAt));
-      return rows.map((r) => ({
-        id: r.id,
-        guestName: r.guestName,
-        attendanceStatus: r.attendanceStatus,
-        paxCount: r.paxCount,
-        message: r.message,
-        isApproved: r.isApproved,
-        createdAt: r.createdAt || new Date(),
-      }));
+      return rows.map(decryptWishRecord);
     } catch (e) {
       console.warn("DB wishes query failed, using local JSON fallback:", e);
     }
   }
 
   const local = getLocalDb();
-  return [...local.wishes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return local.wishes
+    .map(decryptWishRecord)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function createRsvpWish(data: {
@@ -288,27 +453,22 @@ export async function createRsvpWish(data: {
   paxCount: number;
   message: string;
 }): Promise<RsvpWishData> {
+  const encryptedName = encryptField(data.guestName.trim());
+  const encryptedMsg = encryptField(data.message.trim());
+
   const db = getPostgresDb();
   if (db) {
     try {
       const [inserted] = await db
         .insert(schema.rsvpWishes)
         .values({
-          guestName: data.guestName,
+          guestName: encryptedName,
           attendanceStatus: data.attendanceStatus,
           paxCount: data.paxCount,
-          message: data.message,
+          message: encryptedMsg,
         })
         .returning();
-      return {
-        id: inserted.id,
-        guestName: inserted.guestName,
-        attendanceStatus: inserted.attendanceStatus,
-        paxCount: inserted.paxCount,
-        message: inserted.message,
-        isApproved: inserted.isApproved,
-        createdAt: inserted.createdAt || new Date(),
-      };
+      return decryptWishRecord(inserted);
     } catch (e) {
       console.warn("DB insert wish failed, using local JSON fallback:", e);
     }
@@ -316,18 +476,18 @@ export async function createRsvpWish(data: {
 
   const local = getLocalDb();
   const nextId = local.wishes.reduce((max, w) => Math.max(max, w.id), 0) + 1;
-  const newWish: RsvpWishData = {
+  const newRawWish = {
     id: nextId,
-    guestName: data.guestName,
+    guestName: encryptedName,
     attendanceStatus: data.attendanceStatus,
     paxCount: data.paxCount,
-    message: data.message,
+    message: encryptedMsg,
     isApproved: true,
     createdAt: new Date().toISOString(),
   };
-  local.wishes.unshift(newWish);
+  local.wishes.unshift(newRawWish);
   saveLocalDb(local);
-  return newWish;
+  return decryptWishRecord(newRawWish);
 }
 
 export async function deleteRsvpWish(id: number): Promise<boolean> {
@@ -352,21 +512,14 @@ export async function getGuests(): Promise<GuestData[]> {
   if (db) {
     try {
       const rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
-      return rows.map((r) => ({
-        id: r.id,
-        name: r.name,
-        slugQuery: r.slugQuery,
-        whatsappNumber: r.whatsappNumber,
-        category: r.category,
-        waSentStatus: r.waSentStatus,
-        waSentAt: r.waSentAt,
-        createdAt: r.createdAt || new Date(),
-      }));
+      return rows.map(decryptGuestRecord);
     } catch (e) {
       console.warn("DB guests query failed, using local JSON fallback:", e);
     }
   }
-  return getLocalDb().guests;
+
+  const local = getLocalDb();
+  return local.guests.map(decryptGuestRecord);
 }
 
 export async function createGuest(data: {
@@ -374,29 +527,34 @@ export async function createGuest(data: {
   whatsappNumber?: string | null;
   category?: string;
 }): Promise<GuestData> {
-  const slugQuery = encodeURIComponent(data.name.trim().replace(/\s+/g, "+"));
+  const cleanName = data.name.trim();
+  const slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
+  const cleanPhone = data.whatsappNumber?.trim() || null;
+  const category = data.category?.trim() || "Reguler";
+
+  const encName = encryptField(cleanName);
+  const encPhone = cleanPhone ? encryptField(cleanPhone) : null;
+  const encCategory = encryptField(category);
+  const nameBindex = createBlindIndex(cleanName);
+  const waBindex = cleanPhone ? createPhoneBlindIndex(cleanPhone) : null;
+
   const db = getPostgresDb();
   if (db) {
     try {
       const [inserted] = await db
         .insert(schema.guests)
         .values({
-          name: data.name.trim(),
+          name: encName,
           slugQuery,
-          whatsappNumber: data.whatsappNumber || null,
-          category: data.category || "Reguler",
+          whatsappNumber: encPhone,
+          category: encCategory,
+          nameBindex,
+          waBindex,
+          waSentStatus: false,
+          waSentAt: null,
         })
         .returning();
-      return {
-        id: inserted.id,
-        name: inserted.name,
-        slugQuery: inserted.slugQuery,
-        whatsappNumber: inserted.whatsappNumber,
-        category: inserted.category,
-        waSentStatus: inserted.waSentStatus,
-        waSentAt: inserted.waSentAt,
-        createdAt: inserted.createdAt || new Date(),
-      };
+      return decryptGuestRecord(inserted);
     } catch (e) {
       console.warn("DB insert guest failed, using local JSON fallback:", e);
     }
@@ -404,47 +562,60 @@ export async function createGuest(data: {
 
   const local = getLocalDb();
   const nextId = local.guests.reduce((max, g) => Math.max(max, g.id), 0) + 1;
-  const newGuest: GuestData = {
+  const newRawGuest = {
     id: nextId,
-    name: data.name.trim(),
+    name: encName,
     slugQuery,
-    whatsappNumber: data.whatsappNumber || null,
-    category: data.category || "Reguler",
+    whatsappNumber: encPhone,
+    category: encCategory,
+    nameBindex,
+    waBindex,
     waSentStatus: false,
     waSentAt: null,
     createdAt: new Date().toISOString(),
   };
-  local.guests.unshift(newGuest);
+  local.guests.unshift(newRawGuest);
   saveLocalDb(local);
-  return newGuest;
+  return decryptGuestRecord(newRawGuest);
 }
 
 export async function updateGuest(
   id: number,
   updates: Partial<Omit<GuestData, "id" | "createdAt">>
 ): Promise<GuestData | null> {
+  const dbUpdates: any = { ...updates };
+
+  if (updates.name !== undefined) {
+    const cleanName = updates.name.trim();
+    dbUpdates.name = encryptField(cleanName);
+    dbUpdates.slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
+    dbUpdates.nameBindex = createBlindIndex(cleanName);
+  }
+
+  if (updates.whatsappNumber !== undefined) {
+    const cleanPhone = updates.whatsappNumber?.trim() || null;
+    dbUpdates.whatsappNumber = cleanPhone ? encryptField(cleanPhone) : null;
+    dbUpdates.waBindex = cleanPhone ? createPhoneBlindIndex(cleanPhone) : null;
+  }
+
+  if (updates.category !== undefined) {
+    dbUpdates.category = encryptField(updates.category || "Reguler");
+  }
+
+  if (updates.waSentAt !== undefined) {
+    dbUpdates.waSentAt =
+      typeof updates.waSentAt === "string" ? new Date(updates.waSentAt) : updates.waSentAt;
+  }
+
   const db = getPostgresDb();
   if (db) {
     try {
-      const dbUpdates = {
-        ...updates,
-        waSentAt: typeof updates.waSentAt === "string" ? new Date(updates.waSentAt) : updates.waSentAt,
-      };
       const [updated] = await db
         .update(schema.guests)
         .set(dbUpdates)
         .where(eq(schema.guests.id, id))
         .returning();
-      return {
-        id: updated.id,
-        name: updated.name,
-        slugQuery: updated.slugQuery,
-        whatsappNumber: updated.whatsappNumber,
-        category: updated.category,
-        waSentStatus: updated.waSentStatus,
-        waSentAt: updated.waSentAt,
-        createdAt: updated.createdAt || new Date(),
-      };
+      return decryptGuestRecord(updated);
     } catch (e) {
       console.warn("DB update guest failed, using local JSON fallback:", e);
     }
@@ -453,9 +624,19 @@ export async function updateGuest(
   const local = getLocalDb();
   const idx = local.guests.findIndex((g) => g.id === id);
   if (idx === -1) return null;
-  local.guests[idx] = { ...local.guests[idx], ...updates };
+
+  local.guests[idx] = {
+    ...local.guests[idx],
+    ...dbUpdates,
+    waSentAt:
+      updates.waSentAt instanceof Date
+        ? updates.waSentAt.toISOString()
+        : updates.waSentAt !== undefined
+        ? updates.waSentAt
+        : local.guests[idx].waSentAt,
+  };
   saveLocalDb(local);
-  return local.guests[idx];
+  return decryptGuestRecord(local.guests[idx]);
 }
 
 export async function deleteGuest(id: number): Promise<boolean> {

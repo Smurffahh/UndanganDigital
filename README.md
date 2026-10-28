@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💍 The Wedding of Dian & Iqbal
+# 💍 The Wedding of Fauzan & Sinta
 ### Platform Undangan Pernikahan Digital Interaktif & Dashboard Mempelai
 **Ahad, 10 Januari 2027 • Pekanbaru, Riau**
 
@@ -50,7 +50,7 @@
    - Kaligrafi Arab Bismillah & QS. Ar-Rum: 21 dalam bingkai Mihrab Islami lengkung kubah.
    - 4 kotak hitung mundur waktu nyata (*Hari, Jam, Menit, Detik*) menuju 10 Januari 2027 menggunakan animasi `<NumberFlow />` dan font `tabular-nums`.
 3. **Profil Mempelai Nusantara (`03-mempelai`):**
-   - Kartu profil mempelai wanita (Dian) & pria (Iqbal) dengan ornamen Gunungan Wayang Jawa emas dan sudut siku kartu tradisional.
+   - Kartu profil mempelai wanita (Sinta) & pria (Fauzan) dengan ornamen Gunungan Wayang Jawa emas dan sudut siku kartu tradisional.
 4. **Detail Acara & Integrasi Peta (`04-acara`):**
    - Waktu pelaksanaan Akad Nikah & Resepsi Pernikahan.
    - Peta interaktif Google Maps embed, tombol navigasi langsung, serta tombol **"Tambah ke Google Calendar"** dan **"Unduh File (.ics)"**.
@@ -80,7 +80,7 @@ Halaman khusus pengantin dan keluarga untuk mengelola seluruh aspek pernikahan:
 | Modul | Kemampuan & Fungsi |
 | :--- | :--- |
 | **Modul A: Ringkasan & Moderasi RSVP** | 5 Kartu KPI metrik waktu nyata dengan `<NumberFlow />` (*Total Diundang*, *Terkirim WA*, *Konfirmasi Hadir & Total Orang*, *Berhalangan/Ragu*, *Total Ucapan*), pencarian, filter, dan moderasi hapus ucapan spam. |
-| **Modul B: Pengaturan Foto Utama & Galeri** | Atur 5 foto kunci (*Cover Gate*, *Hero Mihrab*, *Foto Dian*, *Foto Iqbal*, *QRIS*) dengan kompresi otomatis WebP di browser/server. Tambah, susun urutan, dan hapus foto galeri pre-wedding. |
+| **Modul B: Pengaturan Foto Utama & Galeri** | Atur 5 foto kunci (*Cover Gate*, *Hero Mihrab*, *Foto Sinta*, *Foto Fauzan*, *QRIS*) dengan kompresi otomatis WebP di browser/server. Tambah, susun urutan, dan hapus foto galeri pre-wedding. |
 | **Modul C: Tamu & WhatsApp Dispatcher** | **Editor Template WhatsApp** dengan variabel `{nama_tamu}` & `{link_undangan}` + pratinjau live. Normalisasi nomor otomatis ke `+628...`. **Tombol 1-Klik Kirim WA** yang membuka chat WhatsApp dan menandai status tamu menjadi *Terkirim*. **Import Tamu Massal dari Excel (`.xlsx`/`.csv`)** dan tombol unduh template Excel resmi. |
 | **Modul D: Pengaturan Acara & Rekening** | Pengaturan nama/bio mempelai, jadwal acara ISO 8601, nama venue, koordinat Plus Code, URL navigasi maps, YouTube Audio ID, daftar dinamis rekening bank & e-wallet, serta alamat kado fisik. |
 
@@ -167,7 +167,7 @@ UndanganDigital/
 │       ├── utils.ts                   # Helper cn() tailwind-merge
 │       └── db/
 │           ├── schema.ts              # Skema tabel Drizzle ORM
-│           ├── seed-data.ts           # Data awal asli Dian & Iqbal
+│           ├── seed-data.ts           # Data awal asli Fauzan & Sinta
 │           └── store.ts               # Storage adapter (Neon DB / JSON fallback)
 ├── test_invitation.py                 # E2E test Playwright halaman publik
 └── test_admin.py                      # E2E test Playwright dashboard admin
@@ -265,6 +265,6 @@ Aplikasi ini 100% siap dideploy ke **Vercel** dengan arsitektur serverless:
 
 ## 📜 Lisensi & Kredit
 
-- **Pasangan Berbahagia:** Dian Ayu Puspa Sari & Iqbal Pradana.
+- **Pasangan Berbahagia:** Fauzan Pratama & Sinta Maharani.
 - **Teknologi:** Next.js, React, Tailwind CSS, Neon, Lucide Icons, NumberFlow, Sonner, Playwright.
 - Dibuat dengan penuh cinta dan dedikasi untuk mengabadikan momen pernikahan yang tak terlupakan. 🌸💍✨

@@ -37,7 +37,7 @@ export function CoverGate({ guestName, onOpen, coverPhotoUrl }: CoverGateProps) 
         className="absolute inset-0 bg-cover bg-center animate-slow-zoom"
         style={{ backgroundImage: `url(${coverPhotoUrl})` }}
         role="img"
-        aria-label="Foto Dian dan Iqbal"
+        aria-label="Foto Fauzan dan Sinta"
       />
 
       {/* Veil Overlay */}
@@ -53,7 +53,7 @@ export function CoverGate({ guestName, onOpen, coverPhotoUrl }: CoverGateProps) 
         </p>
 
         <h1 className="font-serif font-medium text-4xl sm:text-5xl md:text-6xl leading-tight mt-1 text-white drop-shadow-lg">
-          Dian <span className="font-script text-gold-300 text-[0.85em] px-1">&amp;</span> Iqbal
+          Fauzan <span className="font-script text-gold-300 text-[0.85em] px-1">&amp;</span> Sinta
         </h1>
 
         <p className="mt-3.5 text-xs tracking-[0.4em] uppercase text-white/90">

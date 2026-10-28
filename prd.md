@@ -6,7 +6,7 @@
 Mengembangkan ulang (refactor) web undangan pernikahan statis `undangan-dian-iqbal` menjadi aplikasi Full-Stack berbasis React 19 (Next.js App Router) dan Tailwind CSS v4 yang mempertahankan kehangatan visual, budaya, dan kehalusan animasi aslinya (Motif Batik Kawung, Pita Songket, Gunungan Wayang, Bintang Emas, Bingkai Mihrab Islami), diperkaya dengan 4 Fitur & Peningkatan Visual Baru (Staggered Blur Reveal, Kartu Amplop Digital Bergaya ATM & Modal QRIS, Filter & Search Buku Tamu + Import Kontak Excel di Dashboard, serta Floating Glass Pill Navigation & Piringan Musik), serta dilengkapi Dashboard Mempelai (`/admin/dashboard`) untuk mengelola foto utama/galeri secara dinamis, buku tamu & RSVP real-time berbasis database, dan pengiriman undangan WhatsApp otomatis satu klik.
 
 **Target Users:** 
-1. **Primary Persona (Mempelai & Keluarga / Admin):** Pasangan mempelai (Dian & Iqbal) atau panitia keluarga yang mengelola foto, daftar tamu undangan, impor kontak Excel/CSV, pengiriman pesan WhatsApp personal, dan memantau rekapitulasi kehadiran (RSVP).
+1. **Primary Persona (Mempelai & Keluarga / Admin):** Pasangan mempelai (Fauzan & Sinta) atau panitia keluarga yang mengelola foto, daftar tamu undangan, impor kontak Excel/CSV, pengiriman pesan WhatsApp personal, dan memantau rekapitulasi kehadiran (RSVP).
 2. **Secondary Persona (Tamu Undangan):** Kerabat, sahabat, dan kolega yang membuka tautan undangan melalui perangkat seluler (mayoritas via WhatsApp di Android & iOS) untuk melihat detail acara, galeri foto, mengirim konfirmasi kehadiran/doa dengan fitur filter & pencarian, serta mengirim tanda kasih (amplop digital kartu ATM & QRIS).
 
 **Business & Project Objectives:** 

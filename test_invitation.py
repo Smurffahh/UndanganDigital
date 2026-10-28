@@ -89,7 +89,7 @@ def run_tests():
         page.fill("#f-nama", "Budi Santoso Testing")
         page.select_option("#f-hadir", "Hadir")
         page.select_option("#f-jumlah", "2")
-        page.fill("#f-pesan", "Selamat menempuh hidup baru Dian & Iqbal! Semoga samawa selalu.")
+        page.fill("#f-pesan", "Selamat menempuh hidup baru Fauzan & Sinta! Semoga samawa selalu.")
         
         btn_submit = page.locator("button:has-text('Kirim Ucapan')")
         btn_submit.click()

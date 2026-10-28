@@ -16,7 +16,7 @@ export function ClosingFooter() {
         </p>
 
         <p className="mt-4 font-script text-4xl sm:text-5xl text-gold-300 leading-tight drop-shadow-md">
-          Dian &amp; Iqbal
+          Fauzan &amp; Sinta
         </p>
 
         <p className="mt-2 text-xs tracking-[0.42em] text-white/80 tabular-nums">

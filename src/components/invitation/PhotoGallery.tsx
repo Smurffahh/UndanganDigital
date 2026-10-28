@@ -82,7 +82,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.imageUrl}
-                alt={item.caption || "Foto momen Dian dan Iqbal"}
+                alt={item.caption || "Foto momen Fauzan dan Sinta"}
                 className="w-full h-auto object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                 loading="lazy"
               />

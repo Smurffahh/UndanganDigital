@@ -1,10 +1,10 @@
 {
   "settings": {
-    "brideName": "Dian Ayu Puspa Sari",
+    "brideName": "Sinta Maharani",
     "brideBirth": "Pekanbaru, 10 September 2005",
-    "brideBio": "Gadis lembut dari Pekanbaru yang tumbuh bersama doa, menantikan hari penuh berkah bersama belahan jiwanya.",
+    "brideBio": "Gadis lembut yang tumbuh bersama doa, menantikan hari penuh berkah bersama belahan jiwanya.",
     "bridePhotoUrl": "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
-    "groomName": "Iqbal Pradana",
+    "groomName": "Fauzan Pratama",
     "groomBirth": "3 Mei 1997",
     "groomBio": "Pria berhati tenang yang percaya bahwa pernikahan adalah ikhtiar terindah untuk saling menyempurnakan.",
     "groomPhotoUrl": "https://i.pinimg.com/736x/b5/ef/95/b5ef95fd3cd9129193935dc4b50ecaa0.jpg",
@@ -19,47 +19,17 @@
     "googleMapsUrl": "https://www.google.com/maps/place/Kedai+Harian+Bang+Zali/@0.4835204,101.3506971,56m/data=!3m1!1e3!4m6!3m5!1s0x31d5a9d1656c3223:0xab29da710b18cf47!8m2!3d0.4835685!4d101.3507545!16s%2Fg%2F11kmnsnh90?entry=ttu",
     "googleMapsEmbed": "https://maps.google.com/maps?q=0.4835204,101.3506971&z=17&output=embed",
     "youtubeVideoId": "In8kDy_WU4s",
-    "bankAccounts": [
-      {
-        "brand": "Bank BCA",
-        "type": "Transfer Bank",
-        "number": "1234567890",
-        "holder": "Dian Ayu Puspa Sari"
-      },
-      {
-        "brand": "Bank Mandiri",
-        "type": "Transfer Bank",
-        "number": "1230007890123",
-        "holder": "Iqbal Pradana"
-      }
-    ],
-    "ewallets": [
-      {
-        "brand": "DANA",
-        "type": "E-Wallet",
-        "number": "0812-xxxx-xxxx",
-        "holder": "Dian Ayu Puspa Sari"
-      },
-      {
-        "brand": "GoPay",
-        "type": "E-Wallet",
-        "number": "0812-xxxx-xxxx",
-        "holder": "Iqbal Pradana"
-      }
-    ],
-    "giftAddress": {
-      "receiver": "Dian Ayu Puspa Sari",
-      "phone": "0812-xxxx-xxxx",
-      "address": "Jl. Contoh Alamat No. 10, Kel. Air Putih, Kec. Tuah Madani, Kota Pekanbaru, Riau 28127"
-    },
+    "bankAccounts": "enc:v1:289bbbf6d722439541f7b4aa:8e6be5aace9f273c9b433bbcc8291f89:222d2fa88bf86bef33a5c0f640e2db6a0ab75cdfdd7a9a98d873727c065458e761510f77cab661d294347b97d5d84d4e02145f75325d407abb37e992f5c121cbf7f32bbc731193fad7e7e338a742431b71ae2f275e6efdf57774ae1fd3045e553383bda7971126272df75027be4595ffb25315e2c36a36068ba373ba0326031db0d7d2f437d1143d3332ff54c3b9b3c3f31981da450d28f734b9568153ec1560d02fc660b56e25336d017ee3194c6b8257d70ffebea8b76dbee808f552a26f5e",
+    "ewallets": "enc:v1:29056f3e8ae4a097a1b90f8b:8615cbde19d96f0771cd65e5f5435789:8c07684468642a80f20e50f5fb4798cc5b078d7f524b0b15ef0f6c559fcef0e6c6267cd69f75b2207111382e0f3bf9475388d0d3045ab623b72c011baab63dc78128f25d9448e2eb76dd5f3684d5ce0e92504a74a020abe741a9dde775bbdcfd5c9f7e3d8718cea6d99df9f81a8d005206c843ae97d3c32bc75480cd034469d5182b2aea8df6842b1c001c2e881e4aea67882f216cf9c4a18b509766879b54d0aca872e4ce3568e69642925d5b867457",
+    "giftAddress": "enc:v1:60c8a1184d78077b3fa5b3ed:a7606f1ed56889016298699b9f7dd176:4bdbb653a92801416f7d5766490d2d95e481335c82c1555fed5a6d6c17e8a530ea44e7f186d3e9e7aa4e92de7aef66e7f9bb790138f4c3f556209b4dc0085e360f1932674381e332f9a1192a0bd64f50a867fc2b37699e047c3f4baf3fb5dcb9c7a7f93c5e17c6f05239ed44dc7dc14707999a98d4dff04f1eb576a64210617402e274c568ed76919300c00f6e1f37797b2f958a5500383afc",
     "qrisImageUrl": "https://images.unsplash.com/photo-1595079672139-cdc4b0b44714?auto=format&fit=crop&w=600&q=80",
-    "waMessageTemplate": "Kepada Yth.\n*{nama_tamu}*\n\n_Assalamu’alaikum Warahmatullahi Wabarakatuh_\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:\n\n*Dian & Iqbal*\n\nInformasi lengkap mengenai waktu, lokasi acara, dan konfirmasi kehadiran dapat diakses melalui tautan undangan resmi berikut:\n{link_undangan}\n\nMerupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.\n\n_Wassalamu’alaikum Warahmatullahi Wabarakatuh_\n\nKami yang berbahagia,\n*Dian & Iqbal*"
+    "waMessageTemplate": "Kepada Yth.\n*{nama_tamu}*\n\n_Assalamu’alaikum Warahmatullahi Wabarakatuh_\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:\n\n*Fauzan & Sinta*\n\nInformasi lengkap mengenai waktu, lokasi acara, dan konfirmasi kehadiran dapat diakses melalui tautan undangan resmi berikut:\n{link_undangan}\n\nMerupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.\n\n_Wassalamu’alaikum Warahmatullahi Wabarakatuh_\n\nKami yang berbahagia,\n*Fauzan & Sinta*"
   },
   "gallery": [
     {
       "id": 1,
       "imageUrl": "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
-      "caption": "Dian & Iqbal berbaring di padang rumput saat senja",
+      "caption": "Fauzan & Sinta berbaring di padang rumput saat senja",
       "aspectRatio": "3/4",
       "sortOrder": 1
     },
@@ -73,7 +43,7 @@
     {
       "id": 3,
       "imageUrl": "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
-      "caption": "Dian dengan gaun putih di tepi pantai",
+      "caption": "Sinta dengan gaun putih di tepi pantai",
       "aspectRatio": "3/4",
       "sortOrder": 3
     },
@@ -94,7 +64,7 @@
     {
       "id": 6,
       "imageUrl": "https://i.pinimg.com/736x/b5/ef/95/b5ef95fd3cd9129193935dc4b50ecaa0.jpg",
-      "caption": "Iqbal membawa buket bunga",
+      "caption": "Fauzan membawa buket bunga",
       "aspectRatio": "3/4",
       "sortOrder": 6
     },
@@ -136,138 +106,78 @@
   ],
   "wishes": [
     {
-      "id": 8,
-      "guestName": "Budi Santoso Testing",
-      "attendanceStatus": "Hadir",
-      "paxCount": 2,
-      "message": "Selamat menempuh hidup baru Dian &amp; Iqbal! Semoga samawa selalu.",
-      "isApproved": true,
-      "createdAt": "2026-10-28T08:03:19.110Z"
-    },
-    {
-      "id": 7,
-      "guestName": "Budi Santoso Testing",
-      "attendanceStatus": "Hadir",
-      "paxCount": 2,
-      "message": "Selamat menempuh hidup baru Dian &amp; Iqbal! Semoga samawa selalu.",
-      "isApproved": true,
-      "createdAt": "2026-10-28T02:03:10.768Z"
-    },
-    {
-      "id": 6,
-      "guestName": "Budi Santoso Testing",
-      "attendanceStatus": "Hadir",
-      "paxCount": 2,
-      "message": "Selamat menempuh hidup baru Dian & Iqbal! Semoga samawa selalu.",
-      "isApproved": true,
-      "createdAt": "2026-10-28T01:56:40.446Z"
-    },
-    {
-      "id": 5,
-      "guestName": "Budi Santoso Testing",
-      "attendanceStatus": "Hadir",
-      "paxCount": 2,
-      "message": "Selamat menempuh hidup baru Dian & Iqbal! Semoga samawa selalu.",
-      "isApproved": true,
-      "createdAt": "2026-10-28T01:56:21.961Z"
-    },
-    {
       "id": 4,
-      "guestName": "Budi Santoso Testing",
+      "guestName": "enc:v1:e4a4a1f055cb83a0e69c65c7:fcda1beaee0796d54a4844c29c84163c:654fbb809ddef4568a368feabaf6632ff56835ce",
       "attendanceStatus": "Hadir",
       "paxCount": 2,
-      "message": "Selamat menempuh hidup baru Dian & Iqbal! Semoga samawa selalu.",
+      "message": "enc:v1:f068c841035948bc591d44a1:32cfab58cf2ac7d5c119217591289f5c:1303a1b831abebf457a618246eba7f3d4e8dc437e98c2bc60d5d5d0fa9d09923b98a86fec4f835d701243850fac33d5d249f649a32a06057f958e3e913d5c277183700337e",
       "isApproved": true,
-      "createdAt": "2026-10-28T01:45:04.738Z"
+      "createdAt": "2026-10-28T09:36:40.908Z"
     },
     {
       "id": 1,
-      "guestName": "Keluarga Besar Mempelai Wanita",
+      "guestName": "enc:v1:b92d805c4d274b7d58b97e4a:2fb9b8ea91354886d11f87fff91148f3:f3a883fcfbd10996e876a471bbae93b169bce7e3ce1e58e087dc1038096e",
       "attendanceStatus": "Hadir",
       "paxCount": 2,
-      "message": "Selamat menempuh hidup baru, Dian & Iqbal! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.",
+      "message": "enc:v1:add9e0e703669688a7c5962c:5325cf7bcc16baf442f5088dd93cab52:c2ad6513fb95e2a7b8f494bc543532237d7d6fbc5dac17bb65e08fe738c762e998617e2e40e57fd16b726849c17d9a65781176e95609e336cac6e5a28e2512abe398883a7b11c9af8f042f15e5e836ec8b3dd4b2fa32ac4c38752bc74382f3739b8d0711c42f",
       "isApproved": true,
       "createdAt": "2026-10-25T08:00:00.000Z"
     },
     {
       "id": 2,
-      "guestName": "Sahabat Kecil Iqbal",
+      "guestName": "enc:v1:57e2e74abf7d2aefe429b42f:e598c5864de9c6e29c590bcfdbe62c56:6e54e40c731ec2e0fe5c2173101cb2b13b808212",
       "attendanceStatus": "Hadir",
       "paxCount": 1,
-      "message": "Akhirnya ya, Bro! Barakallahu lakuma wa baraka alaikuma. Sampai jumpa di hari bahagia!",
+      "message": "enc:v1:76d9d3ac6ea96e4b8fd0657e:e5e2404935e39273b3c6d923b454d8cb:000a7f889269ae7988ba72997887c83ea1ce5feabaa931e003f68c6dea359fedb6604552530c3e86d26e4638c71eb4ece6a9b94c82cb6c0bb51c4a891deef4d4559c7a578a0a415191149ed7c7ad900368a73413b408",
       "isApproved": true,
       "createdAt": "2026-10-26T08:00:00.000Z"
     },
     {
       "id": 3,
-      "guestName": "Alumni SMA Negeri",
+      "guestName": "enc:v1:3cefea70666111ab9c4301d8:8bdd0a3b986ac9faea66c8c6c653f812:60733ea634db2c4144f1c6ae5d620edb6f",
       "attendanceStatus": "Masih Ragu",
       "paxCount": 1,
-      "message": "Semoga lancar acaranya! Kami usahakan datang, doa terbaik untuk kalian berdua.",
+      "message": "enc:v1:7c083cea36ec86003840de08:ee03ce363644a9e90c081d0280b82985:da8081279a529f6efc1dfa49214c6b38218732cfedf3853dc65b5e55dd4c2bd2e3f606a8bdebab6b1b4962fb4bd7bceff1a49eeaf978e31b1f7e5ba6a655c06344353ca3fde4e31a1f862b68a7c5",
       "isApproved": true,
       "createdAt": "2026-10-27T08:00:00.000Z"
     }
   ],
   "guests": [
     {
-      "id": 6,
-      "name": "Bpk. Ir. Bambang Soediro",
-      "slugQuery": "Bpk.%2BIr.%2BBambang%2BSoediro",
-      "whatsappNumber": "6281298765432",
-      "category": "Keluarga",
-      "waSentStatus": false,
-      "waSentAt": null,
-      "createdAt": "2026-10-28T08:03:38.931Z"
-    },
-    {
-      "id": 5,
-      "name": "Bpk. Ir. Bambang Soediro",
-      "slugQuery": "Bpk.%2BIr.%2BBambang%2BSoediro",
-      "whatsappNumber": "6281298765432",
-      "category": "Keluarga",
-      "waSentStatus": false,
-      "waSentAt": null,
-      "createdAt": "2026-10-28T02:03:53.228Z"
-    },
-    {
-      "id": 4,
-      "name": "Bpk. Ir. Bambang Soediro",
-      "slugQuery": "Bpk.%2BIr.%2BBambang%2BSoediro",
-      "whatsappNumber": "6281298765432",
-      "category": "Keluarga",
-      "waSentStatus": false,
-      "waSentAt": null,
-      "createdAt": "2026-10-28T01:56:01.056Z"
-    },
-    {
       "id": 3,
-      "name": "Bpk. Ir. Bambang Soediro",
+      "name": "enc:v1:b820c5a83fb9e890e2317c1e:08b8a69de8b9a895b6cb83fcca1dda63:8f6d1682f32cd707d9f503d4b0be91b83944a2bc6c4fc1cc",
       "slugQuery": "Bpk.%2BIr.%2BBambang%2BSoediro",
-      "whatsappNumber": "6281298765432",
-      "category": "Keluarga",
+      "whatsappNumber": "enc:v1:9341b704b6365c20eeb39b6f:a98f81b5a60aeaf306e02998f851301a:b90ae44841ce6b76a389eff187",
+      "category": "enc:v1:b56551fb0c8c6dd7773da673:f18f7f908b721832304a2bb56895d1e4:640af3ac4d3ba1a4",
+      "nameBindex": "2a184b8a61d6ac4e62143c3ee2e5da0364f86c739873d32b34a80e7c3560d32c",
+      "waBindex": "e43573bbc321327a8362d75d58cd7b0092ec2193c95d1e25aed4d1869973fe4a",
       "waSentStatus": false,
       "waSentAt": null,
-      "createdAt": "2026-10-28T01:55:37.910Z"
+      "createdAt": "2026-10-28T09:37:01.593Z"
     },
     {
       "id": 1,
-      "name": "Budi Santoso",
+      "name": "enc:v1:d80eb8a8ff97f65bc059cfab:822bc0700576a7869abbfd2883967d09:fc0c662ffa1f032683e1116e",
       "slugQuery": "Budi+Santoso",
-      "whatsappNumber": "6281234567890",
-      "category": "Keluarga",
+      "whatsappNumber": "enc:v1:e33b64a38cb7329e1c537a95:36ba8c58d6260a4e0b569871cad2b033:86f340c9b0d7ddc3d54e51a479",
+      "category": "enc:v1:23ebbe5f9277f2adbe3ddb79:f92bbee685f32344e4ba2d1697da991d:47914e44dce6a4b3",
       "waSentStatus": false,
       "waSentAt": null,
-      "createdAt": "2026-10-28T01:00:00.000Z"
+      "createdAt": "2026-10-28T01:00:00.000Z",
+      "nameBindex": "75285f7f12f2b555321caebe2accb4fde6b01752853a4b53f36e9dc1666be3ee",
+      "waBindex": "a2428d3ab4afdfead98c02a298582fcee4b8bcb82e42e7b4d12c0436ebedbe13"
     },
     {
       "id": 2,
-      "name": "Siti Rahma",
+      "name": "enc:v1:313a321d7742d24d26e0eecb:bcc66dbf8a44ce8c8a54b1e12929b6d7:a81b55c16d3f893f3aa7",
       "slugQuery": "Siti+Rahma",
-      "whatsappNumber": "6289876543210",
-      "category": "Sahabat",
+      "whatsappNumber": "enc:v1:07b011e1d476b0b58a7aed1a:3e6079b352a9c3ec3b0ef4e404659996:9ffbfde7c0dff0904230fb0c7e",
+      "category": "enc:v1:61e2962e3f4ca22b5ccaa82f:0cbba439abd7e847bc551a61684004f6:077b01448e0242",
       "waSentStatus": true,
       "waSentAt": "2026-10-28T01:10:00.000Z",
-      "createdAt": "2026-10-28T01:00:00.000Z"
+      "createdAt": "2026-10-28T01:00:00.000Z",
+      "nameBindex": "57f7fd66ae20afec5d63d331e178a39bb42c99596c54f4cc63539e222adcddca",
+      "waBindex": "d1d0f0b11eb9b5429dc7be8d987b713e2ba67c36589b9c890e178fa709d483e9"
     }
   ]
 }

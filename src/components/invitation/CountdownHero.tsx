@@ -98,7 +98,7 @@ export function CountdownHero({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={heroPhotoUrl}
-            alt="Dian dan Iqbal berbaring di padang rumput berbingkai bunga"
+            alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
             className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
             loading="eager"
           />
@@ -110,7 +110,7 @@ export function CountdownHero({
           style={{ transitionDelay: isRevealed ? "400ms" : "0ms" }}
         >
           <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
-            Dian <span className="font-script text-gold-500 font-normal px-1">&amp;</span> Iqbal
+            Fauzan <span className="font-script text-gold-500 font-normal px-1">&amp;</span> Sinta
           </h2>
           <p className="mt-2 text-xs tracking-[0.3em] uppercase text-gold-600 font-medium">
             Ahad, 10 Januari 2027

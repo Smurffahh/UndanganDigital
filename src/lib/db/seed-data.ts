@@ -40,16 +40,16 @@ export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
 ];
 
 export const DEFAULT_WEDDING_SETTINGS = {
-  brideName: "Sinta Maharani",
+  brideName: "Sinta Maria Utami",
   brideBirth: "Pekanbaru, 10 September 2005",
   brideBio:
-    "Gadis lembut yang tumbuh bersama doa, menantikan hari penuh berkah bersama belahan jiwanya.",
+    "Gadis berhati hangat dan penuh kelembutan yang tumbuh bersama doa, melangkah dengan keyakinan menyambut takdir indah bersama sang belahan jiwa.",
   bridePhotoUrl:
     "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
-  groomName: "Fauzan Pratama",
+  groomName: "Fauzan Ma'ruf",
   groomBirth: "3 Mei 1997",
   groomBio:
-    "Pria berhati tenang yang percaya bahwa pernikahan adalah ikhtiar terindah untuk saling menyempurnakan.",
+    "Pria berhati tenang dan tegas yang percaya bahwa jodoh adalah ketetapan terbaik dari ikhtiar tulus yang diiringi restu kedua orang tua.",
   groomPhotoUrl:
     "https://i.pinimg.com/736x/b5/ef/95/b5ef95fd3cd9129193935dc4b50ecaa0.jpg",
   coverPhotoUrl:
@@ -77,13 +77,13 @@ export const DEFAULT_WEDDING_SETTINGS = {
       brand: "Bank BCA",
       type: "Transfer Bank",
       number: "1234567890",
-      holder: "Sinta Maharani",
+      holder: "Sinta Maria Utami",
     },
     {
       brand: "Bank Mandiri",
       type: "Transfer Bank",
       number: "1230007890123",
-      holder: "Fauzan Pratama",
+      holder: "Fauzan Ma'ruf",
     },
   ],
   ewallets: [
@@ -91,17 +91,17 @@ export const DEFAULT_WEDDING_SETTINGS = {
       brand: "DANA",
       type: "E-Wallet",
       number: "0812-xxxx-xxxx",
-      holder: "Sinta Maharani",
+      holder: "Sinta Maria Utami",
     },
     {
       brand: "GoPay",
       type: "E-Wallet",
       number: "0812-xxxx-xxxx",
-      holder: "Fauzan Pratama",
+      holder: "Fauzan Ma'ruf",
     },
   ],
   giftAddress: {
-    receiver: "Sinta Maharani",
+    receiver: "Sinta Maria Utami",
     phone: "0812-xxxx-xxxx",
     address:
       "Jl. Contoh Alamat No. 10, Kel. Air Putih, Kec. Tuah Madani, Kota Pekanbaru, Riau 28127",
@@ -125,7 +125,8 @@ Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i
 _Wassalamu’alaikum Warahmatullahi Wabarakatuh_
 
 Kami yang berbahagia,
-*Fauzan & Sinta*`,
+*Fauzan & Sinta*
+#SINgkatceritaFAUZAN`,
 };
 
 export const DEFAULT_GALLERY_PHOTOS = [

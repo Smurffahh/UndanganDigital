@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
 import { desc, eq } from "drizzle-orm";
+import { getDb } from "./index";
 import * as schema from "./schema";
 import {
   DEFAULT_WEDDING_SETTINGS,
@@ -15,6 +14,7 @@ import {
   createBlindIndex,
   createPhoneBlindIndex,
 } from "../crypto";
+import { seedDatabase } from "./seed";
 
 // Type definitions
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
@@ -181,22 +181,19 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
       data.settings.giftAddress = encryptField(JSON.stringify(data.settings.giftAddress));
       modified = true;
     }
-    // Update wedding date to Jan 3, 2027 if still on Jan 10
     if (data.settings.weddingDateIso === "2027-01-10T08:00:00+07:00") {
       data.settings.weddingDateIso = "2027-01-03T08:00:00+07:00";
       data.settings.eventDateLabel = "Minggu · 03 · Januari · 2027";
       modified = true;
     }
-    // Update new Google Maps URL & coordinates
-    if (!data.settings.googleMapsUrl || data.settings.googleMapsUrl.includes("Kedai+Harian+Bang+Zali")) {
+    if (data.settings.googleMapsUrl && data.settings.googleMapsUrl.includes("Bang+Zali")) {
       data.settings.googleMapsUrl = "https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8";
       data.settings.mapsLatitude = "-7.310076";
       data.settings.mapsLongitude = "109.296186";
       data.settings.googleMapsEmbed = "https://maps.google.com/maps?q=-7.310076,109.296186&z=17&output=embed";
       modified = true;
     }
-    // Populate music settings if missing
-    if (data.settings.musicEnabled === undefined) {
+    if (!data.settings.musicSourceType) {
       data.settings.musicEnabled = true;
       data.settings.musicTitle = "Shane Filan - Beautiful In White (Romantic Instrumental)";
       data.settings.musicSourceType = "preset";
@@ -206,27 +203,29 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
   }
 
   // 2. Guests migration
-  if (Array.isArray(data.guests)) {
+  if (data.guests && Array.isArray(data.guests)) {
     for (const g of data.guests) {
-      if (g.name && !g.name.startsWith("enc:v1:")) {
-        const plainName = g.name;
-        const plainPhone = g.whatsappNumber;
-        const plainCat = g.category || "Reguler";
-
+      if (g.name && !String(g.name).startsWith("enc:v1:")) {
+        const plainName = String(g.name);
+        const plainPhone = g.whatsappNumber ? String(g.whatsappNumber) : "";
         g.name = encryptField(plainName);
-        g.whatsappNumber = plainPhone ? encryptField(plainPhone) : null;
-        g.category = encryptField(plainCat);
         g.nameBindex = createBlindIndex(plainName);
-        g.waBindex = plainPhone ? createPhoneBlindIndex(plainPhone) : null;
+        if (plainPhone) {
+          g.whatsappNumber = encryptField(plainPhone);
+          g.waBindex = createPhoneBlindIndex(plainPhone);
+        }
+        if (g.category && !String(g.category).startsWith("enc:v1:")) {
+          g.category = encryptField(String(g.category));
+        }
         modified = true;
       }
     }
   }
 
   // 3. Wishes migration
-  if (Array.isArray(data.wishes)) {
+  if (data.wishes && Array.isArray(data.wishes)) {
     for (const w of data.wishes) {
-      if (w.guestName && !w.guestName.startsWith("enc:v1:")) {
+      if (w.guestName && !String(w.guestName).startsWith("enc:v1:")) {
         w.guestName = encryptField(w.guestName);
         w.message = encryptField(w.message);
         modified = true;
@@ -314,18 +313,8 @@ function saveLocalDb(data: LocalDatabase) {
 }
 
 // PostgreSQL Connection Helper
-let dbInstance: ReturnType<typeof drizzle> | null = null;
 function getPostgresDb() {
-  if (!process.env.DATABASE_URL) return null;
-  if (!dbInstance) {
-    try {
-      const sql = neon(process.env.DATABASE_URL);
-      dbInstance = drizzle(sql, { schema });
-    } catch {
-      dbInstance = null;
-    }
-  }
-  return dbInstance;
+  return getDb();
 }
 
 // -------------------------------------------------------------
@@ -339,6 +328,12 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
       const rows = await db.select().from(schema.weddingSettings).limit(1);
       if (rows.length > 0) {
         return decryptSettingsRecord(rows[0]);
+      }
+      // If table is empty, auto-seed and query again
+      await seedDatabase();
+      const seeded = await db.select().from(schema.weddingSettings).limit(1);
+      if (seeded.length > 0) {
+        return decryptSettingsRecord(seeded[0]);
       }
     } catch (e) {
       console.warn("DB query failed, using local JSON fallback:", e);
@@ -370,6 +365,8 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
           .update(schema.weddingSettings)
           .set({ ...dbUpdates, updatedAt: new Date() })
           .where(eq(schema.weddingSettings.id, existing[0].id));
+      } else {
+        await db.insert(schema.weddingSettings).values(dbUpdates);
       }
     } catch (e) {
       console.warn("DB update failed, updating local JSON:", e);
@@ -386,10 +383,17 @@ export async function getGalleryPhotos(): Promise<GalleryPhotoData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      const rows = await db
+      let rows = await db
         .select()
         .from(schema.galleryPhotos)
         .orderBy(schema.galleryPhotos.sortOrder);
+      if (rows.length === 0) {
+        await seedDatabase();
+        rows = await db
+          .select()
+          .from(schema.galleryPhotos)
+          .orderBy(schema.galleryPhotos.sortOrder);
+      }
       if (rows.length > 0) {
         return rows.map((r) => ({
           id: r.id,
@@ -460,10 +464,17 @@ export async function getRsvpWishes(): Promise<RsvpWishData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      const rows = await db
+      let rows = await db
         .select()
         .from(schema.rsvpWishes)
         .orderBy(desc(schema.rsvpWishes.createdAt));
+      if (rows.length === 0) {
+        await seedDatabase();
+        rows = await db
+          .select()
+          .from(schema.rsvpWishes)
+          .orderBy(desc(schema.rsvpWishes.createdAt));
+      }
       return rows.map(decryptWishRecord);
     } catch (e) {
       console.warn("DB wishes query failed, using local JSON fallback:", e);
@@ -540,7 +551,11 @@ export async function getGuests(): Promise<GuestData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      const rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
+      let rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
+      if (rows.length === 0) {
+        await seedDatabase();
+        rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
+      }
       return rows.map(decryptGuestRecord);
     } catch (e) {
       console.warn("DB guests query failed, using local JSON fallback:", e);
@@ -570,6 +585,34 @@ export async function createGuest(data: {
   const db = getPostgresDb();
   if (db) {
     try {
+      // 1. Blind index duplicate detection (fast HMAC-SHA256 lookup without decrypting entire table)
+      if (waBindex) {
+        const existing = await db
+          .select()
+          .from(schema.guests)
+          .where(eq(schema.guests.waBindex, waBindex))
+          .limit(1);
+        if (existing.length > 0) {
+          // Update category/name if changed
+          const [updated] = await db
+            .update(schema.guests)
+            .set({ name: encName, category: encCategory, slugQuery })
+            .where(eq(schema.guests.id, existing[0].id))
+            .returning();
+          return decryptGuestRecord(updated);
+        }
+      } else if (nameBindex) {
+        const existing = await db
+          .select()
+          .from(schema.guests)
+          .where(eq(schema.guests.nameBindex, nameBindex))
+          .limit(1);
+        if (existing.length > 0) {
+          return decryptGuestRecord(existing[0]);
+        }
+      }
+
+      // 2. Insert new record
       const [inserted] = await db
         .insert(schema.guests)
         .values({
@@ -590,6 +633,27 @@ export async function createGuest(data: {
   }
 
   const local = getLocalDb();
+
+  // Local duplicate check
+  if (waBindex) {
+    const existingIdx = local.guests.findIndex((g) => g.waBindex === waBindex);
+    if (existingIdx !== -1) {
+      local.guests[existingIdx] = {
+        ...local.guests[existingIdx],
+        name: encName,
+        slugQuery,
+        category: encCategory,
+      };
+      saveLocalDb(local);
+      return decryptGuestRecord(local.guests[existingIdx]);
+    }
+  } else if (nameBindex) {
+    const existingIdx = local.guests.findIndex((g) => g.nameBindex === nameBindex);
+    if (existingIdx !== -1) {
+      return decryptGuestRecord(local.guests[existingIdx]);
+    }
+  }
+
   const nextId = local.guests.reduce((max, g) => Math.max(max, g.id), 0) + 1;
   const newRawGuest = {
     id: nextId,
@@ -620,20 +684,13 @@ export async function updateGuest(
     dbUpdates.slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
     dbUpdates.nameBindex = createBlindIndex(cleanName);
   }
-
   if (updates.whatsappNumber !== undefined) {
     const cleanPhone = updates.whatsappNumber?.trim() || null;
     dbUpdates.whatsappNumber = cleanPhone ? encryptField(cleanPhone) : null;
     dbUpdates.waBindex = cleanPhone ? createPhoneBlindIndex(cleanPhone) : null;
   }
-
   if (updates.category !== undefined) {
-    dbUpdates.category = encryptField(updates.category || "Reguler");
-  }
-
-  if (updates.waSentAt !== undefined) {
-    dbUpdates.waSentAt =
-      typeof updates.waSentAt === "string" ? new Date(updates.waSentAt) : updates.waSentAt;
+    dbUpdates.category = encryptField(updates.category?.trim() || "Reguler");
   }
 
   const db = getPostgresDb();

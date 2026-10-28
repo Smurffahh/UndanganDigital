@@ -68,54 +68,62 @@ export function DashboardWorkspace({
     {
       id: "rsvp" as AdminTab,
       label: "Ringkasan & RSVP",
+      mobileLabel: "RSVP",
       icon: LayoutDashboard,
       badge: wishes.length > 0 ? wishes.length : undefined,
     },
     {
       id: "media" as AdminTab,
       label: "Foto & Galeri",
+      mobileLabel: "Galeri",
       icon: ImageIcon,
       badge: gallery.length > 0 ? gallery.length : undefined,
     },
     {
       id: "guests" as AdminTab,
       label: "Tamu & WhatsApp",
+      mobileLabel: "Tamu WA",
       icon: Users,
       badge: guests.length > 0 ? guests.length : undefined,
     },
     {
       id: "settings" as AdminTab,
       label: "Pengaturan Acara",
+      mobileLabel: "Acara",
       icon: Settings,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-bg-dark flex flex-col md:flex-row text-slate-800 dark:text-slate-100">
-      {/* DESKTOP LEFT SIDENAV */}
-      <aside className="hidden md:flex flex-col w-64 lg:w-72 bg-white dark:bg-card-dark border-r border-gold-500/20 shadow-sm shrink-0 sticky top-0 h-screen overflow-y-auto">
+    <div className="min-h-screen bg-[#faf7f2] flex flex-col lg:flex-row text-[#4b3a3e]">
+      {/* ============================================================ */}
+      {/* 1. DESKTOP LEFT SIDENAV (lg:flex, w-72 shrink-0)             */}
+      {/* ============================================================ */}
+      <aside className="hidden lg:flex flex-col w-72 bg-[#fffdfa] border-r border-[#e9d3a3]/60 shadow-sm shrink-0 sticky top-0 h-screen overflow-y-auto">
         {/* Sidenav Header */}
-        <div className="p-6 border-b border-gold-500/15">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-600 dark:text-gold-400 shadow-sm">
-              <Heart className="w-5 h-5 fill-gold-500/30" />
+        <div className="p-6 border-b border-[#e9d3a3]/40">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-[#fdf8f3] border border-[#e9d3a3] flex items-center justify-center text-[#a9823a] shadow-xs shrink-0">
+              <Heart className="w-5 h-5 fill-[#a9823a]/25 text-[#a9823a]" />
             </div>
             <div>
-              <h1 className="font-serif text-lg font-bold tracking-tight text-slate-900 dark:text-cream leading-tight">
-                Fauzan & Sinta
+              <h1 className="font-serif text-xl font-bold tracking-tight text-[#5d3a41] leading-tight">
+                Fauzan &amp; Sinta
               </h1>
-              <p className="text-[11px] text-gold-600 dark:text-gold-400 font-medium flex items-center gap-1 mt-0.5">
-                <Sparkles className="w-3 h-3" />
+              <p className="text-xs text-[#9c5f66] font-semibold flex items-center gap-1 mt-0.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#a9823a]" />
                 <span>Dashboard Mempelai</span>
               </p>
             </div>
           </div>
-          <div className="mt-4 px-3 py-1.5 rounded-lg bg-slate-100/70 dark:bg-black/30 border border-slate-200/60 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+
+          {/* Badge Tanggal Dinamis */}
+          <div className="mt-4 bg-[#fdf8f3] border border-[#e9d3a3] text-[#4b3a3e] font-medium text-xs px-3 py-2 rounded-xl flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-gold-600" />
+              <Calendar className="w-3.5 h-3.5 text-[#a9823a]" />
               <span>{formatEventCardDate(settings.weddingDateIso, settings.eventDateLabel)}</span>
             </span>
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Sistem Aktif" />
           </div>
         </div>
 
@@ -129,22 +137,28 @@ export function DashboardWorkspace({
                 key={item.id}
                 type="button"
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium transition-colors ${
+                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-sm transition-colors duration-150 group cursor-pointer ${
                   isActive
-                    ? "bg-gold-500 text-white font-semibold shadow-sm"
-                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-[#5d3a41] text-white font-semibold shadow-xs"
+                    : "text-[#4b3a3e] font-medium hover:bg-[#f7e9e5] hover:text-[#5d3a41]"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
+                  <Icon
+                    className={`w-4 h-4 ${
+                      isActive
+                        ? "text-white"
+                        : "text-[#8d757c] group-hover:text-[#5d3a41] transition-colors duration-150"
+                    }`}
+                  />
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && (
                   <span
-                    className={`px-2 py-0.5 rounded-full text-xs font-mono tabular-nums ${
+                    className={`px-2 py-0.5 rounded-full text-xs font-semibold tabular-nums ${
                       isActive
-                        ? "bg-white/20 text-white"
-                        : "bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300"
+                        ? "bg-white/25 text-white font-bold"
+                        : "bg-[#f7e9e5] text-[#5d3a41]"
                     }`}
                   >
                     {item.badge}
@@ -156,25 +170,27 @@ export function DashboardWorkspace({
         </nav>
 
         {/* Sidenav Footer Actions */}
-        <div className="p-4 border-t border-gold-500/15 space-y-2">
+        <div className="p-4 border-t border-[#e9d3a3]/40 space-y-2">
           <a
             href="/"
             target="_blank"
             rel="noreferrer"
-            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors border border-slate-200/60 dark:border-white/5"
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#4b3a3e] hover:bg-[#f7e9e5] hover:text-[#5d3a41] transition-colors duration-150 border border-[#e9d3a3]/70 bg-[#fffdfa]"
           >
             <span className="flex items-center gap-2">
-              <ExternalLink className="w-3.5 h-3.5 text-gold-600" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#a9823a]" />
               <span>Lihat Undangan Publik</span>
             </span>
-            <span className="text-[10px] text-slate-400">Baru</span>
+            <span className="px-2 py-0.5 rounded-full bg-[#f7e9e5] text-[#5d3a41] font-semibold text-[10px]">
+              Baru
+            </span>
           </a>
 
           <button
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 active:scale-[0.96] transition-transform"
+            className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-700 hover:bg-rose-50 hover:text-rose-800 active:scale-[0.96] transition-colors duration-150 cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>{isLoggingOut ? "Keluar..." : "Keluar / Logout"}</span>
@@ -182,46 +198,54 @@ export function DashboardWorkspace({
         </div>
       </aside>
 
-      {/* MOBILE TOP BAR */}
-      <header className="md:hidden sticky top-0 z-20 bg-white/95 dark:bg-card-dark/95 border-b border-gold-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-600 dark:text-gold-400">
-            <Heart className="w-4 h-4 fill-gold-500/30" />
+      {/* ============================================================ */}
+      {/* 2. STICKY MOBILE TOP BAR (< 1024px / lg:hidden)              */}
+      {/* ============================================================ */}
+      <header className="lg:hidden sticky top-0 z-20 bg-[#fffdfa]/95 border-b border-[#e9d3a3]/60 backdrop-blur-md px-3 sm:px-4 py-3 flex items-center justify-between shadow-xs">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-[#fdf8f3] border border-[#e9d3a3] flex items-center justify-center text-[#a9823a] shrink-0 shadow-xs">
+            <Heart className="w-4 h-4 fill-[#a9823a]/25 text-[#a9823a]" />
           </div>
-          <div>
-            <h1 className="font-serif text-sm font-bold text-slate-900 dark:text-cream leading-none">
-              Fauzan & Sinta
+          <div className="min-w-0">
+            <h1 className="font-serif text-sm sm:text-base font-bold text-[#5d3a41] leading-tight truncate">
+              Fauzan &amp; Sinta
             </h1>
-            <p className="text-[10px] text-gold-600 dark:text-gold-400 mt-0.5">
-              Dashboard Mempelai
+            <p className="text-[10px] sm:text-xs text-[#9c5f66] font-semibold flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-[#a9823a]" />
+              <span>{formatEventCardDate(settings.weddingDateIso, settings.eventDateLabel)}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <a
             href="/"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-white/10"
+            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 min-h-10 rounded-xl text-xs font-medium bg-[#fdf8f3] text-[#4b3a3e] hover:bg-[#f7e9e5] hover:text-[#5d3a41] border border-[#e9d3a3] transition-colors active:scale-[0.96]"
+            title="Lihat Web Undangan Publik"
           >
-            <span>Undangan</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#a9823a]" />
+            <span className="hidden sm:inline">Web Publik</span>
           </a>
           <button
             type="button"
             onClick={handleLogout}
-            className="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-500/10"
+            disabled={isLoggingOut}
+            className="inline-flex items-center gap-1 px-2.5 sm:px-3 min-h-10 rounded-xl text-xs font-medium text-rose-700 hover:bg-rose-50 hover:text-rose-800 border border-rose-200 transition-colors active:scale-[0.96] cursor-pointer"
             title="Keluar / Logout"
             aria-label="Keluar / Logout"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Keluar</span>
           </button>
         </div>
       </header>
 
-      {/* MAIN CONTENT AREA */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-28 md:pb-12">
+      {/* ============================================================ */}
+      {/* 3. MAIN WORKSPACE CONTENT AREA                               */}
+      {/* ============================================================ */}
+      <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-24 lg:pb-10 min-w-0">
         {activeTab === "rsvp" && (
           <RsvpModerationModule
             wishes={wishes}
@@ -256,9 +280,11 @@ export function DashboardWorkspace({
         )}
       </main>
 
-      {/* MOBILE BOTTOM DOCK NAVIGATION */}
+      {/* ============================================================ */}
+      {/* 4. FIXED BOTTOM DOCK NAVIGATION (< 1024px / lg:hidden)       */}
+      {/* ============================================================ */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-card-dark/95 border-t border-gold-500/20 backdrop-blur-md px-2 py-1.5 flex justify-around shadow-lg pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#fffdfa]/95 border-t border-[#e9d3a3]/60 backdrop-blur-md px-2 py-1 flex justify-around shadow-lg pb-[max(0.5rem,env(safe-area-inset-bottom))]"
         aria-label="Navigasi Bawah Mobile"
       >
         {navItems.map((item) => {
@@ -269,21 +295,23 @@ export function DashboardWorkspace({
               key={item.id}
               type="button"
               onClick={() => setActiveTab(item.id)}
-              className={`flex flex-col items-center justify-center min-w-16 min-h-12 px-2 py-1 rounded-xl transition-transform active:scale-[0.96] ${
+              className={`flex flex-col items-center justify-center flex-1 min-h-[56px] py-1.5 px-1 rounded-xl transition-transform duration-150 active:scale-[0.96] cursor-pointer ${
                 isActive
-                  ? "text-gold-600 dark:text-gold-400 font-semibold"
-                  : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  ? "bg-[#f7e9e5] text-[#5d3a41] font-bold"
+                  : "text-[#8d757c] hover:text-[#5d3a41] font-medium"
               }`}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 ${isActive ? "stroke-[2.5]" : ""}`} />
+                <Icon className={`w-5 h-5 ${isActive ? "text-[#5d3a41] stroke-[2.3]" : "text-[#8d757c]"}`} />
                 {item.badge !== undefined && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-gold-500 text-white text-[9px] font-bold flex items-center justify-center font-mono">
+                  <span className="absolute -top-1.5 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-[#5d3a41] text-white text-[9px] font-bold flex items-center justify-center font-mono tabular-nums shadow-xs">
                     {item.badge > 99 ? "99+" : item.badge}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-1 line-clamp-1">{item.label.split(" ")[0]}</span>
+              <span className="text-[11px] mt-1 font-medium whitespace-nowrap tracking-tight">
+                {item.mobileLabel}
+              </span>
             </button>
           );
         })}

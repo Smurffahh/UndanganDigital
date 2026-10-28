@@ -351,7 +351,7 @@ export function WeddingSettingsModule({
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white font-semibold text-xs tracking-wider uppercase shadow-md active:scale-[0.96] transition-transform duration-150 ease-out hover:brightness-105 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto min-h-11 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white font-semibold text-xs tracking-wider uppercase shadow-md active:scale-[0.96] transition-transform duration-150 ease-out hover:brightness-105 disabled:opacity-50 cursor-pointer"
         >
           {isSaving ? (
             <>
@@ -1030,7 +1030,7 @@ export function WeddingSettingsModule({
                     value={bank.brand}
                     onChange={(e) => handleBankChange(idx, "brand", e.target.value)}
                     placeholder="Contoh: Bank BCA"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -1042,7 +1042,7 @@ export function WeddingSettingsModule({
                     value={bank.number}
                     onChange={(e) => handleBankChange(idx, "number", e.target.value)}
                     placeholder="1234567890"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -1054,7 +1054,7 @@ export function WeddingSettingsModule({
                     value={bank.holder}
                     onChange={(e) => handleBankChange(idx, "holder", e.target.value)}
                     placeholder="Nama Pemilik Rekening"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div className="flex justify-end sm:justify-start">
@@ -1104,7 +1104,7 @@ export function WeddingSettingsModule({
                     value={ewallet.brand}
                     onChange={(e) => handleEwalletChange(idx, "brand", e.target.value)}
                     placeholder="Contoh: DANA / GoPay"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -1116,7 +1116,7 @@ export function WeddingSettingsModule({
                     value={ewallet.number}
                     onChange={(e) => handleEwalletChange(idx, "number", e.target.value)}
                     placeholder="0812-xxxx-xxxx"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -1128,7 +1128,7 @@ export function WeddingSettingsModule({
                     value={ewallet.holder}
                     onChange={(e) => handleEwalletChange(idx, "holder", e.target.value)}
                     placeholder="Nama Pemilik Akun"
-                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-xs text-ink focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
                   />
                 </div>
                 <div className="flex justify-end sm:justify-start">
@@ -1206,11 +1206,11 @@ export function WeddingSettingsModule({
       </section>
 
       {/* Floating Bottom Save Action Bar */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-20 lg:z-40 max-w-[calc(100vw-2rem)]">
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 text-white font-bold text-xs tracking-widest uppercase shadow-[0_16px_32px_-10px_rgba(93,58,65,0.65)] hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out disabled:opacity-50 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 text-white font-bold text-xs tracking-wider uppercase shadow-[0_16px_32px_-10px_rgba(93,58,65,0.65)] hover:brightness-110 active:scale-[0.96] transition-transform duration-150 ease-out disabled:opacity-50 cursor-pointer"
         >
           {isSaving ? (
             <>

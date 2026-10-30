@@ -125,13 +125,13 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
     <section id="rsvp" className="py-20 relative bg-transparent" aria-label="Konfirmasi Kehadiran dan Buku Tamu">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
-          <ScrollLinkedItem offsetY={45}>
+          <ScrollLinkedItem offsetY={36}>
             <p className="typo-eyebrow text-[#a9823a] mb-2">
               RSVP &amp; Prayers
             </p>
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={55}>
+          <ScrollLinkedItem offsetY={36}>
             <h2 className="typo-section-title">
               Konfirmasi &amp; Ucapan
             </h2>
@@ -142,7 +142,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           </ScrollLinkedItem>
         </header>
 
-        <ScrollLinkedItem offsetY={65}>
+        <ScrollLinkedItem offsetY={36}>
           <form
             onSubmit={handleSubmit}
             className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
@@ -243,7 +243,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           </form>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={60}>
+        <ScrollLinkedItem offsetY={36}>
           <div className="mt-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <h3 className="typo-card-title flex items-center gap-2">

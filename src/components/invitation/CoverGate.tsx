@@ -140,7 +140,7 @@ export function CoverGate({
           <p className="mt-2.5 text-xs tracking-[0.38em] uppercase text-white/90 font-medium">
             {formattedDate}
           </p>
-          <span className="mt-2 inline-block px-3 py-0.5 rounded-full bg-gold-500/20 border border-gold-400/40 text-[10px] tracking-[0.25em] uppercase text-gold-300 font-semibold drop-shadow-sm">
+          <span className="mt-2 inline-block px-3.5 py-0.5 rounded-full bg-gold-500/20 border border-gold-400/40 text-[11px] tracking-[0.18em] normal-case text-gold-300 font-mono font-semibold drop-shadow-sm">
             #SINgkatceritaFAUZAN
           </span>
         </div>

@@ -69,13 +69,13 @@ export function EventDetails({
         {/* Header Seksi (Staggered Chunk 1 & 2) */}
         <header className="text-center mb-9">
           <ScrollReveal delay={0} variant="fade-up">
-            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+            <p className="typo-eyebrow text-[#a9823a] mb-2">
               Save The Date
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={90} variant="fade-up">
-            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            <h2 className="typo-section-title">
               Waktu &amp; Tempat
             </h2>
             <SongketRibbon />
@@ -91,21 +91,21 @@ export function EventDetails({
             <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
-            <h3 className="font-serif font-semibold text-2xl text-rose-900">
+            <h3 className="typo-card-title">
               Akad Nikah
             </h3>
-            <p className="mt-1.5 text-xs font-semibold tracking-[0.24em] uppercase text-rose-700">
+            <p className="mt-1.5 typo-eyebrow text-[#9c5f66]">
               {displayDate}
             </p>
-            <p className="mt-2 text-sm text-ink flex items-center justify-center gap-1.5 font-medium">
-              <Clock className="w-4 h-4 text-gold-600 stroke-[1.8]" />
+            <p className="mt-2 font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5">
+              <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
               {akadTime}
             </p>
             <SongketRibbon className="w-28 my-3.5 mx-auto" />
-            <p className="font-serif font-semibold text-lg text-ink">
+            <p className="font-sans text-base font-semibold text-[#5d3a41]">
               {venueName}
             </p>
-            <p className="mt-1 text-xs sm:text-sm text-muted">
+            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e]">
               {venueAddress}
               <br />
               {venuePlusCode}
@@ -122,21 +122,21 @@ export function EventDetails({
             <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
-            <h3 className="font-serif font-semibold text-2xl text-rose-900">
+            <h3 className="typo-card-title">
               Resepsi
             </h3>
-            <p className="mt-1.5 text-xs font-semibold tracking-[0.24em] uppercase text-rose-700">
+            <p className="mt-1.5 typo-eyebrow text-[#9c5f66]">
               {displayDate}
             </p>
-            <p className="mt-2 text-sm text-ink flex items-center justify-center gap-1.5 font-medium">
-              <Clock className="w-4 h-4 text-gold-600 stroke-[1.8]" />
+            <p className="mt-2 font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5">
+              <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
               {resepsiTime}
             </p>
             <SongketRibbon className="w-28 my-3.5 mx-auto" />
-            <p className="font-serif font-semibold text-lg text-ink">
+            <p className="font-sans text-base font-semibold text-[#5d3a41]">
               {venueName}
             </p>
-            <p className="mt-1 text-xs sm:text-sm text-muted">
+            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e]">
               {venueAddress}
               <br />
               {venuePlusCode}
@@ -151,18 +151,18 @@ export function EventDetails({
               href={googleCalendarUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-rose-900 text-xs font-semibold tracking-wider uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs"
+              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-[#5d3a41] uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs"
             >
-              <CalendarPlus className="w-4 h-4 text-gold-600" />
+              <CalendarPlus className="w-4 h-4 text-[#a9823a]" />
               <span>Simpan ke Google Calendar</span>
             </a>
 
             <button
               type="button"
               onClick={handleDownloadIcs}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-rose-900 text-xs font-semibold tracking-wider uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer"
+              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-[#5d3a41] uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer"
             >
-              <Download className="w-4 h-4 text-gold-600" />
+              <Download className="w-4 h-4 text-[#a9823a]" />
               <span>Unduh Pengingat (.ics)</span>
             </button>
           </div>
@@ -185,7 +185,7 @@ export function EventDetails({
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white text-xs font-bold tracking-wider uppercase shadow-[0_12px_24px_-8px_rgba(93,58,65,0.5)] active:scale-[0.96] transition-transform duration-150 hover:brightness-110"
+              className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white uppercase shadow-[0_12px_24px_-8px_rgba(93,58,65,0.5)] active:scale-[0.96] transition-transform duration-150 hover:brightness-110"
             >
               <MapPin className="w-4 h-4" />
               <span>Buka Google Maps</span>

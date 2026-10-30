@@ -21,27 +21,27 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
 
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">
         <ScrollReveal variant="fade-up" delay={0}>
-          <p className="font-serif italic text-base sm:text-lg leading-relaxed text-white/90 max-w-[440px] mx-auto">
+          <p className="font-sans text-[15px] sm:text-base font-normal leading-[1.7] text-white/95 max-w-[480px] mx-auto">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai.
           </p>
         </ScrollReveal>
 
         <ScrollReveal variant="fade-up" delay={90}>
-          <p className="mt-7 text-xs tracking-[0.3em] uppercase text-gold-300 font-medium">
+          <p className="mt-7 typo-eyebrow text-gold-300">
             Wassalamu&rsquo;alaikum Warahmatullahi Wabarakatuh
           </p>
         </ScrollReveal>
 
         <ScrollReveal variant="fade-up" delay={180}>
-          <p className="mt-4 font-script text-4xl sm:text-5xl text-gold-300 leading-tight drop-shadow-md">
-            Fauzan &amp; Sinta
+          <p className="mt-4 typo-display text-white drop-shadow-md">
+            Fauzan <span className="font-script text-gold-300 text-[0.85em] px-1 font-normal">&amp;</span> Sinta
           </p>
 
-          <p className="mt-2 text-xs tracking-[0.42em] text-white/80 tabular-nums">
+          <p className="mt-2 font-sans text-xs sm:text-sm tracking-[0.14em] uppercase text-white/85 tabular-nums font-medium">
             {signatureDate}
           </p>
 
-          <p className="mt-3 text-xs tracking-[0.16em] text-gold-300 font-mono font-semibold normal-case">
+          <p className="mt-3 font-sans text-xs sm:text-sm tracking-wide text-gold-300 font-semibold normal-case">
             #SINgkatceritaFAUZAN
           </p>
         </ScrollReveal>
@@ -51,7 +51,7 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
             <Divider light />
           </div>
 
-          <p className="text-xs tracking-[0.12em] text-white/65">
+          <p className="typo-meta text-white/70">
             Dengan cinta, keluarga besar kedua mempelai
           </p>
         </ScrollReveal>

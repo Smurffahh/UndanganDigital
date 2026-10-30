@@ -121,14 +121,14 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <ScrollReveal variant="fade-up" delay={0}>
           <header className="text-center mb-9">
-            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+            <p className="typo-eyebrow text-[#a9823a] mb-2">
               RSVP &amp; Prayers
             </p>
-            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            <h2 className="typo-section-title">
               Konfirmasi &amp; Ucapan
             </h2>
             <SongketRibbon />
-            <p className="text-xs sm:text-sm text-muted max-w-[400px] mx-auto mt-3">
+            <p className="typo-body text-center max-w-[400px] mx-auto mt-3 text-[#4b3a3e]">
               Mohon konfirmasi kehadiran Anda dan tinggalkan doa terbaik untuk kedua mempelai.
             </p>
           </header>
@@ -142,7 +142,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           >
           {/* Field: Nama */}
           <div>
-            <label htmlFor="f-nama" className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600 mb-1.5">
+            <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
               Nama Anda
             </label>
             <input
@@ -154,21 +154,21 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               placeholder="Contoh: Bpk. Budi Santoso"
-              className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white text-base sm:text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow]"
+              className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow]"
             />
           </div>
 
           {/* Row: Kehadiran & Jumlah Tamu */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label htmlFor="f-hadir" className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600 mb-1.5">
+              <label htmlFor="f-hadir" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
                 Konfirmasi Kehadiran
               </label>
               <select
                 id="f-hadir"
                 value={hadir}
                 onChange={(e) => setHadir(e.target.value as "Hadir" | "Berhalangan" | "Masih Ragu")}
-                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
+                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
               >
                 <option value="Hadir">Hadir</option>
                 <option value="Berhalangan">Berhalangan</option>
@@ -177,14 +177,14 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             </div>
 
             <div>
-              <label htmlFor="f-jumlah" className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600 mb-1.5">
+              <label htmlFor="f-jumlah" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
                 Jumlah Tamu
               </label>
               <select
                 id="f-jumlah"
                 value={jumlah}
                 onChange={(e) => setJumlah(e.target.value)}
-                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
+                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
               >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={n}>
@@ -198,10 +198,10 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           {/* Field: Ucapan & Doa */}
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label htmlFor="f-pesan" className="block text-[11px] font-semibold tracking-[0.2em] uppercase text-gold-600">
+              <label htmlFor="f-pesan" className="block font-sans text-sm font-semibold text-[#4b3a3e]">
                 Ucapan &amp; Doa Restu
               </label>
-              <span className="text-[10px] text-muted tabular-nums">
+              <span className="font-sans text-xs text-[#8d757c] tabular-nums">
                 {pesan.length}/500
               </span>
             </div>
@@ -214,7 +214,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
               value={pesan}
               onChange={(e) => setPesan(e.target.value)}
               placeholder="Tuliskan ucapan dan doa terbaik Anda untuk kedua mempelai..."
-              className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white text-base sm:text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] resize-y min-h-[96px]"
+              className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] resize-y min-h-[96px]"
             />
           </div>
 
@@ -222,7 +222,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#e9d3a3] to-[#c9a24b] text-[#443114] text-xs font-bold tracking-[0.2em] uppercase shadow-[0_14px_30px_-10px_rgba(169,130,58,0.55)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="typo-button w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#e9d3a3] to-[#c9a24b] text-[#443114] uppercase shadow-[0_14px_30px_-10px_rgba(169,130,58,0.55)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
@@ -243,7 +243,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
         <ScrollReveal variant="fade-up" delay={180}>
           <div className="mt-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <h3 className="font-serif font-semibold text-xl text-rose-900 flex items-center gap-2">
+            <h3 className="typo-card-title flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-gold-600" />
               Doa &amp; Harapan <span className="text-gold-600 italic text-base">({wishes.length})</span>
             </h3>
@@ -256,7 +256,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari doa pengirim..."
-                className="w-full pl-9 pr-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
+                className="w-full pl-9 pr-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white font-sans text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
               />
             </div>
           </div>
@@ -268,13 +268,13 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                 key={st}
                 type="button"
                 onClick={() => setFilterStatus(st)}
-                className={`px-3 py-1 rounded-full text-xs font-medium tracking-wide transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full font-sans text-xs font-semibold tracking-wide transition-colors cursor-pointer ${
                   filterStatus === st
                     ? "bg-rose-700 text-white shadow-xs"
                     : "bg-surface-white text-muted border border-gold-500/30 hover:bg-rose-100"
                 }`}
               >
-                {st} <span className="tabular-nums text-[10px] ml-1 opacity-80">({counts[st]})</span>
+                {st} <span className="tabular-nums text-xs ml-1 opacity-90">({counts[st]})</span>
               </button>
             ))}
           </div>
@@ -282,7 +282,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           {/* Wishes Scrollable Container */}
           <div className="max-h-[380px] overflow-y-auto space-y-3 pr-1 scrollbar-thin">
             {filteredWishes.length === 0 ? (
-              <div className="text-center py-8 bg-surface-white rounded-2xl border border-gold-500/20 text-muted text-xs">
+              <div className="text-center py-8 bg-surface-white rounded-2xl border border-gold-500/20 text-muted font-sans text-xs">
                 Belum ada ucapan yang sesuai filter pencarian.
               </div>
             ) : (
@@ -299,11 +299,11 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-xs sm:text-sm text-rose-900 break-words">
+                        <span className="font-sans text-[15px] font-semibold text-[#5d3a41] break-words">
                           {item.guestName}
                         </span>
                         <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getBadgeStyle(
+                          className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${getBadgeStyle(
                             item.attendanceStatus
                           )}`}
                         >
@@ -312,7 +312,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                         </span>
                       </div>
 
-                      <span className="text-[10px] text-muted tabular-nums">
+                      <span className="font-sans text-xs text-[#8d757c] tabular-nums">
                         {new Date(item.createdAt).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",
@@ -322,13 +322,13 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                     </div>
 
                     {item.paxCount && item.paxCount > 0 && (
-                      <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5">
-                        <Users className="w-3 h-3 text-gold-600" />
+                      <p className="font-sans text-xs text-[#8d757c] flex items-center gap-1 mt-0.5">
+                        <Users className="w-3.5 h-3.5 text-gold-600" />
                         {item.paxCount} Tamu
                       </p>
                     )}
 
-                    <p className="mt-2 text-xs sm:text-sm text-ink font-light leading-relaxed break-words">
+                    <p className="mt-2 typo-body leading-relaxed break-words font-normal">
                       {item.message}
                     </p>
                   </div>

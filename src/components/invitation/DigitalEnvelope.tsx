@@ -141,14 +141,14 @@ export function DigitalEnvelope({
       <div className="w-[min(100%-2.75rem,720px)] mx-auto">
         <ScrollReveal variant="fade-up" delay={0}>
           <header className="text-center mb-9">
-            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+            <p className="typo-eyebrow text-[#a9823a] mb-2">
               Wedding Gift
             </p>
-            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            <h2 className="typo-section-title">
               Amplop Digital
             </h2>
             <SongketRibbon />
-            <p className="text-xs sm:text-sm text-muted max-w-[420px] mx-auto mt-3">
+            <p className="typo-body text-center max-w-[420px] mx-auto mt-3 text-[#4b3a3e]">
               Doa restu Anda merupakan hadiah terindah bagi kami. Namun apabila Anda ingin memberikan tanda kasih secara digital, dapat melalui:
             </p>
           </header>
@@ -160,7 +160,7 @@ export function DigitalEnvelope({
             <button
               type="button"
               onClick={openQrisModal}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-surface-white border border-gold-500/60 text-gold-600 text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer min-h-11"
+              className="typo-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-surface-white border border-gold-500/60 text-[#a9823a] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer min-h-11"
             >
               <QrCode className="w-4 h-4 stroke-[2]" />
               <span>Lihat Kode QRIS (Semua Bank / E-Wallet)</span>
@@ -187,11 +187,11 @@ export function DigitalEnvelope({
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-gold-500" />
-                    <span className="font-serif font-bold text-base text-rose-900 tracking-wide">
+                    <span className="font-sans text-sm font-bold uppercase tracking-[0.08em] text-[#a9823a]">
                       {acc.brand}
                     </span>
                   </div>
-                  <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-gold-600">
+                  <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#a9823a]">
                     {acc.type}
                   </span>
                 </div>
@@ -206,11 +206,11 @@ export function DigitalEnvelope({
 
                 {/* Card Number in Tabular Nums */}
                 <div className="mb-4">
-                  <p className="font-serif font-semibold text-xl tracking-[0.08em] text-ink tabular-nums">
+                  <p className="font-sans text-xl sm:text-2xl font-bold tabular-nums tracking-[0.06em] text-[#5d3a41]">
                     {acc.number}
                   </p>
-                  <p className="text-xs text-muted mt-1 font-light">
-                    a.n. <span className="font-medium text-rose-900">{acc.holder}</span>
+                  <p className="font-sans text-sm font-medium text-[#4b3a3e] mt-1">
+                    a.n. <span className="font-semibold text-rose-900">{acc.holder}</span>
                   </p>
                 </div>
 
@@ -218,10 +218,10 @@ export function DigitalEnvelope({
                 <button
                   type="button"
                   onClick={() => handleCopy(acc.number, copyKey, `Nomor ${acc.brand}`)}
-                  className={`w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border text-xs font-semibold tracking-[0.16em] uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
+                  className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
                     isCopied
                       ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
-                      : "bg-surface-white border-gold-600/50 text-gold-600 hover:bg-gold-500 hover:text-white hover:border-gold-500"
+                      : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
                   }`}
                 >
                   <span className="relative w-4 h-4 grid place-items-center">
@@ -245,32 +245,32 @@ export function DigitalEnvelope({
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-rose-700" />
-                <span className="font-serif font-bold text-base text-rose-900">
+                <span className="typo-card-title text-base sm:text-lg">
                   Kirim Kado Fisik
                 </span>
               </div>
-              <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-gold-600">
+              <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#a9823a]">
                 Alamat Penerima
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-ink leading-relaxed font-light mb-2">
+            <p className="typo-body text-xs sm:text-sm text-[#4b3a3e] leading-relaxed mb-2 font-normal">
               {giftAddress.address}
             </p>
 
-            <p className="text-xs text-muted mb-4 font-light">
-              Penerima: <span className="font-medium text-rose-900">{giftAddress.receiver}</span> &middot;{" "}
-              <span className="tabular-nums">{giftAddress.phone}</span>
+            <p className="font-sans text-sm text-[#4b3a3e] mb-4">
+              Penerima: <span className="font-semibold text-rose-900">{giftAddress.receiver}</span> &middot;{" "}
+              <span className="tabular-nums font-medium">{giftAddress.phone}</span>
             </p>
 
             {/* Salin Alamat Button */}
             <button
               type="button"
               onClick={() => handleCopy(giftAddress.address, "addr-copy", "Alamat")}
-              className={`w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border text-xs font-semibold tracking-[0.16em] uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
+              className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
                 copiedKey === "addr-copy"
                   ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
-                  : "bg-surface-white border-gold-600/50 text-gold-600 hover:bg-gold-500 hover:text-white hover:border-gold-500"
+                  : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
               }`}
             >
               <span className="relative w-4 h-4 grid place-items-center">
@@ -312,14 +312,14 @@ export function DigitalEnvelope({
               <X className="w-5 h-5 stroke-[2]" />
             </button>
 
-            <span className="inline-block px-4 py-1 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">
+            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] inline-block px-4 py-1 rounded-full bg-rose-100 mb-3">
               QRIS Statis
             </span>
 
-            <h3 className="font-serif font-bold text-xl text-rose-900 mb-1">
+            <h3 className="typo-card-title text-xl sm:text-2xl mb-1">
               Pindai QRIS
             </h3>
-            <p className="text-xs text-muted mb-4 font-light">
+            <p className="typo-body text-xs sm:text-sm mb-4 mx-auto text-center text-[#8d757c]">
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
             </p>
 
@@ -340,7 +340,7 @@ export function DigitalEnvelope({
               )}
             </div>
 
-            <p className="text-xs font-semibold text-rose-900 mt-3.5">
+            <p className="font-sans text-sm font-semibold text-[#5d3a41] mt-3.5">
               a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
             </p>
 
@@ -350,7 +350,7 @@ export function DigitalEnvelope({
               download="qris-fauzan-sinta.png"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#c9a24b] hover:bg-[#b8913b] text-white text-xs font-semibold tracking-[0.16em] uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
+              className="typo-button mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#c9a24b] hover:bg-[#b8913b] text-white uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
             >
               <Download className="w-4 h-4 stroke-[2]" />
               <span>Simpan Gambar QR</span>

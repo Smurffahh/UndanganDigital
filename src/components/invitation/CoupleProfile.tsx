@@ -1,6 +1,6 @@
 "use client";
 
-import { GununganWayang, SongketRibbon } from "./Ornaments";
+import { SongketRibbon } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
 interface CoupleProfileProps {
@@ -103,12 +103,9 @@ export function CoupleProfile({
 
           <div className="flex flex-col items-center justify-center my-4 md:my-0">
             <ScrollLinkedItem offsetY={36}>
-              <div className="flex flex-col items-center">
-                <span className="font-script text-5xl sm:text-6xl text-[#c9a24b] drop-shadow-sm select-none leading-none animate-gold-sheen">
-                  &amp;
-                </span>
-                <GununganWayang className="w-12 sm:w-14 text-gold-500 opacity-75 mt-2" />
-              </div>
+              <span className="font-script text-5xl sm:text-6xl text-[#c9a24b] drop-shadow-sm select-none leading-none animate-gold-sheen">
+                &amp;
+              </span>
             </ScrollLinkedItem>
           </div>
 

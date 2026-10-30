@@ -165,7 +165,7 @@ export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) 
         viewBox="0 0 80 80"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full animate-[spin_28s_linear_infinite]"
+        className="absolute inset-0 w-full h-full animate-[spin_30s_linear_infinite]"
       >
         <circle cx="40" cy="40" r="38" stroke="#c9a24b" strokeWidth="1.4" strokeDasharray="3.5 3.5" opacity="0.85" />
       </svg>

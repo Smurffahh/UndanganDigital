@@ -13,7 +13,6 @@ import { DigitalEnvelope } from "./DigitalEnvelope";
 import { ClosingFooter } from "./ClosingFooter";
 import { FloatingControls } from "./FloatingControls";
 import { GununganWayang, RadiantStar } from "./Ornaments";
-import { useParallax } from "@/hooks/useParallax";
 import type { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 
 interface GalleryItem {
@@ -48,9 +47,6 @@ export function InvitationOrchestrator({
   const [isOpened, setIsOpened] = useState(false);
   const [isHeroReady, setIsHeroReady] = useState(false);
 
-  const bgParallax = useParallax(0.15, true);
-  const ornamentParallax = useParallax(0.35, true);
-
   const handleOpenCover = () => {
     setIsOpened(true);
     setIsHeroReady(true);
@@ -59,8 +55,7 @@ export function InvitationOrchestrator({
   return (
     <main className="relative min-h-screen overflow-x-clip bg-transparent text-ink">
       <div
-        className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
-        style={bgParallax.transformStyle}
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden w-screen h-dvh"
         aria-hidden="true"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,8 +81,7 @@ export function InvitationOrchestrator({
       </div>
 
       <div
-        className="fixed inset-0 pointer-events-none z-[2] overflow-hidden"
-        style={ornamentParallax.transformStyle}
+        className="fixed inset-0 pointer-events-none z-[2] overflow-hidden w-screen h-dvh"
         aria-hidden="true"
       >
         <div className="absolute top-[22%] left-3 sm:left-6 opacity-30 transform -rotate-12">

@@ -18,6 +18,10 @@ interface CoverGateProps {
  * Royal Split-Arch Envelope Gate (01-cover)
  * Features 2 Pintu Lengkung Kembar (Left & Right Ornate Arch Doors),
  * Golden Emblem Seal, and 3-Stage Smooth Opening Choreography.
+ *
+ * Harmonized with the main invitation palette:
+ * Warm Cream (#fdf8f3), Pearl White (#fffdfa), Soft Dusty Rose (#f7e9e5),
+ * Champagne Gold (#c9a24b / #e9d3a3), and Deep Burgundy Rose (#5d3a41).
  */
 export function CoverGate({
   guestName,
@@ -60,12 +64,12 @@ export function CoverGate({
   return (
     <section
       id="cover-gate"
-      className={`fixed inset-0 z-50 overflow-hidden select-none ${
+      className={`fixed inset-0 z-50 overflow-hidden select-none bg-[#fdf8f3] ${
         animStage === 2 ? "pointer-events-none" : ""
       }`}
-      aria-label="Sampul Undangan Kerajaan Fauzan & Sinta"
+      aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
-      {/* 1. Underlying Ken Burns Image with Depth Veil */}
+      {/* 1. Underlying Photo with Soft Warm Cream & Dusty Rose Veil */}
       <div
         className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           animStage >= 2 ? "scale-105 opacity-0" : "scale-100 opacity-100 animate-slow-zoom"
@@ -75,37 +79,38 @@ export function CoverGate({
         aria-label="Foto Sampul Fauzan Ma'ruf & Sinta Maria Utami"
       />
 
-      {/* Atmospheric Radial Vignette */}
+      {/* Atmospheric Soft Warm Veil & Ambient Radial Glow (Zero Color Shock) */}
       <div
-        className={`absolute inset-0 bg-gradient-to-b from-[#2b151b]/80 via-[#3a1d24]/50 to-[#220e14]/90 transition-opacity duration-1000 ${
+        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/85 via-[#fdf8f3]/80 to-[#f7e9e5]/92 backdrop-blur-[2px] transition-opacity duration-1000 ${
           animStage >= 2 ? "opacity-0" : "opacity-100"
         }`}
       />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.18),transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,75,0.14),transparent_70%)] pointer-events-none" />
 
-      {/* 2. Left Arch Door (Pintu Lengkung Kiri) */}
+      {/* 2. Left Arch Door (Pintu Lengkung Kiri - Warm Cream to Dusty Rose) */}
       <div
-        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#2e161c]/95 to-[#3b1c24]/90 backdrop-blur-sm border-r border-gold-500/50 shadow-[10px_0_30px_rgba(0,0,0,0.5)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           animStage >= 2 ? "-translate-x-full" : "translate-x-0"
         }`}
         style={{ willChange: "transform" }}
       >
-        {/* Batik Kawung Overlay & Gold Arch Border */}
-        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-25 pointer-events-none" />
-        <div className="absolute inset-3 border-r border-t border-b border-gold-500/35 rounded-r-[999px_999px] pointer-events-none" />
+        {/* Batik Kawung Overlay & Champagne Gold Arch Border */}
+        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
+        <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/35 rounded-r-[999px_999px] pointer-events-none" />
         <CardCornerOrnament />
       </div>
 
-      {/* 3. Right Arch Door (Pintu Lengkung Kanan) */}
+      {/* 3. Right Arch Door (Pintu Lengkung Kanan - Warm Cream to Dusty Rose) */}
       <div
-        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#2e161c]/95 to-[#3b1c24]/90 backdrop-blur-sm border-l border-gold-500/50 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           animStage >= 2 ? "translate-x-full" : "translate-x-0"
         }`}
         style={{ willChange: "transform" }}
       >
-        {/* Batik Kawung Overlay & Gold Arch Border */}
-        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-25 pointer-events-none" />
-        <div className="absolute inset-3 border-l border-t border-b border-gold-500/35 rounded-l-[999px_999px] pointer-events-none" />
+        {/* Batik Kawung Overlay & Champagne Gold Arch Border */}
+        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
+        <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/35 rounded-l-[999px_999px] pointer-events-none" />
         <CardCornerOrnament />
       </div>
 
@@ -113,66 +118,89 @@ export function CoverGate({
       <div
         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none ${
           animStage === 1
-            ? "scale-110 drop-shadow-[0_0_28px_rgba(233,211,163,0.9)] opacity-100"
+            ? "scale-110 drop-shadow-[0_0_30px_rgba(201,162,75,0.85)] opacity-100"
             : animStage >= 2
             ? "scale-125 opacity-0 blur-sm"
-            : "scale-100 opacity-90"
+            : "scale-100 opacity-95 drop-shadow-[0_12px_28px_rgba(93,58,65,0.25)]"
         }`}
       >
-        <GoldenEmblemSeal className="w-24 h-24 sm:w-28 sm:h-28" />
+        <GoldenEmblemSeal className="w-20 h-20 sm:w-24 sm:h-24" />
       </div>
 
       {/* 5. Central Invitation Card & Guest Information */}
       <div
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-10 px-6 max-w-[440px] mx-auto text-center text-white transition-[opacity,transform,filter] duration-500 ease-out ${
+        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform,filter] duration-500 ease-out overflow-y-auto ${
           animStage >= 1 ? "-translate-y-6 scale-95 opacity-0 blur-sm pointer-events-none" : "translate-y-0 opacity-100"
         }`}
       >
         {/* Top Header */}
-        <div className="flex flex-col items-center pt-2">
-          <RadiantStar className="w-8 h-8 fill-gold-300 drop-shadow-md mb-2 animate-pulse" />
-          <p className="font-script text-3xl sm:text-4xl text-gold-300 leading-tight">
+        <div className="flex flex-col items-center pt-1 sm:pt-2">
+          <RadiantStar className="w-7 h-7 sm:w-8 sm:h-8 fill-[#c9a24b] drop-shadow-xs mb-1 animate-pulse" />
+          <p className="font-script text-3xl sm:text-4xl text-[#a9823a] leading-tight drop-shadow-xs">
             The Wedding Of
           </p>
-          <h1 className="font-serif font-medium text-4xl sm:text-5xl md:text-6xl leading-tight mt-1 text-white drop-shadow-xl">
-            Fauzan <span className="font-script text-gold-300 text-[0.85em] px-1">&amp;</span> Sinta
+
+          {/* Mihrab Arch Photo Frame (Anggun & Senada dengan Seksi Hero) */}
+          <div className="arch w-20 sm:w-24 aspect-[3/4] my-2 shadow-[0_10px_24px_-6px_rgba(93,58,65,0.18)] shrink-0">
+            <div className="w-full h-full rounded-[990px_990px_14px_14px] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverPhotoUrl}
+                alt="Fauzan Ma'ruf & Sinta Maria Utami"
+                className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+                loading="eager"
+              />
+            </div>
+          </div>
+
+          <h1 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl leading-tight text-[#5d3a41] drop-shadow-xs">
+            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">&amp;</span> Sinta
           </h1>
-          <p className="mt-2.5 text-xs tracking-[0.38em] uppercase text-white/90 font-medium">
-            {formattedDate}
-          </p>
-          <span className="mt-2 inline-block px-3.5 py-0.5 rounded-full bg-gold-500/20 border border-gold-400/40 text-[11px] tracking-[0.18em] normal-case text-gold-300 font-mono font-semibold drop-shadow-sm">
+
+          {/* Tanggal Pelaksanaan dengan Flanking Golden Dividers */}
+          <div className="mt-1.5 flex items-center justify-center gap-2">
+            <span className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
+            <p className="text-xs tracking-[0.25em] uppercase text-[#4b3a3e] font-medium">
+              {formattedDate}
+            </p>
+            <span className="w-5 sm:w-8 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
+          </div>
+
+          <span className="mt-2 inline-block px-3.5 py-1 rounded-full bg-[#f7e9e5] text-[#9c5f66] border border-[#e9d3a3] text-[11px] tracking-[0.14em] normal-case font-mono font-semibold shadow-xs">
             #SINgkatceritaFAUZAN
           </span>
         </div>
 
-        {/* Guest Name Glass Card with Metallic Golden Trim */}
-        <div className="w-full max-w-[340px] flex flex-col items-center">
-          <div className="glass px-7 py-4 rounded-3xl w-full border border-gold-300/45 shadow-[0_20px_45px_-12px_rgba(0,0,0,0.6)] backdrop-blur-md relative overflow-hidden group">
+        {/* Guest Name Card with Pearl White & Champagne Gold Trim */}
+        <div className="w-full max-w-[340px] flex flex-col items-center mt-4">
+          <div className="bg-[#fffdfa]/92 backdrop-blur-md px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl sm:rounded-3xl w-full border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.16)] relative overflow-hidden group">
             {/* Shimmer light effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c9a24b]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
-            <p className="text-[10px] tracking-[0.3em] uppercase text-gold-300 font-medium">
+            <CardCornerOrnament />
+
+            <p className="text-[10px] tracking-[0.3em] uppercase text-[#8d757c] font-medium">
               Kepada Yth.
             </p>
-            <p className="text-[11px] text-white/80 mt-0.5 font-light">
+            <p className="text-[11px] text-[#8d757c]/90 mt-0.5 font-light">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="font-serif font-semibold text-2xl sm:text-3xl text-white mt-1 break-words leading-tight drop-shadow-sm">
+            <p className="font-serif font-bold text-2xl sm:text-3xl text-[#5d3a41] mt-1 break-words leading-tight">
               {guestName || "Tamu Undangan"}
             </p>
           </div>
 
-          {/* Primary Action Button */}
+          {/* Primary Action Button (Burgundy Rose with Gold Trim & Active Scale 0.96) */}
           <button
             type="button"
             onClick={handleOpen}
-            className="mt-6 inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#edd39b] to-[#c9a24b] text-[#3d2208] text-xs font-bold tracking-[0.22em] uppercase shadow-[0_16px_35px_-8px_rgba(169,130,58,0.7)] transition-transform duration-150 ease-out active:scale-[0.96] hover:brightness-110 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-300 min-h-12 w-full max-w-[280px]"
+            className="mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] text-xs font-bold tracking-[0.22em] uppercase border border-[#c9a24b]/55 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[280px]"
           >
-            <Mail className="w-4 h-4 stroke-[#3d2208] stroke-[2]" />
+            <Mail className="w-4 h-4 stroke-[#edd39b] stroke-[2]" />
             <span>Buka Undangan</span>
           </button>
 
-          <p className="mt-3.5 text-[10px] tracking-wide text-white/60 font-light">
+          <p className="mt-2.5 sm:mt-3 text-[10px] tracking-wide text-[#8d757c] font-light">
             *Mohon maaf apabila terdapat kekeliruan penulisan nama &amp; gelar
           </p>
         </div>

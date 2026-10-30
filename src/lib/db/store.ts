@@ -16,7 +16,6 @@ import {
 } from "../crypto";
 import { seedDatabase } from "./seed";
 
-// Type definitions
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
 export type GalleryPhotoData = typeof DEFAULT_GALLERY_PHOTOS[number];
 export type RsvpWishData = {
@@ -55,7 +54,6 @@ interface LocalDatabase {
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
 
-// Helper to decrypt a guest record
 function decryptGuestRecord(r: any): GuestData {
   return {
     id: r.id,
@@ -71,7 +69,6 @@ function decryptGuestRecord(r: any): GuestData {
   };
 }
 
-// Helper to decrypt a wish record
 function decryptWishRecord(r: any): RsvpWishData {
   return {
     id: r.id,
@@ -84,7 +81,6 @@ function decryptWishRecord(r: any): RsvpWishData {
   };
 }
 
-// Helper to decrypt settings
 function decryptSettingsRecord(row: any): WeddingSettingsData {
   let bankAccounts = DEFAULT_WEDDING_SETTINGS.bankAccounts;
   if (row.bankAccounts) {
@@ -165,11 +161,9 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
   };
 }
 
-// Auto-migrate plaintext rows to AES-256-GCM ciphertexts
 function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
   let modified = false;
 
-  // 1. Settings migration
   if (data.settings) {
     if (data.settings.bankAccounts && typeof data.settings.bankAccounts !== "string") {
       data.settings.bankAccounts = encryptField(JSON.stringify(data.settings.bankAccounts));
@@ -204,7 +198,6 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
     }
   }
 
-  // 2. Guests migration
   if (data.guests && Array.isArray(data.guests)) {
     for (const g of data.guests) {
       if (g.name && !String(g.name).startsWith("enc:v1:")) {
@@ -224,7 +217,6 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
     }
   }
 
-  // 3. Wishes migration
   if (data.wishes && Array.isArray(data.wishes)) {
     for (const w of data.wishes) {
       if (w.guestName && !String(w.guestName).startsWith("enc:v1:")) {
@@ -238,7 +230,6 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
   return modified;
 }
 
-// Helper to get or initialize local JSON database file
 function getLocalDb(): LocalDatabase {
   try {
     if (!fs.existsSync(DATA_DIR)) {
@@ -257,7 +248,6 @@ function getLocalDb(): LocalDatabase {
     console.warn("Failed to read local wedding-db.json, re-initializing:", err);
   }
 
-  // Initial secure encrypted data
   const initialData: LocalDatabase = {
     settings: {
       ...DEFAULT_WEDDING_SETTINGS,
@@ -314,14 +304,9 @@ function saveLocalDb(data: LocalDatabase) {
   }
 }
 
-// PostgreSQL Connection Helper
 function getPostgresDb() {
   return getDb();
 }
-
-// -------------------------------------------------------------
-// Data-Access Methods with End-to-End Field Decryption/Encryption
-// -------------------------------------------------------------
 
 export async function getWeddingSettings(): Promise<WeddingSettingsData> {
   const db = getPostgresDb();
@@ -331,7 +316,6 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
       if (rows.length > 0) {
         return decryptSettingsRecord(rows[0]);
       }
-      // If table is empty, auto-seed and query again
       await seedDatabase();
       const seeded = await db.select().from(schema.weddingSettings).limit(1);
       if (seeded.length > 0) {
@@ -347,7 +331,6 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
 export async function updateWeddingSettings(updates: Partial<WeddingSettingsData>): Promise<WeddingSettingsData> {
   const dbUpdates: any = { ...updates };
 
-  // Encrypt sensitive fields if provided
   if (updates.bankAccounts) {
     dbUpdates.bankAccounts = encryptField(JSON.stringify(updates.bankAccounts));
   }
@@ -587,7 +570,7 @@ export async function createGuest(data: {
   const db = getPostgresDb();
   if (db) {
     try {
-      // 1. Blind index duplicate detection (fast HMAC-SHA256 lookup without decrypting entire table)
+      // HMAC-SHA256 blind index enables deduplication without decrypting every row in database
       if (waBindex) {
         const existing = await db
           .select()
@@ -595,7 +578,6 @@ export async function createGuest(data: {
           .where(eq(schema.guests.waBindex, waBindex))
           .limit(1);
         if (existing.length > 0) {
-          // Update category/name if changed
           const [updated] = await db
             .update(schema.guests)
             .set({ name: encName, category: encCategory, slugQuery })
@@ -614,7 +596,6 @@ export async function createGuest(data: {
         }
       }
 
-      // 2. Insert new record
       const [inserted] = await db
         .insert(schema.guests)
         .values({
@@ -636,7 +617,6 @@ export async function createGuest(data: {
 
   const local = getLocalDb();
 
-  // Local duplicate check
   if (waBindex) {
     const existingIdx = local.guests.findIndex((g) => g.waBindex === waBindex);
     if (existingIdx !== -1) {

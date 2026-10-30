@@ -48,15 +48,11 @@ export function InvitationOrchestrator({
   const [isOpened, setIsOpened] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
 
-  // Layer 1: Deep Ambient Background Parallax (Speed 0.15x, reverse)
   const bgParallax = useParallax(0.15, true);
-
-  // Layer 2: Floating Cultural Ornaments Parallax (Speed 0.35x, gentle shift)
   const ornamentParallax = useParallax(0.35, true);
 
   const handleOpenCover = () => {
     setIsOpened(true);
-    // Trigger Staggered Blur Reveal on CountdownHero after split-arch doors begin opening
     setTimeout(() => {
       setIsRevealed(true);
     }, 450);
@@ -64,33 +60,24 @@ export function InvitationOrchestrator({
 
   return (
     <main className="relative min-h-screen overflow-x-clip bg-cream text-ink">
-      {/* ============================================================ */}
-      {/* TAHAP 3: FIXED STAGE BACKDROP (Stationary photo with veil)    */}
-      {/* ============================================================ */}
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         style={bgParallax.transformStyle}
         aria-hidden="true"
       >
-        {/* Stationary Pre-wedding Photo Backdrop */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={settings.heroPhotoUrl}
           alt=""
           className="w-full h-full object-cover object-center scale-105 opacity-[0.14] filter saturate-75"
         />
-        {/* Soft Warm-Cream & Dusty-Rose Veil */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/92 via-[#fdf8f3]/85 to-[#f7e9e5]/90 backdrop-blur-[2px]" />
-        {/* Subtle Ambient Radial Glows (Dusty Rose & Champagne Gold) */}
         <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
         <div className="absolute top-[35%] -left-[200px] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
         <div className="absolute top-[65%] -right-[200px] w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-30" />
       </div>
 
-      {/* ============================================================ */}
-      {/* TAHAP 3: FIXED VIEWPORT CORNER BORDERS (Mobile Framing)      */}
-      {/* ============================================================ */}
       <div className="fixed inset-0 pointer-events-none z-[1] p-3 sm:p-5" aria-hidden="true">
         <div className="relative w-full h-full border border-[#c9a24b]/20 rounded-2xl sm:rounded-3xl pointer-events-none">
           <span className="absolute -top-1 -left-1 w-5 h-5 border-t-2 border-l-2 border-[#c9a24b]/60 rounded-tl" />
@@ -100,23 +87,17 @@ export function InvitationOrchestrator({
         </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* LAYER 2: Floating Cultural Ornaments Parallax (Speed 0.35x) */}
-      {/* ============================================================ */}
       <div
         className="fixed inset-0 pointer-events-none z-[2] overflow-hidden"
         style={ornamentParallax.transformStyle}
         aria-hidden="true"
       >
-        {/* Gunungan Wayang Left Edge Silhouette */}
         <div className="absolute top-[22%] left-3 sm:left-6 opacity-30 transform -rotate-12">
           <GununganWayang className="w-12 sm:w-16 text-gold-500" />
         </div>
-        {/* Gunungan Wayang Right Edge Silhouette */}
         <div className="absolute top-[52%] right-3 sm:right-6 opacity-30 transform rotate-12">
           <GununganWayang className="w-12 sm:w-16 text-gold-500" />
         </div>
-        {/* Radiant Stars Accent Floating */}
         <div className="absolute top-[38%] right-8 sm:right-16 opacity-45">
           <RadiantStar className="w-5 h-5 fill-gold-400" />
         </div>
@@ -125,12 +106,8 @@ export function InvitationOrchestrator({
         </div>
       </div>
 
-      {/* Falling Petals Simulation */}
       <PetalsCanvas />
 
-      {/* ============================================================ */}
-      {/* 01. Cover Gate (Royal Split-Arch Envelope Gate)             */}
-      {/* ============================================================ */}
       <CoverGate
         guestName={guestName}
         onOpen={handleOpenCover}
@@ -139,11 +116,7 @@ export function InvitationOrchestrator({
         eventDateLabel={settings.eventDateLabel}
       />
 
-      {/* ============================================================ */}
-      {/* TAHAP 3: SCROLLABLE MAIN CONTENT (Flows in relative z-10)     */}
-      {/* ============================================================ */}
       <div className="relative z-10">
-        {/* 02. Hero & Countdown (02-hitung-mundur) */}
         <CountdownHero
           weddingDateIso={settings.weddingDateIso}
           heroPhotoUrl={settings.heroPhotoUrl}
@@ -151,7 +124,6 @@ export function InvitationOrchestrator({
           eventDateLabel={settings.eventDateLabel}
         />
 
-        {/* 03. Couple Profiles (03-mempelai) */}
         <CoupleProfile
           brideName={settings.brideName}
           brideBirth={settings.brideBirth}
@@ -163,13 +135,11 @@ export function InvitationOrchestrator({
           groomPhotoUrl={settings.groomPhotoUrl}
         />
 
-        {/* LAYER 4: Love Story Timeline (#SINgkatceritaFAUZAN) */}
         <LoveStoryTimeline
           loveStoryText={settings.loveStoryText}
           storyHashtag={settings.storyHashtag}
         />
 
-        {/* 04. Event Details (04-acara) */}
         <EventDetails
           akadTime={settings.akadTime}
           resepsiTime={settings.resepsiTime}
@@ -182,16 +152,13 @@ export function InvitationOrchestrator({
           eventDateLabel={settings.eventDateLabel}
         />
 
-        {/* 05. Photo Gallery (05-galeri) */}
         <PhotoGallery photos={galleryPhotos} />
 
-        {/* 06. RSVP & Guestbook (06-rsvp) */}
         <RsvpGuestbook
           initialWishes={wishes}
           defaultGuestName={guestName}
         />
 
-        {/* 07. Digital Envelope (07-amplop) */}
         <DigitalEnvelope
           bankAccounts={settings.bankAccounts}
           ewallets={settings.ewallets}
@@ -199,13 +166,9 @@ export function InvitationOrchestrator({
           qrisImageUrl={settings.qrisImageUrl}
         />
 
-        {/* 08. Closing Footer (08-penutup) */}
         <ClosingFooter weddingDateIso={settings.weddingDateIso} />
       </div>
 
-      {/* ============================================================ */}
-      {/* 09. Floating Controls (Glass Pill Dock & Vinyl Music Disc)  */}
-      {/* ============================================================ */}
       <FloatingControls
         isOpened={isOpened}
         musicEnabled={settings.musicEnabled}

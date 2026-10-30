@@ -62,7 +62,6 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function InvitationPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
 
-  // Extract guest name from query parameters: ?to= or ?nama= or ?tamu=
   const rawParam =
     resolvedParams.to || resolvedParams.nama || resolvedParams.tamu || "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
@@ -82,7 +81,6 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     getRsvpWishes(),
   ]);
 
-  // Ensure settings matches expected shape with defaults
   const settings: typeof DEFAULT_WEDDING_SETTINGS = {
     brideName: rawSettings.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
     brideBirth: rawSettings.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,

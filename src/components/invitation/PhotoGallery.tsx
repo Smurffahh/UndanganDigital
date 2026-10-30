@@ -53,7 +53,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
   return (
     <section id="galeri" className="py-20 relative" aria-label="Galeri Foto Momen">
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
-        {/* Header Seksi (Staggered Chunk 1 & 2) */}
         <header className="text-center mb-9">
           <ScrollReveal delay={0} variant="fade-up">
             <p className="typo-eyebrow text-[#a9823a] mb-2">
@@ -72,7 +71,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
           </ScrollReveal>
         </header>
 
-        {/* CSS Multi-Column Masonry with Frame Reveal Stagger */}
         <div className="columns-2 md:columns-3 gap-3.5 md:gap-4.5 space-y-3.5 md:space-y-4.5">
           {photos.map((item, idx) => (
             <ScrollReveal
@@ -110,7 +108,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
       {activeIdx !== null && (
         <div
           role="dialog"
@@ -119,7 +116,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
           className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-4"
           onClick={handleClose}
         >
-          {/* Close button */}
           <button
             type="button"
             onClick={handleClose}
@@ -129,7 +125,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             <X className="w-6 h-6" />
           </button>
 
-          {/* Navigation Prev */}
           <button
             type="button"
             onClick={(e) => {
@@ -142,7 +137,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Lightbox Image and Caption */}
           <div
             className="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center"
             onClick={(e) => e.stopPropagation()}
@@ -163,7 +157,6 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             </p>
           </div>
 
-          {/* Navigation Next */}
           <button
             type="button"
             onClick={(e) => {

@@ -13,15 +13,6 @@ interface CountdownHeroProps {
   eventDateLabel?: string;
 }
 
-/**
- * Signature Tall Oval Arch Hero & Countdown (02-hitung-mundur)
- *
- * TAHAP 2:
- * 1. Signature Tall Oval Arch Hero (82dvh) with Monogram FS,
- *    "THE WEDDING OF", "FAUZAN & SINTA", Date, and Scroll-Down Pill Indicator.
- * 2. Bottom-up scroll reveal ke Seksi "With Love" (Ayat QS. Ar-Rum: 21).
- * 3. Seksi Save The Date (Countdown Timer dengan NumberFlow).
- */
 export function CountdownHero({
   weddingDateIso,
   heroPhotoUrl,
@@ -60,11 +51,9 @@ export function CountdownHero({
     return () => clearInterval(timer);
   }, [weddingDateIso]);
 
-  // Format date label fallback to Bahasa Indonesia dari Single Source of Truth
   const displayDate = formatCoverDate(weddingDateIso, eventDateLabel);
 
-  // Staggered Blur Reveal helper classes
-  const getRevealClass = (staggerMs = 0) => {
+  const getRevealClass = () => {
     if (!isRevealed) {
       return "opacity-0 translate-y-6 scale-[0.98] blur-xs";
     }
@@ -77,20 +66,14 @@ export function CountdownHero({
       className="pt-6 sm:pt-10 pb-20 relative"
       aria-label="Beranda dan Hitung Mundur"
     >
-      {/* ===================================================================== */}
-      {/* 1. SIGNATURE TALL OVAL ARCH HERO (~82dvh)                             */}
-      {/* Muncul tepat setelah gerbang Gunungan Wayang Portal membuka           */}
-      {/* ===================================================================== */}
       <div className="w-[min(92%,420px)] mx-auto mb-20">
         <div
           className={`min-h-[78dvh] sm:min-h-[82dvh] max-h-[740px] flex flex-col items-center justify-between p-6 sm:p-8 rounded-[999px] border-2 border-[#5d3a41]/70 outline outline-1 outline-offset-4 outline-[#c9a24b]/60 bg-[#fffdfa]/92 backdrop-blur-sm shadow-[0_24px_50px_-16px_rgba(93,58,65,0.22)] relative overflow-hidden text-center transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isRevealed ? "scale-100 opacity-100" : "scale-[0.94] opacity-0"
           }`}
         >
-          {/* Subtle Ambient Shimmer Background */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,75,0.12),transparent_70%)] pointer-events-none" />
 
-          {/* Top of Arch: Monogram FS */}
           <div
             className={`pt-3 sm:pt-5 flex flex-col items-center ${getRevealClass()}`}
             style={{ transitionDelay: isRevealed ? "150ms" : "0ms" }}
@@ -101,7 +84,6 @@ export function CountdownHero({
             </p>
           </div>
 
-          {/* Center of Arch: Names & Date */}
           <div
             className={`my-auto flex flex-col items-center px-2 ${getRevealClass()}`}
             style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
@@ -127,7 +109,6 @@ export function CountdownHero({
             </span>
           </div>
 
-          {/* Bottom of Arch: Floral Accent & Animated Scroll Indicator */}
           <div
             className={`pb-3 sm:pb-5 flex flex-col items-center ${getRevealClass()}`}
             style={{ transitionDelay: isRevealed ? "450ms" : "0ms" }}
@@ -141,11 +122,7 @@ export function CountdownHero({
         </div>
       </div>
 
-      {/* ===================================================================== */}
-      {/* 2. SEKSI AYAT & PENGANTAR ("WITH LOVE" - BOTTOM-UP SCROLL REVEAL)     */}
-      {/* ===================================================================== */}
       <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
-        {/* Foto Mempelai dalam Bingkai Mihrab */}
         <ScrollReveal delay={0} variant="bottom-up">
           <div className="arch w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-lg">
             <ParallaxPhotoFrame maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
@@ -160,21 +137,18 @@ export function CountdownHero({
           </div>
         </ScrollReveal>
 
-        {/* Header "WITH LOVE" */}
         <ScrollReveal delay={110} variant="bottom-up">
           <p className="typo-eyebrow text-[#a9823a] mt-8 mb-2">
             WITH LOVE
           </p>
         </ScrollReveal>
 
-        {/* Bismillah */}
         <ScrollReveal delay={220} variant="bottom-up">
           <p className="typo-arabic leading-loose text-rose-700" dir="rtl">
             بِسْمِ اللّٰهِ الرَّحْمٰnِ الرَّحِيْمِ
           </p>
         </ScrollReveal>
 
-        {/* Ayat QS. Ar-Rum: 21 & Terjemahan */}
         <ScrollReveal delay={330} variant="bottom-up">
           <figure className="card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center">
             <p className="typo-arabic leading-loose text-rose-900" dir="rtl">
@@ -189,14 +163,10 @@ export function CountdownHero({
           </figure>
         </ScrollReveal>
 
-        {/* Divider */}
         <ScrollReveal delay={440} variant="bottom-up">
           <Divider />
         </ScrollReveal>
 
-        {/* =================================================================== */}
-        {/* 3. SEKSI SAVE THE DATE & COUNTDOWN TIMER                           */}
-        {/* =================================================================== */}
         <ScrollReveal delay={110} variant="bottom-up">
           <p className="typo-eyebrow text-[#a9823a] mt-6 mb-2">
             SAVE THE DATE

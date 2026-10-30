@@ -28,7 +28,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
   const [pesan, setPesan] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Search & Filter state
   const [filterStatus, setFilterStatus] = useState<string>("Semua");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -72,7 +71,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
     }
   };
 
-  // Status badge styling helper
   const getBadgeStyle = (status: string) => {
     switch (status) {
       case "Hadir":
@@ -95,7 +93,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
     }
   };
 
-  // Filtered wishes
   const filteredWishes = useMemo(() => {
     return wishes.filter((item) => {
       const matchesFilter = filterStatus === "Semua" || item.attendanceStatus === filterStatus;
@@ -106,7 +103,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
     });
   }, [wishes, filterStatus, searchQuery]);
 
-  // Counts for pills
   const counts = useMemo(() => {
     return {
       Semua: wishes.length,
@@ -134,17 +130,16 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           </header>
         </ScrollReveal>
 
-        {/* RSVP Form Card */}
         <ScrollReveal variant="fade-up" delay={90}>
           <form
             onSubmit={handleSubmit}
             className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
           >
-          {/* Field: Nama */}
           <div>
             <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
               Nama Anda
             </label>
+            {/* iOS Safari auto-zooms inputs under 16px (text-base) */}
             <input
               id="f-nama"
               type="text"
@@ -158,7 +153,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             />
           </div>
 
-          {/* Row: Kehadiran & Jumlah Tamu */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label htmlFor="f-hadir" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
@@ -195,7 +189,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             </div>
           </div>
 
-          {/* Field: Ucapan & Doa */}
           <div>
             <div className="flex justify-between items-center mb-1.5">
               <label htmlFor="f-pesan" className="block font-sans text-sm font-semibold text-[#4b3a3e]">
@@ -218,7 +211,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
@@ -239,7 +231,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
         </form>
         </ScrollReveal>
 
-        {/* Section: Daftar Ucapan & Doa */}
         <ScrollReveal variant="fade-up" delay={180}>
           <div className="mt-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
@@ -248,7 +239,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
               Doa &amp; Harapan <span className="text-gold-600 italic text-base">({wishes.length})</span>
             </h3>
 
-            {/* Live Search */}
             <div className="relative w-full sm:w-56">
               <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
@@ -261,7 +251,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             </div>
           </div>
 
-          {/* Filter Status Pills */}
           <div className="flex flex-wrap gap-1.5 mb-4">
             {(["Semua", "Hadir", "Berhalangan", "Masih Ragu"] as const).map((st) => (
               <button
@@ -279,7 +268,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             ))}
           </div>
 
-          {/* Wishes Scrollable Container */}
           <div className="max-h-[380px] overflow-y-auto space-y-3 pr-1 scrollbar-thin">
             {filteredWishes.length === 0 ? (
               <div className="text-center py-8 bg-surface-white rounded-2xl border border-gold-500/20 text-muted font-sans text-xs">
@@ -291,7 +279,6 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
                   key={item.id}
                   className="flex items-start gap-3 bg-surface-white border border-gold-500/25 rounded-2xl p-4 shadow-xs"
                 >
-                  {/* Initial Avatar */}
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-gold-500 text-white font-serif font-bold text-base grid place-items-center shrink-0 shadow-xs">
                     {(item.guestName || "?").trim().charAt(0).toUpperCase()}
                   </div>

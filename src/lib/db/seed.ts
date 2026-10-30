@@ -35,7 +35,6 @@ export async function seedDatabase(): Promise<{
     let guestsCount = 0;
     let wishesCount = 0;
 
-    // 1. Seed wedding_settings
     const existingSettings = await db.select().from(schema.weddingSettings).limit(1);
     if (existingSettings.length === 0) {
       console.log("[DB Seed] Mengisi data default wedding_settings (Fauzan & Sinta)...");
@@ -80,7 +79,6 @@ export async function seedDatabase(): Promise<{
       console.log("[DB Seed] wedding_settings sudah memiliki data (lewati insert)");
     }
 
-    // 2. Seed gallery_photos
     const existingGallery = await db.select().from(schema.galleryPhotos);
     if (existingGallery.length === 0) {
       console.log("[DB Seed] Mengisi 11 foto default gallery_photos...");
@@ -98,7 +96,6 @@ export async function seedDatabase(): Promise<{
       console.log(`[DB Seed] gallery_photos sudah memiliki ${galleryCount} foto`);
     }
 
-    // 3. Seed guests
     const existingGuests = await db.select().from(schema.guests);
     if (existingGuests.length === 0) {
       console.log("[DB Seed] Mengisi sampel daftar tamu undangan...");
@@ -125,7 +122,6 @@ export async function seedDatabase(): Promise<{
       console.log(`[DB Seed] guests sudah memiliki ${guestsCount} tamu`);
     }
 
-    // 4. Seed rsvp_wishes
     const existingWishes = await db.select().from(schema.rsvpWishes);
     if (existingWishes.length === 0) {
       console.log("[DB Seed] Mengisi sampel ucapan buku tamu...");
@@ -166,7 +162,6 @@ export async function seedDatabase(): Promise<{
   }
 }
 
-// Auto-run if executed directly via node/tsx
 if (process.argv[1]?.replace(/\\/g, "/").includes("src/lib/db/seed")) {
   seedDatabase()
     .then((res) => {

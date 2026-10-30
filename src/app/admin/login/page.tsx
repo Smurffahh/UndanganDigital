@@ -55,10 +55,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen grid place-items-center bg-gradient-to-br from-cream via-[#fdf5f1] to-rose-100 p-4">
       <div className="w-full max-w-md bg-surface-white border border-gold-500/35 rounded-3xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.25)] p-7 sm:p-9 relative overflow-hidden">
-        {/* Decorative corner accent */}
         <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-rose-300/30 to-transparent rounded-bl-full pointer-events-none" />
 
-        {/* Brand header */}
         <div className="text-center mb-7">
           <div className="w-13 h-13 mx-auto rounded-2xl bg-gradient-to-br from-rose-700 to-rose-900 text-gold-300 grid place-items-center shadow-md mb-3.5">
             <Heart className="w-6 h-6 fill-gold-300 stroke-none" />
@@ -71,7 +69,6 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        {/* Error Announcement */}
         {errorMessage && (
           <div
             id="login-error-msg"
@@ -83,7 +80,6 @@ export default function AdminLoginPage() {
           </div>
         )}
 
-        {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label
@@ -94,6 +90,7 @@ export default function AdminLoginPage() {
             </label>
             <div className="relative">
               <User className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {/* iOS Safari auto-zooms inputs under 16px (text-base) */}
               <input
                 id="username"
                 type="text"
@@ -152,7 +149,6 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Demo Credentials Quick Fill */}
         <div className="mt-7 pt-5 border-t border-gold-500/20 text-center">
           <p className="text-[11px] text-muted mb-2 font-light">
             Kredensial Default Sistem:

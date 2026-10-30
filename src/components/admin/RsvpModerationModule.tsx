@@ -29,7 +29,6 @@ export function RsvpModerationModule({
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeletingId, setIsDeletingId] = useState<number | null>(null);
 
-  // KPI Calculations
   const stats = useMemo(() => {
     const totalGuests = guests.length;
     const sentGuests = guests.filter((g) => g.waSentStatus).length;
@@ -51,7 +50,6 @@ export function RsvpModerationModule({
     };
   }, [guests, wishes]);
 
-  // Filter & Search
   const filteredWishes = useMemo(() => {
     return wishes.filter((item) => {
       const matchFilter = filterStatus === "Semua" || item.attendanceStatus === filterStatus;
@@ -99,9 +97,7 @@ export function RsvpModerationModule({
 
   return (
     <div className="space-y-7">
-      {/* 5 KPI Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
-        {/* KPI 1 */}
         <div className="p-4 rounded-2xl bg-surface-white border border-gold-500/30 shadow-xs">
           <div className="flex items-center justify-between text-muted mb-2">
             <span className="text-[11px] font-medium uppercase tracking-wider">Total Diundang</span>
@@ -113,7 +109,6 @@ export function RsvpModerationModule({
           <span className="text-[10px] text-muted">Kontak tamu terdaftar</span>
         </div>
 
-        {/* KPI 2 */}
         <div className="p-4 rounded-2xl bg-surface-white border border-gold-500/30 shadow-xs">
           <div className="flex items-center justify-between text-muted mb-2">
             <span className="text-[11px] font-medium uppercase tracking-wider">Terkirim WA</span>
@@ -129,7 +124,6 @@ export function RsvpModerationModule({
           </span>
         </div>
 
-        {/* KPI 3 */}
         <div className="p-4 rounded-2xl bg-surface-white border border-gold-500/30 shadow-xs">
           <div className="flex items-center justify-between text-muted mb-2">
             <span className="text-[11px] font-medium uppercase tracking-wider">Konfirmasi Hadir</span>
@@ -143,7 +137,6 @@ export function RsvpModerationModule({
           </span>
         </div>
 
-        {/* KPI 4 */}
         <div className="p-4 rounded-2xl bg-surface-white border border-gold-500/30 shadow-xs">
           <div className="flex items-center justify-between text-muted mb-2">
             <span className="text-[11px] font-medium uppercase tracking-wider">Berhalangan/Ragu</span>
@@ -157,7 +150,6 @@ export function RsvpModerationModule({
           </span>
         </div>
 
-        {/* KPI 5 */}
         <div className="p-4 rounded-2xl bg-surface-white border border-gold-500/30 shadow-xs col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between text-muted mb-2">
             <span className="text-[11px] font-medium uppercase tracking-wider">Total Ucapan</span>
@@ -170,7 +162,6 @@ export function RsvpModerationModule({
         </div>
       </div>
 
-      {/* Moderation List Section */}
       <div className="p-5 sm:p-6 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
           <div>
@@ -182,7 +173,6 @@ export function RsvpModerationModule({
             </p>
           </div>
 
-          {/* Search bar */}
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -195,7 +185,6 @@ export function RsvpModerationModule({
           </div>
         </div>
 
-        {/* Filter Pills */}
         <div className="flex flex-wrap gap-2 mb-4">
           {(["Semua", "Hadir", "Berhalangan", "Masih Ragu"] as const).map((status) => (
             <button
@@ -213,7 +202,6 @@ export function RsvpModerationModule({
           ))}
         </div>
 
-        {/* Wishes List */}
         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
           {filteredWishes.length === 0 ? (
             <div className="text-center py-10 text-muted text-xs bg-cream/50 rounded-2xl border border-dashed border-gold-500/30">
@@ -258,7 +246,6 @@ export function RsvpModerationModule({
                   </p>
                 </div>
 
-                {/* Delete button */}
                 <button
                   type="button"
                   onClick={() => handleDelete(item.id)}

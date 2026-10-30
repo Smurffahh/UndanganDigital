@@ -19,7 +19,6 @@ function validateImageInput(input: string): { valid: boolean; error?: string } {
 
   const trimmed = input.trim();
 
-  // If it's a data URL (base64)
   if (trimmed.startsWith("data:")) {
     const match = trimmed.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
     if (!match) {
@@ -34,7 +33,6 @@ function validateImageInput(input: string): { valid: boolean; error?: string } {
       };
     }
 
-    // Estimate byte size from base64 string
     const base64Data = match[2];
     const byteSize = (base64Data.length * 3) / 4;
     if (byteSize > MAX_BASE64_SIZE_BYTES) {
@@ -47,7 +45,6 @@ function validateImageInput(input: string): { valid: boolean; error?: string } {
     return { valid: true };
   }
 
-  // If it's a web URL
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
     try {
       const url = new URL(trimmed);
@@ -126,7 +123,6 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    // If updating main photos
     if (body.mainPhotos && typeof body.mainPhotos === "object") {
       for (const [key, val] of Object.entries(body.mainPhotos)) {
         if (typeof val === "string" && val.trim()) {

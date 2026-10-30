@@ -49,7 +49,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
 
-    // Sanitize string to prevent Stored Cross-Site Scripting (XSS)
     const sanitizedName = sanitizeString(parsed.data.name);
     const sanitizedMessage = sanitizeString(parsed.data.message);
 

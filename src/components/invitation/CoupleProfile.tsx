@@ -50,7 +50,7 @@ export function CoupleProfile({
               </p>
               <div className="mt-2.5 flex items-center justify-center gap-2">
                 <span className="w-6 h-px bg-gold-500/50" />
-                <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold-600 font-sans">
+                <span className="text-xs font-mono font-bold tracking-[0.12em] normal-case text-gold-600">
                   #SINgkatceritaFAUZAN
                 </span>
                 <span className="w-6 h-px bg-gold-500/50" />

@@ -41,7 +41,7 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
             {signatureDate}
           </p>
 
-          <p className="mt-3 text-xs tracking-[0.25em] text-gold-300 font-semibold uppercase">
+          <p className="mt-3 text-xs tracking-[0.16em] text-gold-300 font-mono font-semibold normal-case">
             #SINgkatceritaFAUZAN
           </p>
         </ScrollReveal>

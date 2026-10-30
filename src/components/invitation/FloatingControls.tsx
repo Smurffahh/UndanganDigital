@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Users, Calendar, Image as ImageIcon, MessageSquare, Gift, Disc3, Music2 } from "lucide-react";
+import { Users, Calendar, Image as ImageIcon, MessageSquare, Gift, Disc3, Music2, Sparkles } from "lucide-react";
 
 interface FloatingControlsProps {
   isOpened: boolean;
@@ -209,7 +209,7 @@ export function FloatingControls({
 
   // IntersectionObserver for tracking active section
   useEffect(() => {
-    const sections = ["beranda", "mempelai", "acara", "galeri", "rsvp", "amplop"];
+    const sections = ["beranda", "mempelai", "cerita", "acara", "galeri", "rsvp", "amplop"];
     const elements = sections
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -233,6 +233,7 @@ export function FloatingControls({
 
   const navLinks = [
     { id: "mempelai", label: "Mempelai", icon: Users },
+    { id: "cerita", label: "Cerita", icon: Sparkles },
     { id: "acara", label: "Acara", icon: Calendar },
     { id: "galeri", label: "Galeri", icon: ImageIcon },
     { id: "rsvp", label: "RSVP", icon: MessageSquare },

@@ -1095,6 +1095,56 @@ export function WeddingSettingsModule({
       </section>
 
       {/* ============================================================ */}
+      {/* 4.5. BEHIND THE STORY & HASHTAG (#SINgkatceritaFAUZAN)       */}
+      {/* ============================================================ */}
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Behind The Story &amp; Hashtag
+            </h3>
+            <p className="text-xs text-muted">
+              Teks narasi kisah cinta dan hashtag resmi yang tampil di seksi perjalanan cinta publik.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Hashtag Resmi Acara:
+            </label>
+            <input
+              type="text"
+              value={formData.storyHashtag || ""}
+              onChange={(e) => handleFieldChange("storyHashtag", e.target.value)}
+              placeholder="#SINgkatceritaFAUZAN"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-semibold text-rose-900 focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+              Teks Narasi Singkat Kisah Cinta (Satset Story):
+            </label>
+            <textarea
+              rows={3}
+              value={formData.loveStoryText || ""}
+              onChange={(e) => handleFieldChange("loveStoryText", e.target.value)}
+              placeholder="Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan."
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
+            />
+            <p className="mt-1.5 text-[11px] text-muted">
+              * Teks ini akan tampil dengan indah pada kartu kutipan pembuka di seksi Behind The Story.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
       {/* 5. REKENING BANK & E-WALLET AMPLOPT DIGITAL */}
       {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">

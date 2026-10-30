@@ -26,6 +26,66 @@ interface DigitalEnvelopeProps {
   qrisImageUrl?: string;
 }
 
+function AestheticGoldQRCode() {
+  return (
+    <svg viewBox="0 0 160 160" className="w-44 h-44 mx-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SVG Kode QRIS Estetik Berbingkai Emas">
+      {/* Outer Border / Frame */}
+      <rect x="2" y="2" width="156" height="156" rx="14" fill="#ffffff" stroke="#c9a24b" strokeWidth="1.5" />
+      
+      {/* Top-Left Finder */}
+      <rect x="14" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
+      <rect x="23" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
+      
+      {/* Top-Right Finder */}
+      <rect x="108" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
+      <rect x="117" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
+      
+      {/* Bottom-Left Finder */}
+      <rect x="14" y="108" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
+      <rect x="23" y="117" width="20" height="20" rx="3.5" fill="#5d3a41" />
+      
+      {/* Top Timing & Matrix Pattern */}
+      <rect x="60" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="74" y="16" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="88" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="60" y="30" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="74" y="30" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="88" y="30" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="60" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="88" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
+      
+      {/* Center Matrix */}
+      <rect x="16" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="30" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="44" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="58" y="60" width="10" height="10" rx="2.5" fill="#5d3a41" />
+      <rect x="92" y="60" width="10" height="10" rx="2.5" fill="#5d3a41" />
+      <rect x="108" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="122" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="136" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
+      
+      {/* Central Heart Monogram Badge */}
+      <circle cx="80" cy="80" r="15" fill="#fffdfa" stroke="#c9a24b" strokeWidth="1.8" />
+      <path d="M75 78 a3 3 0 0 1 5 -2 a3 3 0 0 1 5 2 c0 4 -5 7 -5 7 s-5 -3 -5 -7 z" fill="#8f5a62" />
+      
+      {/* Bottom Matrix */}
+      <rect x="60" y="104" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="74" y="104" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="88" y="104" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="60" y="118" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="74" y="118" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="88" y="118" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="60" y="132" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="74" y="132" width="8" height="8" rx="2" fill="#5d3a41" />
+      <rect x="88" y="132" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="112" y="112" width="10" height="10" rx="2.5" fill="#5d3a41" />
+      <rect x="130" y="112" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="112" y="130" width="8" height="8" rx="2" fill="#c9a24b" />
+      <rect x="128" y="128" width="10" height="10" rx="2.5" fill="#5d3a41" />
+    </svg>
+  );
+}
+
 export function DigitalEnvelope({
   bankAccounts,
   ewallets,
@@ -118,8 +178,11 @@ export function DigitalEnvelope({
             return (
               <article
                 key={copyKey}
-                className="relative overflow-hidden rounded-2xl p-5 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5] flex flex-col justify-between"
+                className="relative overflow-hidden rounded-2xl p-5 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-[0_24px_48px_-14px_rgba(93,58,65,0.26)] transition-[transform,box-shadow] duration-300"
               >
+                {/* 3D Subtle Glare Shimmer */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+
                 {/* Top Card Row */}
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
@@ -260,8 +323,8 @@ export function DigitalEnvelope({
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
             </p>
 
-            {/* QR Image & High-Contrast Fallback Placeholder */}
-            <div className="w-56 h-56 mx-auto bg-white p-3 rounded-2xl border border-gold-500/40 shadow-inner grid place-items-center relative">
+            {/* QR Image & High-Contrast Fallback Placeholder with Aesthetic Gold SVG */}
+            <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-gold-500/40 shadow-inner grid place-items-center relative">
               {qrisImageUrl && !qrisImgError ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -271,21 +334,8 @@ export function DigitalEnvelope({
                   onError={() => setQrisImgError(true)}
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center p-3 text-center space-y-2">
-                  <div className="w-12 h-12 rounded-xl bg-gold-500/15 border border-gold-500/40 flex items-center justify-center text-gold-700">
-                    <QrCode className="w-6 h-6 stroke-[2]" />
-                  </div>
-                  <div>
-                    <p className="font-serif font-bold text-sm text-rose-900">
-                      QRIS Pembayaran Resmi
-                    </p>
-                    <p className="text-[11px] font-medium text-ink/80 mt-0.5">
-                      Fauzan Ma&apos;ruf &amp; Sinta Maria Utami
-                    </p>
-                  </div>
-                  <span className="text-[10px] text-muted tracking-wide font-mono bg-cream px-2 py-0.5 rounded border border-gold-500/25">
-                    NMID: ID102027FAUZANSINTA
-                  </span>
+                <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center">
+                  <AestheticGoldQRCode />
                 </div>
               )}
             </div>

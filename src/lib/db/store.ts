@@ -159,6 +159,8 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     ewallets,
     giftAddress,
     qrisImageUrl: row.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
+    loveStoryText: row.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
+    storyHashtag: row.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
     waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 }

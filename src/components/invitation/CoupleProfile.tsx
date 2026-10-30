@@ -70,7 +70,7 @@ export function CoupleProfile({
 
             {/* Bingkai Mihrab dengan Frame Reveal & Subtle Micro-Parallax */}
             <div className="arch w-[min(72%,260px)] aspect-[3/4] mt-5 shadow-md">
-              <ParallaxPhotoFrame delay={180} maxOffset={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
+              <ParallaxPhotoFrame delay={180} maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={bridePhotoUrl}
@@ -119,7 +119,7 @@ export function CoupleProfile({
 
             {/* Bingkai Mihrab dengan Frame Reveal & Subtle Micro-Parallax */}
             <div className="arch w-[min(72%,260px)] aspect-[3/4] mt-5 shadow-md">
-              <ParallaxPhotoFrame delay={180} maxOffset={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
+              <ParallaxPhotoFrame delay={180} maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={groomPhotoUrl}

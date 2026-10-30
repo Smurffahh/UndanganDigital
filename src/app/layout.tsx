@@ -35,20 +35,20 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "https://undangan-digital-fauzan-sinta.vercel.app"
   ),
-  title: "The Wedding of Fauzan & Sinta",
+  title: "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)",
   description:
-    "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
+    "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.",
   openGraph: {
     type: "website",
     locale: "id_ID",
     url: "/",
     siteName: "The Wedding of Fauzan & Sinta",
-    title: "The Wedding of Fauzan & Sinta",
+    title: "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)",
     description:
-      "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
+      "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.",
     images: [
       {
-        url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+        url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
         width: 1200,
         height: 630,
         alt: "The Wedding of Fauzan & Sinta",
@@ -58,11 +58,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Wedding of Fauzan & Sinta",
+    title: "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)",
     description:
-      "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN",
+      "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.",
     images: [
-      "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+      "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
     ],
   },
   icons: {

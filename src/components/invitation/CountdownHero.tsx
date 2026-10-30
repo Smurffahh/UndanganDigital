@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider } from "./Ornaments";
 import { formatCoverDate } from "@/lib/dateFormat";
+import { ParallaxPhotoFrame } from "./ScrollReveal";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
@@ -62,7 +63,13 @@ export function CountdownHero({
   };
 
   return (
-    <section id="beranda" className="py-20 relative" aria-label="Beranda dan Hitung Mundur">
+    <section
+      id="beranda"
+      className={`py-20 relative transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        isRevealed ? "scale-100" : "scale-[1.08]"
+      }`}
+      aria-label="Beranda dan Hitung Mundur"
+    >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
         {/* 1. Bismillah */}
         <p
@@ -97,18 +104,20 @@ export function CountdownHero({
           <Divider />
         </div>
 
-        {/* 4. Hero Photo in Mihrab Arch */}
+        {/* 4. Hero Photo in Mihrab Arch with Windowed Editorial Parallax */}
         <div
           className={`arch w-[min(76%,320px)] aspect-[4/5] mx-auto mt-2 overflow-hidden shadow-lg ${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={heroPhotoUrl}
-            alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
-            className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-            loading="eager"
-          />
+          <ParallaxPhotoFrame maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroPhotoUrl}
+              alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
+              className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+              loading="eager"
+            />
+          </ParallaxPhotoFrame>
         </div>
 
         {/* 5. Names and Date */}

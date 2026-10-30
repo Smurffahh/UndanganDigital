@@ -63,13 +63,13 @@ export function CountdownHero({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
         {/* Urutan 1: Bingkai Foto Arch Mempelai */}
         <div
-          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.96]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "350ms" : "0ms",
+            transitionDelay: isHeroActive ? "950ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -86,13 +86,13 @@ export function CountdownHero({
 
         {/* Urutan 2: Teks WITH LOVE */}
         <div
-          className={`mt-2 text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`mt-2 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "500ms" : "0ms",
+            transitionDelay: isHeroActive ? "1200ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -103,13 +103,13 @@ export function CountdownHero({
 
         {/* Urutan 3: Kaligrafi Arab Bismillah */}
         <div
-          className={`mt-3 text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`mt-3 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "650ms" : "0ms",
+            transitionDelay: isHeroActive ? "1450ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -120,13 +120,13 @@ export function CountdownHero({
 
         {/* Urutan 4: Kartu Ayat Suci QS. Ar-Rum: 21 */}
         <div
-          className={`mt-5 w-full transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`mt-5 w-full transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "800ms" : "0ms",
+            transitionDelay: isHeroActive ? "1700ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -147,13 +147,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "880ms" : "0ms",
+            transitionDelay: isHeroActive ? "1850ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -161,13 +161,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "920ms" : "0ms",
+            transitionDelay: isHeroActive ? "1850ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -184,13 +184,13 @@ export function CountdownHero({
 
         {/* Urutan 5: Kotak Hitung Mundur */}
         <div
-          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-7 scale-[0.98]"
+              : "opacity-0 translate-y-8 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "950ms" : "0ms",
+            transitionDelay: isHeroActive ? "1950ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >

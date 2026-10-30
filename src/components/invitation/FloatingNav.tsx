@@ -52,12 +52,15 @@ export function FloatingNav({ isOpened }: FloatingNavProps) {
   return (
     <nav
       aria-label="Navigasi cepat undangan"
-      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-[95vw] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-[95vw] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isOpened
-          ? "opacity-100 translate-y-0 delay-700 pointer-events-auto"
+          ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-10 pointer-events-none"
       }`}
-      style={{ willChange: "transform, opacity" }}
+      style={{
+        willChange: "transform, opacity",
+        transitionDelay: isOpened ? "2100ms" : "0ms",
+      }}
     >
       <div className="bg-[#fffdfa]/88 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
         {NAV_ITEMS.map((item) => {

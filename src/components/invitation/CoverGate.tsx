@@ -110,7 +110,7 @@ export function CoverGate({
 
     setTimeout(() => {
       setGone(true);
-    }, 1100);
+    }, 900);
   };
 
   if (gone) return null;
@@ -124,7 +124,7 @@ export function CoverGate({
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening ? "scale-105 opacity-0" : "scale-100 opacity-100 animate-slow-zoom"
         }`}
         style={{ backgroundImage: `url(${coverPhotoUrl})`, willChange: "transform, opacity" }}
@@ -133,7 +133,7 @@ export function CoverGate({
       />
 
       <div
-        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/90 via-[#fdf8f3]/85 to-[#f7e9e5]/95 transition-opacity duration-950 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/90 via-[#fdf8f3]/85 to-[#f7e9e5]/95 transition-opacity duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening ? "opacity-0" : "opacity-100"
         }`}
         style={{ willChange: "opacity" }}
@@ -146,12 +146,11 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
         }`}
         style={{
           willChange: "transform, opacity",
-          transitionDelay: isOpening ? "100ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -164,12 +163,11 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening ? "translate-x-full opacity-0" : "translate-x-0 opacity-100"
         }`}
         style={{
           willChange: "transform, opacity",
-          transitionDelay: isOpening ? "100ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >

@@ -107,7 +107,7 @@ export function CoverGate({
 
     setTimeout(() => {
       setGone(true);
-    }, 1050);
+    }, 2250);
   };
 
   if (gone) return null;
@@ -121,12 +121,12 @@ export function CoverGate({
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-900 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-[1800ms] ease-[cubic-bezier(0.25,1,0.35,1)] ${
           isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "150ms" : "0ms",
+          transitionDelay: isOpening ? "400ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -139,12 +139,12 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-900 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-[1800ms] ease-[cubic-bezier(0.25,1,0.35,1)] ${
           isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "150ms" : "0ms",
+          transitionDelay: isOpening ? "400ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -159,7 +159,7 @@ export function CoverGate({
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
 
       <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-350 ease-out pointer-events-none ${
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-[600ms] ease-out pointer-events-none ${
           isOpening
             ? "scale-90 opacity-0"
             : "scale-100 opacity-95 drop-shadow-[0_12px_28px_rgba(93,58,65,0.25)]"
@@ -170,10 +170,10 @@ export function CoverGate({
       </div>
 
       <div
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
+        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
           isOpening
-            ? "scale-95 opacity-0 pointer-events-none"
-            : "scale-100 opacity-100"
+            ? "opacity-0 scale-[0.95] -translate-y-3 pointer-events-none"
+            : "opacity-100 scale-100 translate-y-0"
         }`}
         style={{
           willChange: "transform, opacity",

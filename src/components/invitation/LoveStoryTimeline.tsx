@@ -1,7 +1,7 @@
 "use client";
 
 import { SongketRibbon } from "./Ornaments";
-import { ScrollReveal } from "./ScrollReveal";
+import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { Sparkles, Heart, Compass } from "lucide-react";
 
 interface LoveStoryTimelineProps {
@@ -44,33 +44,33 @@ export function LoveStoryTimeline({
   return (
     <section
       id="cerita"
-      className="py-20 relative w-full overflow-hidden box-border"
+      className="py-20 relative w-full overflow-hidden box-border bg-transparent"
       aria-label="Kisah Cinta Fauzan dan Sinta"
     >
       <div className="w-full max-w-[780px] mx-auto px-4 sm:px-6 box-border">
         <header className="text-center mb-12">
-          <ScrollReveal delay={0} variant="fade-up">
+          <ScrollLinkedItem offsetY={50}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/35 typo-eyebrow text-[#a9823a] shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#a9823a]" />
               <span>Behind The Story</span>
             </span>
-          </ScrollReveal>
+          </ScrollLinkedItem>
 
-          <ScrollReveal delay={90} variant="fade-up">
+          <ScrollLinkedItem offsetY={55}>
             <h2 className="typo-section-title mt-3">
               Perjalanan Dua Jiwa
             </h2>
             <SongketRibbon />
-          </ScrollReveal>
+          </ScrollLinkedItem>
 
-          <ScrollReveal delay={160} variant="fade-up">
+          <ScrollLinkedItem offsetY={60}>
             <p className="mt-3.5 typo-body italic text-center max-w-[560px] mx-auto leading-relaxed text-[#4b3a3e]">
               &ldquo;{loveStoryText}&rdquo;
             </p>
             <p className="mt-2 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
               {storyHashtag}
             </p>
-          </ScrollReveal>
+          </ScrollLinkedItem>
         </header>
 
         <div className="relative mt-8 space-y-6 sm:space-y-8 w-full max-w-full box-border">
@@ -95,7 +95,7 @@ export function LoveStoryTimeline({
                 </div>
 
                 <div className="flex-1 min-w-0 max-w-full pb-4">
-                  <ScrollReveal delay={idx * 130} variant="fade-up">
+                  <ScrollLinkedItem offsetY={60}>
                     <article className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-surface-white via-[#fffaf7] to-[#fbf1ed] border border-gold-500/35 shadow-[0_12px_28px_-12px_rgba(93,58,65,0.16)] hover:shadow-[0_18px_38px_-10px_rgba(93,58,65,0.22)] transition-[box-shadow,transform] duration-300 relative overflow-hidden group">
                       <div className="absolute top-0 right-0 w-28 h-28 bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.15),transparent_70%)] pointer-events-none" />
 
@@ -124,7 +124,7 @@ export function LoveStoryTimeline({
                         )}
                       </p>
                     </article>
-                  </ScrollReveal>
+                  </ScrollLinkedItem>
                 </div>
               </div>
             );

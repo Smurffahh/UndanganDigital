@@ -1,10 +1,10 @@
 "use client";
 
+import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Download } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { GununganWayang, FloralCornerAccent, SongketRibbon } from "./Ornaments";
-import { Calendar, Clock, MapPin, ExternalLink, CalendarPlus, Download } from "lucide-react";
-import { formatEventCardDate, formatGoogleCalendarUrl, generateIcsContent } from "@/lib/dateFormat";
-import { ScrollReveal } from "./ScrollReveal";
+import { formatGoogleCalendarUrl, generateIcsContent, parseEventDate } from "@/lib/dateFormat";
+import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
 interface EventDetailsProps {
   akadTime: string;
@@ -29,7 +29,8 @@ export function EventDetails({
   weddingDateIso = "2027-01-03T08:00:00+07:00",
   eventDateLabel,
 }: EventDetailsProps) {
-  const displayDate = formatEventCardDate(weddingDateIso, eventDateLabel);
+  const dateObj = parseEventDate(weddingDateIso);
+  const dayNumber = dateObj.getDate();
 
   const googleCalendarUrl = formatGoogleCalendarUrl({
     weddingDateIso,
@@ -62,24 +63,24 @@ export function EventDetails({
   };
 
   return (
-    <section id="acara" className="py-20 relative" aria-label="Detail Acara dan Lokasi">
+    <section id="acara" className="py-20 relative bg-transparent" aria-label="Detail Acara dan Lokasi">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
-          <ScrollReveal delay={0} variant="bottom-up">
+          <ScrollLinkedItem offsetY={50}>
             <span className="inline-block px-4 py-1 rounded-full border border-gold-500/40 bg-surface-white/90 typo-eyebrow text-[#a9823a] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
             </span>
-          </ScrollReveal>
+          </ScrollLinkedItem>
 
-          <ScrollReveal delay={110} variant="bottom-up">
+          <ScrollLinkedItem offsetY={55}>
             <h2 className="typo-section-title">
               Waktu &amp; Tempat
             </h2>
             <SongketRibbon />
-          </ScrollReveal>
+          </ScrollLinkedItem>
         </header>
 
-        <ScrollReveal delay={180} variant="bottom-up" className="mb-8">
+        <ScrollLinkedItem offsetY={70} className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
@@ -99,7 +100,7 @@ export function EventDetails({
               </span>
               <div className="flex items-baseline justify-center">
                 <NumberFlow
-                  value={3}
+                  value={dayNumber}
                   format={{ minimumIntegerDigits: 2 }}
                   className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
                 />
@@ -151,9 +152,9 @@ export function EventDetails({
               <FloralCornerAccent className="w-28 opacity-80" />
             </div>
           </article>
-        </ScrollReveal>
+        </ScrollLinkedItem>
 
-        <ScrollReveal delay={270} variant="bottom-up" className="mb-8">
+        <ScrollLinkedItem offsetY={70} className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
@@ -173,7 +174,7 @@ export function EventDetails({
               </span>
               <div className="flex items-baseline justify-center">
                 <NumberFlow
-                  value={3}
+                  value={dayNumber}
                   format={{ minimumIntegerDigits: 2 }}
                   className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
                 />
@@ -225,22 +226,20 @@ export function EventDetails({
               <FloralCornerAccent className="w-28 opacity-80" />
             </div>
           </article>
-        </ScrollReveal>
+        </ScrollLinkedItem>
 
-        <ScrollReveal delay={360} variant="bottom-up">
-          <div className="flex justify-center mb-8">
-            <button
-              type="button"
-              onClick={handleDownloadIcs}
-              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/40 bg-surface-white/80 text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
-            >
-              <Download className="w-3.5 h-3.5 text-[#a9823a]" />
-              <span>Unduh Pengingat Kalender (.ics)</span>
-            </button>
-          </div>
-        </ScrollReveal>
+        <ScrollLinkedItem offsetY={50} className="flex justify-center mb-8">
+          <button
+            type="button"
+            onClick={handleDownloadIcs}
+            className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/40 bg-surface-white/80 text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
+          >
+            <Download className="w-3.5 h-3.5 text-[#a9823a]" />
+            <span>Unduh Pengingat Kalender (.ics)</span>
+          </button>
+        </ScrollLinkedItem>
 
-        <ScrollReveal delay={450} variant="bottom-up">
+        <ScrollLinkedItem offsetY={70}>
           <div className="card-ornament bg-surface-white border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-5 sm:p-6 text-center">
             <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-gold-500/25 mb-4 shadow-inner">
               <iframe
@@ -263,7 +262,7 @@ export function EventDetails({
               <ExternalLink className="w-3.5 h-3.5 opacity-80" />
             </a>
           </div>
-        </ScrollReveal>
+        </ScrollLinkedItem>
       </div>
     </section>
   );

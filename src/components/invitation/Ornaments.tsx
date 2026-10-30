@@ -161,10 +161,16 @@ export function GoldenEmblemSeal({ className = "w-20 h-20" }: { className?: stri
 export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) {
   return (
     <div className={`relative grid place-items-center ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 80 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute inset-0 w-full h-full animate-[spin_28s_linear_infinite]"
+      >
+        <circle cx="40" cy="40" r="38" stroke="#c9a24b" strokeWidth="1.4" strokeDasharray="3.5 3.5" opacity="0.85" />
+      </svg>
       <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <circle cx="40" cy="40" r="38" stroke="#c9a24b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.75" />
         <circle cx="40" cy="40" r="34" stroke="#5d3a41" strokeWidth="1" opacity="0.6" />
-        
         <text
           x="35"
           y="48"
@@ -214,7 +220,7 @@ export function ScrollDownIndicator({ className = "w-7 h-12" }: { className?: st
       className={`rounded-full border-2 border-[#5d3a41]/60 flex items-start justify-center pt-2 ${className}`}
       aria-hidden="true"
     >
-      <span className="w-1.5 h-3 rounded-full bg-[#5d3a41] animate-bounce" />
+      <span className="w-1.5 h-2.5 rounded-full bg-[#5d3a41] animate-mouse-wheel" />
     </div>
   );
 }

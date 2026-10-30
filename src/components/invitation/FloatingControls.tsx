@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Users, Calendar, Image as ImageIcon, MessageSquare, Gift, Disc3, Music2, Sparkles } from "lucide-react";
+import { Disc3, Music2 } from "lucide-react";
 
 interface FloatingControlsProps {
   isOpened: boolean;
@@ -30,7 +30,6 @@ export function FloatingControls({
   musicUrl,
   youtubeVideoId = "In8kDy_WU4s",
 }: FloatingControlsProps) {
-  const [activeSection, setActiveSection] = useState<string>("beranda");
   const [isPlaying, setIsPlaying] = useState(false);
   const [showTitleBadge, setShowTitleBadge] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -200,37 +199,7 @@ export function FloatingControls({
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [isPlaying, isYouTube]);
 
-  useEffect(() => {
-    const sections = ["beranda", "mempelai", "cerita", "acara", "galeri", "rsvp", "amplop"];
-    const elements = sections
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px" }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [isOpened]);
-
   if (!isOpened) return null;
-
-  const navLinks = [
-    { id: "mempelai", label: "Mempelai", icon: Users },
-    { id: "cerita", label: "Cerita", icon: Sparkles },
-    { id: "acara", label: "Acara", icon: Calendar },
-    { id: "galeri", label: "Galeri", icon: ImageIcon },
-    { id: "rsvp", label: "RSVP", icon: MessageSquare },
-    { id: "amplop", label: "Amplop", icon: Gift },
-  ];
 
   return (
     <>
@@ -278,34 +247,6 @@ export function FloatingControls({
           </button>
         </div>
       )}
-
-      <nav
-        aria-label="Navigasi cepat undangan"
-        className="fixed left-1/2 -translate-x-1/2 bottom-[calc(14px+env(safe-area-inset-bottom,0px))] z-40 flex items-center gap-1 p-1.5 rounded-full bg-surface-white/85 border border-gold-500/45 backdrop-blur-md shadow-[0_20px_40px_-14px_rgba(93,58,65,0.45)] animate-in slide-in-from-bottom-8 duration-500"
-      >
-        {navLinks.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
-
-          return (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              aria-label={item.label}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-medium transition-colors duration-200 ${
-                isActive
-                  ? "bg-rose-100 text-rose-800 shadow-xs"
-                  : "text-muted hover:text-rose-700"
-              }`}
-            >
-              <Icon className="w-4 h-4 stroke-[1.8]" />
-              <span className="hidden sm:inline text-xs font-medium tracking-wide">
-                {item.label}
-              </span>
-            </a>
-          );
-        })}
-      </nav>
     </>
   );
 }

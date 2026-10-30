@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider, GununganWayang } from "./Ornaments";
-import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
   heroPhotoUrl: string;
+  isOpening?: boolean;
+  isOpened?: boolean;
   isHeroReady?: boolean;
   eventDateLabel?: string;
 }
@@ -15,6 +16,8 @@ interface CountdownHeroProps {
 export function CountdownHero({
   weddingDateIso,
   heroPhotoUrl,
+  isOpening,
+  isOpened,
   isHeroReady,
 }: CountdownHeroProps) {
   const [timeLeft, setTimeLeft] = useState({
@@ -24,6 +27,8 @@ export function CountdownHero({
     seconds: 0,
     isDone: false,
   });
+
+  const isHeroActive = Boolean(isOpening || isOpened || isHeroReady);
 
   useEffect(() => {
     const target = new Date(weddingDateIso).getTime();
@@ -56,7 +61,18 @@ export function CountdownHero({
       aria-label="Beranda dan Hitung Mundur"
     >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
-        <ScrollLinkedItem trigger={isHeroReady} delay={50} offsetY={32} className="w-full flex justify-center mb-6">
+        {/* Urutan 1: Bingkai Foto Arch Mempelai */}
+        <div
+          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.96]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "350ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -66,21 +82,54 @@ export function CountdownHero({
               loading="eager"
             />
           </div>
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={120} offsetY={32} className="mt-2 text-center">
+        {/* Urutan 2: Teks WITH LOVE */}
+        <div
+          className={`mt-2 text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "500ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <p className="typo-eyebrow text-[#a9823a]">
             WITH LOVE
           </p>
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={180} offsetY={32} className="mt-3 text-center">
+        {/* Urutan 3: Kaligrafi Arab Bismillah */}
+        <div
+          className={`mt-3 text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "650ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <p className="typo-arabic leading-loose text-rose-700" dir="rtl">
             بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
           </p>
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={240} offsetY={32} className="mt-5 w-full">
+        {/* Urutan 4: Kartu Ayat Suci QS. Ar-Rum: 21 */}
+        <div
+          className={`mt-5 w-full transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "800ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
               <GununganWayang className="w-full h-auto" />
@@ -95,13 +144,33 @@ export function CountdownHero({
               &mdash; QS. Ar-Rum : 21 &mdash;
             </figcaption>
           </figure>
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={300} offsetY={32} className="my-8 w-full flex justify-center">
+        <div
+          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "880ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <Divider />
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={360} offsetY={32} className="text-center">
+        <div
+          className={`text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "920ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           <p className="typo-eyebrow text-[#a9823a] mb-2">
             SAVE THE DATE
           </p>
@@ -111,9 +180,20 @@ export function CountdownHero({
           <p className="typo-body text-center mx-auto mt-2 text-[#4b3a3e]">
             Menuju Hari Bahagia &amp; Ikrar Suci Pernikahan
           </p>
-        </ScrollLinkedItem>
+        </div>
 
-        <ScrollLinkedItem trigger={isHeroReady} delay={420} offsetY={32} className="mt-8 w-full flex justify-center">
+        {/* Urutan 5: Kotak Hitung Mundur */}
+        <div
+          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isHeroActive
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-7 scale-[0.98]"
+          }`}
+          style={{
+            transitionDelay: isHeroActive ? "950ms" : "0ms",
+            willChange: "transform, opacity",
+          }}
+        >
           {!timeLeft.isDone ? (
             <div
               className="flex justify-center items-center gap-2.5 sm:gap-3"
@@ -148,7 +228,7 @@ export function CountdownHero({
               </p>
             </div>
           )}
-        </ScrollLinkedItem>
+        </div>
       </div>
     </section>
   );

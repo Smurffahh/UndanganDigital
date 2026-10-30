@@ -12,6 +12,7 @@ import { RsvpGuestbook } from "./RsvpGuestbook";
 import { DigitalEnvelope } from "./DigitalEnvelope";
 import { ClosingFooter } from "./ClosingFooter";
 import { FloatingControls } from "./FloatingControls";
+import { FloatingNav } from "./FloatingNav";
 import { FixedInvitationBackground } from "./FixedInvitationBackground";
 import type { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 
@@ -45,9 +46,11 @@ export function InvitationOrchestrator({
   guestName,
 }: InvitationOrchestratorProps) {
   const [isOpened, setIsOpened] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const [isHeroReady, setIsHeroReady] = useState(false);
 
   const handleOpenCover = () => {
+    setIsOpening(true);
     setIsOpened(true);
     setIsHeroReady(true);
   };
@@ -70,6 +73,8 @@ export function InvitationOrchestrator({
         <CountdownHero
           weddingDateIso={settings.weddingDateIso}
           heroPhotoUrl={settings.heroPhotoUrl}
+          isOpening={isOpening}
+          isOpened={isOpened}
           isHeroReady={isHeroReady}
           eventDateLabel={settings.eventDateLabel}
         />
@@ -118,6 +123,8 @@ export function InvitationOrchestrator({
 
         <ClosingFooter weddingDateIso={settings.weddingDateIso} />
       </div>
+
+      <FloatingNav isOpened={isOpened} />
 
       <FloatingControls
         isOpened={isOpened}

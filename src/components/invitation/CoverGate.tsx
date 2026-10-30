@@ -5,7 +5,6 @@ import {
   RadiantStar,
   GoldenEmblemSeal,
   CardCornerOrnament,
-  GununganWayang,
   MonogramFS,
   FloralCornerAccent,
 } from "./Ornaments";
@@ -28,7 +27,7 @@ export function CoverGate({
   weddingDateIso,
   eventDateLabel,
 }: CoverGateProps) {
-  const [animStage, setAnimStage] = useState<0 | 1 | 2 | 3>(0);
+  const [isOpening, setIsOpening] = useState(false);
   const [gone, setGone] = useState(false);
   const isReducedMotion = usePrefersReducedMotion();
   const formattedDate = formatCoverDate(weddingDateIso, eventDateLabel);
@@ -99,18 +98,13 @@ export function CoverGate({
       return;
     }
 
-    setAnimStage(1);
+    setIsOpening(true);
+    // Synchronous trigger activates audio on iOS Safari without gesture loss
+    onOpen();
 
     setTimeout(() => {
-      setAnimStage(2);
-      // Synchronous user gesture trigger prevents Safari iOS autoplay rejection
-      onOpen();
-    }, 280);
-
-    setTimeout(() => {
-      setAnimStage(3);
       setGone(true);
-    }, 1500);
+    }, 1100);
   };
 
   if (gone) return null;
@@ -119,32 +113,37 @@ export function CoverGate({
     <section
       id="cover-gate"
       className={`fixed inset-0 z-50 overflow-hidden select-none bg-[#fdf8f3] ${
-        animStage === 2 ? "pointer-events-none" : ""
+        isOpening ? "pointer-events-none" : ""
       }`}
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          animStage >= 2 ? "scale-105 opacity-0" : "scale-100 opacity-100 animate-slow-zoom"
+        className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpening ? "scale-105 opacity-0" : "scale-100 opacity-100 animate-slow-zoom"
         }`}
-        style={{ backgroundImage: `url(${coverPhotoUrl})` }}
+        style={{ backgroundImage: `url(${coverPhotoUrl})`, willChange: "transform, opacity" }}
         role="img"
         aria-label="Foto Sampul Fauzan Ma'ruf & Sinta Maria Utami"
       />
 
       <div
-        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/85 via-[#fdf8f3]/80 to-[#f7e9e5]/92 backdrop-blur-[2px] transition-opacity duration-1000 ${
-          animStage >= 2 ? "opacity-0" : "opacity-100"
+        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/90 via-[#fdf8f3]/85 to-[#f7e9e5]/95 transition-opacity duration-950 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpening ? "opacity-0" : "opacity-100"
         }`}
+        style={{ willChange: "opacity" }}
       />
       <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,75,0.14),transparent_70%)] pointer-events-none" />
 
       <div
-        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          animStage >= 2 ? "-translate-x-full" : "translate-x-0"
+        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+          isOpening ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
         }`}
-        style={{ willChange: "transform" }}
+        style={{
+          willChange: "transform, opacity",
+          transitionDelay: isOpening ? "100ms" : "0ms",
+          backfaceVisibility: "hidden",
+        }}
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
         <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/35 rounded-r-[999px_999px] pointer-events-none" />
@@ -152,10 +151,14 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          animStage >= 2 ? "translate-x-full" : "translate-x-0"
+        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+          isOpening ? "translate-x-full opacity-0" : "translate-x-0 opacity-100"
         }`}
-        style={{ willChange: "transform" }}
+        style={{
+          willChange: "transform, opacity",
+          transitionDelay: isOpening ? "100ms" : "0ms",
+          backfaceVisibility: "hidden",
+        }}
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
         <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/35 rounded-l-[999px_999px] pointer-events-none" />
@@ -163,41 +166,26 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none ${
-          animStage === 1
-            ? "scale-110 drop-shadow-[0_0_30px_rgba(201,162,75,0.85)] opacity-100"
-            : animStage >= 2
-            ? "scale-125 opacity-0 blur-sm"
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none ${
+          isOpening
+            ? "scale-110 opacity-0"
             : "scale-100 opacity-95 drop-shadow-[0_12px_28px_rgba(93,58,65,0.25)]"
         }`}
+        style={{ willChange: "transform, opacity", backfaceVisibility: "hidden" }}
       >
         <GoldenEmblemSeal className="w-20 h-20 sm:w-24 sm:h-24" />
       </div>
 
       <div
-        className={`fixed inset-0 z-40 grid place-items-center pointer-events-none transition-[transform,opacity] duration-[1250ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          animStage === 0
-            ? "scale-[0.3] opacity-0"
-            : animStage === 1
-            ? "scale-100 opacity-100"
-            : "scale-[11] opacity-0 blur-xs"
+        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
+          isOpening
+            ? "-translate-y-7 scale-[0.96] opacity-0 pointer-events-none"
+            : "translate-y-0 scale-100 opacity-100"
         }`}
-        aria-hidden="true"
-      >
-        <div className="relative w-72 h-80 sm:w-88 sm:h-96 text-gold-500 drop-shadow-[0_0_40px_rgba(201,162,75,0.7)] flex flex-col items-center justify-center">
-          <GununganWayang className="w-48 sm:w-56 text-[#c9a24b] opacity-95" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <MonogramFS className="w-24 h-24 sm:w-28 sm:h-28 text-[#5d3a41] drop-shadow-md" />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform,filter] duration-500 ease-out overflow-y-auto ${
-          animStage >= 1
-            ? "-translate-y-6 scale-95 opacity-0 blur-sm pointer-events-none"
-            : "translate-y-0 opacity-100"
-        }`}
+        style={{
+          willChange: "transform, opacity",
+          backfaceVisibility: "hidden",
+        }}
       >
         <div className="flex flex-col items-center pt-1 sm:pt-2">
           <MonogramFS className="w-14 h-14 mb-1" />
@@ -235,7 +223,7 @@ export function CoverGate({
         </div>
 
         <div className="w-full max-w-[340px] flex flex-col items-center mt-3">
-          <div className="bg-[#fffdfa]/92 backdrop-blur-md px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl sm:rounded-3xl w-full border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.16)] relative overflow-hidden group">
+          <div className="bg-[#fffdfa] px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl sm:rounded-3xl w-full border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.16)] relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c9a24b]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
             <CardCornerOrnament />

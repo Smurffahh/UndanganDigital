@@ -108,8 +108,10 @@ export function FloatingControls({
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              setIsPlaying(true);
-              setShowTitleBadge(true);
+              requestAnimationFrame(() => {
+                setIsPlaying(true);
+                setShowTitleBadge(true);
+              });
               let vol = 0;
               const fadeInterval = setInterval(() => {
                 vol += 0.07;
@@ -133,8 +135,10 @@ export function FloatingControls({
     } else {
       if (ytPlayerRef.current?.playVideo) {
         ytPlayerRef.current.playVideo();
-        setIsPlaying(true);
-        setShowTitleBadge(true);
+        requestAnimationFrame(() => {
+          setIsPlaying(true);
+          setShowTitleBadge(true);
+        });
         setTimeout(() => setShowTitleBadge(false), 6000);
       }
     }

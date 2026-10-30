@@ -46,20 +46,18 @@ export function InvitationOrchestrator({
   guestName,
 }: InvitationOrchestratorProps) {
   const [isOpened, setIsOpened] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [isHeroReady, setIsHeroReady] = useState(false);
 
   const bgParallax = useParallax(0.15, true);
   const ornamentParallax = useParallax(0.35, true);
 
   const handleOpenCover = () => {
     setIsOpened(true);
-    setTimeout(() => {
-      setIsRevealed(true);
-    }, 450);
+    setIsHeroReady(true);
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-cream text-ink">
+    <main className="relative min-h-screen overflow-x-clip bg-transparent text-ink">
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         style={bgParallax.transformStyle}
@@ -69,9 +67,9 @@ export function InvitationOrchestrator({
         <img
           src={settings.heroPhotoUrl}
           alt=""
-          className="w-full h-full object-cover object-center scale-105 opacity-[0.14] filter saturate-75"
+          className="w-full h-full object-cover object-center scale-105 opacity-[0.22] filter saturate-75"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/92 via-[#fdf8f3]/85 to-[#f7e9e5]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/85 via-[#fdf8f3]/80 to-[#f7e9e5]/88 backdrop-blur-[2px]" />
         <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
         <div className="absolute top-[35%] -left-[200px] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
         <div className="absolute top-[65%] -right-[200px] w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
@@ -120,7 +118,7 @@ export function InvitationOrchestrator({
         <CountdownHero
           weddingDateIso={settings.weddingDateIso}
           heroPhotoUrl={settings.heroPhotoUrl}
-          isRevealed={isRevealed}
+          isHeroReady={isHeroReady}
           eventDateLabel={settings.eventDateLabel}
         />
 

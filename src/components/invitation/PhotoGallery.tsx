@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { SongketRibbon } from "./Ornaments";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { ScrollReveal, ParallaxPhotoFrame } from "./ScrollReveal";
+import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
 interface GalleryPhotoItem {
   id: number;
@@ -51,16 +51,16 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
   }, [activeIdx, handleClose, handlePrev, handleNext]);
 
   return (
-    <section id="galeri" className="py-20 relative" aria-label="Galeri Foto Momen">
+    <section id="galeri" className="py-20 relative bg-transparent" aria-label="Galeri Foto Momen">
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
         <header className="text-center mb-9">
-          <ScrollReveal delay={0} variant="fade-up">
+          <ScrollLinkedItem offsetY={45}>
             <p className="typo-eyebrow text-[#a9823a] mb-2">
               Our Gallery
             </p>
-          </ScrollReveal>
+          </ScrollLinkedItem>
 
-          <ScrollReveal delay={90} variant="fade-up">
+          <ScrollLinkedItem offsetY={55}>
             <h2 className="typo-section-title">
               Galeri Momen
             </h2>
@@ -68,15 +68,14 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
               #SINgkatceritaFAUZAN
             </p>
-          </ScrollReveal>
+          </ScrollLinkedItem>
         </header>
 
         <div className="columns-2 md:columns-3 gap-3.5 md:gap-4.5 space-y-3.5 md:space-y-4.5">
           {photos.map((item, idx) => (
-            <ScrollReveal
+            <ScrollLinkedItem
               key={item.id}
-              variant="frame-reveal"
-              delay={Math.min(320, (idx % 6) * 60)}
+              offsetY={50}
               className="break-inside-avoid"
             >
               <figure
@@ -92,7 +91,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                 aria-label={`Perbesar foto: ${item.caption || "Galeri prewedding"}`}
                 className="relative rounded-2xl overflow-hidden border border-gold-500/35 shadow-md cursor-zoom-in bg-rose-100 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-rose-700"
               >
-                <ParallaxPhotoFrame maxShiftPercent={6} className="w-full h-full rounded-2xl">
+                <div className="w-full h-full rounded-2xl overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.imageUrl}
@@ -100,10 +99,10 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                     className="w-full h-auto object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                     loading="lazy"
                   />
-                </ParallaxPhotoFrame>
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#5d3a41]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </figure>
-            </ScrollReveal>
+            </ScrollLinkedItem>
           ))}
         </div>
       </div>
@@ -112,15 +111,15 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Pratinjau Foto Layar Penuh"
-          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-4"
+          aria-label="Tampilan Foto Penuh"
+          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
           onClick={handleClose}
         >
           <button
             type="button"
             onClick={handleClose}
-            aria-label="Tutup pratinjau foto"
-            className="absolute top-5 right-5 p-2 rounded-full bg-surface-white/10 text-white hover:bg-surface-white/20 transition-colors z-10 cursor-pointer"
+            className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
+            aria-label="Tutup foto penuh"
           >
             <X className="w-6 h-6" />
           </button>
@@ -131,31 +130,11 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               e.stopPropagation();
               handlePrev();
             }}
+            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
             aria-label="Foto sebelumnya"
-            className="absolute left-4 p-3 rounded-full bg-surface-white/10 text-white hover:bg-surface-white/20 transition-colors cursor-pointer hidden sm:block"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-
-          <div
-            className="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photos[activeIdx].imageUrl}
-              alt={photos[activeIdx].caption || "Foto momen prewedding"}
-              className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-gold-500/30"
-            />
-            {photos[activeIdx].caption && (
-              <p className="mt-3.5 text-center text-sm font-light text-rose-100/90 font-serif italic max-w-xl">
-                {photos[activeIdx].caption}
-              </p>
-            )}
-            <p className="text-xs text-gold-300/80 mt-1.5 tabular-nums font-sans">
-              {activeIdx + 1} / {photos.length}
-            </p>
-          </div>
 
           <button
             type="button"
@@ -163,11 +142,31 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               e.stopPropagation();
               handleNext();
             }}
+            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
             aria-label="Foto selanjutnya"
-            className="absolute right-4 p-3 rounded-full bg-surface-white/10 text-white hover:bg-surface-white/20 transition-colors cursor-pointer hidden sm:block"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
+
+          <div
+            className="max-w-4xl max-h-[85vh] flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photos[activeIdx].imageUrl}
+              alt={photos[activeIdx].caption || `Foto momen Fauzan dan Sinta #${activeIdx + 1}`}
+              className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl border border-gold-500/40"
+            />
+            {photos[activeIdx].caption && (
+              <p className="mt-3 text-center text-white/90 font-sans text-xs sm:text-sm tracking-wide bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-xs">
+                {photos[activeIdx].caption}
+              </p>
+            )}
+            <span className="mt-2 text-white/60 font-sans text-xs tabular-nums">
+              {activeIdx + 1} / {photos.length}
+            </span>
+          </div>
         </div>
       )}
     </section>

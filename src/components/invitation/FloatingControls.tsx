@@ -266,7 +266,7 @@ export function FloatingControls({
         <div className="fixed top-5 right-5 z-40 flex items-center gap-2">
           {/* Animated Song Title Pill */}
           {showTitleBadge && (
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 text-[11px] font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
               <Music2 className="w-3.5 h-3.5 text-gold-600 animate-pulse" />
               <span className="max-w-[200px] truncate">{musicTitle}</span>
             </div>
@@ -312,7 +312,7 @@ export function FloatingControls({
               }`}
             >
               <Icon className="w-4 h-4 stroke-[1.8]" />
-              <span className="hidden sm:inline text-[11px] font-medium tracking-wide">
+              <span className="hidden sm:inline text-xs font-medium tracking-wide">
                 {item.label}
               </span>
             </a>

@@ -73,7 +73,7 @@ export function CountdownHero({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
         {/* 1. Bismillah */}
         <p
-          className={`font-arabic text-2xl sm:text-3xl text-rose-700 leading-loose ${getRevealClass()}`}
+          className={`typo-arabic leading-loose ${getRevealClass()}`}
           dir="rtl"
           style={{ transitionDelay: isRevealed ? "0ms" : "0ms" }}
         >
@@ -85,13 +85,13 @@ export function CountdownHero({
           className={`card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center ${getRevealClass()}`}
           style={{ transitionDelay: isRevealed ? "100ms" : "0ms" }}
         >
-          <p className="font-arabic text-lg sm:text-xl leading-loose text-rose-900" dir="rtl">
+          <p className="typo-arabic leading-loose text-rose-900" dir="rtl">
             وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
           </p>
-          <blockquote className="mt-4 text-xs sm:text-sm font-light text-muted leading-relaxed">
+          <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
             &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
           </blockquote>
-          <figcaption className="mt-3 font-serif italic text-sm sm:text-base text-gold-600">
+          <figcaption className="typo-meta mt-3 font-medium text-[#a9823a]">
             &mdash; QS. Ar-Rum : 21 &mdash;
           </figcaption>
         </figure>
@@ -125,10 +125,10 @@ export function CountdownHero({
           className={`${getRevealClass()} mt-6`}
           style={{ transitionDelay: isRevealed ? "400ms" : "0ms" }}
         >
-          <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
-            Fauzan <span className="font-script text-gold-500 font-normal px-1">&amp;</span> Sinta
+          <h2 className="typo-display drop-shadow-xs">
+            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">&amp;</span> Sinta
           </h2>
-          <p className="mt-2 text-xs tracking-[0.3em] uppercase text-gold-600 font-medium">
+          <p className="typo-eyebrow mt-2 text-[#a9823a]">
             {displayDate}
           </p>
         </div>
@@ -159,7 +159,7 @@ export function CountdownHero({
                     className="font-serif text-3xl sm:text-4xl font-bold tabular-nums text-[#5d3a41] leading-none"
                     style={{ color: "#5d3a41" }}
                   />
-                  <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-[#9c5f66] mt-2">
+                  <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] mt-2">
                     {item.label}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export function CountdownHero({
             </div>
           ) : (
             <div className="p-4 rounded-2xl bg-cream/70 border border-gold-500/30 max-w-md mx-auto">
-              <p className="font-serif italic text-base sm:text-lg text-rose-900">
+              <p className="typo-body italic text-center mx-auto text-rose-900">
                 Alhamdulillah, rangkaian acara pernikahan Fauzan &amp; Sinta telah berlangsung 🤍
               </p>
             </div>

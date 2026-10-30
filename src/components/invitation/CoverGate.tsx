@@ -136,7 +136,7 @@ export function CoverGate({
         {/* Top Header */}
         <div className="flex flex-col items-center pt-1 sm:pt-2">
           <RadiantStar className="w-7 h-7 sm:w-8 sm:h-8 fill-[#c9a24b] drop-shadow-xs mb-1 animate-pulse" />
-          <p className="font-script text-3xl sm:text-4xl text-[#a9823a] leading-tight drop-shadow-xs">
+          <p className="typo-script-accent leading-tight drop-shadow-xs">
             The Wedding Of
           </p>
 
@@ -153,20 +153,20 @@ export function CoverGate({
             </div>
           </div>
 
-          <h1 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl leading-tight text-[#5d3a41] drop-shadow-xs">
+          <h1 className="typo-display drop-shadow-xs">
             Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">&amp;</span> Sinta
           </h1>
 
           {/* Tanggal Pelaksanaan dengan Flanking Golden Dividers */}
           <div className="mt-1.5 flex items-center justify-center gap-2">
             <span className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
-            <p className="text-xs tracking-[0.25em] uppercase text-[#4b3a3e] font-medium">
+            <p className="font-sans text-sm font-medium tracking-[0.12em] uppercase text-[#4b3a3e]">
               {formattedDate}
             </p>
             <span className="w-5 sm:w-8 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
           </div>
 
-          <span className="mt-2 inline-block px-3.5 py-1 rounded-full bg-[#f7e9e5] text-[#9c5f66] border border-[#e9d3a3] text-[11px] tracking-[0.14em] normal-case font-mono font-semibold shadow-xs">
+          <span className="mt-2 inline-block px-3.5 py-1 rounded-full bg-[#f7e9e5] text-[#9c5f66] border border-[#e9d3a3] font-sans text-xs sm:text-sm font-semibold normal-case tracking-wide shadow-xs">
             #SINgkatceritaFAUZAN
           </span>
         </div>
@@ -179,13 +179,13 @@ export function CoverGate({
 
             <CardCornerOrnament />
 
-            <p className="text-[10px] tracking-[0.3em] uppercase text-[#8d757c] font-medium">
+            <p className="typo-eyebrow text-[#8d757c]">
               Kepada Yth.
             </p>
-            <p className="text-[11px] text-[#8d757c]/90 mt-0.5 font-light">
+            <p className="typo-meta mt-0.5">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="font-serif font-bold text-2xl sm:text-3xl text-[#5d3a41] mt-1 break-words leading-tight">
+            <p className="typo-card-title mt-1.5 break-words">
               {guestName || "Tamu Undangan"}
             </p>
           </div>
@@ -194,13 +194,13 @@ export function CoverGate({
           <button
             type="button"
             onClick={handleOpen}
-            className="mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] text-xs font-bold tracking-[0.22em] uppercase border border-[#c9a24b]/55 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[280px]"
+            className="typo-button mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] uppercase border border-[#c9a24b]/55 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[280px]"
           >
             <Mail className="w-4 h-4 stroke-[#edd39b] stroke-[2]" />
             <span>Buka Undangan</span>
           </button>
 
-          <p className="mt-2.5 sm:mt-3 text-[10px] tracking-wide text-[#8d757c] font-light">
+          <p className="typo-meta mt-2.5 sm:mt-3 text-center">
             *Mohon maaf apabila terdapat kekeliruan penulisan nama &amp; gelar
           </p>
         </div>

@@ -30,13 +30,13 @@ export function CoupleProfile({
         {/* Header Seksi (Staggered Chunk 1 & 2) */}
         <header className="text-center mb-9">
           <ScrollReveal delay={0} variant="fade-up">
-            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+            <p className="typo-eyebrow text-[#a9823a] mb-2">
               Dengan Memohon Rahmat &amp; Ridho Allah SWT
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={90} variant="fade-up">
-            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            <h2 className="typo-section-title">
               Mempelai
             </h2>
             <SongketRibbon />
@@ -45,12 +45,12 @@ export function CoupleProfile({
           {/* Narasi Behind Story (Satset Story) */}
           <ScrollReveal delay={150} variant="fade-up">
             <div className="mt-5 max-w-[540px] mx-auto px-5 py-4 rounded-2xl bg-surface-white/85 border border-gold-500/30 shadow-[0_12px_24px_-10px_rgba(93,58,65,0.12)]">
-              <p className="font-serif italic text-sm sm:text-base text-rose-950 leading-relaxed">
+              <p className="typo-body italic text-center mx-auto text-[#4b3a3e]">
                 &ldquo;Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit&mdash;satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.&rdquo;
               </p>
               <div className="mt-2.5 flex items-center justify-center gap-2">
                 <span className="w-6 h-px bg-gold-500/50" />
-                <span className="text-xs font-mono font-bold tracking-[0.12em] normal-case text-gold-600">
+                <span className="font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
                   #SINgkatceritaFAUZAN
                 </span>
                 <span className="w-6 h-px bg-gold-500/50" />
@@ -63,7 +63,7 @@ export function CoupleProfile({
           {/* 1. Mempelai Wanita */}
           <article className="text-center p-4 sm:p-6 flex flex-col items-center">
             <ScrollReveal delay={120} variant="fade-up">
-              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white text-[10px] font-semibold tracking-[0.25em] uppercase text-gold-600 shadow-xs">
+              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white typo-eyebrow text-[#a9823a] shadow-xs">
                 Mempelai Wanita
               </span>
             </ScrollReveal>
@@ -82,16 +82,16 @@ export function CoupleProfile({
             </div>
 
             <ScrollReveal delay={270} variant="fade-up">
-              <h3 className="mt-5 font-serif font-semibold text-2xl sm:text-3xl text-rose-900">
+              <h3 className="mt-5 typo-card-title">
                 {brideName}
               </h3>
-              <p className="mt-2 text-xs tracking-[0.25em] uppercase text-gold-600 font-medium">
+              <p className="mt-2 typo-eyebrow text-[#a9823a]">
                 {brideBirth}
               </p>
             </ScrollReveal>
 
             <ScrollReveal delay={360} variant="fade-up">
-              <p className="mt-3.5 text-xs sm:text-sm font-light text-muted max-w-[320px] leading-relaxed">
+              <p className="mt-3.5 typo-body text-center max-w-[320px] mx-auto text-[#4b3a3e]">
                 {brideBio}
               </p>
             </ScrollReveal>
@@ -112,7 +112,7 @@ export function CoupleProfile({
           {/* 3. Mempelai Pria */}
           <article className="text-center p-4 sm:p-6 flex flex-col items-center">
             <ScrollReveal delay={120} variant="fade-up">
-              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white text-[10px] font-semibold tracking-[0.25em] uppercase text-gold-600 shadow-xs">
+              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white typo-eyebrow text-[#a9823a] shadow-xs">
                 Mempelai Pria
               </span>
             </ScrollReveal>
@@ -131,16 +131,16 @@ export function CoupleProfile({
             </div>
 
             <ScrollReveal delay={270} variant="fade-up">
-              <h3 className="mt-5 font-serif font-semibold text-2xl sm:text-3xl text-rose-900">
+              <h3 className="mt-5 typo-card-title">
                 {groomName}
               </h3>
-              <p className="mt-2 text-xs tracking-[0.25em] uppercase text-gold-600 font-medium">
+              <p className="mt-2 typo-eyebrow text-[#a9823a]">
                 {groomBirth}
               </p>
             </ScrollReveal>
 
             <ScrollReveal delay={360} variant="fade-up">
-              <p className="mt-3.5 text-xs sm:text-sm font-light text-muted max-w-[320px] leading-relaxed">
+              <p className="mt-3.5 typo-body text-center max-w-[320px] mx-auto text-[#4b3a3e]">
                 {groomBio}
               </p>
             </ScrollReveal>

@@ -56,17 +56,17 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         {/* Header Seksi (Staggered Chunk 1 & 2) */}
         <header className="text-center mb-9">
           <ScrollReveal delay={0} variant="fade-up">
-            <p className="text-[11px] tracking-[0.34em] uppercase text-gold-600 mb-2 font-medium">
+            <p className="typo-eyebrow text-[#a9823a] mb-2">
               Our Gallery
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={90} variant="fade-up">
-            <h2 className="font-serif font-semibold text-3xl sm:text-4xl text-rose-900 leading-tight">
+            <h2 className="typo-section-title">
               Galeri Momen
             </h2>
             <SongketRibbon />
-            <p className="mt-2.5 text-xs font-mono font-semibold tracking-[0.14em] normal-case text-gold-600">
+            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
               #SINgkatceritaFAUZAN
             </p>
           </ScrollReveal>
@@ -158,7 +158,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                 {photos[activeIdx].caption}
               </p>
             )}
-            <p className="text-[11px] text-gold-300/80 mt-1.5 tabular-nums">
+            <p className="text-xs text-gold-300/80 mt-1.5 tabular-nums font-sans">
               {activeIdx + 1} / {photos.length}
             </p>
           </div>

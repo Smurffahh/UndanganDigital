@@ -1,6 +1,7 @@
 "use client";
 
-import { SongketRibbon } from "./Ornaments";
+import NumberFlow from "@number-flow/react";
+import { GununganWayang, FloralCornerAccent, SongketRibbon } from "./Ornaments";
 import { Calendar, Clock, MapPin, ExternalLink, CalendarPlus, Download } from "lucide-react";
 import { formatEventCardDate, formatGoogleCalendarUrl, generateIcsContent } from "@/lib/dateFormat";
 import { ScrollReveal } from "./ScrollReveal";
@@ -64,17 +65,17 @@ export function EventDetails({
   };
 
   return (
-    <section id="acara" className="py-20 relative bg-gradient-to-b from-rose-100/0 via-rose-100/50 to-rose-100/0" aria-label="Detail Acara dan Lokasi">
+    <section id="acara" className="py-20 relative" aria-label="Detail Acara dan Lokasi">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
-        {/* Header Seksi (Staggered Chunk 1 & 2) */}
-        <header className="text-center mb-9">
-          <ScrollReveal delay={0} variant="fade-up">
-            <p className="typo-eyebrow text-[#a9823a] mb-2">
+        {/* Header Seksi: Save The Date */}
+        <header className="text-center mb-10">
+          <ScrollReveal delay={0} variant="bottom-up">
+            <span className="inline-block px-4 py-1 rounded-full border border-gold-500/40 bg-surface-white/90 typo-eyebrow text-[#a9823a] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
-            </p>
+            </span>
           </ScrollReveal>
 
-          <ScrollReveal delay={90} variant="fade-up">
+          <ScrollReveal delay={110} variant="bottom-up">
             <h2 className="typo-section-title">
               Waktu &amp; Tempat
             </h2>
@@ -82,94 +83,188 @@ export function EventDetails({
           </ScrollReveal>
         </header>
 
-        {/* Card 1: Akad Nikah (Staggered Chunk 3) */}
-        <ScrollReveal delay={180} variant="scale-up" className="mb-6">
-          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.28)] transition-[transform,box-shadow] duration-300">
-            {/* 3D Glare Shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+        {/* Card 1: Akad Nikah (Tall Arch Frame) */}
+        <ScrollReveal delay={180} variant="bottom-up" className="mb-8">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
+            {/* Watermark Gunungan Wayang samar di tengah */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
+              <GununganWayang className="w-full h-auto" />
+            </div>
 
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
+            {/* Icon Lengkungan Atas */}
+            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
-            <h3 className="typo-card-title">
+
+            {/* Judul Acara */}
+            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#5d3a41]">
               Akad Nikah
             </h3>
-            <p className="mt-1.5 typo-eyebrow text-[#9c5f66]">
-              {displayDate}
-            </p>
-            <p className="mt-2 font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5">
+
+            {/* Penekanan Angka Tanggal Besar "03" dengan NumberFlow */}
+            <div className="my-5 flex flex-col items-center justify-center">
+              <span className="typo-eyebrow text-[#a9823a] tracking-[0.25em] uppercase text-xs mb-1">
+                Minggu
+              </span>
+              <div className="flex items-baseline justify-center">
+                <NumberFlow
+                  value={3}
+                  format={{ minimumIntegerDigits: 2 }}
+                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
+                />
+              </div>
+              <span className="typo-eyebrow text-[#9c5f66] tracking-[0.2em] uppercase text-xs mt-1">
+                Januari 2027
+              </span>
+            </div>
+
+            {/* Waktu Pelaksanaan */}
+            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5 mb-3">
               <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
               {akadTime}
             </p>
-            <SongketRibbon className="w-28 my-3.5 mx-auto" />
+
+            <SongketRibbon className="w-28 my-3 mx-auto" />
+
+            {/* Lokasi Acara */}
             <p className="font-sans text-base font-semibold text-[#5d3a41]">
               {venueName}
             </p>
-            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e]">
+            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e] max-w-[320px]">
               {venueAddress}
               <br />
-              {venuePlusCode}
+              <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
             </p>
+
+            {/* Tombol Kapsul: LIHAT LOKASI & SIMPAN TANGGAL */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm"
+              >
+                <MapPin className="w-3.5 h-3.5 text-gold-300" />
+                <span className="text-xs tracking-wider uppercase font-semibold">Lihat Lokasi</span>
+              </a>
+
+              <a
+                href={googleCalendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm"
+              >
+                <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
+                <span className="text-xs tracking-wider uppercase font-semibold">Simpan Tanggal</span>
+              </a>
+            </div>
+
+            {/* Hiasan Bunga di Lengkungan Bawah */}
+            <div className="mt-6 flex justify-center pb-2">
+              <FloralCornerAccent className="w-28 opacity-80" />
+            </div>
           </article>
         </ScrollReveal>
 
-        {/* Card 2: Resepsi (Staggered Chunk 3) */}
-        <ScrollReveal delay={270} variant="scale-up" className="mb-6">
-          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.28)] transition-[transform,box-shadow] duration-300">
-            {/* 3D Glare Shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+        {/* Card 2: Resepsi (Tall Arch Frame) */}
+        <ScrollReveal delay={270} variant="bottom-up" className="mb-8">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
+            {/* Watermark Gunungan Wayang samar di tengah */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
+              <GununganWayang className="w-full h-auto" />
+            </div>
 
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
+            {/* Icon Lengkungan Atas */}
+            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
-            <h3 className="typo-card-title">
+
+            {/* Judul Acara */}
+            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#5d3a41]">
               Resepsi
             </h3>
-            <p className="mt-1.5 typo-eyebrow text-[#9c5f66]">
-              {displayDate}
-            </p>
-            <p className="mt-2 font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5">
+
+            {/* Penekanan Angka Tanggal Besar "03" dengan NumberFlow */}
+            <div className="my-5 flex flex-col items-center justify-center">
+              <span className="typo-eyebrow text-[#a9823a] tracking-[0.25em] uppercase text-xs mb-1">
+                Minggu
+              </span>
+              <div className="flex items-baseline justify-center">
+                <NumberFlow
+                  value={3}
+                  format={{ minimumIntegerDigits: 2 }}
+                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
+                />
+              </div>
+              <span className="typo-eyebrow text-[#9c5f66] tracking-[0.2em] uppercase text-xs mt-1">
+                Januari 2027
+              </span>
+            </div>
+
+            {/* Waktu Pelaksanaan */}
+            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5 mb-3">
               <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
               {resepsiTime}
             </p>
-            <SongketRibbon className="w-28 my-3.5 mx-auto" />
+
+            <SongketRibbon className="w-28 my-3 mx-auto" />
+
+            {/* Lokasi Acara */}
             <p className="font-sans text-base font-semibold text-[#5d3a41]">
               {venueName}
             </p>
-            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e]">
+            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e] max-w-[320px]">
               {venueAddress}
               <br />
-              {venuePlusCode}
+              <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
             </p>
+
+            {/* Tombol Kapsul: LIHAT LOKASI & SIMPAN TANGGAL */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm"
+              >
+                <MapPin className="w-3.5 h-3.5 text-gold-300" />
+                <span className="text-xs tracking-wider uppercase font-semibold">Lihat Lokasi</span>
+              </a>
+
+              <a
+                href={googleCalendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm"
+              >
+                <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
+                <span className="text-xs tracking-wider uppercase font-semibold">Simpan Tanggal</span>
+              </a>
+            </div>
+
+            {/* Hiasan Bunga di Lengkungan Bawah */}
+            <div className="mt-6 flex justify-center pb-2">
+              <FloralCornerAccent className="w-28 opacity-80" />
+            </div>
           </article>
         </ScrollReveal>
 
-        {/* Calendar Action Buttons (Staggered Chunk 4) */}
-        <ScrollReveal delay={360} variant="fade-up">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <a
-              href={googleCalendarUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-[#5d3a41] uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs"
-            >
-              <CalendarPlus className="w-4 h-4 text-[#a9823a]" />
-              <span>Simpan ke Google Calendar</span>
-            </a>
-
+        {/* Unduh Berkas Kalender .ICS (Pilihan Tambahan) */}
+        <ScrollReveal delay={360} variant="bottom-up">
+          <div className="flex justify-center mb-8">
             <button
               type="button"
               onClick={handleDownloadIcs}
-              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-gold-500/45 bg-surface-white/80 text-[#5d3a41] uppercase hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer"
+              className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/40 bg-surface-white/80 text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
             >
-              <Download className="w-4 h-4 text-[#a9823a]" />
-              <span>Unduh Pengingat (.ics)</span>
+              <Download className="w-3.5 h-3.5 text-[#a9823a]" />
+              <span>Unduh Pengingat Kalender (.ics)</span>
             </button>
           </div>
         </ScrollReveal>
 
-        {/* Card 3: Google Maps Embed (Staggered Chunk 4) */}
-        <ScrollReveal delay={450} variant="fade-up">
+        {/* Card 3: Google Maps Embed */}
+        <ScrollReveal delay={450} variant="bottom-up">
           <div className="card-ornament bg-surface-white border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-5 sm:p-6 text-center">
             <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-gold-500/25 mb-4 shadow-inner">
               <iframe

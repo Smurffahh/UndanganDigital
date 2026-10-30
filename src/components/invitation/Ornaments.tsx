@@ -159,3 +159,83 @@ export function GoldenEmblemSeal({ className = "w-20 h-20" }: { className?: stri
     </div>
   );
 }
+
+/**
+ * Monogram Kaligrafi Artistik F & S
+ * Digunakan pada Layar Cover, Hero Oval Arch, dan Penutup
+ */
+export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) {
+  return (
+    <div className={`relative grid place-items-center ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        {/* Lingkaran Luar Emas Ganda */}
+        <circle cx="40" cy="40" r="38" stroke="#c9a24b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.75" />
+        <circle cx="40" cy="40" r="34" stroke="#5d3a41" strokeWidth="1" opacity="0.6" />
+        
+        {/* Monogram Huruf F & S Artistik */}
+        <text
+          x="35"
+          y="48"
+          textAnchor="middle"
+          fill="#5d3a41"
+          fontFamily="'Great Vibes', cursive"
+          fontSize="36"
+        >
+          F
+        </text>
+        <text
+          x="46"
+          y="52"
+          textAnchor="middle"
+          fill="#c9a24b"
+          fontFamily="'Great Vibes', cursive"
+          fontSize="36"
+        >
+          S
+        </text>
+        {/* Titik Tengah Emas */}
+        <circle cx="40" cy="22" r="1.8" fill="#c9a24b" />
+        <circle cx="40" cy="58" r="1.8" fill="#c9a24b" />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Aksen Bunga & Daun Dusty Rose & Gold
+ * Digunakan untuk membingkai lengkungan bawah Tall Arch Frame & sudut layar
+ */
+export function FloralCornerAccent({ className = "w-28 h-auto" }: { className?: string }) {
+  return (
+    <div className={className} aria-hidden="true">
+      <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+        {/* Tangkai Tengah */}
+        <path d="M10 20 Q60 28 110 20" stroke="#c9a24b" strokeWidth="1" strokeLinecap="round" opacity="0.6" />
+        {/* Daun Emas Kiri */}
+        <path d="M30 20 C25 14 38 10 40 20 C38 24 25 24 30 20 Z" fill="#edd39b" opacity="0.7" />
+        {/* Daun Emas Kanan */}
+        <path d="M90 20 C95 14 82 10 80 20 C82 24 95 24 90 20 Z" fill="#edd39b" opacity="0.7" />
+        {/* Kelopak Bunga Dusty Rose Tengah */}
+        <circle cx="60" cy="22" r="6" fill="#f7e9e5" stroke="#9c5f66" strokeWidth="1" />
+        <circle cx="56" cy="18" r="4" fill="#f4dbd4" opacity="0.8" />
+        <circle cx="64" cy="18" r="4" fill="#f4dbd4" opacity="0.8" />
+        <circle cx="60" cy="22" r="2.2" fill="#c9a24b" />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Animated Scroll-Down Mouse Pill Indicator
+ * Kapsul vertikal penuntun scroll tamu dengan animasi bounce lembut
+ */
+export function ScrollDownIndicator({ className = "w-7 h-12" }: { className?: string }) {
+  return (
+    <div
+      className={`rounded-full border-2 border-[#5d3a41]/60 flex items-start justify-center pt-2 ${className}`}
+      aria-hidden="true"
+    >
+      <span className="w-1.5 h-3 rounded-full bg-[#5d3a41] animate-bounce" />
+    </div>
+  );
+}

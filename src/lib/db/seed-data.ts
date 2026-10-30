@@ -108,6 +108,9 @@ export const DEFAULT_WEDDING_SETTINGS = {
   },
   qrisImageUrl:
     "https://images.unsplash.com/photo-1595079672139-cdc4b0b44714?auto=format&fit=crop&w=600&q=80",
+  loveStoryText:
+    "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.",
+  storyHashtag: "#SINgkatceritaFAUZAN",
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 

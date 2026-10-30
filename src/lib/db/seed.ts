@@ -70,6 +70,8 @@ export async function seedDatabase(): Promise<{
         ewallets: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.ewallets)),
         giftAddress: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.giftAddress)),
         qrisImageUrl: DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
+        loveStoryText: DEFAULT_WEDDING_SETTINGS.loveStoryText,
+        storyHashtag: DEFAULT_WEDDING_SETTINGS.storyHashtag,
         waMessageTemplate: DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
       });
       settingsInserted = true;

@@ -84,8 +84,11 @@ export function EventDetails({
 
         {/* Card 1: Akad Nikah (Staggered Chunk 3) */}
         <ScrollReveal delay={180} variant="scale-up" className="mb-6">
-          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center">
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center">
+          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.28)] transition-[transform,box-shadow] duration-300">
+            {/* 3D Glare Shimmer */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+
+            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
             <h3 className="font-serif font-semibold text-2xl text-rose-900">
@@ -112,8 +115,11 @@ export function EventDetails({
 
         {/* Card 2: Resepsi (Staggered Chunk 3) */}
         <ScrollReveal delay={270} variant="scale-up" className="mb-6">
-          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center">
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center">
+          <article className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 text-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.28)] transition-[transform,box-shadow] duration-300">
+            {/* 3D Glare Shimmer */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+
+            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mb-3.5 grid place-items-center group-hover:scale-105 transition-transform duration-300">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
             <h3 className="font-serif font-semibold text-2xl text-rose-900">

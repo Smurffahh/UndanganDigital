@@ -46,6 +46,8 @@ export const weddingSettings = pgTable("wedding_settings", {
   giftAddress: text("gift_address"),
   qrisImageUrl: text("qris_image_url"),
   waMessageTemplate: text("wa_message_template"),
+  loveStoryText: text("love_story_text"),
+  storyHashtag: varchar("story_hashtag", { length: 100 }).default("#SINgkatceritaFAUZAN"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 

@@ -3,6 +3,8 @@ import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/st
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -22,22 +24,23 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
       .slice(0, 60);
   }
 
-  const title = "The Wedding of Fauzan & Sinta";
+  const baseTitle = "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)";
   const description =
-    "Minggu, 3 Januari 2027 — Kelurahan Air Putih, Tuah Madani, Kota Pekanbaru. #SINgkatceritaFAUZAN";
+    "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.";
+  const title = guestName ? `${baseTitle} — Kepada Yth. ${guestName}` : baseTitle;
 
   return {
-    title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+    title,
     description,
     openGraph: {
       type: "website",
       locale: "id_ID",
       siteName: "The Wedding of Fauzan & Sinta",
-      title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+      title,
       description,
       images: [
         {
-          url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+          url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
           width: 1200,
           height: 630,
           alt: "The Wedding of Fauzan & Sinta",
@@ -47,10 +50,10 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     },
     twitter: {
       card: "summary_large_image",
-      title: guestName ? `${title} — Kepada Yth. ${guestName}` : title,
+      title,
       description,
       images: [
-        "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg",
+        "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
       ],
     },
   };
@@ -117,6 +120,8 @@ export default async function InvitationPage({ searchParams }: PageProps) {
       (rawSettings?.giftAddress as typeof DEFAULT_WEDDING_SETTINGS.giftAddress) ||
       DEFAULT_WEDDING_SETTINGS.giftAddress,
     qrisImageUrl: rawSettings.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
+    loveStoryText: rawSettings.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
+    storyHashtag: rawSettings.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
     waMessageTemplate: rawSettings.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 

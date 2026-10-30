@@ -98,3 +98,64 @@ export function CardCornerOrnament() {
     </>
   );
 }
+
+export function GoldenEmblemSeal({ className = "w-20 h-20" }: { className?: string }) {
+  return (
+    <div className={`relative grid place-items-center ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 100 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-[0_8px_20px_rgba(169,130,58,0.55)]"
+      >
+        <circle cx="50" cy="50" r="46" fill="url(#sealGradBg)" stroke="#d4af37" strokeWidth="1.8" />
+        <circle cx="50" cy="50" r="41" stroke="#edd39b" strokeWidth="0.8" strokeDasharray="2.5 2.5" />
+        <circle cx="50" cy="50" r="38" fill="url(#sealInnerGrad)" stroke="#b8913b" strokeWidth="1" />
+        {/* Ornate Star */}
+        <path
+          d="M50 20 L52 26 L58 26 L53 30 L55 36 L50 32 L45 36 L47 30 L42 26 L48 26 Z"
+          fill="#fff3d1"
+          opacity="0.95"
+        />
+        {/* Monogram F & S */}
+        <text
+          x="50"
+          y="62"
+          textAnchor="middle"
+          fill="#3d2208"
+          fontFamily="'Cormorant Garamond', serif"
+          fontSize="24"
+          fontWeight="bold"
+          letterSpacing="1"
+        >
+          F&amp;S
+        </text>
+        <text
+          x="50"
+          y="74"
+          textAnchor="middle"
+          fill="#594314"
+          fontFamily="'Plus Jakarta Sans', sans-serif"
+          fontSize="6"
+          fontWeight="bold"
+          letterSpacing="2.5"
+        >
+          2027
+        </text>
+        <defs>
+          <radialGradient id="sealGradBg" cx="30%" cy="30%" r="70%">
+            <stop stopColor="#fdf0cd" />
+            <stop offset="0.4" stopColor="#d8ae43" />
+            <stop offset="0.85" stopColor="#966d1e" />
+            <stop offset="1" stopColor="#69480e" />
+          </radialGradient>
+          <radialGradient id="sealInnerGrad" cx="35%" cy="35%" r="65%">
+            <stop stopColor="#f7e6b5" />
+            <stop offset="0.5" stopColor="#cfa53e" />
+            <stop offset="1" stopColor="#a37920" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+}

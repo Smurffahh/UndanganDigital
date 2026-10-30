@@ -97,21 +97,22 @@ interface ParallaxPhotoFrameProps {
   children: ReactNode;
   className?: string;
   delay?: number;
-  maxOffset?: number;
+  maxShiftPercent?: number;
 }
 
 /**
- * Bingkai Foto Mewah dengan Frame Reveal & Micro-Parallax Halus
- * Digunakan pada Bingkai Mihrab (.arch) dan Kartu Galeri Foto
+ * Bingkai Foto Mewah Windowed Parallax (Layer 3 - Editorial Magazine Window)
+ * Digunakan pada Bingkai Mihrab (02-hitung-mundur), Potret Mempelai (03-mempelai), dan Galeri (05-galeri).
+ * Saat halaman di-scroll, foto di dalam bingkai bergeser halus translate3d(0, -8% -> 8%, 0) scale(1.10).
  */
 export function ParallaxPhotoFrame({
   children,
   className = "",
   delay = 180,
-  maxOffset = 8,
+  maxShiftPercent = 8,
 }: ParallaxPhotoFrameProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [parallaxY, setParallaxY] = useState(0);
+  const [shiftPercent, setShiftPercent] = useState(0);
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -133,14 +134,14 @@ export function ParallaxPhotoFrame({
         }
       },
       {
-        threshold: 0.1,
-        rootMargin: "0px 0px -30px 0px",
+        threshold: 0.08,
+        rootMargin: "0px 0px -20px 0px",
       }
     );
 
     observer.observe(node);
 
-    // Micro-parallax on passive scroll throttled via requestAnimationFrame
+    // Windowed Parallax throttled via requestAnimationFrame (Layer 3)
     let rAFId: number | null = null;
     const handleScroll = () => {
       if (rAFId !== null) return;
@@ -150,26 +151,28 @@ export function ParallaxPhotoFrame({
         const rect = frameRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
 
-        // Hitung jarak elemen terhadap pusat layar
-        if (rect.top < windowHeight && rect.bottom > 0) {
+        // Hitung posisi relatif elemen terhadap viewport center
+        if (rect.top < windowHeight + 100 && rect.bottom > -100) {
           const elementCenter = rect.top + rect.height / 2;
           const viewportCenter = windowHeight / 2;
-          const normalizedDiff = (elementCenter - viewportCenter) / (windowHeight / 2);
-          // Batasi translasi vertikal mikro maksimal ±maxOffset (maksimal 8px-10px)
-          const offset = Math.max(-maxOffset, Math.min(maxOffset, -normalizedDiff * maxOffset));
-          setParallaxY(offset);
+          const normalized = (elementCenter - viewportCenter) / (windowHeight / 2);
+          const clamped = Math.max(-1.2, Math.min(1.2, normalized));
+          // Bergerak berlawanan: saat elemen turun, gambar bergeser naik
+          const shift = -clamped * maxShiftPercent;
+          setShiftPercent(shift);
         }
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
       if (rAFId !== null) cancelAnimationFrame(rAFId);
     };
-  }, [maxOffset]);
+  }, [maxShiftPercent]);
 
   return (
     <div
@@ -182,9 +185,10 @@ export function ParallaxPhotoFrame({
       }}
     >
       <div
-        className="w-full h-full transition-transform duration-500 ease-out will-change-transform"
+        className="w-full h-full will-change-transform"
         style={{
-          transform: `translate3d(0, ${parallaxY}px, 0) scale(${isVisible ? 1 : 1.04})`,
+          transform: `translate3d(0, ${shiftPercent.toFixed(2)}%, 0) scale(1.10)`,
+          transition: "transform 0.15s ease-out",
         }}
       >
         {children}

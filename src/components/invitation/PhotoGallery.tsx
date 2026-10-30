@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { SongketRibbon } from "./Ornaments";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { ScrollReveal } from "./ScrollReveal";
+import { ScrollReveal, ParallaxPhotoFrame } from "./ScrollReveal";
 
 interface GalleryPhotoItem {
   id: number;
@@ -94,13 +94,15 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                 aria-label={`Perbesar foto: ${item.caption || "Galeri prewedding"}`}
                 className="relative rounded-2xl overflow-hidden border border-gold-500/35 shadow-md cursor-zoom-in bg-rose-100 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-rose-700"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.imageUrl}
-                  alt={item.caption || `Foto momen Fauzan dan Sinta #${idx + 1}`}
-                  className="w-full h-auto object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-                  loading="lazy"
-                />
+                <ParallaxPhotoFrame maxShiftPercent={6} className="w-full h-full rounded-2xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.imageUrl}
+                    alt={item.caption || `Foto momen Fauzan dan Sinta #${idx + 1}`}
+                    className="w-full h-auto object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </ParallaxPhotoFrame>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#5d3a41]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </figure>
             </ScrollReveal>

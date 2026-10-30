@@ -33,15 +33,10 @@ export const PANDUAN_PENGISIAN_ROWS = [
   ["Tips Excel", "Kolom Nomor_WhatsApp sudah dikunci format Teks (@) agar angka 0 di depan tidak hilang otomatis.", "Ketik langsung nomor tanpa tanda kutip"],
 ];
 
-/**
- * Downloads the official Excel (.xlsx) guest template formatted with text cells
- * and includes a dedicated instruction worksheet.
- */
 export function downloadExcelTemplate(): void {
   try {
     const wb = XLSX.utils.book_new();
 
-    // 1. Sheet "Daftar_Tamu"
     const dataRows = [
       ["Nama_Tamu", "Nomor_WhatsApp", "Kategori"],
       ...SAMPLE_GUEST_DATA.map((item) => [item.Nama_Tamu, item.Nomor_WhatsApp, item.Kategori]),
@@ -49,26 +44,23 @@ export function downloadExcelTemplate(): void {
 
     const wsData = XLSX.utils.aoa_to_sheet(dataRows);
 
-    // Set column widths
     wsData["!cols"] = [
-      { wch: 35 }, // Nama_Tamu
-      { wch: 22 }, // Nomor_WhatsApp
-      { wch: 25 }, // Kategori
+      { wch: 35 },
+      { wch: 22 },
+      { wch: 25 },
     ];
 
-    // Explicitly lock text type and format '@' on phone column (column B / index 1)
-    // to prevent Excel from trimming leading '0' or converting to scientific notation
+    // Locking text format '@' on phone column prevents Excel from trimming leading zero or converting to scientific notation
     for (let r = 0; r < dataRows.length; r++) {
       const cellRef = XLSX.utils.encode_cell({ c: 1, r });
       if (wsData[cellRef]) {
-        wsData[cellRef].t = "s"; // string type
-        wsData[cellRef].z = "@"; // text format
+        wsData[cellRef].t = "s";
+        wsData[cellRef].z = "@";
       }
     }
 
     XLSX.utils.book_append_sheet(wb, wsData, "Daftar_Tamu");
 
-    // 2. Sheet "Panduan_Pengisian"
     const wsPanduan = XLSX.utils.aoa_to_sheet(PANDUAN_PENGISIAN_ROWS);
     wsPanduan["!cols"] = [
       { wch: 20 },
@@ -77,7 +69,6 @@ export function downloadExcelTemplate(): void {
     ];
     XLSX.utils.book_append_sheet(wb, wsPanduan, "Panduan_Pengisian");
 
-    // Write file and trigger browser download
     XLSX.writeFile(wb, "template-tamu-fauzan-sinta.xlsx");
     toast.success("Template Excel daftar tamu berhasil diunduh! ✓");
   } catch (error) {
@@ -86,10 +77,6 @@ export function downloadExcelTemplate(): void {
   }
 }
 
-/**
- * Downloads the official CSV (.csv) guest template with UTF-8 BOM
- * for perfect compatibility with Microsoft Excel on Windows.
- */
 export function downloadCsvTemplate(): void {
   try {
     const headers = ["Nama_Tamu", "Nomor_WhatsApp", "Kategori"];
@@ -101,7 +88,7 @@ export function downloadCsvTemplate(): void {
 
     const csvBody = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
 
-    // Add UTF-8 Byte Order Mark (\uFEFF) so Excel on Windows recognizes UTF-8 properly
+    // UTF-8 Byte Order Mark (\uFEFF) ensures Excel on Windows renders UTF-8 characters properly
     const blob = new Blob(["\uFEFF" + csvBody], {
       type: "text/csv;charset=utf-8;",
     });

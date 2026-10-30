@@ -55,40 +55,31 @@ export function GuestManagementModule({
   onGuestsChange,
   onSettingsChange,
 }: GuestManagementModuleProps) {
-  // Main view tab: "list" (Semua/Antrean) vs "history" (Riwayat Terkirim)
   const [activeViewTab, setActiveViewTab] = useState<"list" | "history">("list");
-
-  // Format Guide Collapsible State
   const [isGuideOpen, setIsGuideOpen] = useState(true);
 
-  // Template state
   const [template, setTemplate] = useState(settings.waMessageTemplate);
   const [isSavingTemplate, setIsSavingTemplate] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // New guest form state
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newCategory, setNewCategory] = useState("Keluarga");
   const [isSavingGuest, setIsSavingGuest] = useState(false);
 
-  // Filter & Search in main list
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "unsent" | "sent">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [copiedGuestId, setCopiedGuestId] = useState<number | null>(null);
 
-  // Filter & Search in History view
   const [historySearchQuery, setHistorySearchQuery] = useState("");
 
-  // Excel bulk import & Staging Modal state
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [validationResult, setValidationResult] = useState<GuestValidationResult | null>(null);
   const [isStagingModalOpen, setIsStagingModalOpen] = useState(false);
   const [isImportingValid, setIsImportingValid] = useState(false);
   const [stagingActiveTab, setStagingActiveTab] = useState<"valid" | "invalid">("valid");
 
-  // Format date helper for sent history
   const formatSentDate = (dateVal: Date | string | null | undefined) => {
     if (!dateVal) return "—";
     try {
@@ -107,7 +98,6 @@ export function GuestManagementModule({
     }
   };
 
-  // WhatsApp template helper
   const renderMessageForGuest = (guestName: string) => {
     const origin =
       typeof window !== "undefined"
@@ -127,7 +117,6 @@ export function GuestManagementModule({
       .replace(/{lokasi_acara}/g, `${settings.venueName}, ${settings.venueAddress}`);
   };
 
-  // Insert variable tag into template
   const handleInsertTag = (tag: string) => {
     const el = textareaRef.current;
     if (!el) {
@@ -145,7 +134,6 @@ export function GuestManagementModule({
     }, 10);
   };
 
-  // Save updated template
   const handleSaveTemplate = async () => {
     setIsSavingTemplate(true);
     try {
@@ -167,7 +155,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Create single Guest
   const handleCreateGuest = async (autoSendWhatsApp: boolean = false) => {
     if (!newName.trim()) {
       toast.error("Nama tamu wajib diisi (minimal 2 karakter)");
@@ -215,7 +202,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Send WhatsApp (strictly 1-by-1, open wa.me link & auto-record waSentStatus + timestamp)
   const handleSendWhatsApp = async (guest: GuestData) => {
     if (!guest.whatsappNumber) {
       toast.error(`Tamu "${guest.name}" tidak memiliki nomor WhatsApp.`);
@@ -226,12 +212,10 @@ export function GuestManagementModule({
     const message = renderMessageForGuest(guest.name);
     const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-    // Open WhatsApp in new tab
     window.open(waUrl, "_blank");
 
     const nowIso = new Date().toISOString();
 
-    // Auto-record status in database
     try {
       const res = await fetch("/api/admin/guests", {
         method: "PATCH",
@@ -251,11 +235,9 @@ export function GuestManagementModule({
         toast.success(`Undangan untuk ${guest.name} dibuka di WhatsApp! Tercatat terkirim ✓`);
       }
     } catch {
-      // Ignored
     }
   };
 
-  // Revert sent guest back to unsent queue
   const handleRevertSentStatus = async (guest: GuestData) => {
     if (!confirm(`Kembalikan tamu "${guest.name}" ke antrean Belum Dikirim?`)) return;
 
@@ -282,7 +264,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Copy full message + link for a guest
   const handleCopyMessage = async (guest: GuestData) => {
     const text = renderMessageForGuest(guest.name);
     try {
@@ -295,7 +276,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Delete guest
   const handleDeleteGuest = async (id: number, name: string) => {
     if (!confirm(`Hapus tamu "${name}" dari daftar undangan?`)) return;
 
@@ -310,7 +290,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Excel bulk upload & Pre-Insert Validation Staging trigger
   const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -330,7 +309,6 @@ export function GuestManagementModule({
           return;
         }
 
-        // Run Pre-Insert Validation Engine against current database
         const result = validateGuestImport(rawRows, guests);
         setValidationResult(result);
         setStagingActiveTab(result.validGuests.length > 0 ? "valid" : "invalid");
@@ -344,7 +322,6 @@ export function GuestManagementModule({
     e.target.value = "";
   };
 
-  // Confirm and insert only valid rows from staging modal
   const handleConfirmSaveValidGuests = async () => {
     if (!validationResult || validationResult.validGuests.length === 0) return;
 
@@ -365,7 +342,6 @@ export function GuestManagementModule({
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || "Gagal mengimpor data valid");
 
-      // Refresh latest guests from API
       const refreshRes = await fetch("/api/admin/guests");
       const refreshJson = await refreshRes.json();
       if (refreshJson.success) onGuestsChange(refreshJson.data);
@@ -389,7 +365,6 @@ export function GuestManagementModule({
     }
   };
 
-  // Filtered guests in list view
   const filteredGuests = useMemo(() => {
     return guests.filter((g) => {
       const matchSearch =
@@ -408,7 +383,6 @@ export function GuestManagementModule({
     });
   }, [guests, searchQuery, statusFilter, categoryFilter]);
 
-  // History list (only sent guests, sorted by newest sentAt)
   const sentHistoryGuests = useMemo(() => {
     return guests
       .filter((g) => g.waSentStatus)
@@ -428,7 +402,6 @@ export function GuestManagementModule({
       });
   }, [guests, historySearchQuery]);
 
-  // Categories list for filter dropdown
   const availableCategories = useMemo(() => {
     const set = new Set<string>();
     guests.forEach((g) => {
@@ -437,7 +410,6 @@ export function GuestManagementModule({
     return Array.from(set);
   }, [guests]);
 
-  // Handle escape key to close modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isStagingModalOpen) {
@@ -453,9 +425,6 @@ export function GuestManagementModule({
 
   return (
     <div className="space-y-8">
-      {/* ============================================================ */}
-      {/* BANNER KEAMANAN & ANTI-BLOKIR WHATSAPP */}
-      {/* ============================================================ */}
       <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-[#f0f8f3] to-teal-50 border border-emerald-500/30 text-ink shadow-xs">
         <div className="flex items-start gap-3.5">
           <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white grid place-items-center shrink-0 shadow-xs">
@@ -478,9 +447,6 @@ export function GuestManagementModule({
         </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* 1. Template Pesan Pengantar WhatsApp */}
-      {/* ============================================================ */}
       <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
@@ -503,7 +469,6 @@ export function GuestManagementModule({
           </button>
         </div>
 
-        {/* Variable Insertion Chips */}
         <div className="flex flex-wrap items-center gap-1.5 mb-3">
           <span className="text-[11px] font-semibold text-gold-600 mr-1 uppercase tracking-wider">
             Variabel Otomatis:
@@ -527,7 +492,6 @@ export function GuestManagementModule({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Editor Textarea */}
           <div>
             <textarea
               ref={textareaRef}
@@ -538,7 +502,6 @@ export function GuestManagementModule({
             />
           </div>
 
-          {/* Live Preview */}
           <div className="p-4 rounded-2xl border border-emerald-500/30 bg-[#e7f2ea]/30 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block mb-2">
@@ -555,11 +518,7 @@ export function GuestManagementModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 2. Form Tambah Tamu & Bulk Import Excel dengan Pre-Insert Validation */}
-      {/* ============================================================ */}
       <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm space-y-6">
-        {/* Section Header & Official Template Download Buttons */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gold-500/20">
           <div>
             <h2 className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2">
@@ -571,9 +530,7 @@ export function GuestManagementModule({
             </p>
           </div>
 
-          {/* Official Template Action Buttons */}
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* Download Excel Template */}
             <button
               type="button"
               onClick={downloadExcelTemplate}
@@ -584,7 +541,6 @@ export function GuestManagementModule({
               <span>Unduh Template Excel (.xlsx)</span>
             </button>
 
-            {/* Download CSV Template */}
             <button
               type="button"
               onClick={downloadCsvTemplate}
@@ -595,7 +551,6 @@ export function GuestManagementModule({
               <span>Unduh Contoh CSV (.csv)</span>
             </button>
 
-            {/* Upload Excel / CSV Button */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -615,11 +570,7 @@ export function GuestManagementModule({
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* PANEL PANDUAN PENGISIAN NOMOR WHATSAPP & FORMAT FILE */}
-        {/* ============================================================ */}
         <div className="rounded-2xl border border-gold-500/30 bg-gradient-to-b from-[#fbf8f5] to-cream/40 overflow-hidden shadow-2xs">
-          {/* Collapsible Header */}
           <button
             type="button"
             onClick={() => setIsGuideOpen((prev) => !prev)}
@@ -648,10 +599,8 @@ export function GuestManagementModule({
             </div>
           </button>
 
-          {/* Collapsible Body */}
           {isGuideOpen && (
             <div className="p-4 sm:p-5 pt-1 space-y-4 border-t border-gold-500/20 text-xs text-ink">
-              {/* Aturan 1: Struktur 3 Kolom */}
               <div>
                 <div className="font-semibold text-rose-900 mb-1 flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold grid place-items-center">
@@ -689,7 +638,6 @@ export function GuestManagementModule({
                 </div>
               </div>
 
-              {/* Aturan 2: Format Nomor WhatsApp Benar vs Salah */}
               <div>
                 <div className="font-semibold text-rose-900 mb-1 flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold grid place-items-center">
@@ -699,7 +647,6 @@ export function GuestManagementModule({
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                  {/* Valid Format Column */}
                   <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-300 shadow-2xs space-y-2">
                     <div className="flex items-center gap-1.5 font-semibold text-emerald-900 text-xs">
                       <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
@@ -733,7 +680,6 @@ export function GuestManagementModule({
                     </ul>
                   </div>
 
-                  {/* Invalid Format Column */}
                   <div className="p-3.5 rounded-xl bg-rose-50/70 border border-rose-300 shadow-2xs space-y-2">
                     <div className="flex items-center gap-1.5 font-semibold text-rose-900 text-xs">
                       <XCircle className="w-4 h-4 text-rose-700 shrink-0" />
@@ -769,7 +715,6 @@ export function GuestManagementModule({
                 </div>
               </div>
 
-              {/* Aturan 3: Tips Excel */}
               <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-300/80 flex items-start gap-2.5">
                 <Lightbulb className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <div className="text-[11px] text-amber-950 leading-relaxed">
@@ -780,7 +725,6 @@ export function GuestManagementModule({
           )}
         </div>
 
-        {/* Input Form Row (Tambah Manual 1 Tamu) */}
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-gold-600 mb-2.5 flex items-center gap-1.5">
             <span>Atau Tambahkan Tamu Manual:</span>
@@ -856,11 +800,7 @@ export function GuestManagementModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 3. TABS NAVIGASI: Antrean Tamu vs Riwayat Undangan Terkirim */}
-      {/* ============================================================ */}
       <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
-        {/* Main Tab Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-gold-500/20">
           <div className="flex items-center gap-2">
             <button
@@ -890,7 +830,6 @@ export function GuestManagementModule({
             </button>
           </div>
 
-          {/* Quick counts indicator */}
           <div className="text-[11px] text-muted flex items-center gap-3">
             <span>
               Belum Dikirim: <strong className="text-amber-700">{unsentCount}</strong>
@@ -902,7 +841,6 @@ export function GuestManagementModule({
           </div>
         </div>
 
-        {/* TAB 1: LIST VIEW (Semua Tamu / Antrean) */}
         {activeViewTab === "list" && (
           <div className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -918,7 +856,6 @@ export function GuestManagementModule({
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                {/* Status Filter */}
                 <div className="flex items-center gap-1 bg-cream p-1 rounded-full border border-gold-500/30">
                   <button
                     type="button"
@@ -953,7 +890,6 @@ export function GuestManagementModule({
                   </button>
                 </div>
 
-                {/* Category Filter */}
                 {availableCategories.length > 0 && (
                   <select
                     value={categoryFilter}
@@ -971,7 +907,6 @@ export function GuestManagementModule({
               </div>
             </div>
 
-            {/* Mobile Card View (< 768px / md:hidden) */}
             <div className="md:hidden space-y-3">
               {filteredGuests.length === 0 ? (
                 <div className="py-8 text-center text-muted text-xs bg-surface-white rounded-2xl border border-gold-500/25 p-4">
@@ -986,7 +921,6 @@ export function GuestManagementModule({
                       key={guest.id}
                       className="p-4 rounded-2xl bg-surface-white border border-gold-500/25 shadow-xs space-y-3"
                     >
-                      {/* Baris Atas: Nama Tamu, Kategori, & Badge Status */}
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
                           <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
@@ -1011,7 +945,6 @@ export function GuestManagementModule({
                         </div>
                       </div>
 
-                      {/* Baris Tengah: Nomor WhatsApp */}
                       <div className="flex items-center gap-2 text-sm text-[#8d757c] tabular-nums font-mono">
                         <span>WhatsApp:</span>
                         <strong className="text-[#4b3a3e] font-semibold">
@@ -1019,7 +952,6 @@ export function GuestManagementModule({
                         </strong>
                       </div>
 
-                      {/* Baris Bawah: Tombol Aksi Thumb-Friendly */}
                       <div className="flex items-center gap-2 pt-1 border-t border-gold-500/15">
                         {guest.whatsappNumber ? (
                           <button
@@ -1077,7 +1009,6 @@ export function GuestManagementModule({
               )}
             </div>
 
-            {/* Desktop Table View (>= 768px / hidden md:block) */}
             <div className="hidden md:block overflow-x-auto rounded-2xl border border-gold-500/25">
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-cream/80 border-b border-gold-500/30 text-rose-900 font-serif font-bold uppercase tracking-wider text-[11px]">
@@ -1132,7 +1063,6 @@ export function GuestManagementModule({
 
                           <td className="py-3 px-4 text-right">
                             <div className="inline-flex items-center gap-1.5 justify-end">
-                              {/* 1-Click WhatsApp Button (1-by-1 safe dispatch) */}
                               {guest.whatsappNumber && (
                                 <button
                                   type="button"
@@ -1145,7 +1075,6 @@ export function GuestManagementModule({
                                 </button>
                               )}
 
-                              {/* Copy Message Button */}
                               <button
                                 type="button"
                                 onClick={() => handleCopyMessage(guest)}
@@ -1160,7 +1089,6 @@ export function GuestManagementModule({
                                 {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                               </button>
 
-                              {/* Preview Link */}
                               <a
                                 href={`/?to=${guest.slugQuery}`}
                                 target="_blank"
@@ -1172,7 +1100,6 @@ export function GuestManagementModule({
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </a>
 
-                              {/* Delete Guest */}
                               <button
                                 type="button"
                                 onClick={() => handleDeleteGuest(guest.id, guest.name)}
@@ -1194,7 +1121,6 @@ export function GuestManagementModule({
           </div>
         )}
 
-        {/* TAB 2: RIWAYAT UNDANGAN TERKIRIM */}
         {activeViewTab === "history" && (
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1220,7 +1146,6 @@ export function GuestManagementModule({
               </div>
             </div>
 
-            {/* Mobile History Card View (< 768px / md:hidden) */}
             <div className="md:hidden space-y-3">
               {sentHistoryGuests.length === 0 ? (
                 <div className="py-8 text-center text-muted text-xs bg-surface-white rounded-2xl border border-emerald-500/25 p-4">
@@ -1232,7 +1157,6 @@ export function GuestManagementModule({
                     key={guest.id}
                     className="p-4 rounded-2xl bg-surface-white border border-emerald-500/25 shadow-xs space-y-3"
                   >
-                    {/* Baris Atas: Nama Tamu, Kategori, & Badge Status */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
@@ -1248,7 +1172,6 @@ export function GuestManagementModule({
                       </span>
                     </div>
 
-                    {/* Baris Tengah: Nomor WhatsApp & Waktu Kirim */}
                     <div className="flex flex-col gap-1 text-xs text-[#8d757c]">
                       <div className="flex items-center gap-2">
                         <span>WhatsApp:</span>
@@ -1264,7 +1187,6 @@ export function GuestManagementModule({
                       </div>
                     </div>
 
-                    {/* Baris Bawah: Tombol Aksi Thumb-Friendly */}
                     <div className="flex items-center gap-2 pt-1 border-t border-emerald-500/15">
                       {guest.whatsappNumber ? (
                         <button
@@ -1292,7 +1214,6 @@ export function GuestManagementModule({
               )}
             </div>
 
-            {/* Desktop History Table View (>= 768px / hidden md:block) */}
             <div className="hidden md:block overflow-x-auto rounded-2xl border border-emerald-500/25">
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-[#e7f2ea]/70 border-b border-emerald-500/30 text-emerald-950 font-serif font-bold uppercase tracking-wider text-[11px]">
@@ -1342,7 +1263,6 @@ export function GuestManagementModule({
 
                         <td className="py-3 px-4 text-right">
                           <div className="inline-flex items-center gap-1.5 justify-end">
-                            {/* Resend WhatsApp */}
                             {guest.whatsappNumber && (
                               <button
                                 type="button"
@@ -1355,7 +1275,6 @@ export function GuestManagementModule({
                               </button>
                             )}
 
-                            {/* Revert to Unsent button */}
                             <button
                               type="button"
                               onClick={() => handleRevertSentStatus(guest)}
@@ -1377,9 +1296,6 @@ export function GuestManagementModule({
         )}
       </section>
 
-      {/* ============================================================ */}
-      {/* 4. MODAL STAGING: PRE-INSERT VALIDATION EXCEL / CSV */}
-      {/* ============================================================ */}
       {isStagingModalOpen && validationResult && (
         <div
           role="dialog"
@@ -1388,7 +1304,6 @@ export function GuestManagementModule({
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
         >
           <div className="w-full max-w-3xl max-h-[90vh] bg-surface-white rounded-3xl border border-gold-500/40 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-            {/* Header */}
             <div className="p-5 sm:p-6 border-b border-gold-500/20 bg-cream/50 flex items-start justify-between gap-4">
               <div>
                 <h3
@@ -1413,14 +1328,12 @@ export function GuestManagementModule({
               </button>
             </div>
 
-            {/* KPI Badges Summary */}
             <div className="px-5 sm:px-6 py-3 bg-surface-white border-b border-gold-500/15 flex flex-wrap items-center gap-3">
               <div className="text-xs text-muted">
                 Total Baris Dibaca: <strong>{validationResult.totalRows}</strong>
               </div>
               <div className="h-4 w-[1px] bg-gold-500/30 hidden sm:block" />
 
-              {/* Valid Badge */}
               <button
                 type="button"
                 onClick={() => setStagingActiveTab("valid")}
@@ -1434,7 +1347,6 @@ export function GuestManagementModule({
                 <span>{validationResult.validGuests.length} Kontak Valid (Siap Disimpan)</span>
               </button>
 
-              {/* Invalid Badge */}
               {validationResult.invalidRows.length > 0 && (
                 <button
                   type="button"
@@ -1451,7 +1363,6 @@ export function GuestManagementModule({
               )}
             </div>
 
-            {/* Body / Table Content */}
             <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
               {stagingActiveTab === "valid" && (
                 <div>
@@ -1540,7 +1451,6 @@ export function GuestManagementModule({
               )}
             </div>
 
-            {/* Footer Actions */}
             <div className="p-4 sm:p-5 border-t border-gold-500/20 bg-cream/40 flex flex-wrap items-center justify-between gap-3">
               <button
                 type="button"

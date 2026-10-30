@@ -41,7 +41,6 @@ export function FloatingControls({
   const isYouTube = musicSourceType === "youtube";
   const effectiveAudioUrl = musicUrl || DEFAULT_AUDIO_URL;
 
-  // Initialize YouTube IFrame API if YouTube mode is chosen
   useEffect(() => {
     if (!isYouTube || !musicEnabled) return;
 
@@ -72,14 +71,13 @@ export function FloatingControls({
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onStateChange: (event: any) => {
-            // YT.PlayerState.PLAYING = 1, PAUSED = 2
             if (event.data === 1) setIsPlaying(true);
             else if (event.data === 2) setIsPlaying(false);
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onError: (event: any) => {
             console.warn("YouTube player embed error:", event.data);
-            // Error 101/150: Video embed blocked by copyright owner. Auto-fallback to local audio.
+            // Video embed blocked by copyright (error 101/150); fall back to local instrumental
             const audio = audioRef.current;
             if (audio) {
               audio.src = "/audio/wedding-instrumental.wav";
@@ -100,7 +98,6 @@ export function FloatingControls({
     }
   }, [isYouTube, musicEnabled, youtubeVideoId]);
 
-  // Autoplay music when cover is opened
   useEffect(() => {
     if (!isOpened || !musicEnabled) return;
 
@@ -114,7 +111,6 @@ export function FloatingControls({
             .then(() => {
               setIsPlaying(true);
               setShowTitleBadge(true);
-              // Fade in volume from 0 to 0.7
               let vol = 0;
               const fadeInterval = setInterval(() => {
                 vol += 0.07;
@@ -126,7 +122,6 @@ export function FloatingControls({
                 }
               }, 100);
 
-              // Auto-hide title badge after 6 seconds
               setTimeout(() => {
                 setShowTitleBadge(false);
               }, 6000);
@@ -146,7 +141,6 @@ export function FloatingControls({
     }
   }, [isOpened, musicEnabled, isYouTube]);
 
-  // Toggle play / pause manually
   const toggleMusic = () => {
     if (!musicEnabled) return;
 
@@ -177,7 +171,6 @@ export function FloatingControls({
     }
   };
 
-  // Visibility change auto-pause / auto-resume
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -207,7 +200,6 @@ export function FloatingControls({
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [isPlaying, isYouTube]);
 
-  // IntersectionObserver for tracking active section
   useEffect(() => {
     const sections = ["beranda", "mempelai", "cerita", "acara", "galeri", "rsvp", "amplop"];
     const elements = sections
@@ -242,7 +234,6 @@ export function FloatingControls({
 
   return (
     <>
-      {/* HTML5 Native Audio Player */}
       {!isYouTube && musicEnabled && (
         <audio
           ref={audioRef}
@@ -254,17 +245,14 @@ export function FloatingControls({
         />
       )}
 
-      {/* Hidden YouTube IFrame */}
       {isYouTube && musicEnabled && (
         <div className="fixed -top-10 -left-10 w-2 h-2 opacity-0 pointer-events-none" aria-hidden="true">
           <div id="yt-audio-player" />
         </div>
       )}
 
-      {/* Floating Vinyl Music Disc Button & Title Badge */}
       {musicEnabled && (
         <div className="fixed top-5 right-5 z-40 flex items-center gap-2">
-          {/* Animated Song Title Pill */}
           {showTitleBadge && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
               <Music2 className="w-3.5 h-3.5 text-gold-600 animate-pulse" />
@@ -291,7 +279,6 @@ export function FloatingControls({
         </div>
       )}
 
-      {/* Floating Glass Pill Dock Navigation */}
       <nav
         aria-label="Navigasi cepat undangan"
         className="fixed left-1/2 -translate-x-1/2 bottom-[calc(14px+env(safe-area-inset-bottom,0px))] z-40 flex items-center gap-1 p-1.5 rounded-full bg-surface-white/85 border border-gold-500/45 backdrop-blur-md shadow-[0_20px_40px_-14px_rgba(93,58,65,0.45)] animate-in slide-in-from-bottom-8 duration-500"

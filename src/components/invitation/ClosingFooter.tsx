@@ -16,7 +16,6 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
       className="relative mt-8 py-20 pb-32 text-center text-[#f3e4e0] bg-gradient-to-br from-[#5d3a41] via-[#7a4a52] to-[#8f5a62] overflow-hidden"
       aria-label="Penutup Undangan"
     >
-      {/* Background motif Batik Kawung overlay */}
       <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-40 pointer-events-none" />
 
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">

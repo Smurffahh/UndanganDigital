@@ -72,7 +72,6 @@ export function WeddingSettingsModule({
   const [isSaving, setIsSaving] = useState(false);
   const [isResolvingMaps, setIsResolvingMaps] = useState(false);
 
-  // Audio Source Calculations
   const isCurrentYouTube =
     formData.musicSourceType === "youtube" ||
     (typeof formData.musicUrl === "string" && formData.musicUrl.includes("youtube.com"));
@@ -84,11 +83,9 @@ export function WeddingSettingsModule({
     ? formData.musicUrl || "/audio/wedding-instrumental.wav"
     : "/audio/wedding-instrumental.wav";
 
-  // Audio Testing State
   const [isPlayingTest, setIsPlayingTest] = useState(false);
   const audioTestRef = useRef<HTMLAudioElement | null>(null);
 
-  // Countdown Live Preview State
   const [countdownPreview, setCountdownPreview] = useState({
     days: 0,
     hours: 0,
@@ -97,7 +94,6 @@ export function WeddingSettingsModule({
     isDone: false,
   });
 
-  // Calculate Countdown Preview in real-time
   useEffect(() => {
     const targetIso = formData.weddingDateIso || "2027-01-03T08:00:00+07:00";
     const targetTime = new Date(targetIso).getTime();
@@ -121,12 +117,10 @@ export function WeddingSettingsModule({
     return () => clearInterval(interval);
   }, [formData.weddingDateIso]);
 
-  // Convert ISO to local datetime-local format (YYYY-MM-DDTHH:mm)
   const getDatetimeLocalValue = (isoString: string) => {
     try {
       const d = new Date(isoString);
       if (isNaN(d.getTime())) return "2027-01-03T08:00";
-      // Adjust for local timezone offset
       const tzOffset = d.getTimezoneOffset() * 60000;
       const localISOTime = new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
       return localISOTime;
@@ -135,7 +129,6 @@ export function WeddingSettingsModule({
     }
   };
 
-  // Handle datetime-local change
   const handleDatetimeChange = (localVal: string) => {
     if (!localVal) return;
     try {
@@ -154,11 +147,9 @@ export function WeddingSettingsModule({
         eventDateLabel: formattedLabel,
       }));
     } catch {
-      // Fallback
     }
   };
 
-  // Parse JSON fields safely with fallback
   const bankAccounts: BankItem[] = Array.isArray(formData.bankAccounts)
     ? (formData.bankAccounts as unknown as BankItem[])
     : [];
@@ -179,12 +170,10 @@ export function WeddingSettingsModule({
     }));
   };
 
-  // Music preset selection
   const handleSelectMusicPreset = (presetId: string) => {
     const selected = WEDDING_MUSIC_PRESETS.find((p) => p.id === presetId);
     if (!selected) return;
 
-    // Stop current test audio
     if (audioTestRef.current) {
       audioTestRef.current.pause();
       setIsPlayingTest(false);
@@ -201,7 +190,6 @@ export function WeddingSettingsModule({
     toast.success(`Lagu preset "${selected.title}" dipilih! ✓`);
   };
 
-  // Upload local audio file (.mp3 / .wav) from device
   const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -235,7 +223,6 @@ export function WeddingSettingsModule({
     reader.readAsDataURL(file);
   };
 
-  // Test Play / Stop audio preview in Dashboard (YouTube iframe vs HTML5 Audio)
   const handleToggleTestAudio = () => {
     if (isCurrentYouTube) {
       const iframe = document.getElementById("dashboard-yt-preview") as HTMLIFrameElement | null;
@@ -272,7 +259,6 @@ export function WeddingSettingsModule({
     }
   };
 
-  // Auto-resolve Google Maps Shortlink / Coordinates
   const handleResolveMaps = async () => {
     const targetUrl = formData.googleMapsUrl;
     if (!targetUrl || !targetUrl.trim()) {
@@ -309,7 +295,6 @@ export function WeddingSettingsModule({
     }
   };
 
-  // Bank accounts management
   const handleBankChange = (index: number, field: keyof BankItem, val: string) => {
     const updated = [...bankAccounts];
     updated[index] = { ...updated[index], [field]: val };
@@ -338,7 +323,6 @@ export function WeddingSettingsModule({
     }));
   };
 
-  // E-wallets management
   const handleEwalletChange = (index: number, field: keyof EwalletItem, val: string) => {
     const updated = [...ewallets];
     updated[index] = { ...updated[index], [field]: val };
@@ -367,7 +351,6 @@ export function WeddingSettingsModule({
     }));
   };
 
-  // Gift address management
   const handleGiftAddressChange = (field: keyof GiftAddressData, val: string) => {
     const updated = { ...giftAddress, [field]: val };
     setFormData((prev: any) => ({
@@ -376,7 +359,6 @@ export function WeddingSettingsModule({
     }));
   };
 
-  // Save changes
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -405,7 +387,6 @@ export function WeddingSettingsModule({
 
   return (
     <form onSubmit={handleSave} id="wedding-settings-form" className="space-y-8 pb-8">
-      {/* Hidden Audio for Dashboard Testing */}
       <audio
         ref={audioTestRef}
         src={effectiveAudioUrl}
@@ -413,7 +394,6 @@ export function WeddingSettingsModule({
         className="hidden"
       />
 
-      {/* Top Banner Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-white p-5 rounded-2xl border border-gold-500/25 shadow-sm">
         <div>
           <h2 className="text-xl font-bold font-serif text-rose-900">
@@ -442,9 +422,6 @@ export function WeddingSettingsModule({
         </button>
       </div>
 
-      {/* ============================================================ */}
-      {/* 1. WAKTU & TARGET HITUNG MUNDUR (COUNTDOWN SETTINGS) */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
           <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
@@ -461,7 +438,6 @@ export function WeddingSettingsModule({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Inputs Column */}
           <div className="lg:col-span-7 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -526,7 +502,6 @@ export function WeddingSettingsModule({
             </div>
           </div>
 
-          {/* Live Preview Column */}
           <div className="lg:col-span-5 p-4 sm:p-5 rounded-2xl bg-cream/70 border border-gold-500/30 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -578,9 +553,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 2. MUSIK LATAR BELAKANG MULTI-SUMBER (MUSIC SETTINGS) */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gold-500/15">
           <div className="flex items-center gap-2.5">
@@ -597,7 +569,6 @@ export function WeddingSettingsModule({
             </div>
           </div>
 
-          {/* Toggle Music Enable */}
           <label className="inline-flex items-center gap-2.5 cursor-pointer">
             <input
               type="checkbox"
@@ -614,7 +585,6 @@ export function WeddingSettingsModule({
 
         {formData.musicEnabled !== false && (
           <div className="space-y-5">
-            {/* Source Type Selector */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-2">
                 Pilihan Sumber Audio:
@@ -658,7 +628,6 @@ export function WeddingSettingsModule({
               </div>
             </div>
 
-            {/* If Preset Selected */}
             {(formData.musicSourceType === "preset" || !formData.musicSourceType) && (
               <div className="p-4 rounded-2xl bg-cream/40 border border-gold-500/25 space-y-3">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
@@ -695,7 +664,6 @@ export function WeddingSettingsModule({
               </div>
             )}
 
-            {/* Custom URL or YouTube ID Inputs */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
@@ -751,7 +719,6 @@ export function WeddingSettingsModule({
               )}
             </div>
 
-            {/* Live Audio Test Player in Dashboard */}
             <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/40 to-cream/70 border border-emerald-400/30 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
@@ -797,7 +764,6 @@ export function WeddingSettingsModule({
                 </div>
               </div>
 
-              {/* YouTube Interactive Mini-Player for previewing YouTube videos */}
               {isCurrentYouTube && currentYoutubeId && (
                 <div className="pt-2 border-t border-emerald-400/20 space-y-2">
                   <div className="relative rounded-xl overflow-hidden aspect-video max-w-sm border border-emerald-500/25 bg-black/90">
@@ -826,9 +792,6 @@ export function WeddingSettingsModule({
         )}
       </section>
 
-      {/* ============================================================ */}
-      {/* 3. LOKASI ACARA & GOOGLE MAPS RESOLVER (MAPS SETTINGS) */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
           <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
@@ -884,7 +847,6 @@ export function WeddingSettingsModule({
             />
           </div>
 
-          {/* Google Maps Link with Auto-Resolver */}
           <div className="sm:col-span-2 space-y-2">
             <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
               Tautan Google Maps Share URL:
@@ -947,7 +909,6 @@ export function WeddingSettingsModule({
             />
           </div>
 
-          {/* Live Google Maps Embed Preview */}
           <div className="sm:col-span-2 pt-2">
             <span className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-2">
               Pratinjau Peta Interaktif (Live Preview):
@@ -967,9 +928,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 4. PROFIL KEDUA MEMPELAI */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
           <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
@@ -986,7 +944,6 @@ export function WeddingSettingsModule({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Mempelai Wanita */}
           <div className="p-4 sm:p-5 rounded-2xl bg-cream/40 border border-gold-500/20 space-y-4">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-900 block border-b border-gold-500/15 pb-2">
               Mempelai Wanita (Bride)
@@ -1039,7 +996,6 @@ export function WeddingSettingsModule({
             </div>
           </div>
 
-          {/* Mempelai Pria */}
           <div className="p-4 sm:p-5 rounded-2xl bg-cream/40 border border-gold-500/20 space-y-4">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-900 block border-b border-gold-500/15 pb-2">
               Mempelai Pria (Groom)
@@ -1094,9 +1050,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 4.5. BEHIND THE STORY & HASHTAG (#SINgkatceritaFAUZAN)       */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
           <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
@@ -1144,9 +1097,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 5. REKENING BANK & E-WALLET AMPLOPT DIGITAL */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-gold-500/15">
           <div className="flex items-center gap-2.5">
@@ -1172,7 +1122,6 @@ export function WeddingSettingsModule({
           </button>
         </div>
 
-        {/* Bank Accounts List */}
         <div className="space-y-4">
           <h4 className="text-xs font-bold uppercase tracking-wider text-gold-600">
             Daftar Rekening Bank
@@ -1236,7 +1185,6 @@ export function WeddingSettingsModule({
           )}
         </div>
 
-        {/* E-Wallets List */}
         <div className="space-y-4 pt-4 border-t border-gold-500/15">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold uppercase tracking-wider text-gold-600">
@@ -1311,9 +1259,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 6. ALAMAT KIRIM KADO FISIK */}
-      {/* ============================================================ */}
       <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-4">
         <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
           <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
@@ -1369,7 +1314,6 @@ export function WeddingSettingsModule({
         </div>
       </section>
 
-      {/* Normal Document Flow Bottom Save Action Bar */}
       <div className="p-5 sm:p-6 bg-surface-white rounded-3xl border border-gold-500/30 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <p className="font-serif font-bold text-base text-rose-900">

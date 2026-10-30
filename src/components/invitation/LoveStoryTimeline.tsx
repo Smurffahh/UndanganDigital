@@ -48,7 +48,6 @@ export function LoveStoryTimeline({
       aria-label="Kisah Cinta Fauzan dan Sinta"
     >
       <div className="w-full max-w-[780px] mx-auto px-4 sm:px-6 box-border">
-        {/* Section Header */}
         <header className="text-center mb-12">
           <ScrollReveal delay={0} variant="fade-up">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/35 typo-eyebrow text-[#a9823a] shadow-2xs">
@@ -74,7 +73,6 @@ export function LoveStoryTimeline({
           </ScrollReveal>
         </header>
 
-        {/* Responsive Mobile-First Vertical Timeline (Zero Horizontal Overflow) */}
         <div className="relative mt-8 space-y-6 sm:space-y-8 w-full max-w-full box-border">
           {chapters.map((ch, idx) => {
             const IconComp = ch.icon;
@@ -84,7 +82,6 @@ export function LoveStoryTimeline({
                 key={ch.phase}
                 className="flex items-start gap-3 sm:gap-5 w-full max-w-full box-border"
               >
-                {/* Left Icon Column with Continuous Connecting Line */}
                 <div className="shrink-0 w-10 sm:w-12 flex flex-col items-center">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-surface-white border-2 border-gold-500 shadow-md grid place-items-center text-rose-900 shrink-0 z-10 group-hover:scale-105 transition-transform duration-300">
                     <IconComp className="w-5 h-5 text-gold-600" />
@@ -97,14 +94,11 @@ export function LoveStoryTimeline({
                   )}
                 </div>
 
-                {/* Right Content Card (flex-1 min-w-0 max-w-full guarantees no overflow) */}
                 <div className="flex-1 min-w-0 max-w-full pb-4">
                   <ScrollReveal delay={idx * 130} variant="fade-up">
                     <article className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-surface-white via-[#fffaf7] to-[#fbf1ed] border border-gold-500/35 shadow-[0_12px_28px_-12px_rgba(93,58,65,0.16)] hover:shadow-[0_18px_38px_-10px_rgba(93,58,65,0.22)] transition-[box-shadow,transform] duration-300 relative overflow-hidden group">
-                      {/* Subtle Ambient Shimmer */}
                       <div className="absolute top-0 right-0 w-28 h-28 bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.15),transparent_70%)] pointer-events-none" />
 
-                      {/* Card Header (Label Utama + Badge Kanan with flex-wrap) */}
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pb-2.5 border-b border-gold-500/15">
                         <span className="typo-eyebrow text-[#a9823a]">
                           {ch.phase}

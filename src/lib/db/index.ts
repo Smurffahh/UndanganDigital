@@ -6,14 +6,10 @@ import * as schema from "./schema";
 const databaseUrl = process.env.DATABASE_URL;
 const unpooledDatabaseUrl = process.env.DATABASE_URL_UNPOOLED;
 
-/**
- * Cek apakah kredensial database Neon Postgres telah terkonfigurasi.
- */
 export function isDatabaseConfigured(): boolean {
   return Boolean(databaseUrl && databaseUrl.trim().length > 0);
 }
 
-// 1. Neon HTTP Client (Zero cold-start overhead, highly resilient for Serverless App Router)
 let httpDbInstance: ReturnType<typeof drizzleHttp<typeof schema>> | null = null;
 
 export function getDb() {
@@ -32,7 +28,6 @@ export function getDb() {
   return httpDbInstance;
 }
 
-// 2. Neon WebSocket / Connection Pool Client (Untuk transaksi interaktif jika diperlukan)
 let poolInstance: Pool | null = null;
 let pooledDbInstance: ReturnType<typeof drizzleServerless<typeof schema>> | null = null;
 
@@ -53,7 +48,6 @@ export function getPooledDb() {
   return pooledDbInstance;
 }
 
-// Default runtime instance
 export const db = getDb();
 export { schema };
 export * from "./schema";

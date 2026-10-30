@@ -29,22 +29,17 @@ interface DigitalEnvelopeProps {
 function AestheticGoldQRCode() {
   return (
     <svg viewBox="0 0 160 160" className="w-44 h-44 mx-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SVG Kode QRIS Estetik Berbingkai Emas">
-      {/* Outer Border / Frame */}
       <rect x="2" y="2" width="156" height="156" rx="14" fill="#ffffff" stroke="#c9a24b" strokeWidth="1.5" />
       
-      {/* Top-Left Finder */}
       <rect x="14" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
       <rect x="23" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
       
-      {/* Top-Right Finder */}
       <rect x="108" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
       <rect x="117" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
       
-      {/* Bottom-Left Finder */}
       <rect x="14" y="108" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
       <rect x="23" y="117" width="20" height="20" rx="3.5" fill="#5d3a41" />
       
-      {/* Top Timing & Matrix Pattern */}
       <rect x="60" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
       <rect x="74" y="16" width="8" height="8" rx="2" fill="#c9a24b" />
       <rect x="88" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
@@ -54,7 +49,6 @@ function AestheticGoldQRCode() {
       <rect x="60" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
       <rect x="88" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
       
-      {/* Center Matrix */}
       <rect x="16" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
       <rect x="30" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
       <rect x="44" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
@@ -64,11 +58,9 @@ function AestheticGoldQRCode() {
       <rect x="122" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
       <rect x="136" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
       
-      {/* Central Heart Monogram Badge */}
       <circle cx="80" cy="80" r="15" fill="#fffdfa" stroke="#c9a24b" strokeWidth="1.8" />
       <path d="M75 78 a3 3 0 0 1 5 -2 a3 3 0 0 1 5 2 c0 4 -5 7 -5 7 s-5 -3 -5 -7 z" fill="#8f5a62" />
       
-      {/* Bottom Matrix */}
       <rect x="60" y="104" width="8" height="8" rx="2" fill="#5d3a41" />
       <rect x="74" y="104" width="8" height="8" rx="2" fill="#c9a24b" />
       <rect x="88" y="104" width="8" height="8" rx="2" fill="#5d3a41" />
@@ -111,7 +103,6 @@ export function DigitalEnvelope({
     }, 300);
   };
 
-  // Close QRIS modal with Escape key (better-accessibility)
   useEffect(() => {
     if (!showQrisModal) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -154,7 +145,6 @@ export function DigitalEnvelope({
           </header>
         </ScrollReveal>
 
-        {/* Action Button: Modal QRIS Trigger */}
         <ScrollReveal variant="fade-up" delay={90}>
           <div className="flex justify-center mb-8">
             <button
@@ -168,7 +158,6 @@ export function DigitalEnvelope({
           </div>
         </ScrollReveal>
 
-        {/* ATM Card Style Grid */}
         <ScrollReveal variant="fade-up" delay={180}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
           {allAccounts.map((acc, idx) => {
@@ -180,10 +169,8 @@ export function DigitalEnvelope({
                 key={copyKey}
                 className="relative overflow-hidden rounded-2xl p-5 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-[0_24px_48px_-14px_rgba(93,58,65,0.26)] transition-[transform,box-shadow] duration-300"
               >
-                {/* 3D Subtle Glare Shimmer */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
-                {/* Top Card Row */}
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-gold-500" />
@@ -196,7 +183,6 @@ export function DigitalEnvelope({
                   </span>
                 </div>
 
-                {/* Metallic Chip & Wireless Icon */}
                 <div className="flex items-center justify-between mb-4">
                   <ChipMetallic />
                   <svg className="w-6 h-6 text-gold-600/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -204,7 +190,6 @@ export function DigitalEnvelope({
                   </svg>
                 </div>
 
-                {/* Card Number in Tabular Nums */}
                 <div className="mb-4">
                   <p className="font-sans text-xl sm:text-2xl font-bold tabular-nums tracking-[0.06em] text-[#5d3a41]">
                     {acc.number}
@@ -214,7 +199,6 @@ export function DigitalEnvelope({
                   </p>
                 </div>
 
-                {/* Salin Button with Contextual Icon Swap */}
                 <button
                   type="button"
                   onClick={() => handleCopy(acc.number, copyKey, `Nomor ${acc.brand}`)}
@@ -239,7 +223,6 @@ export function DigitalEnvelope({
         </div>
         </ScrollReveal>
 
-        {/* Physical Gift Address Card */}
         <ScrollReveal variant="fade-up" delay={270}>
           <article className="rounded-2xl p-6 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5]">
             <div className="flex items-center justify-between gap-2 mb-3">
@@ -263,7 +246,6 @@ export function DigitalEnvelope({
               <span className="tabular-nums font-medium">{giftAddress.phone}</span>
             </p>
 
-            {/* Salin Alamat Button */}
             <button
               type="button"
               onClick={() => handleCopy(giftAddress.address, "addr-copy", "Alamat")}
@@ -286,7 +268,6 @@ export function DigitalEnvelope({
         </ScrollReveal>
       </div>
 
-      {/* QRIS Modal with Blur Backdrop & Smooth Scale Transition */}
       {showQrisModal && (
         <div
           role="dialog"
@@ -323,7 +304,6 @@ export function DigitalEnvelope({
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
             </p>
 
-            {/* QR Image & High-Contrast Fallback Placeholder with Aesthetic Gold SVG */}
             <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-gold-500/40 shadow-inner grid place-items-center relative">
               {qrisImageUrl && !qrisImgError ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -344,7 +324,6 @@ export function DigitalEnvelope({
               a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
             </p>
 
-            {/* Download QR Button */}
             <a
               href={qrisImageUrl || "#"}
               download="qris-fauzan-sinta.png"

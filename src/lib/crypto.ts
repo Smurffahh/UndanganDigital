@@ -1,6 +1,5 @@
 import crypto from "crypto";
 
-// 32-byte key derived from secret
 const ENCRYPTION_SECRET =
   process.env.ENCRYPTION_KEY || "fauzan-sinta-wedding-secure-encryption-key-2027-secret";
 const BLIND_INDEX_SECRET =
@@ -13,16 +12,11 @@ function getDerivedKey(): Buffer {
   return crypto.createHash("sha256").update(ENCRYPTION_SECRET).digest();
 }
 
-/**
- * Encrypt a plaintext string using AES-256-GCM.
- * Output format: enc:v1:<iv_hex>:<authTag_hex>:<ciphertext_hex>
- */
 export function encryptField(plainText: string | null | undefined): string {
   if (plainText === null || plainText === undefined || plainText === "") {
     return "";
   }
 
-  // If already encrypted, don't double-encrypt
   if (typeof plainText === "string" && plainText.startsWith(PREFIX)) {
     return plainText;
   }
@@ -47,16 +41,11 @@ export function encryptField(plainText: string | null | undefined): string {
   }
 }
 
-/**
- * Decrypt a ciphertext string back to plaintext.
- * Gracefully returns original value if not encrypted or on corruption.
- */
 export function decryptField(cipherText: string | null | undefined): string {
   if (!cipherText || typeof cipherText !== "string") {
     return cipherText || "";
   }
 
-  // If not encrypted with our format, return gracefully as plaintext
   if (!cipherText.startsWith(PREFIX)) {
     return cipherText;
   }
@@ -84,14 +73,11 @@ export function decryptField(cipherText: string | null | undefined): string {
 
     return decrypted.toString("utf8");
   } catch {
-    // Graceful fallback without crashing
     return cipherText;
   }
 }
 
-/**
- * Normalize and generate an HMAC-SHA256 blind index for exact matching / duplicate detection.
- */
+// HMAC-SHA256 blind index enables exact-match queries and deduplication without decrypting columns
 export function createBlindIndex(val: string | null | undefined): string {
   if (!val) return "";
   const normalized = String(val).trim().toLowerCase();
@@ -101,13 +87,8 @@ export function createBlindIndex(val: string | null | undefined): string {
     .digest("hex");
 }
 
-/**
- * Normalize phone number and generate blind index (HMAC-SHA256).
- * Supports numbers starting with 08, 8, +628, or 628.
- */
 export function createPhoneBlindIndex(phone: string | null | undefined): string {
   if (!phone) return "";
-  // Strip non-digits
   let digits = String(phone).replace(/\D/g, "");
   if (digits.startsWith("08")) {
     digits = "628" + digits.slice(2);
@@ -119,10 +100,6 @@ export function createPhoneBlindIndex(phone: string | null | undefined): string 
     .update(digits)
     .digest("hex");
 }
-
-// -------------------------------------------------------------
-// Transparent Query Wrappers (Drizzle ORM & Local Store)
-// -------------------------------------------------------------
 
 export interface PlainGuestInput {
   name: string;

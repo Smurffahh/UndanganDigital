@@ -9,10 +9,6 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 
-/**
- * 1. Tabel wedding_settings
- * Menyimpan data konfigurasi tunggal pernikahan Fauzan & Sinta
- */
 export const weddingSettings = pgTable("wedding_settings", {
   id: serial("id").primaryKey(),
   brideName: varchar("bride_name", { length: 100 }).notNull(),
@@ -51,10 +47,6 @@ export const weddingSettings = pgTable("wedding_settings", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
-/**
- * 2. Tabel gallery_photos
- * Menyimpan daftar foto momen pre-wedding
- */
 export const galleryPhotos = pgTable("gallery_photos", {
   id: serial("id").primaryKey(),
   imageUrl: text("image_url").notNull(),
@@ -64,20 +56,16 @@ export const galleryPhotos = pgTable("gallery_photos", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-/**
- * 3. Tabel guests
- * Menyimpan daftar tamu undangan personal & status pengiriman WhatsApp
- */
 export const guests = pgTable(
   "guests",
   {
     id: serial("id").primaryKey(),
-    name: text("name").notNull(), // Terenkripsi AES-256-GCM
+    name: text("name").notNull(),
     slugQuery: varchar("slug_query", { length: 120 }).notNull(),
-    whatsappNumber: text("whatsapp_number"), // Terenkripsi AES-256-GCM
-    category: text("category").default("Reguler"), // Terenkripsi AES-256-GCM
-    nameBindex: varchar("name_bindex", { length: 64 }), // Blind Index HMAC-SHA256
-    waBindex: varchar("wa_bindex", { length: 64 }), // Blind Index HMAC-SHA256
+    whatsappNumber: text("whatsapp_number"),
+    category: text("category").default("Reguler"),
+    nameBindex: varchar("name_bindex", { length: 64 }),
+    waBindex: varchar("wa_bindex", { length: 64 }),
     waSentStatus: boolean("wa_sent_status").default(false),
     waSentAt: timestamp("wa_sent_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
@@ -89,18 +77,14 @@ export const guests = pgTable(
   ]
 );
 
-/**
- * 4. Tabel rsvp_wishes
- * Menyimpan ucapan doa restu dan konfirmasi kehadiran
- */
 export const rsvpWishes = pgTable(
   "rsvp_wishes",
   {
     id: serial("id").primaryKey(),
-    guestName: text("guest_name").notNull(), // Terenkripsi AES-256-GCM
+    guestName: text("guest_name").notNull(),
     attendanceStatus: varchar("attendance_status", { length: 30 }).notNull(),
     paxCount: integer("pax_count").default(1),
-    message: text("message").notNull(), // Terenkripsi AES-256-GCM
+    message: text("message").notNull(),
     isApproved: boolean("is_approved").default(true),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },

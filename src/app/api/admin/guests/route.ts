@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Normalize phone number (e.g., 08123... -> 628123...)
+    // Excel strips leading 0 on numeric cells; normalizes 08... and 8... to 628...
     let phone = parsed.data.whatsappNumber ? parsed.data.whatsappNumber.replace(/[^0-9]/g, "") : null;
     if (phone) {
       if (phone.startsWith("0")) {

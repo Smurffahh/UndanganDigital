@@ -11,14 +11,6 @@ interface ScrollRevealProps {
   threshold?: number;
 }
 
-/**
- * Komponen pembungkus animasi scroll editorial Bottom-Up Reveal
- * Mematuhi prinsip Motion Restraint (Better-UI & WCAG Accessibility):
- * - Translasi vertikal bottom-up halus (translate3d(0, 48px, 0) scale(0.97))
- * - Kurva timing cubic-bezier(0.22, 1, 0.36, 1) dengan durasi 700ms
- * - Zero transition: all (eksplisit transition-transform, transition-opacity)
- * - Otomatis nonaktif pada prefers-reduced-motion: reduce
- */
 export function ScrollReveal({
   children,
   delay = 0,
@@ -31,7 +23,6 @@ export function ScrollReveal({
   const elementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    // Cek preferensi aksesibilitas pengguna
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (mediaQuery.matches) {
@@ -94,9 +85,6 @@ export function ScrollReveal({
   );
 }
 
-/**
- * Komponen shorthand ScrollRevealBottom dengan staggered delay bawaan
- */
 export function ScrollRevealBottom(props: ScrollRevealProps) {
   return <ScrollReveal {...props} variant="bottom-up" />;
 }
@@ -108,11 +96,6 @@ interface ParallaxPhotoFrameProps {
   maxShiftPercent?: number;
 }
 
-/**
- * Bingkai Foto Mewah Windowed Parallax (Layer 3 - Editorial Magazine Window)
- * Digunakan pada Bingkai Mihrab (02-hitung-mundur), Potret Mempelai (03-mempelai), dan Galeri (05-galeri).
- * Saat halaman di-scroll, foto di dalam bingkai bergeser halus translate3d(0, -8% -> 8%, 0) scale(1.10).
- */
 export function ParallaxPhotoFrame({
   children,
   className = "",
@@ -149,7 +132,6 @@ export function ParallaxPhotoFrame({
 
     observer.observe(node);
 
-    // Windowed Parallax throttled via requestAnimationFrame (Layer 3)
     let rAFId: number | null = null;
     const handleScroll = () => {
       if (rAFId !== null) return;
@@ -159,13 +141,11 @@ export function ParallaxPhotoFrame({
         const rect = frameRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
 
-        // Hitung posisi relatif elemen terhadap viewport center
         if (rect.top < windowHeight + 100 && rect.bottom > -100) {
           const elementCenter = rect.top + rect.height / 2;
           const viewportCenter = windowHeight / 2;
           const normalized = (elementCenter - viewportCenter) / (windowHeight / 2);
           const clamped = Math.max(-1.2, Math.min(1.2, normalized));
-          // Bergerak berlawanan: saat elemen turun, gambar bergeser naik
           const shift = -clamped * maxShiftPercent;
           setShiftPercent(shift);
         }

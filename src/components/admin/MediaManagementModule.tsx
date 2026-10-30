@@ -27,7 +27,6 @@ export function MediaManagementModule({
   onSettingsChange,
   onGalleryChange,
 }: MediaManagementModuleProps) {
-  // Main Photos state
   const [mainPhotos, setMainPhotos] = useState({
     coverPhotoUrl: settings.coverPhotoUrl,
     heroPhotoUrl: settings.heroPhotoUrl,
@@ -37,14 +36,12 @@ export function MediaManagementModule({
   });
   const [isSavingMain, setIsSavingMain] = useState(false);
 
-  // Gallery Photo modal / form state
   const [isAddingGallery, setIsAddingGallery] = useState(false);
   const [newGalleryUrl, setNewGalleryUrl] = useState("");
   const [newGalleryCaption, setNewGalleryCaption] = useState("");
   const [newGalleryAspect, setNewGalleryAspect] = useState("3/4");
   const [isSubmittingGallery, setIsSubmittingGallery] = useState(false);
 
-  // File upload helper converting file to data URL
   const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: keyof typeof mainPhotos | "gallery"
@@ -75,7 +72,6 @@ export function MediaManagementModule({
     reader.readAsDataURL(file);
   };
 
-  // Save Main Photos
   const handleSaveMainPhotos = async () => {
     setIsSavingMain(true);
     try {
@@ -99,7 +95,6 @@ export function MediaManagementModule({
     }
   };
 
-  // Add new gallery photo
   const handleAddGalleryPhoto = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newGalleryUrl.trim()) {
@@ -138,7 +133,6 @@ export function MediaManagementModule({
     }
   };
 
-  // Delete gallery photo
   const handleDeleteGallery = async (id: number) => {
     if (!confirm("Apakah Anda yakin ingin menghapus foto ini dari galeri?")) return;
 
@@ -159,7 +153,6 @@ export function MediaManagementModule({
     }
   };
 
-  // Reorder gallery photo
   const handleMove = (index: number, direction: "up" | "down") => {
     const targetIndex = direction === "up" ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= gallery.length) return;
@@ -175,9 +168,6 @@ export function MediaManagementModule({
 
   return (
     <div className="space-y-10">
-      {/* ============================================================ */}
-      {/* 1. Pengaturan Foto Utama */}
-      {/* ============================================================ */}
       <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
@@ -211,7 +201,6 @@ export function MediaManagementModule({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Card: Foto Sampul (01-cover) */}
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
@@ -255,7 +244,6 @@ export function MediaManagementModule({
             </label>
           </div>
 
-          {/* Card: Foto Mempelai Wanita (03-mempelai) */}
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
@@ -299,7 +287,6 @@ export function MediaManagementModule({
             </label>
           </div>
 
-          {/* Card: Foto Mempelai Pria (03-mempelai) */}
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
@@ -343,7 +330,6 @@ export function MediaManagementModule({
             </label>
           </div>
 
-          {/* Card: Foto Mihrab Hitung Mundur (02-hitung-mundur) */}
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
@@ -387,7 +373,6 @@ export function MediaManagementModule({
             </label>
           </div>
 
-          {/* Card: Gambar Kode QRIS (07-amplop) */}
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
@@ -433,9 +418,6 @@ export function MediaManagementModule({
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* 2. Manajemen Koleksi Foto Galeri (05-galeri) */}
-      {/* ============================================================ */}
       <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
@@ -458,7 +440,6 @@ export function MediaManagementModule({
           </button>
         </div>
 
-        {/* Add photo form modal / inline panel */}
         {isAddingGallery && (
           <form
             onSubmit={handleAddGalleryPhoto}
@@ -541,7 +522,6 @@ export function MediaManagementModule({
           </form>
         )}
 
-        {/* Gallery Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {gallery.map((item, idx) => (
             <div
@@ -567,7 +547,6 @@ export function MediaManagementModule({
                 </p>
               </div>
 
-              {/* Actions: Reorder & Delete */}
               <div className="flex items-center justify-between border-t border-gold-500/20 pt-2 mt-auto">
                 <div className="flex items-center gap-1">
                   <button

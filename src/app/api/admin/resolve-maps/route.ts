@@ -45,7 +45,6 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
   try {
     let finalUrl = targetUrl;
 
-    // Follow redirects for short links (e.g. maps.app.goo.gl, goo.gl)
     if (targetUrl.includes("goo.gl") || targetUrl.includes("maps.app")) {
       const response = await fetch(targetUrl, {
         method: "GET",
@@ -61,14 +60,12 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
     let lat: string | null = null;
     let lng: string | null = null;
 
-    // Regex 1: /search/-7.310076,+109.296186 or /search/-7.310076,109.296186
     const searchMatch = finalUrl.match(/\/search\/([+-]?\d+\.?\d*)[,\+]+([+-]?\d+\.?\d*)/);
     if (searchMatch) {
       lat = searchMatch[1];
       lng = searchMatch[2];
     }
 
-    // Regex 2: @-7.310076,109.296186
     if (!lat || !lng) {
       const atMatch = finalUrl.match(/@([+-]?\d+\.?\d*),([+-]?\d+\.?\d*)/);
       if (atMatch) {
@@ -77,7 +74,6 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
       }
     }
 
-    // Regex 3: q=-7.310076,109.296186 or query=-7.310076,109.296186
     if (!lat || !lng) {
       const qMatch = finalUrl.match(/[?&](?:q|query)=([+-]?\d+\.?\d*)[,\+]+([+-]?\d+\.?\d*)/);
       if (qMatch) {
@@ -86,7 +82,6 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
       }
     }
 
-    // Regex 4: ll=-7.310076,109.296186
     if (!lat || !lng) {
       const llMatch = finalUrl.match(/[?&]ll=([+-]?\d+\.?\d*)[,\+]+([+-]?\d+\.?\d*)/);
       if (llMatch) {
@@ -106,7 +101,6 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
       });
     }
 
-    // Fallback if exact coordinates cannot be parsed
     const fallbackEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(targetUrl)}&z=17&output=embed`;
     return NextResponse.json({
       success: true,

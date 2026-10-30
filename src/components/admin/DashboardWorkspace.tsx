@@ -46,7 +46,6 @@ export function DashboardWorkspace({
   const [activeTab, setActiveTab] = useState<AdminTab>("rsvp");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Synchronized state across all 4 modules
   const [settings, setSettings] = useState<WeddingSettingsData>(initialSettings);
   const [gallery, setGallery] = useState<GalleryPhotoData[]>(initialGallery);
   const [guests, setGuests] = useState<GuestData[]>(initialGuests);
@@ -97,11 +96,7 @@ export function DashboardWorkspace({
 
   return (
     <div className="min-h-screen bg-[#faf7f2] flex flex-col lg:flex-row text-[#4b3a3e]">
-      {/* ============================================================ */}
-      {/* 1. DESKTOP LEFT SIDENAV (lg:flex, w-72 shrink-0)             */}
-      {/* ============================================================ */}
       <aside className="hidden lg:flex flex-col w-72 bg-[#fffdfa] border-r border-[#e9d3a3]/60 shadow-sm shrink-0 sticky top-0 h-screen overflow-y-auto">
-        {/* Sidenav Header */}
         <div className="p-6 border-b border-[#e9d3a3]/40">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-[#fdf8f3] border border-[#e9d3a3] flex items-center justify-center text-[#a9823a] shadow-xs shrink-0">
@@ -118,7 +113,6 @@ export function DashboardWorkspace({
             </div>
           </div>
 
-          {/* Badge Tanggal Dinamis */}
           <div className="mt-4 bg-[#fdf8f3] border border-[#e9d3a3] text-[#4b3a3e] font-medium text-xs px-3 py-2 rounded-xl flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-[#a9823a]" />
@@ -128,7 +122,6 @@ export function DashboardWorkspace({
           </div>
         </div>
 
-        {/* Sidenav Nav Links */}
         <nav className="p-4 space-y-1.5 flex-1" aria-label="Menu Admin">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -170,7 +163,6 @@ export function DashboardWorkspace({
           })}
         </nav>
 
-        {/* Sidenav Footer Actions */}
         <div className="p-4 border-t border-[#e9d3a3]/40 space-y-2">
           <a
             href="/"
@@ -199,9 +191,6 @@ export function DashboardWorkspace({
         </div>
       </aside>
 
-      {/* ============================================================ */}
-      {/* 2. STICKY MOBILE TOP BAR (< 1024px / lg:hidden)              */}
-      {/* ============================================================ */}
       <header className="lg:hidden sticky top-0 z-20 bg-[#fffdfa]/95 border-b border-[#e9d3a3]/60 backdrop-blur-md px-3 sm:px-4 py-3 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-[#fdf8f3] border border-[#e9d3a3] flex items-center justify-center text-[#a9823a] shrink-0 shadow-xs">
@@ -255,9 +244,6 @@ export function DashboardWorkspace({
         </div>
       </header>
 
-      {/* ============================================================ */}
-      {/* 3. MAIN WORKSPACE CONTENT AREA                               */}
-      {/* ============================================================ */}
       <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-28 lg:pb-12 min-w-0">
         {activeTab === "rsvp" && (
           <RsvpModerationModule
@@ -293,9 +279,6 @@ export function DashboardWorkspace({
         )}
       </main>
 
-      {/* ============================================================ */}
-      {/* 4. FIXED BOTTOM DOCK NAVIGATION (< 1024px / lg:hidden)       */}
-      {/* ============================================================ */}
       <nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#fffdfa]/95 border-t border-[#e9d3a3]/60 backdrop-blur-md px-2 py-1 flex justify-around shadow-lg pb-[max(0.5rem,env(safe-area-inset-bottom))]"
         aria-label="Navigasi Bawah Mobile"

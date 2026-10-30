@@ -2,9 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 
-/**
- * Hook to detect if the user prefers reduced motion for accessibility (WCAG AA/AAA).
- */
 export function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -24,13 +21,6 @@ export function usePrefersReducedMotion(): boolean {
   return prefersReducedMotion;
 }
 
-/**
- * High-performance 60fps parallax hook based on requestAnimationFrame and passive scroll.
- * Uses GPU-composited transform properties (translate3d).
- * 
- * @param speed Multiplier for parallax shift (e.g., 0.15 for background, 0.35 for ornaments).
- * @param reverse If true, shifts in the opposite direction.
- */
 export function useParallax(speed: number = 0.2, reverse: boolean = false): {
   offset: number;
   transformStyle: { transform: string; willChange: string };
@@ -57,7 +47,6 @@ export function useParallax(speed: number = 0.2, reverse: boolean = false): {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Initialize initial offset
     handleScroll();
 
     return () => {
@@ -78,12 +67,6 @@ export function useParallax(speed: number = 0.2, reverse: boolean = false): {
   return { offset, transformStyle, isReducedMotion };
 }
 
-/**
- * Windowed Parallax Hook for Inner-Image Frames (Layer 3).
- * Calculates the relative position of the container element inside the viewport (-1 to +1)
- * and translates the inner image smoothly by `translate3d(0, Y%, 0) scale(1.10)`
- * creating a luxury 3D editorial magazine window effect.
- */
 export function useWindowedParallax(maxPercent: number = 8): {
   ref: React.RefObject<HTMLDivElement | null>;
   imageTransform: { transform: string; willChange: string };
@@ -100,9 +83,7 @@ export function useWindowedParallax(maxPercent: number = 8): {
     const rect = ref.current.getBoundingClientRect();
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
 
-    // Only calculate when element is near or within the viewport
     if (rect.bottom >= -100 && rect.top <= windowHeight + 100) {
-      // Progress from -1 (entering bottom) to +1 (leaving top)
       const center = rect.top + rect.height / 2;
       const viewportCenter = windowHeight / 2;
       const normalized = (center - viewportCenter) / (windowHeight / 2);

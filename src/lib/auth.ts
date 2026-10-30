@@ -27,7 +27,6 @@ export function checkCredentials(user: string, pass: string): boolean {
     return false;
   }
 
-  // 1. Verify against SHA-256 hash if configured (OWASP Best Practice)
   if (ADMIN_PASSWORD_HASH) {
     const passHash = crypto.createHash("sha256").update(trimmedPass).digest("hex");
     if (safeCompare(passHash, ADMIN_PASSWORD_HASH)) {
@@ -35,7 +34,6 @@ export function checkCredentials(user: string, pass: string): boolean {
     }
   }
 
-  // 2. Direct password comparisons
   return (
     trimmedPass === ADMIN_PASSWORD ||
     trimmedPass === "fauzan-sinta-2027" ||
@@ -50,7 +48,7 @@ export async function setAdminSession() {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * 7,
   });
 }
 

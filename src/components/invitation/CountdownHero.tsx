@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
-import { Divider, MonogramFS, FloralCornerAccent, ScrollDownIndicator } from "./Ornaments";
+import { Divider, MonogramFS, FloralCornerAccent, ScrollDownIndicator, GununganWayang } from "./Ornaments";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
@@ -83,11 +83,13 @@ export function CountdownHero({
           </div>
 
           <div
-            className={`min-h-[78dvh] sm:min-h-[82dvh] max-h-[740px] w-full flex flex-col items-center justify-between p-6 sm:p-8 rounded-[999px] border-2 border-[#5d3a41]/70 outline outline-1 outline-offset-4 outline-[#c9a24b]/60 bg-[#fffdfa] shadow-[0_24px_50px_-16px_rgba(93,58,65,0.22)] relative overflow-hidden text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={`min-h-[78dvh] sm:min-h-[82dvh] max-h-[740px] w-full flex flex-col items-center justify-between p-6 sm:p-8 rounded-[999px] border-2 border-[#5d3a41]/75 outline outline-1 outline-offset-4 outline-[#c9a24b]/60 bg-[#fffdfa]/65 backdrop-blur-[1.5px] shadow-[0_24px_50px_-16px_rgba(93,58,65,0.22)] relative overflow-hidden text-center transition-[transform,opacity] duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isHeroReady ? "scale-100 opacity-100" : "scale-[0.94] opacity-0 pointer-events-none"
             }`}
             style={{ transitionDelay: isHeroReady ? "400ms" : "0ms", willChange: "transform, opacity" }}
           >
+            <div className="absolute inset-2 sm:inset-2.5 rounded-[999px] border border-[#c9a24b]/40 pointer-events-none" />
+
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,75,0.12),transparent_70%)] pointer-events-none" />
 
             <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[85%] h-px bg-gradient-to-r from-transparent via-[#c9a24b]/40 to-transparent pointer-events-none" />
@@ -216,8 +218,11 @@ export function CountdownHero({
         </ScrollLinkedItem>
 
         <ScrollLinkedItem offsetY={36} className="mt-5 w-full">
-          <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center">
-            <p className="typo-arabic leading-loose text-rose-900" dir="rtl">
+          <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
+              <GununganWayang className="w-full h-auto" />
+            </div>
+            <p className="typo-arabic leading-loose text-rose-900 relative z-10" dir="rtl">
               وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>
             <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">

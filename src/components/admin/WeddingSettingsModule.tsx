@@ -307,7 +307,7 @@ export function WeddingSettingsModule({
   const addBankAccount = () => {
     const updated = [
       ...bankAccounts,
-      { brand: "Bank BCA", type: "Transfer Bank", number: "", holder: "" },
+      { brand: "Bank BCA", type: "Transfer Bank", number: "", holder: formData.brideName || "Sinta Maria Utami" },
     ];
     setFormData((prev: any) => ({
       ...prev,
@@ -335,7 +335,7 @@ export function WeddingSettingsModule({
   const addEwallet = () => {
     const updated = [
       ...ewallets,
-      { brand: "DANA", type: "E-Wallet", number: "", holder: "" },
+      { brand: "DANA", type: "E-Wallet", number: "", holder: formData.brideName || "Sinta Maria Utami" },
     ];
     setFormData((prev: any) => ({
       ...prev,
@@ -1075,7 +1075,7 @@ export function WeddingSettingsModule({
               value={formData.storyHashtag || ""}
               onChange={(e) => handleFieldChange("storyHashtag", e.target.value)}
               placeholder="#SINgkatceritaFAUZAN"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-semibold text-rose-900 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-semibold text-rose-900 focus:outline-none focus:border-rose-500 normal-case"
             />
           </div>
 

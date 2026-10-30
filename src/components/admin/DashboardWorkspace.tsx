@@ -56,7 +56,7 @@ export function DashboardWorkspace({
     try {
       await fetch("/api/admin/auth", { method: "DELETE" });
       toast.success("Sesi admin berhasil diakhiri");
-      router.push("/admin/login");
+      router.push("/dashboard/login");
       router.refresh();
     } catch {
       toast.error("Gagal keluar dari sesi admin");

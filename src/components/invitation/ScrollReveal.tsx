@@ -5,24 +5,24 @@ import { useEffect, useRef, useState, type ElementType, type ReactNode } from "r
 interface ScrollRevealProps {
   children: ReactNode;
   delay?: number;
-  variant?: "fade-up" | "fade" | "scale-up" | "float" | "frame-reveal";
+  variant?: "fade-up" | "fade" | "scale-up" | "float" | "frame-reveal" | "bottom-up";
   className?: string;
   as?: ElementType;
   threshold?: number;
 }
 
 /**
- * Komponen pembungkus animasi scroll editorial yang tenang & elegan
+ * Komponen pembungkus animasi scroll editorial Bottom-Up Reveal
  * Mematuhi prinsip Motion Restraint (Better-UI & WCAG Accessibility):
- * - Translasi vertikal halus (maksimal 14px–16px)
- * - Kurva timing cubic-bezier(0.22, 1, 0.36, 1) dengan durasi 650ms–750ms
+ * - Translasi vertikal bottom-up halus (translate3d(0, 48px, 0) scale(0.97))
+ * - Kurva timing cubic-bezier(0.22, 1, 0.36, 1) dengan durasi 700ms
  * - Zero transition: all (eksplisit transition-transform, transition-opacity)
  * - Otomatis nonaktif pada prefers-reduced-motion: reduce
  */
 export function ScrollReveal({
   children,
   delay = 0,
-  variant = "fade-up",
+  variant = "bottom-up",
   className = "",
   as: Component = "div",
   threshold = 0.12,
@@ -66,14 +66,15 @@ export function ScrollReveal({
         case "fade":
           return "opacity-0";
         case "scale-up":
-          return "opacity-0 translate-y-3.5 scale-[0.97] blur-[2px]";
+          return "opacity-0 translate-y-12 scale-[0.96] blur-[2px]";
         case "float":
-          return "opacity-0 translate-y-2.5 scale-[0.94]";
+          return "opacity-0 translate-y-8 scale-[0.94]";
         case "frame-reveal":
-          return "opacity-0 translate-y-4 scale-[0.97]";
+          return "opacity-0 translate-y-12 scale-[0.97]";
+        case "bottom-up":
         case "fade-up":
         default:
-          return "opacity-0 translate-y-3.5";
+          return "opacity-0 translate-y-12 scale-[0.97]";
       }
     }
 
@@ -91,6 +92,13 @@ export function ScrollReveal({
       {children}
     </Component>
   );
+}
+
+/**
+ * Komponen shorthand ScrollRevealBottom dengan staggered delay bawaan
+ */
+export function ScrollRevealBottom(props: ScrollRevealProps) {
+  return <ScrollReveal {...props} variant="bottom-up" />;
 }
 
 interface ParallaxPhotoFrameProps {

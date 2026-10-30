@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
-import { Divider } from "./Ornaments";
+import { Divider, MonogramFS, FloralCornerAccent, ScrollDownIndicator } from "./Ornaments";
 import { formatCoverDate } from "@/lib/dateFormat";
-import { ParallaxPhotoFrame } from "./ScrollReveal";
+import { ParallaxPhotoFrame, ScrollReveal } from "./ScrollReveal";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
@@ -13,6 +13,15 @@ interface CountdownHeroProps {
   eventDateLabel?: string;
 }
 
+/**
+ * Signature Tall Oval Arch Hero & Countdown (02-hitung-mundur)
+ *
+ * TAHAP 2:
+ * 1. Signature Tall Oval Arch Hero (82dvh) with Monogram FS,
+ *    "THE WEDDING OF", "FAUZAN & SINTA", Date, and Scroll-Down Pill Indicator.
+ * 2. Bottom-up scroll reveal ke Seksi "With Love" (Ayat QS. Ar-Rum: 21).
+ * 3. Seksi Save The Date (Countdown Timer dengan NumberFlow).
+ */
 export function CountdownHero({
   weddingDateIso,
   heroPhotoUrl,
@@ -55,89 +64,152 @@ export function CountdownHero({
   const displayDate = formatCoverDate(weddingDateIso, eventDateLabel);
 
   // Staggered Blur Reveal helper classes
-  const getRevealClass = () => {
+  const getRevealClass = (staggerMs = 0) => {
     if (!isRevealed) {
-      return "opacity-0 translate-y-3 blur-sm";
+      return "opacity-0 translate-y-6 scale-[0.98] blur-xs";
     }
-    return `opacity-100 translate-y-0 blur-none transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]`;
+    return `opacity-100 translate-y-0 scale-100 blur-none transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]`;
   };
 
   return (
     <section
       id="beranda"
-      className={`py-20 relative transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        isRevealed ? "scale-100" : "scale-[1.08]"
-      }`}
+      className="pt-6 sm:pt-10 pb-20 relative"
       aria-label="Beranda dan Hitung Mundur"
     >
+      {/* ===================================================================== */}
+      {/* 1. SIGNATURE TALL OVAL ARCH HERO (~82dvh)                             */}
+      {/* Muncul tepat setelah gerbang Gunungan Wayang Portal membuka           */}
+      {/* ===================================================================== */}
+      <div className="w-[min(92%,420px)] mx-auto mb-20">
+        <div
+          className={`min-h-[78dvh] sm:min-h-[82dvh] max-h-[740px] flex flex-col items-center justify-between p-6 sm:p-8 rounded-[999px] border-2 border-[#5d3a41]/70 outline outline-1 outline-offset-4 outline-[#c9a24b]/60 bg-[#fffdfa]/92 backdrop-blur-sm shadow-[0_24px_50px_-16px_rgba(93,58,65,0.22)] relative overflow-hidden text-center transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isRevealed ? "scale-100 opacity-100" : "scale-[0.94] opacity-0"
+          }`}
+        >
+          {/* Subtle Ambient Shimmer Background */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,75,0.12),transparent_70%)] pointer-events-none" />
+
+          {/* Top of Arch: Monogram FS */}
+          <div
+            className={`pt-3 sm:pt-5 flex flex-col items-center ${getRevealClass()}`}
+            style={{ transitionDelay: isRevealed ? "150ms" : "0ms" }}
+          >
+            <MonogramFS className="w-16 h-16 sm:w-20 sm:h-20" />
+            <p className="typo-eyebrow text-[#a9823a] tracking-[0.22em] mt-3">
+              THE WEDDING OF
+            </p>
+          </div>
+
+          {/* Center of Arch: Names & Date */}
+          <div
+            className={`my-auto flex flex-col items-center px-2 ${getRevealClass()}`}
+            style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
+          >
+            <h1 className="typo-display drop-shadow-xs text-center">
+              Fauzan{" "}
+              <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">
+                &amp;
+              </span>{" "}
+              Sinta
+            </h1>
+
+            <div className="mt-3 flex items-center justify-center gap-2">
+              <span className="w-6 sm:w-10 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
+              <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-[#4b3a3e]">
+                {displayDate}
+              </p>
+              <span className="w-6 sm:w-10 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
+            </div>
+
+            <span className="mt-3 inline-block px-3.5 py-1 rounded-full bg-[#f7e9e5] text-[#9c5f66] border border-[#e9d3a3] font-sans text-xs sm:text-sm font-semibold normal-case tracking-wide shadow-xs">
+              #SINgkatceritaFAUZAN
+            </span>
+          </div>
+
+          {/* Bottom of Arch: Floral Accent & Animated Scroll Indicator */}
+          <div
+            className={`pb-3 sm:pb-5 flex flex-col items-center ${getRevealClass()}`}
+            style={{ transitionDelay: isRevealed ? "450ms" : "0ms" }}
+          >
+            <FloralCornerAccent className="w-32 sm:w-36 mx-auto mb-2 opacity-80" />
+            <ScrollDownIndicator className="w-7 h-12 mx-auto" />
+            <p className="typo-meta text-[11px] uppercase tracking-[0.2em] mt-2 text-[#8d757c]">
+              Scroll Ke Bawah
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ===================================================================== */}
+      {/* 2. SEKSI AYAT & PENGANTAR ("WITH LOVE" - BOTTOM-UP SCROLL REVEAL)     */}
+      {/* ===================================================================== */}
       <div className="w-[min(100%-2.75rem,560px)] mx-auto text-center">
-        {/* 1. Bismillah */}
-        <p
-          className={`typo-arabic leading-loose ${getRevealClass()}`}
-          dir="rtl"
-          style={{ transitionDelay: isRevealed ? "0ms" : "0ms" }}
-        >
-          بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
-        </p>
+        {/* Foto Mempelai dalam Bingkai Mihrab */}
+        <ScrollReveal delay={0} variant="bottom-up">
+          <div className="arch w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-lg">
+            <ParallaxPhotoFrame maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={heroPhotoUrl}
+                alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
+                className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+                loading="eager"
+              />
+            </ParallaxPhotoFrame>
+          </div>
+        </ScrollReveal>
 
-        {/* 2. Quote Card QS Ar-Rum: 21 */}
-        <figure
-          className={`card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center ${getRevealClass()}`}
-          style={{ transitionDelay: isRevealed ? "100ms" : "0ms" }}
-        >
-          <p className="typo-arabic leading-loose text-rose-900" dir="rtl">
-            وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
+        {/* Header "WITH LOVE" */}
+        <ScrollReveal delay={110} variant="bottom-up">
+          <p className="typo-eyebrow text-[#a9823a] mt-8 mb-2">
+            WITH LOVE
           </p>
-          <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
-            &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
-          </blockquote>
-          <figcaption className="typo-meta mt-3 font-medium text-[#a9823a]">
-            &mdash; QS. Ar-Rum : 21 &mdash;
-          </figcaption>
-        </figure>
+        </ScrollReveal>
 
-        {/* 3. Divider */}
-        <div
-          className={`${getRevealClass()}`}
-          style={{ transitionDelay: isRevealed ? "200ms" : "0ms" }}
-        >
+        {/* Bismillah */}
+        <ScrollReveal delay={220} variant="bottom-up">
+          <p className="typo-arabic leading-loose text-rose-700" dir="rtl">
+            بِسْمِ اللّٰهِ الرَّحْمٰnِ الرَّحِيْمِ
+          </p>
+        </ScrollReveal>
+
+        {/* Ayat QS. Ar-Rum: 21 & Terjemahan */}
+        <ScrollReveal delay={330} variant="bottom-up">
+          <figure className="card-ornament mt-5 bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center">
+            <p className="typo-arabic leading-loose text-rose-900" dir="rtl">
+              وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
+            </p>
+            <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
+              &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
+            </blockquote>
+            <figcaption className="typo-meta mt-3 font-medium text-[#a9823a]">
+              &mdash; QS. Ar-Rum : 21 &mdash;
+            </figcaption>
+          </figure>
+        </ScrollReveal>
+
+        {/* Divider */}
+        <ScrollReveal delay={440} variant="bottom-up">
           <Divider />
-        </div>
+        </ScrollReveal>
 
-        {/* 4. Hero Photo in Mihrab Arch with Windowed Editorial Parallax */}
-        <div
-          className={`arch w-[min(76%,320px)] aspect-[4/5] mx-auto mt-2 overflow-hidden shadow-lg ${getRevealClass()}`}
-          style={{ transitionDelay: isRevealed ? "300ms" : "0ms" }}
-        >
-          <ParallaxPhotoFrame maxShiftPercent={8} className="w-full h-full rounded-[990px_990px_14px_14px]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={heroPhotoUrl}
-              alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
-              className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-              loading="eager"
-            />
-          </ParallaxPhotoFrame>
-        </div>
-
-        {/* 5. Names and Date */}
-        <div
-          className={`${getRevealClass()} mt-6`}
-          style={{ transitionDelay: isRevealed ? "400ms" : "0ms" }}
-        >
-          <h2 className="typo-display drop-shadow-xs">
-            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">&amp;</span> Sinta
-          </h2>
-          <p className="typo-eyebrow mt-2 text-[#a9823a]">
-            {displayDate}
+        {/* =================================================================== */}
+        {/* 3. SEKSI SAVE THE DATE & COUNTDOWN TIMER                           */}
+        {/* =================================================================== */}
+        <ScrollReveal delay={110} variant="bottom-up">
+          <p className="typo-eyebrow text-[#a9823a] mt-6 mb-2">
+            SAVE THE DATE
           </p>
-        </div>
+          <h2 className="typo-section-title">
+            Hitung Mundur
+          </h2>
+          <p className="typo-body text-center mx-auto mt-2 text-[#4b3a3e]">
+            Menuju Hari Bahagia &amp; Ikrar Suci Pernikahan
+          </p>
+        </ScrollReveal>
 
-        {/* 6. Countdown Timer with NumberFlow & Tabular Numbers */}
-        <div
-          className={`mt-6 ${getRevealClass()}`}
-          style={{ transitionDelay: isRevealed ? "500ms" : "0ms" }}
-        >
+        <ScrollReveal delay={220} variant="bottom-up" className="mt-8">
           {!timeLeft.isDone ? (
             <div
               className="flex justify-center items-center gap-2.5 sm:gap-3"
@@ -148,7 +220,7 @@ export function CountdownHero({
                 { label: "Jam", value: timeLeft.hours },
                 { label: "Menit", value: timeLeft.minutes },
                 { label: "Detik", value: timeLeft.seconds },
-              ].map((item) => (
+              ].map((item, idx) => (
                 <div
                   key={item.label}
                   className="min-w-[72px] sm:min-w-[84px] py-3.5 px-2.5 bg-surface-white border border-gold-500/40 rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center"
@@ -172,7 +244,7 @@ export function CountdownHero({
               </p>
             </div>
           )}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

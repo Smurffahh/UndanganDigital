@@ -65,18 +65,39 @@ export function InvitationOrchestrator({
   return (
     <main className="relative min-h-screen overflow-x-clip bg-cream text-ink">
       {/* ============================================================ */}
-      {/* LAYER 1: Deep Ambient Background Parallax (Speed 0.15x)     */}
+      {/* TAHAP 3: FIXED STAGE BACKDROP (Stationary photo with veil)    */}
       {/* ============================================================ */}
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         style={bgParallax.transformStyle}
         aria-hidden="true"
       >
+        {/* Stationary Pre-wedding Photo Backdrop */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={settings.heroPhotoUrl}
+          alt=""
+          className="w-full h-full object-cover object-center scale-105 opacity-[0.14] filter saturate-75"
+        />
+        {/* Soft Warm-Cream & Dusty-Rose Veil */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/92 via-[#fdf8f3]/85 to-[#f7e9e5]/90 backdrop-blur-[2px]" />
         {/* Subtle Ambient Radial Glows (Dusty Rose & Champagne Gold) */}
         <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
         <div className="absolute top-[35%] -left-[200px] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
         <div className="absolute top-[65%] -right-[200px] w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
-        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-35" />
+        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-30" />
+      </div>
+
+      {/* ============================================================ */}
+      {/* TAHAP 3: FIXED VIEWPORT CORNER BORDERS (Mobile Framing)      */}
+      {/* ============================================================ */}
+      <div className="fixed inset-0 pointer-events-none z-[1] p-3 sm:p-5" aria-hidden="true">
+        <div className="relative w-full h-full border border-[#c9a24b]/20 rounded-2xl sm:rounded-3xl pointer-events-none">
+          <span className="absolute -top-1 -left-1 w-5 h-5 border-t-2 border-l-2 border-[#c9a24b]/60 rounded-tl" />
+          <span className="absolute -top-1 -right-1 w-5 h-5 border-t-2 border-r-2 border-[#c9a24b]/60 rounded-tr" />
+          <span className="absolute -bottom-1 -left-1 w-5 h-5 border-b-2 border-l-2 border-[#c9a24b]/60 rounded-bl" />
+          <span className="absolute -bottom-1 -right-1 w-5 h-5 border-b-2 border-r-2 border-[#c9a24b]/60 rounded-br" />
+        </div>
       </div>
 
       {/* ============================================================ */}
@@ -119,79 +140,68 @@ export function InvitationOrchestrator({
       />
 
       {/* ============================================================ */}
-      {/* 02. Hero & Countdown (02-hitung-mundur)                      */}
+      {/* TAHAP 3: SCROLLABLE MAIN CONTENT (Flows in relative z-10)     */}
       {/* ============================================================ */}
-      <CountdownHero
-        weddingDateIso={settings.weddingDateIso}
-        heroPhotoUrl={settings.heroPhotoUrl}
-        isRevealed={isRevealed}
-        eventDateLabel={settings.eventDateLabel}
-      />
+      <div className="relative z-10">
+        {/* 02. Hero & Countdown (02-hitung-mundur) */}
+        <CountdownHero
+          weddingDateIso={settings.weddingDateIso}
+          heroPhotoUrl={settings.heroPhotoUrl}
+          isRevealed={isRevealed}
+          eventDateLabel={settings.eventDateLabel}
+        />
 
-      {/* ============================================================ */}
-      {/* 03. Couple Profiles (03-mempelai)                           */}
-      {/* ============================================================ */}
-      <CoupleProfile
-        brideName={settings.brideName}
-        brideBirth={settings.brideBirth}
-        brideBio={settings.brideBio}
-        bridePhotoUrl={settings.bridePhotoUrl}
-        groomName={settings.groomName}
-        groomBirth={settings.groomBirth}
-        groomBio={settings.groomBio}
-        groomPhotoUrl={settings.groomPhotoUrl}
-      />
+        {/* 03. Couple Profiles (03-mempelai) */}
+        <CoupleProfile
+          brideName={settings.brideName}
+          brideBirth={settings.brideBirth}
+          brideBio={settings.brideBio}
+          bridePhotoUrl={settings.bridePhotoUrl}
+          groomName={settings.groomName}
+          groomBirth={settings.groomBirth}
+          groomBio={settings.groomBio}
+          groomPhotoUrl={settings.groomPhotoUrl}
+        />
 
-      {/* ============================================================ */}
-      {/* LAYER 4: Love Story Timeline (#SINgkatceritaFAUZAN)         */}
-      {/* ============================================================ */}
-      <LoveStoryTimeline
-        loveStoryText={settings.loveStoryText}
-        storyHashtag={settings.storyHashtag}
-      />
+        {/* LAYER 4: Love Story Timeline (#SINgkatceritaFAUZAN) */}
+        <LoveStoryTimeline
+          loveStoryText={settings.loveStoryText}
+          storyHashtag={settings.storyHashtag}
+        />
 
-      {/* ============================================================ */}
-      {/* 04. Event Details (04-acara)                                */}
-      {/* ============================================================ */}
-      <EventDetails
-        akadTime={settings.akadTime}
-        resepsiTime={settings.resepsiTime}
-        venueName={settings.venueName}
-        venueAddress={settings.venueAddress}
-        venuePlusCode={settings.venuePlusCode}
-        googleMapsUrl={settings.googleMapsUrl}
-        googleMapsEmbed={settings.googleMapsEmbed}
-        weddingDateIso={settings.weddingDateIso}
-        eventDateLabel={settings.eventDateLabel}
-      />
+        {/* 04. Event Details (04-acara) */}
+        <EventDetails
+          akadTime={settings.akadTime}
+          resepsiTime={settings.resepsiTime}
+          venueName={settings.venueName}
+          venueAddress={settings.venueAddress}
+          venuePlusCode={settings.venuePlusCode}
+          googleMapsUrl={settings.googleMapsUrl}
+          googleMapsEmbed={settings.googleMapsEmbed}
+          weddingDateIso={settings.weddingDateIso}
+          eventDateLabel={settings.eventDateLabel}
+        />
 
-      {/* ============================================================ */}
-      {/* 05. Photo Gallery (05-galeri)                               */}
-      {/* ============================================================ */}
-      <PhotoGallery photos={galleryPhotos} />
+        {/* 05. Photo Gallery (05-galeri) */}
+        <PhotoGallery photos={galleryPhotos} />
 
-      {/* ============================================================ */}
-      {/* 06. RSVP & Guestbook (06-rsvp)                              */}
-      {/* ============================================================ */}
-      <RsvpGuestbook
-        initialWishes={wishes}
-        defaultGuestName={guestName}
-      />
+        {/* 06. RSVP & Guestbook (06-rsvp) */}
+        <RsvpGuestbook
+          initialWishes={wishes}
+          defaultGuestName={guestName}
+        />
 
-      {/* ============================================================ */}
-      {/* 07. Digital Envelope (07-amplop)                            */}
-      {/* ============================================================ */}
-      <DigitalEnvelope
-        bankAccounts={settings.bankAccounts}
-        ewallets={settings.ewallets}
-        giftAddress={settings.giftAddress}
-        qrisImageUrl={settings.qrisImageUrl}
-      />
+        {/* 07. Digital Envelope (07-amplop) */}
+        <DigitalEnvelope
+          bankAccounts={settings.bankAccounts}
+          ewallets={settings.ewallets}
+          giftAddress={settings.giftAddress}
+          qrisImageUrl={settings.qrisImageUrl}
+        />
 
-      {/* ============================================================ */}
-      {/* 08. Closing Footer (08-penutup)                             */}
-      {/* ============================================================ */}
-      <ClosingFooter weddingDateIso={settings.weddingDateIso} />
+        {/* 08. Closing Footer (08-penutup) */}
+        <ClosingFooter weddingDateIso={settings.weddingDateIso} />
+      </div>
 
       {/* ============================================================ */}
       {/* 09. Floating Controls (Glass Pill Dock & Vinyl Music Disc)  */}

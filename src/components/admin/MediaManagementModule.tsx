@@ -204,11 +204,14 @@ export function MediaManagementModule({
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi 01-Cover
+                Seksi Sampul
               </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
+              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
                 Foto Sampul Utama
               </h3>
+              <p className="text-[11px] text-[#8d757c] mb-3">
+                Tampil pada latar sampul saat tamu pertama kali menerima undangan.
+              </p>
 
               <div className="aspect-[4/3] rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -247,17 +250,20 @@ export function MediaManagementModule({
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi 03-Mempelai
+                Seksi Pembuka
               </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
-                Foto Sinta (Mempelai Wanita)
+              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
+                Foto Utama / Arch (WITH LOVE)
               </h3>
+              <p className="text-[11px] text-[#8d757c] mb-3">
+                Tampil pada bingkai lengkung (arch) di seksi pembuka atas bersama kaligrafi dan ayat suci.
+              </p>
 
-              <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
+              <div className="aspect-[4/5] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={mainPhotos.bridePhotoUrl}
-                  alt="Sinta"
+                  src={mainPhotos.heroPhotoUrl}
+                  alt="Foto Utama Arch"
                   className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
                 />
               </div>
@@ -267,9 +273,9 @@ export function MediaManagementModule({
               </label>
               <input
                 type="text"
-                value={mainPhotos.bridePhotoUrl}
+                value={mainPhotos.heroPhotoUrl}
                 onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, bridePhotoUrl: e.target.value }))
+                  setMainPhotos((p) => ({ ...p, heroPhotoUrl: e.target.value }))
                 }
                 className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
@@ -281,7 +287,7 @@ export function MediaManagementModule({
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileUpload(e, "bridePhotoUrl")}
+                onChange={(e) => handleFileUpload(e, "heroPhotoUrl")}
                 className="hidden"
               />
             </label>
@@ -290,11 +296,14 @@ export function MediaManagementModule({
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi 03-Mempelai
+                Seksi Mempelai Pria
               </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
-                Foto Fauzan (Mempelai Pria)
+              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
+                Foto Mempelai Pria (Fauzan Ma&apos;ruf)
               </h3>
+              <p className="text-[11px] text-[#8d757c] mb-3">
+                Tampil pada bingkai oval seksi Mempelai Pria.
+              </p>
 
               <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -333,17 +342,20 @@ export function MediaManagementModule({
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi 02-Hitung Mundur
+                Seksi Mempelai Wanita
               </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
-                Foto Hero Mihrab
+              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
+                Foto Mempelai Wanita (Sinta Maria Utami)
               </h3>
+              <p className="text-[11px] text-[#8d757c] mb-3">
+                Tampil pada bingkai oval seksi Mempelai Wanita.
+              </p>
 
-              <div className="aspect-[4/5] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
+              <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={mainPhotos.heroPhotoUrl}
-                  alt="Hero Mihrab"
+                  src={mainPhotos.bridePhotoUrl}
+                  alt="Sinta"
                   className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
                 />
               </div>
@@ -353,9 +365,9 @@ export function MediaManagementModule({
               </label>
               <input
                 type="text"
-                value={mainPhotos.heroPhotoUrl}
+                value={mainPhotos.bridePhotoUrl}
                 onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, heroPhotoUrl: e.target.value }))
+                  setMainPhotos((p) => ({ ...p, bridePhotoUrl: e.target.value }))
                 }
                 className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
               />
@@ -367,7 +379,7 @@ export function MediaManagementModule({
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileUpload(e, "heroPhotoUrl")}
+                onChange={(e) => handleFileUpload(e, "bridePhotoUrl")}
                 className="hidden"
               />
             </label>
@@ -376,11 +388,14 @@ export function MediaManagementModule({
           <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi 07-Amplop
+                Seksi Amplop Digital
               </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-3">
+              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
                 Kode QRIS Amplop Digital
               </h3>
+              <p className="text-[11px] text-[#8d757c] mb-3">
+                Tampil langsung pada pop-up modal QRIS di halaman utama saat tamu ingin mengirim tanda kasih.
+              </p>
 
               <div className="aspect-square max-w-[180px] mx-auto rounded-xl overflow-hidden bg-white p-2 border border-gold-500/30 mb-3 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -423,10 +438,10 @@ export function MediaManagementModule({
           <div>
             <h2 className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2">
               <ImageIcon className="w-5 h-5 text-gold-600" />
-              Koleksi Galeri Momen ({gallery.length} Foto)
+              Koleksi Galeri Pre-Wedding ({gallery.length} Foto)
             </h2>
             <p className="text-xs text-muted mt-0.5">
-              Tambah, susun urutan, edit caption, atau hapus foto galeri pre-wedding.
+              Tampil pada grid seksi Galeri Kebahagiaan di halaman publik.
             </p>
           </div>
 

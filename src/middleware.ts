@@ -7,11 +7,28 @@ export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   const isAuthed = sessionCookie === SESSION_SECRET_TOKEN;
 
-  if (pathname.startsWith("/admin/dashboard")) {
-    if (!isAuthed) {
-      const loginUrl = new URL("/admin/login", request.url);
+  if (pathname === "/admin" || pathname === "/admin/dashboard" || pathname.startsWith("/admin/dashboard/")) {
+    const dashboardUrl = new URL("/dashboard", request.url);
+    return NextResponse.redirect(dashboardUrl, { status: 308 });
+  }
+
+  if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
+    const loginUrl = new URL("/dashboard/login", request.url);
+    return NextResponse.redirect(loginUrl, { status: 308 });
+  }
+
+  if (pathname.startsWith("/dashboard")) {
+    const isLoginPage = pathname === "/dashboard/login" || pathname.startsWith("/dashboard/login/");
+
+    if (!isAuthed && !isLoginPage) {
+      const loginUrl = new URL("/dashboard/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+
+    if (isAuthed && isLoginPage) {
+      const dashboardUrl = new URL("/dashboard", request.url);
+      return NextResponse.redirect(dashboardUrl);
     }
   }
 
@@ -42,7 +59,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/dashboard/:path*",
+    "/admin/:path*",
+    "/dashboard/:path*",
     "/api/admin/:path*",
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 interface ScrollLinkedItemProps {
   children: ReactNode;
@@ -8,6 +8,8 @@ interface ScrollLinkedItemProps {
   as?: ElementType;
   style?: CSSProperties;
   offsetY?: number;
+  delay?: number;
+  trigger?: boolean;
 }
 
 export function ScrollLinkedItem({
@@ -15,9 +17,13 @@ export function ScrollLinkedItem({
   className = "",
   as: Component = "div",
   style,
-  offsetY = 36,
+  offsetY = 32,
+  delay = 0,
+  trigger,
 }: ScrollLinkedItemProps) {
   const containerRef = useRef<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const isIntersectingRef = useRef(false);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -26,79 +32,61 @@ export function ScrollLinkedItem({
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (mediaQuery.matches) {
-        node.style.opacity = "1";
-        node.style.transform = "none";
+        setIsVisible(true);
         return;
       }
     }
 
-    let currentP = 0;
-    let targetP = 0;
-    let rAFId: number | null = null;
-    let isRunning = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        isIntersectingRef.current = entry.isIntersecting;
 
-    const calculateTarget = () => {
-      const rect = node.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const entryBottom = windowHeight * 0.98;
-      const entryTop = windowHeight * 0.65;
-      const range = entryBottom - entryTop;
-
-      if (rect.top >= entryBottom) {
-        targetP = 0;
-      } else if (rect.top <= entryTop) {
-        targetP = 1;
-      } else {
-        targetP = Math.max(0, Math.min(1, (entryBottom - rect.top) / range));
+        if (entry.isIntersecting) {
+          if (trigger === undefined || trigger === true) {
+            setIsVisible(true);
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px",
       }
-    };
+    );
 
-    calculateTarget();
-    currentP = targetP;
-    node.style.opacity = currentP.toFixed(3);
-    node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.98 + currentP * 0.02).toFixed(3)})`;
-
-    const tick = () => {
-      calculateTarget();
-      currentP = currentP + (targetP - currentP) * 0.12;
-
-      if (Math.abs(currentP - targetP) < 0.002) {
-        currentP = targetP;
-      }
-
-      node.style.opacity = currentP.toFixed(3);
-      node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.98 + currentP * 0.02).toFixed(3)})`;
-
-      if (Math.abs(currentP - targetP) >= 0.002) {
-        rAFId = requestAnimationFrame(tick);
-      } else {
-        isRunning = false;
-        rAFId = null;
-      }
-    };
-
-    const requestTick = () => {
-      if (!isRunning) {
-        isRunning = true;
-        rAFId = requestAnimationFrame(tick);
-      }
-    };
-
-    window.addEventListener("scroll", requestTick, { passive: true });
-    window.addEventListener("resize", requestTick, { passive: true });
+    observer.observe(node);
 
     return () => {
-      window.removeEventListener("scroll", requestTick);
-      window.removeEventListener("resize", requestTick);
-      if (rAFId !== null) cancelAnimationFrame(rAFId);
+      observer.disconnect();
     };
-  }, [offsetY]);
+  }, [trigger]);
+
+  useEffect(() => {
+    if (trigger === true && isIntersectingRef.current && !isVisible) {
+      setIsVisible(true);
+    }
+  }, [trigger, isVisible]);
+
+  const animatedStyle: CSSProperties = {
+    ...style,
+    opacity: isVisible ? 1 : 0,
+    transform: isVisible
+      ? "translate3d(0, 0, 0) scale3d(1, 1, 1)"
+      : `translate3d(0, ${offsetY}px, 0) scale3d(0.98, 0.98, 1)`,
+    transitionProperty: "transform, opacity",
+    transitionDuration: "700ms",
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+    transitionDelay: `${delay}ms`,
+    willChange: "transform, opacity",
+    backfaceVisibility: "hidden",
+  };
 
   return (
     <Component
       ref={containerRef}
-      className={`will-change-[transform,opacity] ${className}`}
-      style={style}
+      className={className}
+      style={animatedStyle}
     >
       {children}
     </Component>

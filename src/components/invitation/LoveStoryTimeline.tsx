@@ -1,6 +1,6 @@
 "use client";
 
-import { SongketRibbon } from "./Ornaments";
+import { SongketRibbon, GununganWayang } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { Sparkles, Heart, Compass } from "lucide-react";
 
@@ -98,6 +98,9 @@ export function LoveStoryTimeline({
                   <ScrollLinkedItem offsetY={36}>
                     <article className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-surface-white via-[#fffaf7] to-[#fbf1ed] border border-gold-500/35 shadow-[0_12px_28px_-12px_rgba(93,58,65,0.16)] hover:shadow-[0_18px_38px_-10px_rgba(93,58,65,0.22)] transition-[box-shadow,transform] duration-300 relative overflow-hidden group">
                       <div className="absolute top-0 right-0 w-28 h-28 bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.15),transparent_70%)] pointer-events-none" />
+                      <div className="absolute -bottom-4 -right-4 w-24 h-auto pointer-events-none opacity-[0.06] text-[#5d3a41]">
+                        <GununganWayang className="w-full h-auto" />
+                      </div>
 
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pb-2.5 border-b border-gold-500/15">
                         <span className="typo-eyebrow text-[#a9823a]">

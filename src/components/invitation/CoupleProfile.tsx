@@ -1,6 +1,6 @@
 "use client";
 
-import { SongketRibbon } from "./Ornaments";
+import { SongketRibbon, GununganWayang } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
 interface CoupleProfileProps {
@@ -93,8 +93,11 @@ export function CoupleProfile({
             </ScrollLinkedItem>
 
             <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-              <div className="p-4 rounded-2xl bg-surface-white/92 backdrop-blur-md border border-gold-500/25 shadow-xs">
-                <p className="typo-body text-center mx-auto text-[#4b3a3e]">
+              <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
+                  <GununganWayang className="w-full h-auto" />
+                </div>
+                <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                   {groomBio}
                 </p>
               </div>
@@ -141,8 +144,11 @@ export function CoupleProfile({
             </ScrollLinkedItem>
 
             <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-              <div className="p-4 rounded-2xl bg-surface-white/92 backdrop-blur-md border border-gold-500/25 shadow-xs">
-                <p className="typo-body text-center mx-auto text-[#4b3a3e]">
+              <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
+                  <GununganWayang className="w-full h-auto" />
+                </div>
+                <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                   {brideBio}
                 </p>
               </div>

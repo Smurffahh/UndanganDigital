@@ -8,6 +8,12 @@ import {
   MonogramFS,
   FloralCornerAccent,
 } from "./Ornaments";
+import {
+  NusantaraEtchedWatermark,
+  BatikKawungStamp,
+  BotanicalHangingVines,
+  BotanicalFloralFooter,
+} from "./HeritageBotanicalAssets";
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
@@ -135,6 +141,10 @@ export function CoverGate({
       <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,75,0.14),transparent_70%)] pointer-events-none" />
 
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.16]">
+        <NusantaraEtchedWatermark />
+      </div>
+
       <div
         className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-950 ease-[cubic-bezier(0.65,0,0.35,1)] ${
           isOpening ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
@@ -147,6 +157,9 @@ export function CoverGate({
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
         <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/35 rounded-r-[999px_999px] pointer-events-none" />
+        <div className="absolute top-2 left-2 w-36 h-36 opacity-45 pointer-events-none">
+          <BatikKawungStamp className="w-full h-full" />
+        </div>
         <CardCornerOrnament />
       </div>
 
@@ -162,8 +175,14 @@ export function CoverGate({
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
         <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/35 rounded-l-[999px_999px] pointer-events-none" />
+        <div className="absolute top-2 right-2 w-36 h-36 opacity-35 pointer-events-none">
+          <BatikKawungStamp className="w-full h-full" mirror />
+        </div>
         <CardCornerOrnament />
       </div>
+
+      <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
+      <BotanicalFloralFooter className="absolute bottom-0 inset-x-0 h-28 sm:h-36 overflow-hidden pointer-events-none z-15 opacity-75" />
 
       <div
         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none ${

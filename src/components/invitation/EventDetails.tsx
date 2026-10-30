@@ -81,8 +81,8 @@ export function EventDetails({
         </header>
 
         <ScrollLinkedItem offsetY={36} className="mb-8">
-          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.08] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
             </div>
 
@@ -155,8 +155,8 @@ export function EventDetails({
         </ScrollLinkedItem>
 
         <ScrollLinkedItem offsetY={36} className="mb-8">
-          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.08] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
             </div>
 

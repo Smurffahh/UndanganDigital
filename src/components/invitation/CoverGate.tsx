@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react";
 import {
-  RadiantStar,
   GoldenEmblemSeal,
   CardCornerOrnament,
   MonogramFS,
   FloralCornerAccent,
 } from "./Ornaments";
 import {
-  NusantaraEtchedWatermark,
   BatikKawungStamp,
   BotanicalHangingVines,
-  BotanicalFloralFooter,
 } from "./HeritageBotanicalAssets";
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
@@ -110,7 +107,7 @@ export function CoverGate({
 
     setTimeout(() => {
       setGone(true);
-    }, 900);
+    }, 1050);
   };
 
   if (gone) return null;
@@ -118,74 +115,53 @@ export function CoverGate({
   return (
     <section
       id="cover-gate"
-      className={`fixed inset-0 z-50 overflow-hidden select-none bg-[#fdf8f3] ${
+      className={`fixed inset-0 z-50 overflow-hidden select-none bg-transparent ${
         isOpening ? "pointer-events-none" : ""
       }`}
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpening ? "scale-105 opacity-0" : "scale-100 opacity-100 animate-slow-zoom"
-        }`}
-        style={{ backgroundImage: `url(${coverPhotoUrl})`, willChange: "transform, opacity" }}
-        role="img"
-        aria-label="Foto Sampul Fauzan Ma'ruf & Sinta Maria Utami"
-      />
-
-      <div
-        className={`absolute inset-0 bg-gradient-to-b from-[#fdf8f3]/90 via-[#fdf8f3]/85 to-[#f7e9e5]/95 transition-opacity duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpening ? "opacity-0" : "opacity-100"
-        }`}
-        style={{ willChange: "opacity" }}
-      />
-      <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,75,0.14),transparent_70%)] pointer-events-none" />
-
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.16]">
-        <NusantaraEtchedWatermark />
-      </div>
-
-      <div
-        className={`absolute top-0 bottom-0 left-0 w-1/2 z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/40 shadow-[10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpening ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
+        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-900 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
-          willChange: "transform, opacity",
+          willChange: "transform",
+          transitionDelay: isOpening ? "150ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
-        <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/35 rounded-r-[999px_999px] pointer-events-none" />
-        <div className="absolute top-2 left-2 w-36 h-36 opacity-45 pointer-events-none">
+        <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/40 rounded-r-[999px_999px] pointer-events-none" />
+        <div className="absolute top-2 left-2 w-32 sm:w-44 h-32 sm:h-44 opacity-45 pointer-events-none">
           <BatikKawungStamp className="w-full h-full" />
         </div>
         <CardCornerOrnament />
       </div>
 
       <div
-        className={`absolute top-0 bottom-0 right-0 w-1/2 z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/40 shadow-[-10px_0_35px_-8px_rgba(93,58,65,0.18)] transition-[transform,opacity] duration-850 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpening ? "translate-x-full opacity-0" : "translate-x-0 opacity-100"
+        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-900 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
-          willChange: "transform, opacity",
+          willChange: "transform",
+          transitionDelay: isOpening ? "150ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
         <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
-        <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/35 rounded-l-[999px_999px] pointer-events-none" />
-        <div className="absolute top-2 right-2 w-36 h-36 opacity-35 pointer-events-none">
+        <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/40 rounded-l-[999px_999px] pointer-events-none" />
+        <div className="absolute top-2 right-2 w-32 sm:w-44 h-32 sm:h-44 opacity-35 pointer-events-none">
           <BatikKawungStamp className="w-full h-full" mirror />
         </div>
         <CardCornerOrnament />
       </div>
 
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
-      <BotanicalFloralFooter className="absolute bottom-0 inset-x-0 h-28 sm:h-36 overflow-hidden pointer-events-none z-15 opacity-75" />
 
       <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none ${
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-350 ease-out pointer-events-none ${
           isOpening
-            ? "scale-110 opacity-0"
+            ? "scale-90 opacity-0"
             : "scale-100 opacity-95 drop-shadow-[0_12px_28px_rgba(93,58,65,0.25)]"
         }`}
         style={{ willChange: "transform, opacity", backfaceVisibility: "hidden" }}
@@ -194,10 +170,10 @@ export function CoverGate({
       </div>
 
       <div
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
+        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
           isOpening
-            ? "-translate-y-7 scale-[0.96] opacity-0 pointer-events-none"
-            : "translate-y-0 scale-100 opacity-100"
+            ? "scale-95 opacity-0 pointer-events-none"
+            : "scale-100 opacity-100"
         }`}
         style={{
           willChange: "transform, opacity",

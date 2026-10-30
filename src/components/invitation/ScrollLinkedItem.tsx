@@ -15,7 +15,7 @@ export function ScrollLinkedItem({
   className = "",
   as: Component = "div",
   style,
-  offsetY = 64,
+  offsetY = 36,
 }: ScrollLinkedItemProps) {
   const containerRef = useRef<HTMLElement | null>(null);
 
@@ -41,7 +41,7 @@ export function ScrollLinkedItem({
       const rect = node.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const entryBottom = windowHeight * 0.98;
-      const entryTop = windowHeight * 0.62;
+      const entryTop = windowHeight * 0.65;
       const range = entryBottom - entryTop;
 
       if (rect.top >= entryBottom) {
@@ -56,7 +56,7 @@ export function ScrollLinkedItem({
     calculateTarget();
     currentP = targetP;
     node.style.opacity = currentP.toFixed(3);
-    node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.95 + currentP * 0.05).toFixed(3)})`;
+    node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.98 + currentP * 0.02).toFixed(3)})`;
 
     const tick = () => {
       calculateTarget();
@@ -67,7 +67,7 @@ export function ScrollLinkedItem({
       }
 
       node.style.opacity = currentP.toFixed(3);
-      node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.95 + currentP * 0.05).toFixed(3)})`;
+      node.style.transform = `translate3d(0, ${((1 - currentP) * offsetY).toFixed(1)}px, 0) scale(${(0.98 + currentP * 0.02).toFixed(3)})`;
 
       if (Math.abs(currentP - targetP) >= 0.002) {
         rAFId = requestAnimationFrame(tick);

@@ -139,13 +139,13 @@ export function DigitalEnvelope({
     <section id="amplop" className="py-20 relative bg-transparent" aria-label="Amplop Digital dan Hadiah Pernikahan">
       <div className="w-[min(100%-2.75rem,720px)] mx-auto">
         <header className="text-center mb-9">
-          <ScrollLinkedItem offsetY={45}>
+          <ScrollLinkedItem offsetY={36}>
             <p className="typo-eyebrow text-[#a9823a] mb-2">
               Wedding Gift
             </p>
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={55}>
+          <ScrollLinkedItem offsetY={36}>
             <h2 className="typo-section-title">
               Amplop Digital
             </h2>
@@ -156,7 +156,7 @@ export function DigitalEnvelope({
           </ScrollLinkedItem>
         </header>
 
-        <ScrollLinkedItem offsetY={50} className="flex justify-center mb-8">
+        <ScrollLinkedItem offsetY={36} className="flex justify-center mb-8">
           <button
             type="button"
             onClick={openQrisModal}
@@ -167,7 +167,7 @@ export function DigitalEnvelope({
           </button>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={65}>
+        <ScrollLinkedItem offsetY={36}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
             {allAccounts.map((acc, idx) => {
               const copyKey = `acc-${idx}-${acc.number}`;
@@ -232,7 +232,7 @@ export function DigitalEnvelope({
           </div>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={65}>
+        <ScrollLinkedItem offsetY={36}>
           <article className="rounded-2xl p-6 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5]">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">

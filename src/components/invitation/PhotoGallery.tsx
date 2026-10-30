@@ -54,13 +54,13 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
     <section id="galeri" className="py-20 relative bg-transparent" aria-label="Galeri Foto Momen">
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
         <header className="text-center mb-9">
-          <ScrollLinkedItem offsetY={45}>
+          <ScrollLinkedItem offsetY={36}>
             <p className="typo-eyebrow text-[#a9823a] mb-2">
               Our Gallery
             </p>
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={55}>
+          <ScrollLinkedItem offsetY={36}>
             <h2 className="typo-section-title">
               Galeri Momen
             </h2>
@@ -75,7 +75,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
           {photos.map((item, idx) => (
             <ScrollLinkedItem
               key={item.id}
-              offsetY={50}
+              offsetY={36}
               className="break-inside-avoid"
             >
               <figure

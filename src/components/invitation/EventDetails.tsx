@@ -66,13 +66,13 @@ export function EventDetails({
     <section id="acara" className="py-20 relative bg-transparent" aria-label="Detail Acara dan Lokasi">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
-          <ScrollLinkedItem offsetY={50}>
+          <ScrollLinkedItem offsetY={36}>
             <span className="inline-block px-4 py-1 rounded-full border border-gold-500/40 bg-surface-white/90 typo-eyebrow text-[#a9823a] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
             </span>
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={55}>
+          <ScrollLinkedItem offsetY={36}>
             <h2 className="typo-section-title">
               Waktu &amp; Tempat
             </h2>
@@ -80,7 +80,7 @@ export function EventDetails({
           </ScrollLinkedItem>
         </header>
 
-        <ScrollLinkedItem offsetY={70} className="mb-8">
+        <ScrollLinkedItem offsetY={36} className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
@@ -154,7 +154,7 @@ export function EventDetails({
           </article>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={70} className="mb-8">
+        <ScrollLinkedItem offsetY={36} className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/92 shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.06] text-[#5d3a41]">
               <GununganWayang className="w-full h-auto" />
@@ -228,7 +228,7 @@ export function EventDetails({
           </article>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={50} className="flex justify-center mb-8">
+        <ScrollLinkedItem offsetY={36} className="flex justify-center mb-8">
           <button
             type="button"
             onClick={handleDownloadIcs}
@@ -239,7 +239,7 @@ export function EventDetails({
           </button>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={70}>
+        <ScrollLinkedItem offsetY={36}>
           <div className="card-ornament bg-surface-white border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-5 sm:p-6 text-center">
             <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-gold-500/25 mb-4 shadow-inner">
               <iframe

@@ -19,19 +19,19 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
       <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-40 pointer-events-none" />
 
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">
-        <ScrollLinkedItem offsetY={50}>
+        <ScrollLinkedItem offsetY={36}>
           <p className="font-sans text-[15px] sm:text-base font-normal leading-[1.7] text-white/95 max-w-[480px] mx-auto">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai.
           </p>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={55}>
+        <ScrollLinkedItem offsetY={36}>
           <p className="mt-7 typo-eyebrow text-gold-300">
             Wassalamu&rsquo;alaikum Warahmatullahi Wabarakatuh
           </p>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={60}>
+        <ScrollLinkedItem offsetY={36}>
           <p className="mt-4 typo-display text-white drop-shadow-md">
             Fauzan <span className="font-script text-gold-300 text-[0.85em] px-1 font-normal">&amp;</span> Sinta
           </p>
@@ -45,7 +45,7 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
           </p>
         </ScrollLinkedItem>
 
-        <ScrollLinkedItem offsetY={45}>
+        <ScrollLinkedItem offsetY={36}>
           <div className="my-6">
             <Divider light />
           </div>

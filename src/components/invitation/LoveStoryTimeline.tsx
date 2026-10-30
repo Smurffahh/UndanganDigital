@@ -49,21 +49,21 @@ export function LoveStoryTimeline({
     >
       <div className="w-full max-w-[780px] mx-auto px-4 sm:px-6 box-border">
         <header className="text-center mb-12">
-          <ScrollLinkedItem offsetY={50}>
+          <ScrollLinkedItem offsetY={36}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/35 typo-eyebrow text-[#a9823a] shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#a9823a]" />
               <span>Behind The Story</span>
             </span>
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={55}>
+          <ScrollLinkedItem offsetY={36}>
             <h2 className="typo-section-title mt-3">
               Perjalanan Dua Jiwa
             </h2>
             <SongketRibbon />
           </ScrollLinkedItem>
 
-          <ScrollLinkedItem offsetY={60}>
+          <ScrollLinkedItem offsetY={36}>
             <p className="mt-3.5 typo-body italic text-center max-w-[560px] mx-auto leading-relaxed text-[#4b3a3e]">
               &ldquo;{loveStoryText}&rdquo;
             </p>
@@ -95,7 +95,7 @@ export function LoveStoryTimeline({
                 </div>
 
                 <div className="flex-1 min-w-0 max-w-full pb-4">
-                  <ScrollLinkedItem offsetY={60}>
+                  <ScrollLinkedItem offsetY={36}>
                     <article className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-surface-white via-[#fffaf7] to-[#fbf1ed] border border-gold-500/35 shadow-[0_12px_28px_-12px_rgba(93,58,65,0.16)] hover:shadow-[0_18px_38px_-10px_rgba(93,58,65,0.22)] transition-[box-shadow,transform] duration-300 relative overflow-hidden group">
                       <div className="absolute top-0 right-0 w-28 h-28 bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,75,0.15),transparent_70%)] pointer-events-none" />
 

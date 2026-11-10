@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PetalsCanvas } from "./PetalsCanvas";
 import { ScrollLinkedButterflies } from "./ScrollLinkedButterflies";
 import { CoverGate } from "./CoverGate";
@@ -49,15 +49,93 @@ export function InvitationOrchestrator({
   const [isOpened, setIsOpened] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
   const [isHeroReady, setIsHeroReady] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  const effectiveAudioUrl = settings.musicUrl || "/audio/raim-laode-komang.mp3";
+  const isYouTube = settings.musicSourceType === "youtube";
 
   const handleOpenCover = () => {
+    if (audioRef.current && settings.musicEnabled && !isYouTube) {
+      audioRef.current.volume = 0.15;
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlayingAudio(true);
+            let vol = 0.15;
+            const ramp = setInterval(() => {
+              vol += 0.05;
+              if (vol >= 0.8) {
+                if (audioRef.current) audioRef.current.volume = 0.8;
+                clearInterval(ramp);
+              } else if (audioRef.current) {
+                audioRef.current.volume = vol;
+              }
+            }, 80);
+          })
+          .catch(() => {});
+      }
+    }
+
     setIsOpening(true);
     setIsOpened(true);
     setIsHeroReady(true);
   };
 
+  useEffect(() => {
+    if (!isOpened || isPlayingAudio || !settings.musicEnabled || isYouTube) return;
+
+    const tryPlayFallback = () => {
+      if (audioRef.current && !isPlayingAudio) {
+        audioRef.current.volume = 0.8;
+        audioRef.current.play().then(() => {
+          setIsPlayingAudio(true);
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener("click", tryPlayFallback, { once: true, passive: true });
+    window.addEventListener("touchstart", tryPlayFallback, { once: true, passive: true });
+    window.addEventListener("scroll", tryPlayFallback, { once: true, passive: true });
+
+    return () => {
+      window.removeEventListener("click", tryPlayFallback);
+      window.removeEventListener("touchstart", tryPlayFallback);
+      window.removeEventListener("scroll", tryPlayFallback);
+    };
+  }, [isOpened, isPlayingAudio, settings.musicEnabled, isYouTube]);
+
+  const handleToggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlayingAudio) {
+      audioRef.current.pause();
+      setIsPlayingAudio(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlayingAudio(true);
+      }).catch(console.error);
+    }
+  };
+
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-transparent text-ink">
+    <main
+      className={`relative min-h-screen overflow-x-clip bg-transparent text-ink ${
+        isOpened ? "royal-seq-active" : ""
+      }`}
+    >
+      {settings.musicEnabled && !isYouTube && (
+        <audio
+          ref={audioRef}
+          src={effectiveAudioUrl}
+          loop
+          preload="auto"
+          playsInline
+          aria-hidden="true"
+          className="hidden"
+        />
+      )}
+
       <FixedInvitationBackground heroPhotoUrl={settings.heroPhotoUrl} />
 
       <PetalsCanvas />
@@ -140,10 +218,12 @@ export function InvitationOrchestrator({
 
       <FloatingControls
         isOpened={isOpened}
+        isPlaying={isPlayingAudio}
+        onToggleMusic={handleToggleMusic}
         musicEnabled={settings.musicEnabled}
         musicTitle={settings.musicTitle}
         musicSourceType={settings.musicSourceType}
-        musicUrl={settings.musicUrl}
+        musicUrl={effectiveAudioUrl}
         youtubeVideoId={settings.youtubeVideoId}
       />
     </main>

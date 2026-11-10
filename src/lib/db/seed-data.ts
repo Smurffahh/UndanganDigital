@@ -70,18 +70,17 @@ export const SVG_CHARACTER_PRESETS: SvgPresetInfo[] = [
 export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
   {
     id: "preset-1",
-    title: "Romantic Piano & Strings Wedding Instrumental",
-    artist: "Wedding Studio (Instrumental)",
+    title: "Raim Laode — Komang (Official Romantic Wedding Theme)",
+    artist: "Raim Laode",
     sourceType: "audio_url",
-    url: "/audio/romantic-piano.wav",
+    url: "/audio/raim-laode-komang.mp3",
   },
   {
     id: "preset-2",
-    title: "Mahalini x Nuca — Janji Kita",
-    artist: "Mahalini x Nuca",
-    sourceType: "youtube",
-    url: "https://www.youtube.com/watch?v=In8kDy_WU4s",
-    youtubeId: "In8kDy_WU4s",
+    title: "Javanese / Acoustic Sundanese Instrumental Wedding",
+    artist: "Traditional Acoustic Gamelan Strings",
+    sourceType: "audio_url",
+    url: "/audio/javanese-romance.wav",
   },
   {
     id: "preset-3",
@@ -92,10 +91,18 @@ export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
   },
   {
     id: "preset-4",
-    title: "Javanese / Acoustic Sundanese Instrumental Wedding",
-    artist: "Traditional Acoustic Gamelan Strings",
+    title: "Romantic Piano & Strings Wedding Instrumental",
+    artist: "Wedding Studio (Instrumental)",
     sourceType: "audio_url",
-    url: "/audio/javanese-romance.wav",
+    url: "/audio/romantic-piano.wav",
+  },
+  {
+    id: "preset-5",
+    title: "Mahalini x Nuca — Janji Kita",
+    artist: "Mahalini x Nuca",
+    sourceType: "youtube",
+    url: "https://www.youtube.com/watch?v=In8kDy_WU4s",
+    youtubeId: "In8kDy_WU4s",
   },
 ];
 
@@ -129,9 +136,9 @@ export const DEFAULT_WEDDING_SETTINGS = {
   googleMapsEmbed: "https://maps.google.com/maps?q=-7.310076,109.296186&z=17&output=embed",
   youtubeVideoId: "In8kDy_WU4s",
   musicEnabled: true,
-  musicTitle: "Shane Filan - Beautiful In White (Romantic Instrumental)",
+  musicTitle: "Raim Laode — Komang (Official Romantic Wedding Theme)",
   musicSourceType: "preset",
-  musicUrl: "/audio/wedding-instrumental.wav",
+  musicUrl: "/audio/raim-laode-komang.mp3",
   bankAccounts: [
     {
       brand: "Bank BCA",

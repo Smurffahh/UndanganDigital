@@ -194,9 +194,9 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
     }
     if (!data.settings.musicSourceType) {
       data.settings.musicEnabled = true;
-      data.settings.musicTitle = "Shane Filan - Beautiful In White (Romantic Instrumental)";
+      data.settings.musicTitle = "Raim Laode — Komang (Official Romantic Wedding Theme)";
       data.settings.musicSourceType = "preset";
-      data.settings.musicUrl = "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-wedding-piano-10899.mp3";
+      data.settings.musicUrl = "/audio/raim-laode-komang.mp3";
       modified = true;
     }
   }

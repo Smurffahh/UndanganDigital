@@ -34,8 +34,6 @@ export function CountdownHero({
     isDone: false,
   });
 
-  const isHeroActive = Boolean(isOpening || isOpened || isHeroReady);
-
   useEffect(() => {
     const target = new Date(weddingDateIso).getTime();
 
@@ -68,15 +66,17 @@ export function CountdownHero({
     >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
         <div
-          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "350ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="w-full flex flex-col items-center mb-3 royal-seq-item"
+          style={{ "--seq-delay": "1850ms" } as React.CSSProperties}
+        >
+          <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em]">
+            THE WEDDING OF
+          </p>
+        </div>
+
+        <div
+          className="w-full flex justify-center mb-6 royal-seq-item"
+          style={{ "--seq-delay": "2050ms" } as React.CSSProperties}
         >
           <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
             {coupleVisualMode === "svg" || !heroPhotoUrl ? (
@@ -98,47 +98,20 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`mt-2 text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "450ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="mt-2 text-center royal-seq-item"
+          style={{ "--seq-delay": "2250ms" } as React.CSSProperties}
         >
           <p className="typo-eyebrow text-[#a9823a]">
             WITH LOVE
           </p>
-        </div>
-
-        <div
-          className={`mt-3 text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "550ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
-        >
-          <p className="typo-arabic leading-loose text-rose-700" dir="rtl">
+          <p className="typo-arabic leading-loose text-rose-700 mt-2" dir="rtl">
             بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
           </p>
         </div>
 
         <div
-          className={`mt-5 w-full transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "650ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="mt-5 w-full royal-seq-item"
+          style={{ "--seq-delay": "2450ms" } as React.CSSProperties}
         >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
@@ -157,29 +130,15 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "750ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="my-8 w-full flex justify-center royal-seq-item"
+          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
         >
           <Divider />
         </div>
 
         <div
-          className={`text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "750ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="text-center royal-seq-item"
+          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
         >
           <p className="typo-eyebrow text-[#a9823a] mb-2">
             SAVE THE DATE
@@ -193,15 +152,8 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isHeroActive
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-85 translate-y-4 scale-[0.97]"
-          }`}
-          style={{
-            transitionDelay: isHeroActive ? "850ms" : "0ms",
-            willChange: "transform, opacity",
-          }}
+          className="mt-8 w-full flex justify-center royal-seq-item"
+          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
         >
           {!timeLeft.isDone ? (
             <div

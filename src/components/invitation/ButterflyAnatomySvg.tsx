@@ -6,6 +6,7 @@ export interface ButterflyAnatomySvgProps {
   variant?: "swallowtail" | "morpho";
   className?: string;
   isFlappingFast?: boolean;
+  animationDelay?: string;
   style?: React.CSSProperties;
 }
 
@@ -13,13 +14,15 @@ export function ButterflyAnatomySvg({
   variant = "swallowtail",
   className = "w-10 h-10",
   isFlappingFast,
+  animationDelay,
   style,
 }: ButterflyAnatomySvgProps) {
   const isSwallowtail = variant === "swallowtail";
   const wingSpeedStyle = {
     ...(isFlappingFast !== undefined
-      ? { "--wing-speed": isFlappingFast ? "0.14s" : "0.45s" }
+      ? { "--wing-speed": isFlappingFast ? "1.15s" : "1.85s" }
       : {}),
+    ...(animationDelay ? { "--wing-delay": animationDelay } : {}),
     ...style,
   } as React.CSSProperties;
 
@@ -30,7 +33,7 @@ export function ButterflyAnatomySvg({
       aria-hidden="true"
     >
       <svg
-        viewBox="0 0 100 90"
+        viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full drop-shadow-[0_4px_8px_rgba(93,58,65,0.22)] overflow-visible"
@@ -71,7 +74,7 @@ export function ButterflyAnatomySvg({
           </linearGradient>
         </defs>
 
-        <g className="butterfly-wing-l">
+        <g className="butterfly-wing-left">
           <path
             d="M 50,42 C 45,30 24,6 4,14 C -3,20 1,35 12,46 C 24,57 42,54 50,48 Z"
             fill={`url(#wing-grad-${variant})`}
@@ -113,7 +116,7 @@ export function ButterflyAnatomySvg({
           <circle cx="21" cy="74" r="1.2" fill={isSwallowtail ? "#ffd700" : "#fbcfe8"} opacity="0.9" />
         </g>
 
-        <g className="butterfly-wing-r">
+        <g className="butterfly-wing-right">
           <path
             d="M 50,42 C 55,30 76,6 96,14 C 103,20 99,35 88,46 C 76,57 58,54 50,48 Z"
             fill={`url(#wing-grad-${variant})`}
@@ -155,7 +158,7 @@ export function ButterflyAnatomySvg({
           <circle cx="79" cy="74" r="1.2" fill={isSwallowtail ? "#ffd700" : "#fbcfe8"} opacity="0.9" />
         </g>
 
-        <g id="butterfly-body">
+        <g id="butterfly-body" className="butterfly-body-bob">
           <path
             d="M 49,36 Q 44,22 36,15 M 51,36 Q 56,22 64,15"
             stroke="#2b1a13"

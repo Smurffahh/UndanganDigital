@@ -56,44 +56,43 @@ export function FloatingNav({ isOpened, isGalleryEnabled = true }: FloatingNavPr
   };
 
   return (
-    <nav
-      aria-label="Navigasi cepat undangan"
-      className={`fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-40 max-w-[95vw] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        isOpened
-          ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 translate-y-10 pointer-events-none"
+    <div
+      className={`fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-40 max-w-[95vw] pointer-events-none ${
+        isOpened ? "pointer-events-auto" : ""
       }`}
-      style={{
-        willChange: "transform, opacity",
-        transitionDelay: isOpened ? "2100ms" : "0ms",
-      }}
     >
-      <div className="bg-[#fffdfa]/90 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-1.5 sm:px-3 py-1 flex items-center gap-0.5 sm:gap-1">
-        {effectiveItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
+      <nav
+        aria-label="Navigasi cepat undangan"
+        className="royal-seq-item pointer-events-auto"
+        style={{ "--seq-delay": "2850ms" } as React.CSSProperties}
+      >
+        <div className="bg-[#fffdfa]/90 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-1.5 sm:px-3 py-1 flex items-center gap-0.5 sm:gap-1">
+          {effectiveItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
 
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => handleNavClick(item.id)}
-              aria-label={item.label}
-              aria-current={isActive ? "true" : undefined}
-              className={`min-w-[44px] min-h-[44px] px-2.5 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition-colors duration-200 active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-[#5d3a41] ${
-                isActive
-                  ? "bg-[#5d3a41] text-[#fffdfa] shadow-xs"
-                  : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60"
-              }`}
-            >
-              <Icon className="w-4 h-4 stroke-[1.8]" />
-              <span className="hidden md:inline text-[11px] tracking-wide font-medium">
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleNavClick(item.id)}
+                aria-label={item.label}
+                aria-current={isActive ? "true" : undefined}
+                className={`min-w-[44px] min-h-[44px] px-2.5 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition-colors duration-200 active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-[#5d3a41] ${
+                  isActive
+                    ? "bg-[#5d3a41] text-[#fffdfa] shadow-xs"
+                    : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60"
+                }`}
+              >
+                <Icon className="w-4 h-4 stroke-[1.8]" />
+                <span className="hidden md:inline text-[11px] tracking-wide font-medium">
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
 }

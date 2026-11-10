@@ -81,6 +81,9 @@ export async function GET() {
         groomPhotoUrl: settings.groomPhotoUrl,
         qrisImageUrl: settings.qrisImageUrl,
       },
+      isGalleryEnabled: settings.isGalleryEnabled,
+      coupleVisualMode: settings.coupleVisualMode,
+      svgCharacterPreset: settings.svgCharacterPreset,
     },
   });
 }
@@ -123,6 +126,8 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
+    const updatesToApply: Record<string, any> = {};
+
     if (body.mainPhotos && typeof body.mainPhotos === "object") {
       for (const [key, val] of Object.entries(body.mainPhotos)) {
         if (typeof val === "string" && val.trim()) {
@@ -134,9 +139,27 @@ export async function PUT(request: Request) {
             );
           }
         }
+        updatesToApply[key] = val;
       }
+    }
 
-      const updated = await updateWeddingSettings(body.mainPhotos);
+    if (typeof body.isGalleryEnabled === "boolean") {
+      updatesToApply.isGalleryEnabled = body.isGalleryEnabled;
+    }
+    if (body.coupleVisualMode === "photo" || body.coupleVisualMode === "svg") {
+      updatesToApply.coupleVisualMode = body.coupleVisualMode;
+    }
+    if (
+      body.svgCharacterPreset &&
+      ["javanese-royal", "modern-editorial", "islamic-grace", "casual-botanical"].includes(
+        body.svgCharacterPreset
+      )
+    ) {
+      updatesToApply.svgCharacterPreset = body.svgCharacterPreset;
+    }
+
+    if (Object.keys(updatesToApply).length > 0) {
+      const updated = await updateWeddingSettings(updatesToApply);
       revalidatePath("/");
       return NextResponse.json({ success: true, data: updated });
     }

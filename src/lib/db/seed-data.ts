@@ -7,6 +7,66 @@ export interface MusicPreset {
   youtubeId?: string;
 }
 
+export type CoupleVisualMode = "photo" | "svg";
+export type SvgCharacterPreset =
+  | "javanese-royal"
+  | "modern-editorial"
+  | "islamic-grace"
+  | "casual-botanical";
+
+export interface SvgPresetInfo {
+  id: SvgCharacterPreset;
+  title: string;
+  subtitle: string;
+  description: string;
+  groomAttire: string;
+  brideAttire: string;
+  paletteTheme: string;
+}
+
+export const SVG_CHARACTER_PRESETS: SvgPresetInfo[] = [
+  {
+    id: "javanese-royal",
+    title: "Adat Jawa Klasik (Paes & Beskap)",
+    subtitle: "Paes Ageng, Ronce Melati, & Beskap Sikepan",
+    description:
+      "Pengantin pria mengenakan blangkon batik dan beskap lengkap dengan keris/bros, pengantin wanita mengenakan sanggul paes Jawa, melati ronce, dan kebaya kutubaru.",
+    groomAttire: "Blangkon Batik & Beskap Keris",
+    brideAttire: "Sanggul Paes Jawa & Kebaya Kutubaru",
+    paletteTheme: "Velvet Hitam & Emas Keraton",
+  },
+  {
+    id: "modern-editorial",
+    title: "Modern Editorial (Jas & Gaun Elegan)",
+    subtitle: "Tuksedo Klasik & Gaun Pengantin Minimalis",
+    description:
+      "Pengantin pria mengenakan setelan jas tuksedo berdasi kupu-kupu/boutonniere, pengantin wanita mengenakan gaun pengantin modern dengan tiara/veil halus dan buket bunga.",
+    groomAttire: "Setelan Jas & Dasi Kupu-Kupu",
+    brideAttire: "Gaun Modern & Veil Transparan",
+    paletteTheme: "Slate Navy & Ivory Champagne",
+  },
+  {
+    id: "islamic-grace",
+    title: "Islamic Grace (Busana Muslim Syar'i)",
+    subtitle: "Jas Koko Modern & Gaun Muslimah Syar'i",
+    description:
+      "Pengantin pria mengenakan jas koko modern dan peci/kopiah bertekstur halus, pengantin wanita mengenakan gaun pengantin muslimah dengan hijab menjuntai rapi dan mahkota bunga.",
+    groomAttire: "Jas Koko & Peci Bertekstur",
+    brideAttire: "Gaun Muslimah & Hijab Menjuntai",
+    paletteTheme: "Dusty Rose & Sage Champagne",
+  },
+  {
+    id: "casual-botanical",
+    title: "Semi-Formal Nusantara (Batik & Kebaya Modern)",
+    subtitle: "Kemeja Batik Tulis & Kebaya Berselempang",
+    description:
+      "Pengantin pria mengenakan kemeja batik tulis berlengan panjang, pengantin wanita mengenakan kebaya modern berselempang dengan sanggul minimalis.",
+    groomAttire: "Kemeja Batik Tulis Nusantara",
+    brideAttire: "Kebaya Modern Berselempang",
+    paletteTheme: "Soga Cokelat & Rose Peach",
+  },
+];
+
 export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
   {
     id: "preset-1",
@@ -111,6 +171,9 @@ export const DEFAULT_WEDDING_SETTINGS = {
   loveStoryText:
     "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.",
   storyHashtag: "#SINgkatceritaFAUZAN",
+  coupleVisualMode: "photo" as CoupleVisualMode,
+  svgCharacterPreset: "javanese-royal" as SvgCharacterPreset,
+  isGalleryEnabled: true,
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 

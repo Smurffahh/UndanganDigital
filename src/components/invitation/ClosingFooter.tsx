@@ -3,12 +3,20 @@
 import { Divider } from "./Ornaments";
 import { formatFooterSignatureDate } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
+import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface ClosingFooterProps {
   weddingDateIso?: string;
+  coupleVisualMode?: CoupleVisualMode;
+  svgCharacterPreset?: SvgCharacterPreset;
 }
 
-export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
+export function ClosingFooter({
+  weddingDateIso,
+  coupleVisualMode = "photo",
+  svgCharacterPreset = "javanese-royal",
+}: ClosingFooterProps) {
   const signatureDate = formatFooterSignatureDate(weddingDateIso);
 
   return (
@@ -30,6 +38,11 @@ export function ClosingFooter({ weddingDateIso }: ClosingFooterProps) {
         </ScrollLinkedItem>
 
         <ScrollLinkedItem offsetY={36}>
+          {coupleVisualMode === "svg" && (
+            <div className="w-20 sm:w-24 aspect-[3/4] mx-auto mb-4 rounded-[990px_990px_12px_12px] overflow-hidden border border-[#c9a24b]/50 bg-surface-white/90 shadow-sm p-1">
+              <CoupleCharacterSvg preset={svgCharacterPreset} variant="couple" className="w-full h-full" />
+            </div>
+          )}
           <p className="mt-4 typo-display text-[#5d3a41] drop-shadow-xs">
             Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal animate-gold-sheen">&amp;</span> Sinta
           </p>

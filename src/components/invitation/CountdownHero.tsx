@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider, GununganWayang } from "./Ornaments";
+import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
+import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
@@ -11,6 +13,8 @@ interface CountdownHeroProps {
   isOpened?: boolean;
   isHeroReady?: boolean;
   eventDateLabel?: string;
+  coupleVisualMode?: CoupleVisualMode;
+  svgCharacterPreset?: SvgCharacterPreset;
 }
 
 export function CountdownHero({
@@ -19,6 +23,8 @@ export function CountdownHero({
   isOpening,
   isOpened,
   isHeroReady,
+  coupleVisualMode = "photo",
+  svgCharacterPreset = "javanese-royal",
 }: CountdownHeroProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -62,35 +68,43 @@ export function CountdownHero({
     >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
         <div
-          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "950ms" : "0ms",
+            transitionDelay: isHeroActive ? "350ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
-          <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={heroPhotoUrl}
-              alt="Fauzan dan Sinta berbaring di padang rumput berbingkai bunga"
-              className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-              loading="eager"
-            />
+          <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
+            {coupleVisualMode === "svg" || !heroPhotoUrl ? (
+              <CoupleCharacterSvg
+                preset={svgCharacterPreset}
+                variant="couple"
+                className="w-full h-full"
+              />
+            ) : (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={heroPhotoUrl}
+                alt="Fauzan dan Sinta"
+                className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+                loading="eager"
+              />
+            )}
           </div>
         </div>
 
         <div
-          className={`mt-2 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`mt-2 text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1200ms" : "0ms",
+            transitionDelay: isHeroActive ? "450ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -100,13 +114,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`mt-3 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`mt-3 text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1450ms" : "0ms",
+            transitionDelay: isHeroActive ? "550ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -116,13 +130,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`mt-5 w-full transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`mt-5 w-full transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1700ms" : "0ms",
+            transitionDelay: isHeroActive ? "650ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -143,13 +157,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`my-8 w-full flex justify-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1850ms" : "0ms",
+            transitionDelay: isHeroActive ? "750ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -157,13 +171,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`text-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1850ms" : "0ms",
+            transitionDelay: isHeroActive ? "750ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -179,13 +193,13 @@ export function CountdownHero({
         </div>
 
         <div
-          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
               ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-[0.97]"
+              : "opacity-85 translate-y-4 scale-[0.97]"
           }`}
           style={{
-            transitionDelay: isHeroActive ? "1950ms" : "0ms",
+            transitionDelay: isHeroActive ? "850ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >

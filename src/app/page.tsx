@@ -120,6 +120,9 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     qrisImageUrl: rawSettings.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
     loveStoryText: rawSettings.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
     storyHashtag: rawSettings.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
+    coupleVisualMode: rawSettings.coupleVisualMode || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
+    svgCharacterPreset: rawSettings.svgCharacterPreset || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
+    isGalleryEnabled: rawSettings.isGalleryEnabled !== undefined ? rawSettings.isGalleryEnabled : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
     waMessageTemplate: rawSettings.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 

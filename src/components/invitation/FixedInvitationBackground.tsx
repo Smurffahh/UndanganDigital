@@ -52,33 +52,6 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-28 sm:h-36 overflow-hidden pointer-events-none opacity-85" />
 
       <div
-        className="absolute top-[16%] right-[8%] sm:right-[16%] w-8 h-8 pointer-events-none animate-butterfly-drift z-[2]"
-        style={{ willChange: "transform" }}
-      >
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xs">
-          <ellipse cx="10" cy="11" rx="9" ry="7" transform="rotate(-25 10 11)" fill="#c9a24b" opacity="0.85" />
-          <ellipse cx="22" cy="11" rx="9" ry="7" transform="rotate(25 22 11)" fill="#c9a24b" opacity="0.85" />
-          <ellipse cx="11" cy="20" rx="6" ry="5" transform="rotate(-15 11 20)" fill="#5d3a41" opacity="0.75" />
-          <ellipse cx="21" cy="20" rx="6" ry="5" transform="rotate(15 21 20)" fill="#5d3a41" opacity="0.75" />
-          <line x1="16" y1="7" x2="16" y2="24" stroke="#5d3a41" strokeWidth="1.2" strokeLinecap="round" />
-          <circle cx="16" cy="6" r="1.5" fill="#c9a24b" />
-        </svg>
-      </div>
-
-      <div
-        className="absolute top-[48%] left-[6%] sm:left-[12%] w-7 h-7 pointer-events-none animate-butterfly-drift z-[2]"
-        style={{ willChange: "transform", animationDelay: "-4.2s", transform: "scale(0.85) scale-x-[-1]" }}
-      >
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xs">
-          <ellipse cx="10" cy="11" rx="9" ry="7" transform="rotate(-25 10 11)" fill="#9c5f66" opacity="0.8" />
-          <ellipse cx="22" cy="11" rx="9" ry="7" transform="rotate(25 22 11)" fill="#9c5f66" opacity="0.8" />
-          <ellipse cx="11" cy="20" rx="6" ry="5" transform="rotate(-15 11 20)" fill="#c9a24b" opacity="0.8" />
-          <ellipse cx="21" cy="20" rx="6" ry="5" transform="rotate(15 21 20)" fill="#c9a24b" opacity="0.8" />
-          <line x1="16" y1="7" x2="16" y2="24" stroke="#5d3a41" strokeWidth="1.2" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      <div
         className="absolute top-[28%] left-[22%] w-4 h-4 pointer-events-none animate-petal-drift z-[2]"
         style={{ willChange: "transform" }}
       >

@@ -2,6 +2,8 @@
 
 import { SongketRibbon, GununganWayang } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
+import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CoupleProfileProps {
   brideName: string;
@@ -12,6 +14,8 @@ interface CoupleProfileProps {
   groomBirth: string;
   groomBio: string;
   groomPhotoUrl: string;
+  coupleVisualMode?: CoupleVisualMode;
+  svgCharacterPreset?: SvgCharacterPreset;
 }
 
 export function CoupleProfile({
@@ -23,7 +27,11 @@ export function CoupleProfile({
   groomBirth,
   groomBio,
   groomPhotoUrl,
+  coupleVisualMode = "photo",
+  svgCharacterPreset = "javanese-royal",
 }: CoupleProfileProps) {
+  const isSvgMode = coupleVisualMode === "svg";
+
   return (
     <section id="mempelai" className="py-20 relative bg-transparent" aria-label="Profil Mempelai">
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
@@ -69,14 +77,22 @@ export function CoupleProfile({
             </ScrollLinkedItem>
 
             <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
-              <div className="w-full h-full rounded-[999px] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={groomPhotoUrl}
-                  alt={`${groomName} - Mempelai Pria`}
-                  className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
-                  loading="lazy"
-                />
+              <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
+                {isSvgMode || !groomPhotoUrl ? (
+                  <CoupleCharacterSvg
+                    preset={svgCharacterPreset}
+                    variant="groom"
+                    className="w-full h-full"
+                  />
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={groomPhotoUrl}
+                    alt={`${groomName} - Mempelai Pria`}
+                    className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </ScrollLinkedItem>
 
@@ -120,14 +136,22 @@ export function CoupleProfile({
             </ScrollLinkedItem>
 
             <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
-              <div className="w-full h-full rounded-[999px] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bridePhotoUrl}
-                  alt={`${brideName} - Mempelai Wanita`}
-                  className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
-                  loading="lazy"
-                />
+              <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
+                {isSvgMode || !bridePhotoUrl ? (
+                  <CoupleCharacterSvg
+                    preset={svgCharacterPreset}
+                    variant="bride"
+                    className="w-full h-full"
+                  />
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={bridePhotoUrl}
+                    alt={`${brideName} - Mempelai Wanita`}
+                    className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </ScrollLinkedItem>
 

@@ -5,6 +5,7 @@ import { Users, Sparkles, Calendar, Image as ImageIcon, Gift, MessageSquare } fr
 
 interface FloatingNavProps {
   isOpened: boolean;
+  isGalleryEnabled?: boolean;
 }
 
 const NAV_ITEMS = [
@@ -16,13 +17,18 @@ const NAV_ITEMS = [
   { id: "rsvp", label: "RSVP", icon: MessageSquare },
 ];
 
-export function FloatingNav({ isOpened }: FloatingNavProps) {
+export function FloatingNav({ isOpened, isGalleryEnabled = true }: FloatingNavProps) {
   const [activeSection, setActiveSection] = useState<string>("mempelai");
+
+  const effectiveItems = NAV_ITEMS.filter((item) => {
+    if (item.id === "galeri" && isGalleryEnabled === false) return false;
+    return true;
+  });
 
   useEffect(() => {
     if (!isOpened) return;
 
-    const sectionElements = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(
+    const sectionElements = effectiveItems.map((item) => document.getElementById(item.id)).filter(
       (el): el is HTMLElement => el !== null
     );
 
@@ -63,7 +69,7 @@ export function FloatingNav({ isOpened }: FloatingNavProps) {
       }}
     >
       <div className="bg-[#fffdfa]/90 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-1.5 sm:px-3 py-1 flex items-center gap-0.5 sm:gap-1">
-        {NAV_ITEMS.map((item) => {
+        {effectiveItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
 

@@ -2,15 +2,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getRsvpWishes, createRsvpWish } from "@/lib/db/store";
 
-const rsvpSchema = z
+const rsvpInputSchema = z
   .object({
-    name: z
-      .string()
-      .trim()
-      .min(1, "Nama wajib diisi")
-      .max(60, "Nama maksimal 60 karakter"),
-    attend: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]),
-    guests: z.coerce.number().int().min(1).max(10).default(1),
+    name: z.string().trim().min(1).max(60).optional(),
+    guestName: z.string().trim().min(1).max(60).optional(),
+    attend: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
+    attendanceStatus: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
+    guests: z.coerce.number().int().min(0).max(10).optional(),
+    paxCount: z.coerce.number().int().min(0).max(10).optional(),
     message: z
       .string()
       .trim()
@@ -33,8 +32,7 @@ export async function GET() {
   try {
     const wishes = await getRsvpWishes();
     return NextResponse.json({ success: true, data: wishes });
-  } catch (error) {
-    console.error("Failed to fetch wishes", error);
+  } catch {
     return NextResponse.json({ success: false, error: "Gagal mengambil data ucapan" }, { status: 500 });
   }
 }
@@ -42,26 +40,33 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const parsed = rsvpSchema.safeParse(body);
+    const parsed = rsvpInputSchema.safeParse(body);
 
     if (!parsed.success) {
       const firstError = parsed.error.issues[0]?.message || "Format data tidak valid";
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
 
-    const sanitizedName = sanitizeString(parsed.data.name);
+    const rawName = parsed.data.guestName || parsed.data.name;
+    if (!rawName || rawName.trim().length === 0) {
+      return NextResponse.json({ success: false, error: "Nama tamu wajib diisi" }, { status: 400 });
+    }
+
+    const attendanceStatus = parsed.data.attendanceStatus || parsed.data.attend || "Hadir";
+    const paxCount = parsed.data.paxCount !== undefined ? parsed.data.paxCount : (parsed.data.guests !== undefined ? parsed.data.guests : 1);
+
+    const sanitizedName = sanitizeString(rawName);
     const sanitizedMessage = sanitizeString(parsed.data.message);
 
     const newWish = await createRsvpWish({
       guestName: sanitizedName,
-      attendanceStatus: parsed.data.attend,
-      paxCount: parsed.data.guests,
+      attendanceStatus,
+      paxCount: attendanceStatus === "Hadir" ? paxCount : 0,
       message: sanitizedMessage,
     });
 
     return NextResponse.json({ success: true, data: newWish }, { status: 201 });
-  } catch (error) {
-    console.error("Failed to post RSVP", error);
+  } catch {
     return NextResponse.json({ success: false, error: "Terjadi kesalahan pada server" }, { status: 500 });
   }
 }

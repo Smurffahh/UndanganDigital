@@ -207,12 +207,12 @@ export function FloatingControls({
 
   return (
     <>
-      {!isYouTube && musicEnabled && (
+      {musicEnabled && (
         <audio
           ref={audioRef}
           src={effectiveAudioUrl}
           loop
-          preload="auto"
+          preload="none"
           aria-hidden="true"
           className="hidden"
         />
@@ -227,7 +227,7 @@ export function FloatingControls({
       {musicEnabled && (
         <div className="fixed top-5 right-5 z-40 flex items-center gap-2">
           {showTitleBadge && (
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/95 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
               <Music2 className="w-3.5 h-3.5 text-gold-600 animate-pulse" />
               <span className="max-w-[200px] truncate">{musicTitle}</span>
             </div>
@@ -239,12 +239,43 @@ export function FloatingControls({
             aria-label={isPlaying ? "Jeda musik latar" : "Putar musik latar"}
             aria-pressed={isPlaying}
             title={isPlaying ? `Jeda Musik (${musicTitle})` : "Putar Musik Latar"}
-            className="w-11 h-11 rounded-full bg-surface-white/90 border border-gold-500/50 shadow-[0_12px_26px_-10px_rgba(93,58,65,0.45)] backdrop-blur-md grid place-items-center transition-transform duration-200 active:scale-[0.96] hover:scale-105 cursor-pointer animate-in zoom-in-75 duration-300 focus-visible:outline-2 focus-visible:outline-rose-700"
+            className="w-12 h-12 rounded-full bg-surface-white/95 border border-gold-500/60 shadow-[0_12px_26px_-10px_rgba(93,58,65,0.45)] backdrop-blur-md grid place-items-center transition-transform duration-200 active:scale-[0.96] hover:scale-105 cursor-pointer animate-in zoom-in-75 duration-300 focus-visible:outline-2 focus-visible:outline-rose-700 relative group"
           >
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="24" cy="24" r="22" stroke="#c9a24b" strokeWidth="0.8" opacity="0.6" />
+              <circle cx="24" cy="24" r="19" stroke="#e9d3a3" strokeWidth="0.5" strokeDasharray="1.5 2.5" opacity="0.75" />
+              {Array.from({ length: 12 }).map((_, i) => {
+                const angle = (i * 360) / 12;
+                const rad = (angle * Math.PI) / 180;
+                const x1 = 24 + 20 * Math.cos(rad);
+                const y1 = 24 + 20 * Math.sin(rad);
+                const x2 = 24 + 22 * Math.cos(rad);
+                const y2 = 24 + 22 * Math.sin(rad);
+                return (
+                  <line
+                    key={i}
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#c9a24b"
+                    strokeWidth="0.75"
+                    opacity="0.8"
+                  />
+                );
+              })}
+            </svg>
+
             <Disc3
               className={`w-6 h-6 stroke-[1.8] text-rose-700 transition-colors ${
                 isPlaying
-                  ? "animate-[spin_8s_linear_infinite] text-gold-600 motion-reduce:animate-none"
+                  ? "animate-[spin_6s_linear_infinite] text-gold-600 motion-reduce:animate-none"
                   : "text-muted"
               }`}
             />

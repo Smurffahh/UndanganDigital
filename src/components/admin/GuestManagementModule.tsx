@@ -68,9 +68,17 @@ export function GuestManagementModule({
   const [isSavingGuest, setIsSavingGuest] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "unsent" | "sent">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [copiedGuestId, setCopiedGuestId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const [historySearchQuery, setHistorySearchQuery] = useState("");
 
@@ -367,10 +375,12 @@ export function GuestManagementModule({
 
   const filteredGuests = useMemo(() => {
     return guests.filter((g) => {
+      const q = debouncedSearch.toLowerCase();
       const matchSearch =
-        g.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (g.whatsappNumber && g.whatsappNumber.includes(searchQuery)) ||
-        (g.category && g.category.toLowerCase().includes(searchQuery.toLowerCase()));
+        !q ||
+        g.name.toLowerCase().includes(q) ||
+        (g.whatsappNumber && g.whatsappNumber.includes(q)) ||
+        (g.category && g.category.toLowerCase().includes(q));
 
       const matchStatus =
         statusFilter === "all" ||
@@ -381,7 +391,7 @@ export function GuestManagementModule({
 
       return matchSearch && matchStatus && matchCategory;
     });
-  }, [guests, searchQuery, statusFilter, categoryFilter]);
+  }, [guests, debouncedSearch, statusFilter, categoryFilter]);
 
   const sentHistoryGuests = useMemo(() => {
     return guests

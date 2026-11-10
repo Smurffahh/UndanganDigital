@@ -61,7 +61,6 @@ export function CountdownHero({
       aria-label="Beranda dan Hitung Mundur"
     >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
-        {/* Urutan 1: Bingkai Foto Arch Mempelai */}
         <div
           className={`w-full flex justify-center mb-6 transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
@@ -84,7 +83,6 @@ export function CountdownHero({
           </div>
         </div>
 
-        {/* Urutan 2: Teks WITH LOVE */}
         <div
           className={`mt-2 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
@@ -101,7 +99,6 @@ export function CountdownHero({
           </p>
         </div>
 
-        {/* Urutan 3: Kaligrafi Arab Bismillah */}
         <div
           className={`mt-3 text-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
@@ -118,7 +115,6 @@ export function CountdownHero({
           </p>
         </div>
 
-        {/* Urutan 4: Kartu Ayat Suci QS. Ar-Rum: 21 */}
         <div
           className={`mt-5 w-full transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
@@ -182,7 +178,6 @@ export function CountdownHero({
           </p>
         </div>
 
-        {/* Urutan 5: Kotak Hitung Mundur */}
         <div
           className={`mt-8 w-full flex justify-center transition-[transform,opacity] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isHeroActive
@@ -196,28 +191,39 @@ export function CountdownHero({
         >
           {!timeLeft.isDone ? (
             <div
-              className="flex justify-center items-center gap-2.5 sm:gap-3"
+              className="grid grid-cols-4 gap-2 sm:gap-3.5 w-full max-w-[480px] mx-auto px-1"
               aria-label="Hitung mundur pernikahan"
             >
               {[
-                { label: "Hari", value: timeLeft.days },
-                { label: "Jam", value: timeLeft.hours },
-                { label: "Menit", value: timeLeft.minutes },
-                { label: "Detik", value: timeLeft.seconds },
+                { label: "Hari", value: timeLeft.days, maxTick: 30 },
+                { label: "Jam", value: timeLeft.hours, maxTick: 24 },
+                { label: "Menit", value: timeLeft.minutes, maxTick: 60 },
+                { label: "Detik", value: timeLeft.seconds, maxTick: 60 },
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="min-w-[72px] sm:min-w-[84px] py-3.5 px-2.5 bg-surface-white/95 backdrop-blur-md border border-gold-500/40 rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center"
+                  className="relative py-3 sm:py-4 px-1.5 sm:px-2 bg-surface-white/95 backdrop-blur-md border border-gold-500/40 rounded-xl sm:rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center justify-center overflow-hidden min-w-0"
                 >
+                  <div className="w-full flex justify-between px-2 sm:px-3 mb-1 opacity-50" aria-hidden="true">
+                    <span className="w-px h-1.5 bg-gold-600" />
+                    <span className="w-px h-1 bg-gold-400" />
+                    <span className="w-px h-1 bg-gold-400" />
+                    <span className="w-px h-1 bg-gold-400" />
+                    <span className="w-px h-1.5 bg-gold-600" />
+                  </div>
+
                   <NumberFlow
                     value={item.value}
                     format={{ minimumIntegerDigits: 2 }}
-                    className="font-serif text-3xl sm:text-4xl font-bold tabular-nums text-[#5d3a41] leading-none"
+                    className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#5d3a41] leading-none tracking-tight"
                     style={{ color: "#5d3a41" }}
                   />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] mt-2">
+                  
+                  <span className="font-sans text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] mt-1.5">
                     {item.label}
                   </span>
+
+                  <div className="w-6 h-px bg-gold-500/40 mt-1.5" aria-hidden="true" />
                 </div>
               ))}
             </div>

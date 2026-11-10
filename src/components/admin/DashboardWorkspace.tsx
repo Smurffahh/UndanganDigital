@@ -244,7 +244,7 @@ export function DashboardWorkspace({
         </div>
       </header>
 
-      <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-28 lg:pb-12 min-w-0">
+      <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-[1600px] mx-auto w-full pb-28 lg:pb-12 min-w-0">
         {activeTab === "rsvp" && (
           <RsvpModerationModule
             wishes={wishes}

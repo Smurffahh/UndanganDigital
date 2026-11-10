@@ -72,38 +72,47 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         </header>
 
         <div className="columns-2 md:columns-3 gap-3.5 md:gap-4.5 space-y-3.5 md:space-y-4.5">
-          {photos.map((item, idx) => (
-            <ScrollLinkedItem
-              key={item.id}
-              offsetY={36}
-              className="break-inside-avoid"
-            >
-              <figure
-                onClick={() => handleOpen(idx)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleOpen(idx);
-                  }
-                }}
-                tabIndex={0}
-                role="button"
-                aria-label={`Perbesar foto: ${item.caption || "Galeri prewedding"}`}
-                className="relative rounded-2xl overflow-hidden border border-gold-500/35 shadow-md cursor-zoom-in bg-rose-100 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-rose-700"
+          {photos.map((item, idx) => {
+            const aspectClass =
+              item.aspectRatio === "square" || item.aspectRatio === "1/1"
+                ? "aspect-square"
+                : item.aspectRatio === "16/9"
+                ? "aspect-[16/9]"
+                : "aspect-[4/5]";
+
+            return (
+              <ScrollLinkedItem
+                key={item.id}
+                offsetY={36}
+                className="break-inside-avoid"
               >
-                <div className="w-full h-full rounded-2xl overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.imageUrl}
-                    alt={item.caption || `Foto momen Fauzan dan Sinta #${idx + 1}`}
-                    className="w-full h-auto object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#5d3a41]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              </figure>
-            </ScrollLinkedItem>
-          ))}
+                <figure
+                  onClick={() => handleOpen(idx)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleOpen(idx);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Perbesar foto: ${item.caption || "Galeri prewedding"}`}
+                  className="relative rounded-2xl overflow-hidden border border-gold-500/35 shadow-md cursor-zoom-in bg-rose-100/50 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-rose-700"
+                >
+                  <div className={`w-full ${aspectClass} rounded-2xl overflow-hidden relative`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.imageUrl}
+                      alt={item.caption || `Foto momen Fauzan dan Sinta #${idx + 1}`}
+                      className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#5d3a41]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </figure>
+              </ScrollLinkedItem>
+            );
+          })}
         </div>
       </div>
 

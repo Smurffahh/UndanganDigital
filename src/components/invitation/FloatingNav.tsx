@@ -52,7 +52,7 @@ export function FloatingNav({ isOpened }: FloatingNavProps) {
   return (
     <nav
       aria-label="Navigasi cepat undangan"
-      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-[95vw] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-40 max-w-[95vw] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isOpened
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-10 pointer-events-none"
@@ -62,7 +62,7 @@ export function FloatingNav({ isOpened }: FloatingNavProps) {
         transitionDelay: isOpened ? "2100ms" : "0ms",
       }}
     >
-      <div className="bg-[#fffdfa]/88 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
+      <div className="bg-[#fffdfa]/90 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-1.5 sm:px-3 py-1 flex items-center gap-0.5 sm:gap-1">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
@@ -74,7 +74,7 @@ export function FloatingNav({ isOpened }: FloatingNavProps) {
               onClick={() => handleNavClick(item.id)}
               aria-label={item.label}
               aria-current={isActive ? "true" : undefined}
-              className={`min-w-[44px] min-h-[44px] px-2.5 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#5d3a41] ${
+              className={`min-w-[44px] min-h-[44px] px-2.5 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition-colors duration-200 active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-[#5d3a41] ${
                 isActive
                   ? "bg-[#5d3a41] text-[#fffdfa] shadow-xs"
                   : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60"

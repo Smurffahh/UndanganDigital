@@ -3,9 +3,12 @@
 import React from "react";
 import {
   BatikKawungTruntumBg,
-  GebyokUkirArch,
+  GebyokUkirArchLeft,
+  GebyokUkirArchRight,
   GununganKayonSilhouette,
   RonceMelatiFlora,
+  HeritageCornerFloraLeft,
+  HeritageCornerFloraRight,
 } from "./HeritageBotanicalAssets";
 
 interface FixedInvitationBackgroundProps {
@@ -39,36 +42,67 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div className="absolute top-[40%] -left-[180px] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
       <div className="absolute top-[65%] -right-[180px] w-[550px] h-[550px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
 
-      {/* Layer 1: Pola Dasar Batik Kawung & Truntum */}
+      {/* Layer 1: Pola Dasar Batik Kawung & Truntum (Center Scale) */}
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none"
+        data-seq-dir="center-scale"
         style={{ "--seq-delay": "350ms" } as React.CSSProperties}
       >
         <BatikKawungTruntumBg />
       </div>
 
-      {/* Layer 2: Bingkai Arsitektural Gebyok Ukir */}
+      {/* Layer 2: Gebyok Ukir Sisi Kiri (Left) */}
       <div
-        className="royal-seq-item absolute inset-x-0 top-0 h-40 sm:h-52 pointer-events-none z-[2]"
-        style={{ "--seq-delay": "550ms" } as React.CSSProperties}
+        className="royal-seq-item absolute left-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
+        data-seq-dir="left"
+        style={{ "--seq-delay": "520ms" } as React.CSSProperties}
       >
-        <GebyokUkirArch />
+        <GebyokUkirArchLeft />
       </div>
 
-      {/* Layer 3: Siluet Gunungan (Kayon) Kalpataru */}
+      {/* Layer 2: Gebyok Ukir Sisi Kanan (Right) */}
+      <div
+        className="royal-seq-item absolute right-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
+        data-seq-dir="right"
+        style={{ "--seq-delay": "600ms" } as React.CSSProperties}
+      >
+        <GebyokUkirArchRight />
+      </div>
+
+      {/* Layer 3: Untaian Ronce Melati & Kantil Keraton (Top) */}
+      <div
+        className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
+        data-seq-dir="top"
+        style={{ "--seq-delay": "720ms" } as React.CSSProperties}
+      >
+        <RonceMelatiFlora />
+      </div>
+
+      {/* Layer 4: Siluet Gunungan (Kayon) Kalpataru (Center Scale) */}
       <div
         className="royal-seq-item absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
-        style={{ "--seq-delay": "750ms" } as React.CSSProperties}
+        data-seq-dir="center-scale"
+        style={{ "--seq-delay": "900ms" } as React.CSSProperties}
       >
         <GununganKayonSilhouette />
       </div>
 
-      {/* Layer 4: Untaian Ronce Melati & Kantil Keraton */}
+      {/* Layer 5: Bunga Sudut Kiri Bawah (Left) */}
       <div
-        className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
-        style={{ "--seq-delay": "950ms" } as React.CSSProperties}
+        className="royal-seq-item absolute bottom-0 left-0 pointer-events-none z-[2]"
+        data-seq-dir="left"
+        style={{ "--seq-delay": "1050ms" } as React.CSSProperties}
       >
-        <RonceMelatiFlora />
+        <HeritageCornerFloraLeft />
+      </div>
+
+      {/* Layer 6: Bunga Sudut Kanan Bawah (Right) */}
+      <div
+        className="royal-seq-item absolute bottom-0 right-0 pointer-events-none z-[2]"
+        data-seq-dir="right"
+        style={{ "--seq-delay": "1120ms" } as React.CSSProperties}
+      >
+        <HeritageCornerFloraRight />
       </div>
 
       <div

@@ -355,6 +355,223 @@ export function BatikKawungStamp({ className = "w-48 h-48", mirror = false }: { 
   );
 }
 
+export function GebyokUkirArchLeft({ className = "w-full h-44 sm:h-56" }: { className?: string }) {
+  return (
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 600 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full object-cover overflow-visible"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="gebyokFillGradL" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#fdf8f3" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#f7e9e5" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M 0,0 L 600,0 L 600,32 Q 300,38 0,32 Z"
+          fill="url(#gebyokFillGradL)"
+          stroke="#c9a24b"
+          strokeWidth="1.2"
+        />
+
+        <g stroke="#c9a24b" strokeWidth="0.8" opacity="0.8">
+          <line x1="0" y1="12" x2="600" y2="12" strokeDasharray="3 3" />
+          <line x1="0" y1="22" x2="600" y2="22" />
+        </g>
+
+        {/* Left Spandrel / Lung-lungan Ukir */}
+        <g stroke="#c9a24b" strokeWidth="1" opacity="0.85">
+          <path d="M 0,32 C 120,34 240,70 320,135 Q 350,160 360,200" fill="none" />
+          <path d="M 0,42 C 100,45 200,78 270,135" fill="none" strokeWidth="0.7" strokeDasharray="2 3" />
+
+          <g fill="#9c5f66" fillOpacity="0.4" stroke="#c9a24b" strokeWidth="0.8">
+            <circle cx="140" cy="54" r="9" />
+            <circle cx="210" cy="78" r="11" />
+            <circle cx="280" cy="118" r="10" />
+            <circle cx="340" cy="170" r="8" />
+          </g>
+          <circle cx="140" cy="54" r="3" fill="#fdf0cd" />
+          <circle cx="210" cy="78" r="3.5" fill="#fdf0cd" />
+          <circle cx="280" cy="118" r="3" fill="#fdf0cd" />
+          <circle cx="340" cy="170" r="2.5" fill="#fdf0cd" />
+        </g>
+
+        {/* Half Crown Crest on right edge of left half */}
+        <g transform="translate(600, 32)">
+          <path
+            d="M -45,-15 C -25,-28 0,-28 0,-20 C 0,5 0,16 -45,-15 Z"
+            fill="#fffdfa"
+            stroke="#c9a24b"
+            strokeWidth="1.2"
+          />
+          <circle cx="-6" cy="-6" r="6" fill="#fdf0cd" stroke="#c9a24b" strokeWidth="1" />
+          <circle cx="-6" cy="-6" r="2.5" fill="#5d3a41" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function GebyokUkirArchRight({ className = "w-full h-44 sm:h-56" }: { className?: string }) {
+  return (
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 600 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full object-cover overflow-visible"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="gebyokFillGradR" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#fdf8f3" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#f7e9e5" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M 600,0 L 0,0 L 0,32 Q 300,38 600,32 Z"
+          fill="url(#gebyokFillGradR)"
+          stroke="#c9a24b"
+          strokeWidth="1.2"
+        />
+
+        <g stroke="#c9a24b" strokeWidth="0.8" opacity="0.8">
+          <line x1="0" y1="12" x2="600" y2="12" strokeDasharray="3 3" />
+          <line x1="0" y1="22" x2="600" y2="22" />
+        </g>
+
+        {/* Right Spandrel (Mirrored) */}
+        <g transform="translate(600, 0) scale(-1, 1)" stroke="#c9a24b" strokeWidth="1" opacity="0.85">
+          <path d="M 0,32 C 120,34 240,70 320,135 Q 350,160 360,200" fill="none" />
+          <path d="M 0,42 C 100,45 200,78 270,135" fill="none" strokeWidth="0.7" strokeDasharray="2 3" />
+
+          <g fill="#9c5f66" fillOpacity="0.4" stroke="#c9a24b" strokeWidth="0.8">
+            <circle cx="140" cy="54" r="9" />
+            <circle cx="210" cy="78" r="11" />
+            <circle cx="280" cy="118" r="10" />
+            <circle cx="340" cy="170" r="8" />
+          </g>
+          <circle cx="140" cy="54" r="3" fill="#fdf0cd" />
+          <circle cx="210" cy="78" r="3.5" fill="#fdf0cd" />
+          <circle cx="280" cy="118" r="3" fill="#fdf0cd" />
+          <circle cx="340" cy="170" r="2.5" fill="#fdf0cd" />
+        </g>
+
+        {/* Half Crown Crest on left edge of right half */}
+        <g transform="translate(0, 32)">
+          <path
+            d="M 45,-15 C 25,-28 0,-28 0,-20 C 0,5 0,16 45,-15 Z"
+            fill="#fffdfa"
+            stroke="#c9a24b"
+            strokeWidth="1.2"
+          />
+          <circle cx="6" cy="-6" r="6" fill="#fdf0cd" stroke="#c9a24b" strokeWidth="1" />
+          <circle cx="6" cy="-6" r="2.5" fill="#5d3a41" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+export function HeritageCornerFloraLeft({ className = "w-36 sm:w-48 h-36 sm:h-48" }: { className?: string }) {
+  return (
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <div className="w-full h-full animate-flora-sway origin-bottom-left">
+        <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+          {/* Main Corner Floral Swirls */}
+          <path
+            d="M 0,160 C 25,120 40,80 85,55 C 110,40 135,42 150,25"
+            stroke="#c9a24b"
+            strokeWidth="1.2"
+            strokeDasharray="2 2"
+            opacity="0.8"
+          />
+          <path
+            d="M 0,140 C 35,115 65,95 105,75"
+            stroke="#9c5f66"
+            strokeWidth="0.8"
+            opacity="0.7"
+          />
+
+          {/* Leaves */}
+          <g fill="#fdf0cd" stroke="#c9a24b" strokeWidth="0.75" opacity="0.85">
+            <path d="M 30,120 C 45,100 65,110 50,130 Z" />
+            <path d="M 65,85 C 80,68 100,75 85,95 Z" />
+            <path d="M 105,55 C 120,40 135,45 125,62 Z" />
+          </g>
+
+          {/* Jasmine blossoms */}
+          {[
+            { cx: 45, cy: 110, r: 8 },
+            { cx: 80, cy: 75, r: 9.5 },
+            { cx: 125, cy: 45, r: 8 },
+            { cx: 148, cy: 22, r: 6.5 },
+          ].map((f, i) => (
+            <g key={i} transform={`translate(${f.cx}, ${f.cy})`} className="animate-flora-petal">
+              <circle cx="0" cy="0" r={f.r} fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+              <circle cx="-2" cy="-2" r={f.r * 0.55} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="2" cy="-2" r={f.r * 0.55} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="0" cy="2" r={f.r * 0.55} fill="#f7e9e5" opacity="0.9" />
+              <circle cx="0" cy="0" r="2.2" fill="#c9a24b" />
+            </g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+export function HeritageCornerFloraRight({ className = "w-36 sm:w-48 h-36 sm:h-48" }: { className?: string }) {
+  return (
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <div className="w-full h-full animate-flora-sway origin-bottom-right scale-x-[-1]">
+        <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+          <path
+            d="M 0,160 C 25,120 40,80 85,55 C 110,40 135,42 150,25"
+            stroke="#c9a24b"
+            strokeWidth="1.2"
+            strokeDasharray="2 2"
+            opacity="0.8"
+          />
+          <path
+            d="M 0,140 C 35,115 65,95 105,75"
+            stroke="#9c5f66"
+            strokeWidth="0.8"
+            opacity="0.7"
+          />
+
+          <g fill="#fdf0cd" stroke="#c9a24b" strokeWidth="0.75" opacity="0.85">
+            <path d="M 30,120 C 45,100 65,110 50,130 Z" />
+            <path d="M 65,85 C 80,68 100,75 85,95 Z" />
+            <path d="M 105,55 C 120,40 135,45 125,62 Z" />
+          </g>
+
+          {[
+            { cx: 45, cy: 110, r: 8 },
+            { cx: 80, cy: 75, r: 9.5 },
+            { cx: 125, cy: 45, r: 8 },
+            { cx: 148, cy: 22, r: 6.5 },
+          ].map((f, i) => (
+            <g key={i} transform={`translate(${f.cx}, ${f.cy})`} className="animate-flora-petal">
+              <circle cx="0" cy="0" r={f.r} fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+              <circle cx="-2" cy="-2" r={f.r * 0.55} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="2" cy="-2" r={f.r * 0.55} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="0" cy="2" r={f.r * 0.55} fill="#f7e9e5" opacity="0.9" />
+              <circle cx="0" cy="0" r="2.2" fill="#c9a24b" />
+            </g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export function BotanicalHangingVines({ className = "w-full h-28 sm:h-36" }: { className?: string }) {
   return <GebyokUkirArch className={className} />;
 }

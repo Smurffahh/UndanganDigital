@@ -156,7 +156,7 @@ export function DigitalEnvelope({
           </ScrollLinkedItem>
         </header>
 
-        <ScrollLinkedItem offsetY={36} className="flex justify-center mb-8">
+        <ScrollLinkedItem direction="center-scale" className="flex justify-center mb-8">
           <button
             type="button"
             onClick={openQrisModal}

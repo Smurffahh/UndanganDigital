@@ -2,6 +2,7 @@
 
 import { SongketRibbon, GununganWayang } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
@@ -69,115 +70,121 @@ export function CoupleProfile({
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-6">
-          <article className="text-center p-4 sm:p-6 flex flex-col items-center">
-            <ScrollLinkedItem offsetY={36} className="mb-5">
-              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white/95 typo-eyebrow text-[#a9823a] shadow-xs">
-                Mempelai Pria
-              </span>
-            </ScrollLinkedItem>
+          <ScrollReveal direction="left">
+            <article className="text-center p-4 sm:p-6 flex flex-col items-center">
+              <ScrollLinkedItem offsetY={36} className="mb-5">
+                <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white/95 typo-eyebrow text-[#a9823a] shadow-xs">
+                  Mempelai Pria
+                </span>
+              </ScrollLinkedItem>
 
-            <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
-              <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
-                {isSvgMode || !groomPhotoUrl ? (
-                  <CoupleCharacterSvg
-                    preset={svgCharacterPreset}
-                    variant="groom"
-                    className="w-full h-full"
-                  />
-                ) : (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={groomPhotoUrl}
-                    alt={`${groomName} - Mempelai Pria`}
-                    className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
-                    loading="lazy"
-                  />
-                )}
-              </div>
-            </ScrollLinkedItem>
-
-            <ScrollLinkedItem offsetY={36} className="text-center">
-              <span className="font-script text-3xl sm:text-4xl text-[#5d3a41] block mt-2 mb-0.5 leading-none">
-                Fauzan
-              </span>
-              <h3 className="typo-card-title mt-1">
-                {groomName}
-              </h3>
-              <p className="mt-2 typo-eyebrow text-[#a9823a]">
-                {groomBirth}
-              </p>
-            </ScrollLinkedItem>
-
-            <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-              <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
-                  <GununganWayang className="w-full h-auto" />
+              <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
+                <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
+                  {isSvgMode || !groomPhotoUrl ? (
+                    <CoupleCharacterSvg
+                      preset={svgCharacterPreset}
+                      variant="groom"
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={groomPhotoUrl}
+                      alt={`${groomName} - Mempelai Pria`}
+                      className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                      loading="lazy"
+                    />
+                  )}
                 </div>
-                <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
-                  {groomBio}
+              </ScrollLinkedItem>
+
+              <ScrollLinkedItem offsetY={36} className="text-center">
+                <span className="font-script text-3xl sm:text-4xl text-[#5d3a41] block mt-2 mb-0.5 leading-none">
+                  Fauzan
+                </span>
+                <h3 className="typo-card-title mt-1">
+                  {groomName}
+                </h3>
+                <p className="mt-2 typo-eyebrow text-[#a9823a]">
+                  {groomBirth}
                 </p>
-              </div>
-            </ScrollLinkedItem>
-          </article>
+              </ScrollLinkedItem>
 
-          <div className="flex flex-col items-center justify-center my-4 md:my-0">
-            <ScrollLinkedItem offsetY={36}>
-              <span className="font-script text-5xl sm:text-6xl text-[#c9a24b] drop-shadow-sm select-none leading-none animate-gold-sheen">
-                &amp;
-              </span>
-            </ScrollLinkedItem>
-          </div>
-
-          <article className="text-center p-4 sm:p-6 flex flex-col items-center">
-            <ScrollLinkedItem offsetY={36} className="mb-5">
-              <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white/95 typo-eyebrow text-[#a9823a] shadow-xs">
-                Mempelai Wanita
-              </span>
-            </ScrollLinkedItem>
-
-            <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
-              <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
-                {isSvgMode || !bridePhotoUrl ? (
-                  <CoupleCharacterSvg
-                    preset={svgCharacterPreset}
-                    variant="bride"
-                    className="w-full h-full"
-                  />
-                ) : (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={bridePhotoUrl}
-                    alt={`${brideName} - Mempelai Wanita`}
-                    className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
-                    loading="lazy"
-                  />
-                )}
-              </div>
-            </ScrollLinkedItem>
-
-            <ScrollLinkedItem offsetY={36} className="text-center">
-              <span className="font-script text-3xl sm:text-4xl text-[#5d3a41] block mt-2 mb-0.5 leading-none">
-                Sinta
-              </span>
-              <h3 className="typo-card-title mt-1">
-                {brideName}
-              </h3>
-              <p className="mt-2 typo-eyebrow text-[#a9823a]">
-                {brideBirth}
-              </p>
-            </ScrollLinkedItem>
-
-            <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-              <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
-                  <GununganWayang className="w-full h-auto" />
+              <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
+                <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
+                    <GununganWayang className="w-full h-auto" />
+                  </div>
+                  <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
+                    {groomBio}
+                  </p>
                 </div>
-                <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
-                  {brideBio}
+              </ScrollLinkedItem>
+            </article>
+          </ScrollReveal>
+
+          <ScrollReveal direction="center-scale">
+            <div className="flex flex-col items-center justify-center my-4 md:my-0">
+              <ScrollLinkedItem offsetY={36}>
+                <span className="font-script text-5xl sm:text-6xl text-[#c9a24b] drop-shadow-sm select-none leading-none animate-gold-sheen">
+                  &amp;
+                </span>
+              </ScrollLinkedItem>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal direction="right">
+            <article className="text-center p-4 sm:p-6 flex flex-col items-center">
+              <ScrollLinkedItem offsetY={36} className="mb-5">
+                <span className="inline-block px-5 py-1.5 border border-gold-500/55 rounded-full bg-surface-white/95 typo-eyebrow text-[#a9823a] shadow-xs">
+                  Mempelai Wanita
+                </span>
+              </ScrollLinkedItem>
+
+              <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#5d3a41]/60 outline outline-1 outline-offset-4 outline-[#c9a24b]/50 shadow-lg bg-[#fffdfa]/95 relative z-10 mb-6">
+                <div className="w-full h-full rounded-[999px] overflow-hidden flex items-center justify-center bg-[#fdfaf5]">
+                  {isSvgMode || !bridePhotoUrl ? (
+                    <CoupleCharacterSvg
+                      preset={svgCharacterPreset}
+                      variant="bride"
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={bridePhotoUrl}
+                      alt={`${brideName} - Mempelai Wanita`}
+                      className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                      loading="lazy"
+                    />
+                  )}
+                </div>
+              </ScrollLinkedItem>
+
+              <ScrollLinkedItem offsetY={36} className="text-center">
+                <span className="font-script text-3xl sm:text-4xl text-[#5d3a41] block mt-2 mb-0.5 leading-none">
+                  Sinta
+                </span>
+                <h3 className="typo-card-title mt-1">
+                  {brideName}
+                </h3>
+                <p className="mt-2 typo-eyebrow text-[#a9823a]">
+                  {brideBirth}
                 </p>
-              </div>
-            </ScrollLinkedItem>
-          </article>
+              </ScrollLinkedItem>
+
+              <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
+                <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
+                    <GununganWayang className="w-full h-auto" />
+                  </div>
+                  <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
+                    {brideBio}
+                  </p>
+                </div>
+              </ScrollLinkedItem>
+            </article>
+          </ScrollReveal>
         </div>
       </div>
     </section>

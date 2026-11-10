@@ -64,7 +64,8 @@ export function FloatingNav({ isOpened, isGalleryEnabled = true }: FloatingNavPr
       <nav
         aria-label="Navigasi cepat undangan"
         className="royal-seq-item pointer-events-auto"
-        style={{ "--seq-delay": "2850ms" } as React.CSSProperties}
+        data-seq-dir="bottom"
+        style={{ "--seq-delay": "2720ms" } as React.CSSProperties}
       >
         <div className="bg-[#fffdfa]/90 backdrop-blur-md border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.28)] rounded-full px-1.5 sm:px-3 py-1 flex items-center gap-0.5 sm:gap-1">
           {effectiveItems.map((item) => {

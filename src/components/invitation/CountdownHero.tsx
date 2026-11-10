@@ -67,7 +67,8 @@ export function CountdownHero({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
-          style={{ "--seq-delay": "1850ms" } as React.CSSProperties}
+          data-seq-dir="top"
+          style={{ "--seq-delay": "1800ms" } as React.CSSProperties}
         >
           <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em]">
             THE WEDDING OF
@@ -76,7 +77,8 @@ export function CountdownHero({
 
         <div
           className="w-full flex justify-center mb-6 royal-seq-item"
-          style={{ "--seq-delay": "2050ms" } as React.CSSProperties}
+          data-seq-dir="center-scale"
+          style={{ "--seq-delay": "2000ms" } as React.CSSProperties}
         >
           <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
             {coupleVisualMode === "svg" || !heroPhotoUrl ? (
@@ -99,7 +101,8 @@ export function CountdownHero({
 
         <div
           className="mt-2 text-center royal-seq-item"
-          style={{ "--seq-delay": "2250ms" } as React.CSSProperties}
+          data-seq-dir="bottom"
+          style={{ "--seq-delay": "2200ms" } as React.CSSProperties}
         >
           <p className="typo-eyebrow text-[#a9823a]">
             WITH LOVE
@@ -111,14 +114,15 @@ export function CountdownHero({
 
         <div
           className="mt-5 w-full royal-seq-item"
-          style={{ "--seq-delay": "2450ms" } as React.CSSProperties}
+          data-seq-dir="bottom"
+          style={{ "--seq-delay": "2380ms" } as React.CSSProperties}
         >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
               <GununganWayang className="w-full h-auto" />
             </div>
             <p className="typo-arabic leading-loose text-rose-900 relative z-10" dir="rtl">
-              وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
+              وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعELَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>
             <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
               &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
@@ -131,14 +135,16 @@ export function CountdownHero({
 
         <div
           className="my-8 w-full flex justify-center royal-seq-item"
-          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
+          data-seq-dir="bottom"
+          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
         >
           <Divider />
         </div>
 
         <div
           className="text-center royal-seq-item"
-          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
+          data-seq-dir="bottom"
+          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
         >
           <p className="typo-eyebrow text-[#a9823a] mb-2">
             SAVE THE DATE
@@ -153,7 +159,8 @@ export function CountdownHero({
 
         <div
           className="mt-8 w-full flex justify-center royal-seq-item"
-          style={{ "--seq-delay": "2650ms" } as React.CSSProperties}
+          data-seq-dir="bottom"
+          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
         >
           {!timeLeft.isDone ? (
             <div

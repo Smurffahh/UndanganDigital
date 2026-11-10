@@ -9,6 +9,7 @@ interface ScrollLinkedItemProps {
   style?: CSSProperties;
   offsetY?: number;
   delay?: number;
+  direction?: "bottom" | "top" | "left" | "right" | "center-scale";
   trigger?: boolean;
 }
 
@@ -17,8 +18,9 @@ export function ScrollLinkedItem({
   className = "",
   as: Component = "div",
   style,
-  offsetY = 32,
+  offsetY = 24,
   delay = 0,
+  direction = "bottom",
   trigger,
 }: ScrollLinkedItemProps) {
   const containerRef = useRef<HTMLElement | null>(null);
@@ -68,14 +70,25 @@ export function ScrollLinkedItem({
     }
   }, [trigger, isVisible]);
 
+  const initialTransform =
+    direction === "left"
+      ? "translate3d(-28px, 0, 0) scale3d(0.96, 0.96, 1)"
+      : direction === "right"
+      ? "translate3d(28px, 0, 0) scale3d(0.96, 0.96, 1)"
+      : direction === "top"
+      ? "translate3d(0, -24px, 0) scale3d(0.96, 0.96, 1)"
+      : direction === "center-scale"
+      ? "translate3d(0, 6px, 0) scale3d(0.90, 0.90, 1)"
+      : `translate3d(0, ${offsetY}px, 0) scale3d(0.96, 0.96, 1)`;
+
   const animatedStyle: CSSProperties = {
     ...style,
     opacity: isVisible ? 1 : 0,
     transform: isVisible
       ? "translate3d(0, 0, 0) scale3d(1, 1, 1)"
-      : `translate3d(0, ${offsetY}px, 0) scale3d(0.98, 0.98, 1)`,
+      : initialTransform,
     transitionProperty: "transform, opacity",
-    transitionDuration: "700ms",
+    transitionDuration: "750ms",
     transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
     transitionDelay: `${delay}ms`,
     willChange: "transform, opacity",

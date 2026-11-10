@@ -445,14 +445,49 @@ body {
   will-change: transform;
 }
 
+@keyframes vinylSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-vinyl-spin {
+  animation: vinylSpin 10s linear infinite;
+}
+
 .royal-seq-item {
   opacity: 0;
-  transform: translate3d(0, 18px, 0) scale(0.96);
   transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--seq-delay, 0ms);
   will-change: opacity, transform;
+}
+
+.royal-seq-item[data-seq-dir="top"] {
+  transform: translate3d(0, -24px, 0) scale(0.96);
+}
+.royal-seq-item[data-seq-dir="bottom"],
+.royal-seq-item:not([data-seq-dir]) {
+  transform: translate3d(0, 24px, 0) scale(0.96);
+}
+.royal-seq-item[data-seq-dir="left"] {
+  transform: translate3d(-28px, 0, 0) scale(0.96);
+}
+.royal-seq-item[data-seq-dir="right"] {
+  transform: translate3d(28px, 0, 0) scale(0.96);
+}
+.royal-seq-item[data-seq-dir="left-diagonal"] {
+  transform: translate3d(-28px, 14px, 0) scale(0.94);
+}
+.royal-seq-item[data-seq-dir="right-diagonal"] {
+  transform: translate3d(28px, -14px, 0) scale(0.94);
+}
+.royal-seq-item[data-seq-dir="center-scale"] {
+  transform: translate3d(0, 6px, 0) scale(0.90);
 }
 
 .royal-seq-active .royal-seq-item {
@@ -465,6 +500,9 @@ body {
     transition: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+  .animate-vinyl-spin {
+    animation: none !important;
   }
 }
 

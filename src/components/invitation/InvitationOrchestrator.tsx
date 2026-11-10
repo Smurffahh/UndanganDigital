@@ -51,6 +51,8 @@ export function InvitationOrchestrator({
   const [isHeroReady, setIsHeroReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const hasUserPausedRef = useRef(false);
+  const hasEverPlayedRef = useRef(false);
 
   const effectiveAudioUrl = settings.musicUrl || "/audio/raim-laode-komang.mp3";
   const isYouTube = settings.musicSourceType === "youtube";
@@ -63,6 +65,7 @@ export function InvitationOrchestrator({
         playPromise
           .then(() => {
             setIsPlayingAudio(true);
+            hasEverPlayedRef.current = true;
             let vol = 0.15;
             const ramp = setInterval(() => {
               vol += 0.05;
@@ -84,13 +87,20 @@ export function InvitationOrchestrator({
   };
 
   useEffect(() => {
-    if (!isOpened || isPlayingAudio || !settings.musicEnabled || isYouTube) return;
+    if (isPlayingAudio) {
+      hasEverPlayedRef.current = true;
+    }
+  }, [isPlayingAudio]);
+
+  useEffect(() => {
+    if (!isOpened || isPlayingAudio || !settings.musicEnabled || isYouTube || hasUserPausedRef.current || hasEverPlayedRef.current) return;
 
     const tryPlayFallback = () => {
-      if (audioRef.current && !isPlayingAudio) {
+      if (audioRef.current && !isPlayingAudio && !hasUserPausedRef.current) {
         audioRef.current.volume = 0.8;
         audioRef.current.play().then(() => {
           setIsPlayingAudio(true);
+          hasEverPlayedRef.current = true;
         }).catch(() => {});
       }
     };
@@ -106,15 +116,19 @@ export function InvitationOrchestrator({
     };
   }, [isOpened, isPlayingAudio, settings.musicEnabled, isYouTube]);
 
-  const handleToggleMusic = () => {
+  const toggleAudioPlayback = () => {
     if (!audioRef.current) return;
     if (isPlayingAudio) {
+      hasUserPausedRef.current = true;
       audioRef.current.pause();
       setIsPlayingAudio(false);
     } else {
+      hasUserPausedRef.current = false;
+      audioRef.current.volume = 0.8;
       audioRef.current.play().then(() => {
         setIsPlayingAudio(true);
       }).catch(console.error);
+      setIsPlayingAudio(true);
     }
   };
 
@@ -131,6 +145,9 @@ export function InvitationOrchestrator({
           loop
           preload="auto"
           playsInline
+          onPlay={() => setIsPlayingAudio(true)}
+          onPause={() => setIsPlayingAudio(false)}
+          onEnded={() => setIsPlayingAudio(false)}
           aria-hidden="true"
           className="hidden"
         />
@@ -219,7 +236,8 @@ export function InvitationOrchestrator({
       <FloatingControls
         isOpened={isOpened}
         isPlaying={isPlayingAudio}
-        onToggleMusic={handleToggleMusic}
+        onTogglePlay={toggleAudioPlayback}
+        onToggleMusic={toggleAudioPlayback}
         musicEnabled={settings.musicEnabled}
         musicTitle={settings.musicTitle}
         musicSourceType={settings.musicSourceType}

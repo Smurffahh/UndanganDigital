@@ -222,48 +222,63 @@ export function ScrollLinkedButterflies() {
       aria-hidden="true"
     >
       <div
-        ref={b1Ref}
-        data-butterfly-guide="primary"
-        className="royal-seq-item absolute top-0 left-0"
-        style={
-          {
-            "--seq-delay": "1350ms",
-            willChange: "transform",
-            transform: "translate3d(-100px, -100px, 0)",
-          } as React.CSSProperties
-        }
+        className="royal-seq-item absolute inset-0 pointer-events-none"
+        data-seq-dir="left-diagonal"
+        style={{ "--seq-delay": "1350ms" } as React.CSSProperties}
       >
-        <ButterflyAnatomySvg variant="swallowtail" className="w-11 h-10" animationDelay="0s" />
+        <div
+          ref={b1Ref}
+          data-butterfly-guide="primary"
+          className="absolute top-0 left-0 pointer-events-none"
+          style={
+            {
+              willChange: "transform",
+              transform: "translate3d(-100px, -100px, 0)",
+            } as React.CSSProperties
+          }
+        >
+          <ButterflyAnatomySvg variant="swallowtail" className="w-11 h-10" animationDelay="0s" />
+        </div>
       </div>
 
       <div
-        ref={b2Ref}
-        data-butterfly-guide="companion"
-        className="royal-seq-item absolute top-0 left-0 opacity-90"
-        style={
-          {
-            "--seq-delay": "1500ms",
-            willChange: "transform",
-            transform: "translate3d(-100px, -100px, 0)",
-          } as React.CSSProperties
-        }
+        className="royal-seq-item absolute inset-0 pointer-events-none"
+        data-seq-dir="right-diagonal"
+        style={{ "--seq-delay": "1500ms" } as React.CSSProperties}
       >
-        <ButterflyAnatomySvg variant="morpho" className="w-8 h-8" animationDelay="-0.65s" />
+        <div
+          ref={b2Ref}
+          data-butterfly-guide="companion"
+          className="absolute top-0 left-0 opacity-90 pointer-events-none"
+          style={
+            {
+              willChange: "transform",
+              transform: "translate3d(-100px, -100px, 0)",
+            } as React.CSSProperties
+          }
+        >
+          <ButterflyAnatomySvg variant="morpho" className="w-8 h-8" animationDelay="-0.65s" />
+        </div>
       </div>
 
       <div
-        ref={b3Ref}
-        data-butterfly-guide="micro"
-        className="royal-seq-item absolute top-0 left-0 opacity-75 hidden sm:block"
-        style={
-          {
-            "--seq-delay": "1650ms",
-            willChange: "transform",
-            transform: "translate3d(-100px, -100px, 0)",
-          } as React.CSSProperties
-        }
+        className="royal-seq-item absolute inset-0 pointer-events-none hidden sm:block"
+        data-seq-dir="bottom"
+        style={{ "--seq-delay": "1650ms" } as React.CSSProperties}
       >
-        <ButterflyAnatomySvg variant="swallowtail" className="w-6 h-6" animationDelay="-1.25s" />
+        <div
+          ref={b3Ref}
+          data-butterfly-guide="micro"
+          className="absolute top-0 left-0 opacity-75 pointer-events-none"
+          style={
+            {
+              willChange: "transform",
+              transform: "translate3d(-100px, -100px, 0)",
+            } as React.CSSProperties
+          }
+        >
+          <ButterflyAnatomySvg variant="swallowtail" className="w-6 h-6" animationDelay="-1.25s" />
+        </div>
       </div>
     </div>
   );

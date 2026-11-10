@@ -5,7 +5,19 @@ import { useEffect, useRef, useState, type ElementType, type ReactNode } from "r
 interface ScrollRevealProps {
   children: ReactNode;
   delay?: number;
-  variant?: "fade-up" | "fade" | "scale-up" | "float" | "frame-reveal" | "bottom-up";
+  variant?:
+    | "fade-up"
+    | "fade"
+    | "scale-up"
+    | "float"
+    | "frame-reveal"
+    | "bottom-up"
+    | "left"
+    | "right"
+    | "top"
+    | "bottom"
+    | "center-scale";
+  direction?: "bottom" | "top" | "left" | "right" | "center-scale";
   className?: string;
   as?: ElementType;
   threshold?: number;
@@ -15,6 +27,7 @@ export function ScrollReveal({
   children,
   delay = 0,
   variant = "bottom-up",
+  direction,
   className = "",
   as: Component = "div",
   threshold = 0.12,
@@ -52,30 +65,41 @@ export function ScrollReveal({
   }, [threshold]);
 
   const getVariantStyles = () => {
+    const effectiveDir =
+      direction ||
+      (variant === "left"
+        ? "left"
+        : variant === "right"
+        ? "right"
+        : variant === "top"
+        ? "top"
+        : variant === "center-scale" || variant === "scale-up"
+        ? "center-scale"
+        : "bottom");
+
     if (!isVisible) {
-      switch (variant) {
-        case "fade":
-          return "opacity-0";
-        case "scale-up":
-          return "opacity-0 translate-y-12 scale-[0.96] blur-[2px]";
-        case "float":
-          return "opacity-0 translate-y-8 scale-[0.94]";
-        case "frame-reveal":
-          return "opacity-0 translate-y-12 scale-[0.97]";
-        case "bottom-up":
-        case "fade-up":
+      switch (effectiveDir) {
+        case "left":
+          return "opacity-0 -translate-x-7 scale-[0.96]";
+        case "right":
+          return "opacity-0 translate-x-7 scale-[0.96]";
+        case "top":
+          return "opacity-0 -translate-y-6 scale-[0.96]";
+        case "center-scale":
+          return "opacity-0 translate-y-1.5 scale-[0.90]";
+        case "bottom":
         default:
-          return "opacity-0 translate-y-12 scale-[0.97]";
+          return "opacity-0 translate-y-6 scale-[0.96]";
       }
     }
 
-    return "opacity-100 translate-y-0 scale-100 blur-none";
+    return "opacity-100 translate-x-0 translate-y-0 scale-100";
   };
 
   return (
     <Component
       ref={elementRef}
-      className={`transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${getVariantStyles()} ${className}`}
+      className={`transition-[opacity,transform] duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${getVariantStyles()} ${className}`}
       style={{
         transitionDelay: isVisible ? `${delay}ms` : "0ms",
       }}

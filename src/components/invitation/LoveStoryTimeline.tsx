@@ -113,7 +113,7 @@ export function LoveStoryTimeline({
                       isEven ? "md:order-2 md:pl-6" : "md:order-1 md:pr-6 md:text-right"
                     }`}
                   >
-                    <ScrollLinkedItem offsetY={36}>
+                    <ScrollLinkedItem direction={isEven ? "right" : "left"}>
                       <article className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-white/95 backdrop-blur-md border border-gold-500/35 shadow-[0_16px_36px_-12px_rgba(93,58,65,0.18)] hover:shadow-[0_22px_44px_-10px_rgba(93,58,65,0.24)] transition-[box-shadow,transform] duration-200 relative overflow-hidden group">
                         <span className="absolute top-2.5 left-2.5 w-2.5 h-2.5 border-t border-l border-gold-500/50 pointer-events-none" />
                         <span className="absolute bottom-2.5 right-2.5 w-2.5 h-2.5 border-b border-r border-gold-500/50 pointer-events-none" />

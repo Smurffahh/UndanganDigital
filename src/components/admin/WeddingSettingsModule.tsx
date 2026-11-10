@@ -90,8 +90,8 @@ export function WeddingSettingsModule({
     extractYouTubeVideoId(formData.musicUrl) ||
     "In8kDy_WU4s";
   const effectiveAudioUrl = !isCurrentYouTube
-    ? formData.musicUrl || "/audio/wedding-instrumental.wav"
-    : "/audio/wedding-instrumental.wav";
+    ? formData.musicUrl || "/audio/raim-laode-komang.mp3"
+    : "/audio/raim-laode-komang.mp3";
 
   const [isPlayingTest, setIsPlayingTest] = useState(false);
   const audioTestRef = useRef<HTMLAudioElement | null>(null);

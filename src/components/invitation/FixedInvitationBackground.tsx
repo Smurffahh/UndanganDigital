@@ -2,9 +2,10 @@
 
 import React from "react";
 import {
-  NusantaraEtchedWatermark,
-  BatikKawungStamp,
-  BotanicalHangingVines,
+  BatikKawungTruntumBg,
+  GebyokUkirArch,
+  GununganKayonSilhouette,
+  RonceMelatiFlora,
 } from "./HeritageBotanicalAssets";
 
 interface FixedInvitationBackgroundProps {
@@ -21,12 +22,12 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
 
       {heroPhotoUrl && (
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.14] saturate-[0.65] mix-blend-multiply filter blur-[0.5px]"
+          className="absolute inset-0 bg-cover bg-center opacity-[0.11] saturate-[0.6] mix-blend-multiply filter blur-[0.5px]"
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         />
       )}
 
-      <svg className="absolute inset-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
         <filter id="paperNoise">
           <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
           <feColorMatrix type="matrix" values="0 0 0 0 0.36  0 0 0 0 0.23  0 0 0 0 0.25  0 0 0 0.5 0" />
@@ -35,21 +36,40 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       </svg>
 
       <div className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.09),transparent_70%)] blur-2xl" />
-      <div className="absolute top-[35%] -left-[180px] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.08),transparent_70%)] blur-2xl" />
+      <div className="absolute top-[40%] -left-[180px] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
       <div className="absolute top-[65%] -right-[180px] w-[550px] h-[550px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
 
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <NusantaraEtchedWatermark />
+      {/* Layer 1: Pola Dasar Batik Kawung & Truntum */}
+      <div
+        className="royal-seq-item absolute inset-0 pointer-events-none"
+        style={{ "--seq-delay": "350ms" } as React.CSSProperties}
+      >
+        <BatikKawungTruntumBg />
       </div>
 
-      <div className="absolute -top-4 -left-4 sm:top-2 sm:left-2 w-48 sm:w-64 h-48 sm:h-64 opacity-45 pointer-events-none">
-        <BatikKawungStamp className="w-full h-full" />
-      </div>
-      <div className="absolute -top-4 -right-4 sm:top-2 sm:right-2 w-36 sm:w-48 h-36 sm:h-48 opacity-35 pointer-events-none">
-        <BatikKawungStamp className="w-full h-full" mirror />
+      {/* Layer 2: Bingkai Arsitektural Gebyok Ukir */}
+      <div
+        className="royal-seq-item absolute inset-x-0 top-0 h-40 sm:h-52 pointer-events-none z-[2]"
+        style={{ "--seq-delay": "550ms" } as React.CSSProperties}
+      >
+        <GebyokUkirArch />
       </div>
 
-      <BotanicalHangingVines className="absolute top-0 inset-x-0 h-28 sm:h-36 overflow-hidden pointer-events-none opacity-85" />
+      {/* Layer 3: Siluet Gunungan (Kayon) Kalpataru */}
+      <div
+        className="royal-seq-item absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
+        style={{ "--seq-delay": "750ms" } as React.CSSProperties}
+      >
+        <GununganKayonSilhouette />
+      </div>
+
+      {/* Layer 4: Untaian Ronce Melati & Kantil Keraton */}
+      <div
+        className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
+        style={{ "--seq-delay": "950ms" } as React.CSSProperties}
+      >
+        <RonceMelatiFlora />
+      </div>
 
       <div
         className="absolute top-[28%] left-[22%] w-4 h-4 pointer-events-none animate-petal-drift z-[2]"

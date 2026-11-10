@@ -5,6 +5,8 @@ import { Disc3, Music2 } from "lucide-react";
 
 interface FloatingControlsProps {
   isOpened: boolean;
+  isPlaying?: boolean;
+  onToggleMusic?: () => void;
   musicEnabled?: boolean;
   musicTitle?: string;
   musicSourceType?: string;
@@ -20,17 +22,21 @@ declare global {
   }
 }
 
-const DEFAULT_AUDIO_URL = "/audio/wedding-instrumental.wav";
+const DEFAULT_AUDIO_URL = "/audio/raim-laode-komang.mp3";
 
 export function FloatingControls({
   isOpened,
+  isPlaying: externalIsPlaying,
+  onToggleMusic,
   musicEnabled = true,
-  musicTitle = "Shane Filan - Beautiful In White (Romantic Instrumental)",
+  musicTitle = "Raim Laode — Komang (Official Romantic Wedding Theme)",
   musicSourceType = "preset",
   musicUrl,
   youtubeVideoId = "In8kDy_WU4s",
 }: FloatingControlsProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [internalIsPlaying, setInternalIsPlaying] = useState(false);
+  const isPlaying = externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying;
+  const setIsPlaying = (val: boolean) => setInternalIsPlaying(val);
   const [showTitleBadge, setShowTitleBadge] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -147,6 +153,11 @@ export function FloatingControls({
   const toggleMusic = () => {
     if (!musicEnabled) return;
 
+    if (onToggleMusic) {
+      onToggleMusic();
+      return;
+    }
+
     if (!isYouTube) {
       const audio = audioRef.current;
       if (!audio) return;
@@ -203,11 +214,9 @@ export function FloatingControls({
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [isPlaying, isYouTube]);
 
-  if (!isOpened) return null;
-
   return (
     <>
-      {musicEnabled && (
+      {musicEnabled && !onToggleMusic && (
         <audio
           ref={audioRef}
           src={effectiveAudioUrl}
@@ -225,7 +234,12 @@ export function FloatingControls({
       )}
 
       {musicEnabled && (
-        <div className="fixed top-5 right-5 z-40 flex items-center gap-2">
+        <div
+          className={`fixed top-5 right-5 z-40 flex items-center gap-2 royal-seq-item ${
+            isOpened ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+          style={{ "--seq-delay": "2850ms" } as React.CSSProperties}
+        >
           {showTitleBadge && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/95 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">
               <Music2 className="w-3.5 h-3.5 text-gold-600 animate-pulse" />

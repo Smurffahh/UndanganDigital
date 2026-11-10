@@ -131,7 +131,7 @@ export function ScrollLinkedButterflies() {
         b1Ref.current.style.transform = `translate3d(${b1.x.toFixed(1)}px, ${b1.y.toFixed(1)}px, 0) rotate(${b1.angle.toFixed(1)}deg)`;
         if (b1.isFlappingFast !== isActivelyScrolling) {
           b1.isFlappingFast = isActivelyScrolling;
-          b1Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "0.14s" : "0.45s");
+          b1Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "1.15s" : "1.85s");
         }
       }
 
@@ -167,7 +167,7 @@ export function ScrollLinkedButterflies() {
         b2Ref.current.style.transform = `translate3d(${b2.x.toFixed(1)}px, ${b2.y.toFixed(1)}px, 0) rotate(${b2.angle.toFixed(1)}deg)`;
         if (b2.isFlappingFast !== isActivelyScrolling) {
           b2.isFlappingFast = isActivelyScrolling;
-          b2Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "0.14s" : "0.45s");
+          b2Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "1.15s" : "1.85s");
         }
       }
 
@@ -201,7 +201,7 @@ export function ScrollLinkedButterflies() {
         b3Ref.current.style.transform = `translate3d(${b3.x.toFixed(1)}px, ${b3.y.toFixed(1)}px, 0) rotate(${b3.angle.toFixed(1)}deg)`;
         if (b3.isFlappingFast !== isActivelyScrolling) {
           b3.isFlappingFast = isActivelyScrolling;
-          b3Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "0.14s" : "0.45s");
+          b3Ref.current.style.setProperty("--wing-speed", isActivelyScrolling ? "1.15s" : "1.85s");
         }
       }
 
@@ -224,28 +224,46 @@ export function ScrollLinkedButterflies() {
       <div
         ref={b1Ref}
         data-butterfly-guide="primary"
-        className="absolute top-0 left-0"
-        style={{ willChange: "transform", transform: "translate3d(-100px, -100px, 0)" }}
+        className="royal-seq-item absolute top-0 left-0"
+        style={
+          {
+            "--seq-delay": "1350ms",
+            willChange: "transform",
+            transform: "translate3d(-100px, -100px, 0)",
+          } as React.CSSProperties
+        }
       >
-        <ButterflyAnatomySvg variant="swallowtail" className="w-11 h-10" />
+        <ButterflyAnatomySvg variant="swallowtail" className="w-11 h-10" animationDelay="0s" />
       </div>
 
       <div
         ref={b2Ref}
         data-butterfly-guide="companion"
-        className="absolute top-0 left-0 opacity-90"
-        style={{ willChange: "transform", transform: "translate3d(-100px, -100px, 0)" }}
+        className="royal-seq-item absolute top-0 left-0 opacity-90"
+        style={
+          {
+            "--seq-delay": "1500ms",
+            willChange: "transform",
+            transform: "translate3d(-100px, -100px, 0)",
+          } as React.CSSProperties
+        }
       >
-        <ButterflyAnatomySvg variant="morpho" className="w-8 h-8" />
+        <ButterflyAnatomySvg variant="morpho" className="w-8 h-8" animationDelay="-0.65s" />
       </div>
 
       <div
         ref={b3Ref}
         data-butterfly-guide="micro"
-        className="absolute top-0 left-0 opacity-75 hidden sm:block"
-        style={{ willChange: "transform", transform: "translate3d(-100px, -100px, 0)" }}
+        className="royal-seq-item absolute top-0 left-0 opacity-75 hidden sm:block"
+        style={
+          {
+            "--seq-delay": "1650ms",
+            willChange: "transform",
+            transform: "translate3d(-100px, -100px, 0)",
+          } as React.CSSProperties
+        }
       >
-        <ButterflyAnatomySvg variant="swallowtail" className="w-6 h-6" />
+        <ButterflyAnatomySvg variant="swallowtail" className="w-6 h-6" animationDelay="-1.25s" />
       </div>
     </div>
   );

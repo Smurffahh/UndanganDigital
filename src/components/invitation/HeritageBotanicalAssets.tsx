@@ -107,42 +107,56 @@ export function BatikKawungStamp({ className = "w-48 h-48", mirror = false }: { 
 
 export function BotanicalHangingVines({ className = "w-full h-28 sm:h-36" }: { className?: string }) {
   return (
-    <div className={className} aria-hidden="true">
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
       <svg
         viewBox="0 0 1200 180"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover overflow-visible"
         preserveAspectRatio="none"
       >
-        <g stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round">
-          <path d="M0 0 Q 150 40, 280 15 Q 380 -5, 450 35" fill="none" />
-          <path d="M60 15 Q 120 70, 160 110" fill="none" />
-          <path d="M190 25 Q 240 75, 260 125" fill="none" />
-          <path d="M300 10 Q 330 55, 335 90" fill="none" />
+        <g className="animate-flora-sway">
+          <path d="M0 0 Q 150 40, 280 15 Q 380 -5, 450 35" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+          <path d="M60 15 Q 120 70, 160 110" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+          <path d="M190 25 Q 240 75, 260 125" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+          <path d="M300 10 Q 330 55, 335 90" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
         </g>
-        <g fill="#9c5f66" opacity="0.8">
-          <ellipse cx="160" cy="110" rx="8" ry="14" transform="rotate(25 160 110)" />
-          <ellipse cx="260" cy="125" rx="8" ry="13" transform="rotate(-15 260 125)" />
-          <circle cx="335" cy="90" r="7" fill="#5d3a41" />
+
+        <g className="animate-flora-leaf">
+          <ellipse cx="160" cy="110" rx="9" ry="16" transform="rotate(25 160 110)" fill="#9c5f66" opacity="0.85" />
+          <path d="M 155,98 L 165,122" stroke="#4a242c" strokeWidth="0.6" opacity="0.7" />
           <circle cx="120" cy="70" r="5" fill="#c9a24b" />
           <circle cx="240" cy="75" r="5" fill="#c9a24b" />
         </g>
-        <g fill="#f7e9e5" stroke="#5d3a41" strokeWidth="0.8">
-          <path d="M160 110 C 150 95, 170 95, 160 110 Z" />
-          <circle cx="160" cy="106" r="2.5" fill="#c9a24b" />
+
+        <g className="animate-flora-leaf-delayed">
+          <ellipse cx="260" cy="125" rx="9" ry="15" transform="rotate(-15 260 125)" fill="#9c5f66" opacity="0.85" />
+          <path d="M 258,112 L 262,138" stroke="#4a242c" strokeWidth="0.6" opacity="0.7" />
+          <circle cx="335" cy="90" r="7" fill="#5d3a41" />
+        </g>
+
+        <g className="animate-flora-petal">
+          <circle cx="160" cy="112" r="8" fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+          <path d="M160 106 C 152 95, 168 95, 160 106 Z" fill="#f7e9e5" stroke="#9c5f66" strokeWidth="0.7" />
+          <circle cx="160" cy="112" r="2.8" fill="#c9a24b" />
         </g>
 
         <g transform="translate(1200, 0) scale(-1, 1)">
-          <g stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round">
-            <path d="M0 0 Q 150 40, 280 15 Q 380 -5, 450 35" fill="none" />
-            <path d="M60 15 Q 120 70, 160 110" fill="none" />
-            <path d="M190 25 Q 240 75, 260 125" fill="none" />
+          <g className="animate-flora-sway">
+            <path d="M0 0 Q 150 40, 280 15 Q 380 -5, 450 35" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+            <path d="M60 15 Q 120 70, 160 110" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+            <path d="M190 25 Q 240 75, 260 125" stroke="#c9a24b" strokeWidth="1.2" strokeLinecap="round" fill="none" />
           </g>
-          <g fill="#9c5f66" opacity="0.8">
-            <ellipse cx="160" cy="110" rx="8" ry="14" transform="rotate(25 160 110)" />
-            <ellipse cx="260" cy="125" rx="8" ry="13" transform="rotate(-15 260 125)" />
+          <g className="animate-flora-leaf">
+            <ellipse cx="160" cy="110" rx="9" ry="16" transform="rotate(25 160 110)" fill="#9c5f66" opacity="0.85" />
             <circle cx="120" cy="70" r="5" fill="#c9a24b" />
+          </g>
+          <g className="animate-flora-leaf-delayed">
+            <ellipse cx="260" cy="125" rx="9" ry="15" transform="rotate(-15 260 125)" fill="#9c5f66" opacity="0.85" />
+          </g>
+          <g className="animate-flora-petal">
+            <circle cx="160" cy="112" r="8" fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+            <circle cx="160" cy="112" r="2.8" fill="#c9a24b" />
           </g>
         </g>
       </svg>

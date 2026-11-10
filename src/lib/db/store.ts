@@ -157,6 +157,9 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     qrisImageUrl: row.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
     loveStoryText: row.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
     storyHashtag: row.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
+    coupleVisualMode: (row.coupleVisualMode as typeof DEFAULT_WEDDING_SETTINGS.coupleVisualMode) || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
+    svgCharacterPreset: (row.svgCharacterPreset as typeof DEFAULT_WEDDING_SETTINGS.svgCharacterPreset) || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
+    isGalleryEnabled: row.isGalleryEnabled !== undefined ? Boolean(row.isGalleryEnabled) : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
     waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 }
@@ -308,10 +311,28 @@ function getPostgresDb() {
   return getDb();
 }
 
+let hasEnsuredColumns = false;
+async function ensureSettingsColumns() {
+  if (hasEnsuredColumns) return;
+  const rawUrl = process.env.DATABASE_URL;
+  if (!rawUrl) return;
+  try {
+    const { neon } = await import("@neondatabase/serverless");
+    const sql = neon(rawUrl);
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS couple_visual_mode VARCHAR(20) DEFAULT 'photo'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS svg_character_preset VARCHAR(50) DEFAULT 'javanese-royal'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS is_gallery_enabled BOOLEAN DEFAULT true`;
+    hasEnsuredColumns = true;
+  } catch (err) {
+    console.warn("Could not ensure wedding_settings columns:", err);
+  }
+}
+
 export async function getWeddingSettings(): Promise<WeddingSettingsData> {
   const db = getPostgresDb();
   if (db) {
     try {
+      await ensureSettingsColumns();
       const rows = await db.select().from(schema.weddingSettings).limit(1);
       if (rows.length > 0) {
         return decryptSettingsRecord(rows[0]);
@@ -344,6 +365,7 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
   const db = getPostgresDb();
   if (db) {
     try {
+      await ensureSettingsColumns();
       const existing = await db.select().from(schema.weddingSettings).limit(1);
       if (existing.length > 0) {
         await db

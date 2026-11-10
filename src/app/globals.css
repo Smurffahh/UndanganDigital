@@ -321,12 +321,89 @@ body {
   }
 }
 
+@keyframes floraSwaySlow {
+  0% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes floraPetalBreathe {
+  0% {
+    transform: scale(0.97) rotate(-1.5deg);
+  }
+  100% {
+    transform: scale(1.03) rotate(1.5deg);
+  }
+}
+
+@keyframes floraLeafFlutter {
+  0% {
+    transform: rotate(-3deg) scale(0.98);
+  }
+  100% {
+    transform: rotate(3deg) scale(1.02);
+  }
+}
+
+@keyframes wingFlapLeft {
+  0%, 100% {
+    transform: scaleX(1) rotateY(0deg);
+  }
+  50% {
+    transform: scaleX(0.18) rotateY(65deg);
+  }
+}
+
+@keyframes wingFlapRight {
+  0%, 100% {
+    transform: scaleX(1) rotateY(0deg);
+  }
+  50% {
+    transform: scaleX(0.18) rotateY(-65deg);
+  }
+}
+
 .animate-butterfly-drift {
   animation: butterflyDrift 9s ease-in-out infinite;
 }
 
 .animate-petal-drift {
   animation: petalDrift 11s ease-in-out infinite;
+}
+
+.animate-flora-sway {
+  transform-origin: bottom center;
+  animation: floraSwaySlow 6s ease-in-out infinite alternate;
+}
+
+.animate-flora-petal {
+  transform-origin: center center;
+  animation: floraPetalBreathe 4.5s ease-in-out infinite alternate;
+}
+
+.animate-flora-leaf {
+  transform-origin: bottom left;
+  animation: floraLeafFlutter 5s ease-in-out infinite alternate;
+}
+
+.animate-flora-leaf-delayed {
+  transform-origin: bottom right;
+  animation: floraLeafFlutter 5.5s ease-in-out infinite alternate -2.5s;
+}
+
+.butterfly-wing-l {
+  transform-origin: 100% 50%;
+  animation: wingFlapLeft var(--wing-speed, 0.45s) ease-in-out infinite;
+  will-change: transform;
+}
+
+.butterfly-wing-r {
+  transform-origin: 0% 50%;
+  animation: wingFlapRight var(--wing-speed, 0.45s) ease-in-out infinite;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {

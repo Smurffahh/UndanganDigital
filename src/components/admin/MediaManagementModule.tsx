@@ -41,6 +41,35 @@ export function MediaManagementModule({
   const [newGalleryCaption, setNewGalleryCaption] = useState("");
   const [newGalleryAspect, setNewGalleryAspect] = useState("3/4");
   const [isSubmittingGallery, setIsSubmittingGallery] = useState(false);
+  const [isTogglingGallery, setIsTogglingGallery] = useState(false);
+
+  const isGalleryEnabled = settings.isGalleryEnabled !== false;
+
+  const handleToggleGallery = async () => {
+    setIsTogglingGallery(true);
+    const newStatus = !isGalleryEnabled;
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isGalleryEnabled: newStatus }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Gagal mengubah status visibilitas galeri");
+      }
+      onSettingsChange({ ...settings, isGalleryEnabled: newStatus });
+      toast.success(
+        newStatus
+          ? "Halaman Galeri Foto sekarang AKTIF dan ditampilkan pada undangan publik! ✓"
+          : "Halaman Galeri Foto sekarang DISEMBUNYIKAN dari undangan publik! ✓"
+      );
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Gagal mengubah status");
+    } finally {
+      setIsTogglingGallery(false);
+    }
+  };
 
   const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -452,6 +481,48 @@ export function MediaManagementModule({
           >
             <Plus className="w-4 h-4 stroke-[2]" />
             <span>Tambah Foto Galeri</span>
+          </button>
+        </div>
+
+        <div className="mb-6 p-4 rounded-2xl bg-cream/35 border border-gold-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold text-sm text-ink font-serif">
+                Tampilkan Halaman Galeri Foto pada Undangan
+              </h4>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  isGalleryEnabled
+                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                    : "bg-rose-100 text-rose-800 border border-rose-300"
+                }`}
+              >
+                {isGalleryEnabled ? "Aktif (ON)" : "Disembunyikan (OFF)"}
+              </span>
+            </div>
+            <p className="text-xs text-muted max-w-[560px] leading-relaxed">
+              {isGalleryEnabled
+                ? "Halaman galeri foto dan menu navigasi Galeri ditampilkan pada undangan publik."
+                : "Halaman galeri foto dan tombol menu Galeri disembunyikan dari undangan publik (foto yang sudah diunggah tetap tersimpan aman di sistem)."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isGalleryEnabled}
+            aria-label="Tampilkan Halaman Galeri Foto pada Undangan"
+            disabled={isTogglingGallery}
+            onClick={handleToggleGallery}
+            className={`min-w-[52px] w-[52px] h-[30px] rounded-full p-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-rose-700 shrink-0 cursor-pointer disabled:opacity-50 ${
+              isGalleryEnabled ? "bg-emerald-600" : "bg-stone-300"
+            }`}
+          >
+            <div
+              className={`w-[22px] h-[22px] rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                isGalleryEnabled ? "translate-x-[22px]" : "translate-x-0"
+              }`}
+            />
           </button>
         </div>
 

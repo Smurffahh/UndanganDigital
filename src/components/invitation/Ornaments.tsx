@@ -261,15 +261,67 @@ export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) 
 
 export function FloralCornerAccent({ className = "w-28 h-auto" }: { className?: string }) {
   return (
-    <div className={className} aria-hidden="true">
-      <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-        <path d="M10 20 Q60 27 110 20" stroke="#c9a24b" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
-        <path d="M30 20 C25 14 38 10 40 20 C38 24 25 24 30 20 Z" fill="#edd39b" opacity="0.75" />
-        <path d="M90 20 C95 14 82 10 80 20 C82 24 95 24 90 20 Z" fill="#edd39b" opacity="0.75" />
-        <circle cx="60" cy="21" r="6" fill="#f7e9e5" stroke="#9c5f66" strokeWidth="1" />
-        <circle cx="56" cy="17" r="3.5" fill="#f4dbd4" opacity="0.8" />
-        <circle cx="64" cy="17" r="3.5" fill="#f4dbd4" opacity="0.8" />
-        <circle cx="60" cy="21" r="2" fill="#c9a24b" />
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 140 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-xs">
+        <g className="animate-flora-sway">
+          <path
+            d="M 12,24 Q 45,30 70,24 Q 95,18 128,24"
+            stroke="#c9a24b"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            opacity="0.8"
+          />
+          <path d="M 38,26 Q 24,14 16,16" stroke="#c9a24b" strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+          <path d="M 102,23 Q 116,14 124,16" stroke="#c9a24b" strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+        </g>
+
+        <g className="animate-flora-leaf">
+          <path
+            d="M 38,26 C 30,16 18,18 16,24 C 18,29 32,32 38,26 Z"
+            fill="#d8b488"
+            stroke="#8c5835"
+            strokeWidth="0.75"
+            opacity="0.85"
+          />
+          <path d="M 38,26 L 19,23" stroke="#8c5835" strokeWidth="0.5" opacity="0.7" />
+          <path d="M 28,24 L 25,20 M 32,25 L 30,22" stroke="#8c5835" strokeWidth="0.4" opacity="0.6" />
+        </g>
+
+        <g className="animate-flora-leaf-delayed">
+          <path
+            d="M 102,23 C 110,14 122,16 124,22 C 122,27 108,30 102,23 Z"
+            fill="#d8b488"
+            stroke="#8c5835"
+            strokeWidth="0.75"
+            opacity="0.85"
+          />
+          <path d="M 102,23 L 121,21" stroke="#8c5835" strokeWidth="0.5" opacity="0.7" />
+          <path d="M 112,22 L 115,18 M 108,23 L 110,20" stroke="#8c5835" strokeWidth="0.4" opacity="0.6" />
+        </g>
+
+        <g className="animate-flora-petal">
+          <circle cx="70" cy="24" r="10" fill="#fffdfa" stroke="#c9a24b" strokeWidth="1" />
+          <path
+            d="M 70,14 C 63,18 63,30 70,34 C 77,30 77,18 70,14 Z"
+            fill="#fcedeb"
+            stroke="#c08497"
+            strokeWidth="0.75"
+            opacity="0.9"
+          />
+          <path
+            d="M 60,24 C 64,17 76,17 80,24 C 76,31 64,31 60,24 Z"
+            fill="#fcedeb"
+            stroke="#c08497"
+            strokeWidth="0.75"
+            opacity="0.9"
+          />
+          <circle cx="70" cy="24" r="4.5" fill="#fdf0cd" stroke="#c9a24b" strokeWidth="0.8" />
+          <circle cx="70" cy="24" r="2" fill="#c9a24b" />
+          <circle cx="68" cy="22.5" r="0.6" fill="#8c5835" />
+          <circle cx="72" cy="22.5" r="0.6" fill="#8c5835" />
+          <circle cx="68" cy="25.5" r="0.6" fill="#8c5835" />
+          <circle cx="72" cy="25.5" r="0.6" fill="#8c5835" />
+        </g>
       </svg>
     </div>
   );

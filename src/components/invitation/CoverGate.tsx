@@ -5,7 +5,6 @@ import {
   GoldenEmblemSeal,
   CardCornerOrnament,
   MonogramFS,
-  FloralCornerAccent,
 } from "./Ornaments";
 import {
   BatikKawungStamp,
@@ -14,6 +13,8 @@ import {
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
+import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
+import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CoverGateProps {
   guestName: string;
@@ -21,6 +22,8 @@ interface CoverGateProps {
   coverPhotoUrl: string;
   weddingDateIso?: string;
   eventDateLabel?: string;
+  coupleVisualMode?: CoupleVisualMode;
+  svgCharacterPreset?: SvgCharacterPreset;
 }
 
 export function CoverGate({
@@ -29,13 +32,14 @@ export function CoverGate({
   coverPhotoUrl,
   weddingDateIso,
   eventDateLabel,
+  coupleVisualMode = "photo",
+  svgCharacterPreset = "javanese-royal",
 }: CoverGateProps) {
   const [isOpening, setIsOpening] = useState(false);
   const [gone, setGone] = useState(false);
   const isReducedMotion = usePrefersReducedMotion();
   const formattedDate = formatCoverDate(weddingDateIso, eventDateLabel);
 
-  // Strict mobile viewport lock; blocks touchmove and wheel gestures until invitation opens
   useEffect(() => {
     if (gone) return;
 
@@ -102,12 +106,11 @@ export function CoverGate({
     }
 
     setIsOpening(true);
-    // Synchronous trigger activates audio on iOS Safari without gesture loss
     onOpen();
 
     setTimeout(() => {
       setGone(true);
-    }, 2250);
+    }, 1050);
   };
 
   if (gone) return null;
@@ -121,12 +124,12 @@ export function CoverGate({
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-[1800ms] ease-[cubic-bezier(0.25,1,0.35,1)] ${
+        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform duration-[750ms] ease-[cubic-bezier(0.65,0,0.15,1)] ${
           isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "400ms" : "0ms",
+          transitionDelay: isOpening ? "250ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -139,12 +142,12 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-12px_0_35px_-8px_rgba(93,58,65,0.22)] transition-transform duration-[1800ms] ease-[cubic-bezier(0.25,1,0.35,1)] ${
+        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform duration-[750ms] ease-[cubic-bezier(0.65,0,0.15,1)] ${
           isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "400ms" : "0ms",
+          transitionDelay: isOpening ? "250ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -159,20 +162,9 @@ export function CoverGate({
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
 
       <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-[transform,opacity] duration-[600ms] ease-out pointer-events-none ${
+        className={`relative z-20 w-full h-dvh min-h-dvh max-w-[440px] mx-auto flex flex-col justify-between items-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[opacity,transform] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening
-            ? "scale-90 opacity-0"
-            : "scale-100 opacity-95 drop-shadow-[0_12px_28px_rgba(93,58,65,0.25)]"
-        }`}
-        style={{ willChange: "transform, opacity", backfaceVisibility: "hidden" }}
-      >
-        <GoldenEmblemSeal className="w-20 h-20 sm:w-24 sm:h-24" />
-      </div>
-
-      <div
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between py-6 sm:py-8 px-4 sm:px-6 max-w-[440px] mx-auto text-center transition-[opacity,transform] duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)] overflow-y-auto ${
-          isOpening
-            ? "opacity-0 scale-[0.95] -translate-y-3 pointer-events-none"
+            ? "opacity-0 scale-[0.98] -translate-y-3.5 pointer-events-none"
             : "opacity-100 scale-100 translate-y-0"
         }`}
         style={{
@@ -180,54 +172,80 @@ export function CoverGate({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className="flex flex-col items-center pt-1 sm:pt-2">
-          <MonogramFS className="w-14 h-14 mb-1" />
-          <p className="typo-eyebrow text-[#a9823a] tracking-[0.2em] mb-1">
-            THE WEDDING OF
-          </p>
-
-          <div className="arch w-20 sm:w-24 aspect-[3/4] my-2 shadow-[0_10px_24px_-6px_rgba(93,58,65,0.18)] shrink-0">
-            <div className="w-full h-full rounded-[990px_990px_14px_14px] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={coverPhotoUrl}
-                alt="Fauzan Ma'ruf & Sinta Maria Utami"
-                className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-                loading="eager"
-              />
-            </div>
+        <div className="flex flex-col items-center shrink-0 w-full">
+          <div className="flex items-center justify-center gap-2 mb-1 sm:mb-1.5">
+            <MonogramFS className="w-8 h-8 sm:w-9 sm:h-9" />
+            <span className="w-3.5 h-px bg-[#c9a24b]/60" />
+            <p className="typo-eyebrow text-[#a9823a] tracking-[0.22em] text-[10px] sm:text-xs">
+              THE WEDDING OF
+            </p>
           </div>
 
-          <h1 className="typo-display drop-shadow-xs">
-            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-1 font-normal">&amp;</span> Sinta
+          <div className="w-44 sm:w-52 md:w-60 aspect-[4/5] mx-auto rounded-t-full rounded-b-2xl p-2 bg-white/80 shadow-xs border border-amber-900/15 backdrop-blur-[2px] shrink-0">
+            <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-[#fdfaf5] flex items-center justify-center">
+              {coupleVisualMode === "svg" || !coverPhotoUrl ? (
+                <CoupleCharacterSvg
+                  preset={svgCharacterPreset}
+                  variant="couple"
+                  className="w-full h-full"
+                />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={coverPhotoUrl}
+                  alt="Fauzan Ma'ruf & Sinta Maria Utami"
+                  className="w-full h-full object-cover object-center"
+                  fetchPriority="high"
+                  loading="eager"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center shrink-0 w-full my-auto">
+          <h1 className="text-3xl sm:text-4xl font-serif tracking-tight drop-shadow-xs font-bold text-ink">
+            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-0.5 font-normal">&amp;</span> Sinta
           </h1>
 
-          <div className="mt-1.5 flex items-center justify-center gap-2">
+          <div className="mt-1 flex items-center justify-center gap-2">
             <span className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
-            <p className="font-sans text-sm font-medium tracking-[0.12em] uppercase text-[#4b3a3e]">
+            <p className="font-sans text-xs sm:text-sm font-medium tracking-[0.14em] uppercase text-[#4b3a3e] tabular-nums">
               {formattedDate}
             </p>
             <span className="w-5 sm:w-8 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
           </div>
 
-          <span className="mt-2 inline-block px-3.5 py-1 rounded-full bg-[#f7e9e5] text-[#9c5f66] border border-[#e9d3a3] font-sans text-xs sm:text-sm font-semibold normal-case tracking-wide shadow-xs">
+          <span className="mt-1.5 inline-block px-3 py-0.5 rounded-full bg-[#f7e9e5]/90 text-[#9c5f66] border border-[#e9d3a3] font-sans text-[11px] sm:text-xs font-semibold normal-case tracking-wide shadow-2xs">
             #SINgkatceritaFAUZAN
           </span>
+
+          <div
+            className={`relative my-2 sm:my-2.5 transition-[transform,opacity] duration-[350ms] ease-out ${
+              isOpening
+                ? "scale-[1.08] rotate-12 opacity-0"
+                : "scale-100 rotate-0 opacity-100"
+            }`}
+            style={{ willChange: "transform, opacity" }}
+          >
+            <GoldenEmblemSeal className="size-14 sm:size-16" />
+            {isOpening && (
+              <div className="absolute inset-0 rounded-full border-2 border-[#d4af37] animate-ping opacity-75 pointer-events-none" />
+            )}
+          </div>
         </div>
 
-        <div className="w-full max-w-[340px] flex flex-col items-center mt-3">
-          <div className="bg-[#fffdfa] px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl sm:rounded-3xl w-full border border-[#e9d3a3] shadow-[0_16px_36px_-12px_rgba(93,58,65,0.16)] relative overflow-hidden group">
+        <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center shrink-0">
+          <div className="w-full bg-[#fffdfa]/95 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl sm:rounded-2xl border border-[#e9d3a3] shadow-[0_10px_24px_-8px_rgba(93,58,65,0.14)] relative overflow-hidden group text-center">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c9a24b]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
-
             <CardCornerOrnament />
-
-            <p className="typo-eyebrow text-[#8d757c] tracking-[0.2em]">
+            <p className="typo-eyebrow text-[#8d757c] tracking-[0.2em] text-[10px]">
               KEPADA YTH.
             </p>
-            <p className="typo-meta mt-0.5 text-xs">
+            <p className="typo-meta text-[11px] mt-0.5">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="typo-card-title mt-1.5 break-words font-semibold text-rose-900">
+            <p className="typo-card-title mt-1 font-semibold text-rose-900 text-sm sm:text-base truncate">
               {guestName || "Tamu Undangan"}
             </p>
           </div>
@@ -235,17 +253,17 @@ export function CoverGate({
           <button
             type="button"
             onClick={handleOpen}
-            className="typo-button mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] uppercase border border-[#c9a24b]/60 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[290px]"
+            className="typo-button mt-3 sm:mt-3.5 inline-flex items-center justify-center gap-2.5 ps-5 pe-6 min-h-12 w-full max-w-xs rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] uppercase border border-[#c9a24b]/60 shadow-[0_12px_28px_-6px_rgba(93,58,65,0.35)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b]"
           >
-            <Mail className="w-4 h-4 stroke-[#edd39b] stroke-[2]" />
-            <span className="tracking-wider">Buka Undangan Pernikahan</span>
+            <Mail className="w-4 h-4 shrink-0 stroke-[#edd39b] stroke-[2]" />
+            <span className="whitespace-nowrap text-xs sm:text-sm font-semibold tracking-wider uppercase">
+              Buka Undangan
+            </span>
           </button>
 
-          <p className="typo-meta mt-2 text-center">
+          <p className="text-[10px] sm:text-xs text-[#8d757c] mt-2 text-center tracking-tight">
             *Mohon maaf apabila terdapat kekeliruan penulisan nama &amp; gelar
           </p>
-
-          <FloralCornerAccent className="w-28 mx-auto mt-1 opacity-70" />
         </div>
       </div>
     </section>

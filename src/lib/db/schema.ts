@@ -44,6 +44,9 @@ export const weddingSettings = pgTable("wedding_settings", {
   waMessageTemplate: text("wa_message_template"),
   loveStoryText: text("love_story_text"),
   storyHashtag: varchar("story_hashtag", { length: 100 }).default("#SINgkatceritaFAUZAN"),
+  coupleVisualMode: varchar("couple_visual_mode", { length: 20 }).default("photo"),
+  svgCharacterPreset: varchar("svg_character_preset", { length: 50 }).default("javanese-royal"),
+  isGalleryEnabled: boolean("is_gallery_enabled").default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 

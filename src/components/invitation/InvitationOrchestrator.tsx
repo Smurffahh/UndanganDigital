@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PetalsCanvas } from "./PetalsCanvas";
+import { ScrollLinkedButterflies } from "./ScrollLinkedButterflies";
 import { CoverGate } from "./CoverGate";
 import { CountdownHero } from "./CountdownHero";
 import { CoupleProfile } from "./CoupleProfile";
@@ -60,6 +61,7 @@ export function InvitationOrchestrator({
       <FixedInvitationBackground heroPhotoUrl={settings.heroPhotoUrl} />
 
       <PetalsCanvas />
+      <ScrollLinkedButterflies />
 
       <CoverGate
         guestName={guestName}
@@ -67,6 +69,8 @@ export function InvitationOrchestrator({
         coverPhotoUrl={settings.coverPhotoUrl}
         weddingDateIso={settings.weddingDateIso}
         eventDateLabel={settings.eventDateLabel}
+        coupleVisualMode={settings.coupleVisualMode}
+        svgCharacterPreset={settings.svgCharacterPreset}
       />
 
       <div className="relative z-10">
@@ -77,6 +81,8 @@ export function InvitationOrchestrator({
           isOpened={isOpened}
           isHeroReady={isHeroReady}
           eventDateLabel={settings.eventDateLabel}
+          coupleVisualMode={settings.coupleVisualMode}
+          svgCharacterPreset={settings.svgCharacterPreset}
         />
 
         <CoupleProfile
@@ -88,6 +94,8 @@ export function InvitationOrchestrator({
           groomBirth={settings.groomBirth}
           groomBio={settings.groomBio}
           groomPhotoUrl={settings.groomPhotoUrl}
+          coupleVisualMode={settings.coupleVisualMode}
+          svgCharacterPreset={settings.svgCharacterPreset}
         />
 
         <LoveStoryTimeline
@@ -107,7 +115,7 @@ export function InvitationOrchestrator({
           eventDateLabel={settings.eventDateLabel}
         />
 
-        <PhotoGallery photos={galleryPhotos} />
+        {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
 
         <RsvpGuestbook
           initialWishes={wishes}
@@ -121,10 +129,14 @@ export function InvitationOrchestrator({
           qrisImageUrl={settings.qrisImageUrl}
         />
 
-        <ClosingFooter weddingDateIso={settings.weddingDateIso} />
+        <ClosingFooter
+          weddingDateIso={settings.weddingDateIso}
+          coupleVisualMode={settings.coupleVisualMode}
+          svgCharacterPreset={settings.svgCharacterPreset}
+        />
       </div>
 
-      <FloatingNav isOpened={isOpened} />
+      <FloatingNav isOpened={isOpened} isGalleryEnabled={settings.isGalleryEnabled} />
 
       <FloatingControls
         isOpened={isOpened}

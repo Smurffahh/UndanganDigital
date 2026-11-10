@@ -24,10 +24,20 @@ import {
   Volume2,
   VolumeX,
   Upload,
+  Image as ImageIcon,
+  Palette,
+  Check,
 } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import type { WeddingSettingsData } from "@/lib/db/store";
-import { WEDDING_MUSIC_PRESETS, type MusicPreset } from "@/lib/db/seed-data";
+import {
+  WEDDING_MUSIC_PRESETS,
+  SVG_CHARACTER_PRESETS,
+  type MusicPreset,
+  type CoupleVisualMode,
+  type SvgCharacterPreset,
+} from "@/lib/db/seed-data";
+import { CoupleCharacterSvg } from "@/components/invitation/CoupleCharacterSvg";
 
 interface WeddingSettingsModuleProps {
   initialSettings: WeddingSettingsData | any;
@@ -926,6 +936,254 @@ export function WeddingSettingsModule({
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-6">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <Palette className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Mode Visual Mempelai &amp; Karakter Ilustrasi SVG
+            </h3>
+            <p className="text-xs text-muted">
+              Pilih apakah undangan menggunakan foto asli calon mempelai atau karakter ilustrasi vektor SVG arsitektural.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-3">
+            Pilihan Mode Visual Utama:
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <button
+              type="button"
+              onClick={() => handleFieldChange("coupleVisualMode", "photo")}
+              className={`p-4 rounded-2xl border text-left transition-transform duration-150 active:scale-[0.98] cursor-pointer flex items-start gap-3.5 ${
+                (formData.coupleVisualMode || "photo") === "photo"
+                  ? "border-rose-700 bg-rose-50/70 shadow-xs ring-1 ring-rose-700"
+                  : "border-gold-500/30 bg-surface-white hover:bg-cream/40"
+              }`}
+            >
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                  (formData.coupleVisualMode || "photo") === "photo"
+                    ? "bg-rose-900 text-gold-300"
+                    : "bg-gold-500/15 text-gold-700"
+                }`}
+              >
+                <ImageIcon className="w-5 h-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-semibold text-sm text-ink font-serif">
+                    Gunakan Foto Asli
+                  </h4>
+                  {(formData.coupleVisualMode || "photo") === "photo" && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-900 text-gold-200 text-[10px] font-bold">
+                      <Check className="w-3 h-3 stroke-[2.5]" />
+                      Aktif
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted mt-1 leading-relaxed">
+                  Menampilkan foto asli mempelai pria, wanita, dan foto berdua pada bingkai sampul, hero, dan kartu profil.
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleFieldChange("coupleVisualMode", "svg")}
+              className={`p-4 rounded-2xl border text-left transition-transform duration-150 active:scale-[0.98] cursor-pointer flex items-start gap-3.5 ${
+                formData.coupleVisualMode === "svg"
+                  ? "border-rose-700 bg-rose-50/70 shadow-xs ring-1 ring-rose-700"
+                  : "border-gold-500/30 bg-surface-white hover:bg-cream/40"
+              }`}
+            >
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                  formData.coupleVisualMode === "svg"
+                    ? "bg-rose-900 text-gold-300"
+                    : "bg-gold-500/15 text-gold-700"
+                }`}
+              >
+                <Palette className="w-5 h-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-semibold text-sm text-ink font-serif">
+                    Gunakan Karakter Ilustrasi SVG
+                  </h4>
+                  {formData.coupleVisualMode === "svg" && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-900 text-gold-200 text-[10px] font-bold">
+                      <Check className="w-3 h-3 stroke-[2.5]" />
+                      Aktif
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted mt-1 leading-relaxed">
+                  Menampilkan ilustrasi vektor karakter dengan keserasian presisi antara pose sendiri-sendiri dan pose berdua.
+                </p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {formData.coupleVisualMode === "svg" && (
+          <div className="pt-2 border-t border-gold-500/15 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
+                  Pilih Versi Karakter Ilustrasi SVG (Live Preview):
+                </label>
+                <p className="text-xs text-muted mt-0.5">
+                  Setiap versi memiliki keserasian garis, warna, dan busana yang identik antara pose solo pria, solo wanita, dan pose berdua.
+                </p>
+              </div>
+              <span className="text-xs font-medium text-[#5d3a41] px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 self-start sm:self-auto">
+                Preset Terpilih: <strong>{SVG_CHARACTER_PRESETS.find(p => p.id === (formData.svgCharacterPreset || "javanese-royal"))?.title.split("(")[0]}</strong>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {SVG_CHARACTER_PRESETS.map((preset) => {
+                const isSelected = (formData.svgCharacterPreset || "javanese-royal") === preset.id;
+
+                return (
+                  <div
+                    key={preset.id}
+                    onClick={() => handleFieldChange("svgCharacterPreset", preset.id)}
+                    className={`p-4 sm:p-5 rounded-2xl border text-left transition-transform duration-150 active:scale-[0.98] cursor-pointer flex flex-col justify-between relative group ${
+                      isSelected
+                        ? "border-rose-700 bg-gradient-to-b from-rose-50/90 to-surface-white shadow-md ring-2 ring-rose-700/80"
+                        : "border-gold-500/30 bg-surface-white hover:border-gold-500/60 hover:shadow-xs"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div>
+                          <h4 className="font-serif font-bold text-base text-rose-950">
+                            {preset.title}
+                          </h4>
+                          <p className="text-xs text-[#a9823a] font-medium mt-0.5">
+                            {preset.subtitle}
+                          </p>
+                        </div>
+                        {isSelected && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-900 text-gold-200 text-xs font-bold shrink-0">
+                            <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                            Dipilih
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-muted leading-relaxed mb-4">
+                        {preset.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        <span className="px-2 py-0.5 rounded-md bg-[#fffdfa] border border-[#e9d3a3] text-[11px] font-medium text-ink">
+                          👔 {preset.groomAttire}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#fffdfa] border border-[#e9d3a3] text-[11px] font-medium text-ink">
+                          👗 {preset.brideAttire}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-gold-500/20 bg-cream/30 -mx-4 -mb-4 sm:-mx-5 sm:-mb-5 p-3 rounded-b-2xl">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gold-700 text-center mb-2">
+                        Pratinjau Serasi (Pria Solo &bull; Pose Berdua &bull; Wanita Solo)
+                      </p>
+                      <div className="flex items-center justify-center gap-2 sm:gap-3">
+                        <div className="flex flex-col items-center">
+                          <div className="w-14 h-18 sm:w-16 sm:h-20 rounded-xl overflow-hidden border border-gold-500/40 bg-surface-white shadow-xs p-0.5">
+                            <CoupleCharacterSvg preset={preset.id} variant="groom" className="w-full h-full" />
+                          </div>
+                          <span className="text-[10px] font-medium text-muted mt-1">Pria</span>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                          <div className="w-24 h-18 sm:w-28 sm:h-20 rounded-xl overflow-hidden border-2 border-rose-800/60 bg-surface-white shadow-xs p-0.5">
+                            <CoupleCharacterSvg preset={preset.id} variant="couple" className="w-full h-full" />
+                          </div>
+                          <span className="text-[10px] font-bold text-rose-900 mt-1">Pose Berdua</span>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                          <div className="w-14 h-18 sm:w-16 sm:h-20 rounded-xl overflow-hidden border border-gold-500/40 bg-surface-white shadow-xs p-0.5">
+                            <CoupleCharacterSvg preset={preset.id} variant="bride" className="w-full h-full" />
+                          </div>
+                          <span className="text-[10px] font-medium text-muted mt-1">Wanita</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="bg-surface-white rounded-3xl p-6 sm:p-7 border border-gold-500/30 shadow-sm space-y-4">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-gold-500/15">
+          <div className="w-9 h-9 rounded-xl bg-gold-500/15 flex items-center justify-center text-gold-700">
+            <ImageIcon className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-rose-900 font-serif">
+              Pengaturan Visibilitas Halaman Galeri Foto
+            </h3>
+            <p className="text-xs text-muted">
+              Kendali apakah seksi Galeri Foto dan tombol pintasan navigasi Galeri ditampilkan pada undangan publik.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-cream/35 border border-gold-500/25">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold text-sm text-ink font-serif">
+                Tampilkan Halaman Galeri Foto
+              </h4>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  formData.isGalleryEnabled !== false
+                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                    : "bg-rose-100 text-rose-800 border border-rose-300"
+                }`}
+              >
+                {formData.isGalleryEnabled !== false ? "Aktif (ON)" : "Disembunyikan (OFF)"}
+              </span>
+            </div>
+            <p className="text-xs text-muted max-w-[560px] leading-relaxed">
+              {formData.isGalleryEnabled !== false
+                ? "Halaman galeri foto dan menu navigasi Galeri ditampilkan pada undangan publik."
+                : "Halaman galeri foto dan tombol menu Galeri disembunyikan dari undangan publik (foto yang sudah diunggah tetap tersimpan aman di sistem)."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formData.isGalleryEnabled !== false}
+            aria-label="Tampilkan Halaman Galeri Foto"
+            onClick={() => handleFieldChange("isGalleryEnabled", formData.isGalleryEnabled === false)}
+            className={`min-w-[52px] w-[52px] h-[30px] rounded-full p-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-rose-700 shrink-0 cursor-pointer ${
+              formData.isGalleryEnabled !== false ? "bg-emerald-600" : "bg-stone-300"
+            }`}
+          >
+            <div
+              className={`w-[22px] h-[22px] rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                formData.isGalleryEnabled !== false ? "translate-x-[22px]" : "translate-x-0"
+              }`}
+            />
+          </button>
         </div>
       </section>
 

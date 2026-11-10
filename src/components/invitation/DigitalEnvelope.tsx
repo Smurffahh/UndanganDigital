@@ -211,18 +211,23 @@ export function DigitalEnvelope({
                   <button
                     type="button"
                     onClick={() => handleCopy(acc.number, copyKey, `Nomor ${acc.brand}`)}
-                    className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
+                    className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                       isCopied
                         ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
                         : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
                     }`}
                   >
                     <span className="relative w-4 h-4 grid place-items-center">
-                      {isCopied ? (
-                        <Check className="w-4 h-4 text-white animate-in zoom-in-50 duration-300 stroke-[2.5]" />
-                      ) : (
-                        <Copy className="w-4 h-4 stroke-[1.8]" />
-                      )}
+                      <Check
+                        className={`w-4 h-4 text-white stroke-[2.5] absolute transition-[transform,opacity,filter] duration-200 ${
+                          isCopied ? "scale-100 opacity-100 blur-none" : "scale-50 opacity-0 blur-[2px] pointer-events-none"
+                        }`}
+                      />
+                      <Copy
+                        className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ${
+                          isCopied ? "scale-50 opacity-0 blur-[2px] pointer-events-none" : "scale-100 opacity-100 blur-none"
+                        }`}
+                      />
                     </span>
                     <span>{isCopied ? "Berhasil Disalin" : "Salin Nomor Rekening"}</span>
                   </button>
@@ -258,18 +263,27 @@ export function DigitalEnvelope({
             <button
               type="button"
               onClick={() => handleCopy(giftAddress.address, "addr-copy", "Alamat")}
-              className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer ${
+              className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                 copiedKey === "addr-copy"
                   ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
                   : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
               }`}
             >
               <span className="relative w-4 h-4 grid place-items-center">
-                {copiedKey === "addr-copy" ? (
-                  <Check className="w-4 h-4 text-white animate-in zoom-in-50 duration-300 stroke-[2.5]" />
-                ) : (
-                  <Copy className="w-4 h-4 stroke-[1.8]" />
-                )}
+                <Check
+                  className={`w-4 h-4 text-white stroke-[2.5] absolute transition-[transform,opacity,filter] duration-200 ${
+                    copiedKey === "addr-copy"
+                      ? "scale-100 opacity-100 blur-none"
+                      : "scale-50 opacity-0 blur-[2px] pointer-events-none"
+                  }`}
+                />
+                <Copy
+                  className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ${
+                    copiedKey === "addr-copy"
+                      ? "scale-50 opacity-0 blur-[2px] pointer-events-none"
+                      : "scale-100 opacity-100 blur-none"
+                  }`}
+                />
               </span>
               <span>{copiedKey === "addr-copy" ? "Alamat Berhasil Disalin" : "Salin Alamat Kirim Kado"}</span>
             </button>
@@ -288,7 +302,7 @@ export function DigitalEnvelope({
           onClick={closeQrisModal}
         >
           <div
-            className={`w-full max-w-sm bg-gradient-to-b from-[#fffcf9] to-[#fbf1ed] rounded-3xl border border-gold-500/60 shadow-2xl p-6 text-center relative overflow-hidden transition-all duration-300 ${
+            className={`w-full max-w-sm bg-gradient-to-b from-[#fffcf9] to-[#fbf1ed] rounded-3xl border border-gold-500/60 shadow-2xl p-6 text-center relative overflow-hidden transition-[transform,opacity] duration-300 ${
               isModalVisible ? "scale-100 translate-y-0 opacity-100" : "scale-95 translate-y-4 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}

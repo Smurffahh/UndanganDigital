@@ -221,13 +221,13 @@ export function CoverGate({
 
             <CardCornerOrnament />
 
-            <p className="typo-eyebrow text-[#8d757c]">
-              Kepada Yth.
+            <p className="typo-eyebrow text-[#8d757c] tracking-[0.2em]">
+              KEPADA YTH.
             </p>
-            <p className="typo-meta mt-0.5">
+            <p className="typo-meta mt-0.5 text-xs">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="typo-card-title mt-1.5 break-words">
+            <p className="typo-card-title mt-1.5 break-words font-semibold text-rose-900">
               {guestName || "Tamu Undangan"}
             </p>
           </div>
@@ -235,10 +235,10 @@ export function CoverGate({
           <button
             type="button"
             onClick={handleOpen}
-            className="typo-button mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] uppercase border border-[#c9a24b]/55 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[280px]"
+            className="typo-button mt-4 sm:mt-5 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-[#fffdfa] uppercase border border-[#c9a24b]/60 shadow-[0_14px_32px_-8px_rgba(93,58,65,0.38)] transition-[transform,background-color,box-shadow] duration-150 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c9a24b] min-h-12 w-full max-w-[290px]"
           >
             <Mail className="w-4 h-4 stroke-[#edd39b] stroke-[2]" />
-            <span>Buka Undangan</span>
+            <span className="tracking-wider">Buka Undangan Pernikahan</span>
           </button>
 
           <p className="typo-meta mt-2 text-center">

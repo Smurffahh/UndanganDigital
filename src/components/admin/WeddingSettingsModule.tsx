@@ -390,6 +390,7 @@ export function WeddingSettingsModule({
       <audio
         ref={audioTestRef}
         src={effectiveAudioUrl}
+        preload="none"
         onEnded={() => setIsPlayingTest(false)}
         className="hidden"
       />

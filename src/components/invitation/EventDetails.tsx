@@ -126,25 +126,25 @@ export function EventDetails({
               <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
               <a
                 href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
                 <MapPin className="w-3.5 h-3.5 text-gold-300" />
-                <span className="text-xs tracking-wider uppercase font-semibold">Lihat Lokasi</span>
+                <span className="text-xs tracking-wider uppercase font-semibold">Buka Petunjuk Arah Google Maps</span>
               </a>
 
               <a
                 href={googleCalendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
                 <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
-                <span className="text-xs tracking-wider uppercase font-semibold">Simpan Tanggal</span>
+                <span className="text-xs tracking-wider uppercase font-semibold">Simpan ke Kalender</span>
               </a>
             </div>
 
@@ -200,25 +200,25 @@ export function EventDetails({
               <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
               <a
                 href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
                 <MapPin className="w-3.5 h-3.5 text-gold-300" />
-                <span className="text-xs tracking-wider uppercase font-semibold">Lihat Lokasi</span>
+                <span className="text-xs tracking-wider uppercase font-semibold">Buka Petunjuk Arah Google Maps</span>
               </a>
 
               <a
                 href={googleCalendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
                 <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
-                <span className="text-xs tracking-wider uppercase font-semibold">Simpan Tanggal</span>
+                <span className="text-xs tracking-wider uppercase font-semibold">Simpan ke Kalender</span>
               </a>
             </div>
 

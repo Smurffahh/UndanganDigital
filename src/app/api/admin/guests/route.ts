@@ -3,11 +3,24 @@ import { isAuthenticated } from "@/lib/auth";
 import { getGuests, createGuest, updateGuest, deleteGuest } from "@/lib/db/store";
 import { z } from "zod";
 
-const guestSchema = z.object({
-  name: z.string().trim().min(1, "Nama tamu wajib diisi").max(100),
-  whatsappNumber: z.string().optional().nullable(),
-  category: z.string().optional().default("Reguler"),
-});
+const guestSchema = z
+  .object({
+    name: z.string().trim().min(1, "Nama tamu wajib diisi").max(100),
+    whatsappNumber: z.string().optional().nullable(),
+    category: z.string().optional().default("Reguler"),
+  })
+  .strict();
+
+const updateGuestSchema = z
+  .object({
+    id: z.coerce.number().int().positive(),
+    name: z.string().trim().min(1).max(100).optional(),
+    whatsappNumber: z.string().optional().nullable(),
+    category: z.string().optional(),
+    waSentStatus: z.boolean().optional(),
+    waSentAt: z.string().nullable().optional(),
+  })
+  .strict();
 
 export async function GET() {
   if (!(await isAuthenticated())) {
@@ -33,7 +46,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Excel strips leading 0 on numeric cells; normalizes 08... and 8... to 628...
     let phone = parsed.data.whatsappNumber ? parsed.data.whatsappNumber.replace(/[^0-9]/g, "") : null;
     if (phone) {
       if (phone.startsWith("0")) {
@@ -50,8 +62,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, data: newGuest }, { status: 201 });
-  } catch (err) {
-    console.error("Failed to create guest:", err);
+  } catch {
     return NextResponse.json({ success: false, error: "Gagal menambahkan tamu" }, { status: 500 });
   }
 }
@@ -63,21 +74,26 @@ export async function PATCH(request: Request) {
 
   try {
     const body = await request.json();
-    if (!body.id) {
-      return NextResponse.json({ success: false, error: "ID tamu diperlukan" }, { status: 400 });
+    const parsed = updateGuestSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: parsed.error.issues[0]?.message || "Format data tidak valid" },
+        { status: 400 }
+      );
     }
 
-    const updated = await updateGuest(body.id, {
-      waSentStatus: body.waSentStatus !== undefined ? body.waSentStatus : undefined,
-      waSentAt: body.waSentAt !== undefined ? body.waSentAt : (body.waSentStatus ? new Date().toISOString() : null),
-      name: body.name,
-      whatsappNumber: body.whatsappNumber,
-      category: body.category,
+    const { id, waSentStatus, waSentAt, name, whatsappNumber, category } = parsed.data;
+
+    const updated = await updateGuest(id, {
+      waSentStatus: waSentStatus !== undefined ? waSentStatus : undefined,
+      waSentAt: waSentAt !== undefined ? waSentAt : (waSentStatus ? new Date().toISOString() : null),
+      name,
+      whatsappNumber,
+      category,
     });
 
     return NextResponse.json({ success: true, data: updated });
-  } catch (err) {
-    console.error("Failed to update guest:", err);
+  } catch {
     return NextResponse.json({ success: false, error: "Gagal memperbarui status tamu" }, { status: 500 });
   }
 }
@@ -96,8 +112,7 @@ export async function DELETE(request: Request) {
 
     await deleteGuest(parseInt(idParam, 10));
     return NextResponse.json({ success: true, message: "Tamu berhasil dihapus" });
-  } catch (err) {
-    console.error("Failed to delete guest:", err);
+  } catch {
     return NextResponse.json({ success: false, error: "Gagal menghapus tamu" }, { status: 500 });
   }
 }

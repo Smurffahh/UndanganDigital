@@ -5,7 +5,6 @@ import { formatFooterSignatureDate } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
-import { GununganWayang } from "./GununganWayang";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface ClosingFooterProps {
@@ -29,12 +28,9 @@ export function ClosingFooter({
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">
         <ScrollReveal direction="bottom">
           <div className="flex flex-col items-center justify-center mb-6">
-            <div className="h-28 sm:h-36 w-auto flex items-center justify-center">
-              <GununganWayang variant="royal-solid" tone="luminous-crest" />
-            </div>
-            <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em] text-[10px] sm:text-xs uppercase mt-3">
-              Tancep Kayon &bull; Doa &amp; Restu
-            </p>
+            <span className="inline-block px-4 py-1 rounded-full border border-gold-500/40 bg-surface-white/90 typo-eyebrow text-[#a9823a] tracking-[0.22em] uppercase shadow-xs">
+              Doa &amp; Restu
+            </span>
           </div>
         </ScrollReveal>
 

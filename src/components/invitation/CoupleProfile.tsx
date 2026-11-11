@@ -136,10 +136,7 @@ export function CoupleProfile({
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-                <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.08]">
-                    <GununganWayang variant="watermark" tone="antique-bronze" />
-                  </div>
+                <div className="p-4 rounded-2xl bg-[#fffdfa]/95 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
                   <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                     {groomBio}
                   </p>
@@ -223,10 +220,7 @@ export function CoupleProfile({
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
-                <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.08]">
-                    <GununganWayang variant="watermark" tone="antique-bronze" />
-                  </div>
+                <div className="p-4 rounded-2xl bg-[#fffdfa]/95 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
                   <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                     {brideBio}
                   </p>

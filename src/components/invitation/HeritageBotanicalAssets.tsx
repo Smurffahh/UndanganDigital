@@ -575,3 +575,77 @@ export function HeritageCornerFloraRight({ className = "w-36 sm:w-48 h-36 sm:h-4
 export function BotanicalHangingVines({ className = "w-full h-28 sm:h-36" }: { className?: string }) {
   return <GebyokUkirArch className={className} />;
 }
+
+export function RoyalSulurCornerSvg({
+  className = "w-28 sm:w-36 h-28 sm:h-36",
+  mirror = false,
+}: {
+  className?: string;
+  mirror?: boolean;
+}) {
+  return (
+    <div
+      className={`overflow-visible pointer-events-none select-none ${className} ${
+        mirror ? "scale-x-[-1]" : ""
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 140 140"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full object-contain"
+      >
+        <path
+          d="M 6,134 C 18,105 32,78 68,58 C 96,42 122,46 134,22"
+          stroke="#C5A059"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M 6,118 C 24,94 48,76 86,62 C 108,54 122,38 126,14"
+          stroke="#C5A059"
+          strokeWidth="0.85"
+          strokeDasharray="2 3"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 22,134 C 38,102 64,84 104,74"
+          stroke="#C5A059"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 68,58 C 76,50 86,46 94,52 C 100,58 98,68 90,70 C 82,72 76,64 80,58"
+          stroke="#C5A059"
+          strokeWidth="1.1"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 42,90 C 48,82 56,80 62,85 C 66,90 64,98 58,100 C 52,102 48,96 50,90"
+          stroke="#C5A059"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 98,34 C 104,26 112,24 118,28 C 122,32 120,40 114,42 C 108,44 104,38 106,34"
+          stroke="#C5A059"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <g fill="#C5A059" fillOpacity="0.12" stroke="#C5A059" strokeWidth="0.85">
+          <path d="M 28,108 C 36,92 52,100 42,116 Z" />
+          <path d="M 52,78 C 62,64 78,72 68,88 Z" />
+          <path d="M 86,48 C 96,36 110,42 102,56 Z" />
+          <path d="M 112,22 C 120,12 132,16 126,28 Z" />
+          <path d="M 74,86 C 88,80 94,94 82,102 Z" />
+          <path d="M 102,60 C 114,56 120,68 110,76 Z" />
+        </g>
+        <circle cx="134" cy="22" r="3" fill="#C5A059" fillOpacity="0.3" stroke="#C5A059" strokeWidth="1" />
+        <circle cx="126" cy="14" r="2" fill="#C5A059" />
+        <circle cx="8" cy="132" r="3.5" fill="#C5A059" fillOpacity="0.2" stroke="#C5A059" strokeWidth="1" />
+      </svg>
+    </div>
+  );
+}

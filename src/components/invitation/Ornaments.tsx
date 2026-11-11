@@ -25,9 +25,9 @@ export function GununganWayang({
   return <RichGununganWayang className={className} variant={variant} tone={tone} />;
 }
 
-export function WayangDivider({ className = "my-5", light = false }: { className?: string; light?: boolean }) {
+export function WayangDivider({ className = "my-4", light = false }: { className?: string; light?: boolean }) {
   return (
-    <div className={`flex items-center justify-center gap-3.5 mx-auto max-w-[340px] ${className}`} aria-hidden="true">
+    <div className={`flex items-center justify-center gap-3 mx-auto max-w-[300px] ${className}`} aria-hidden="true">
       <div className="flex items-center flex-1">
         <span
           className={`h-px flex-1 ${
@@ -39,7 +39,7 @@ export function WayangDivider({ className = "my-5", light = false }: { className
         <span className="w-1.5 h-1.5 rotate-45 border border-[#c9a24b]/70 shrink-0 ml-1" />
       </div>
       <div className="relative flex items-center justify-center shrink-0">
-        <div className="w-8 sm:w-10 h-10 sm:h-12 flex items-center justify-center">
+        <div className="w-6 sm:w-7 h-7 sm:h-8 flex items-center justify-center">
           <RichGununganWayang variant="royal-solid" tone="luminous-crest" />
         </div>
       </div>
@@ -57,12 +57,12 @@ export function WayangDivider({ className = "my-5", light = false }: { className
   );
 }
 
-export function SectionOrnament({ className = "my-5" }: { className?: string }) {
+export function SectionOrnament({ className = "my-4" }: { className?: string }) {
   return <WayangDivider className={className} />;
 }
 
-export function Divider({ light = false }: { light?: boolean }) {
-  return <WayangDivider light={light} />;
+export function Divider({ className = "my-4", light = false }: { className?: string; light?: boolean }) {
+  return <WayangDivider className={className} light={light} />;
 }
 
 export function ChipMetallic({ className = "w-11 h-8" }: { className?: string }) {

@@ -934,7 +934,7 @@ export function WeddingSettingsModule({
                     <span>* Putar video di atas untuk menguji kecocokan lagu YouTube.</span>
                     <button
                       type="button"
-                      onClick={() => handleSelectMusicPreset("preset-1")}
+                      onClick={() => handleSelectMusicPreset("preset-raim-laode-komang")}
                       className="text-emerald-800 hover:text-emerald-950 font-medium underline cursor-pointer"
                     >
                       Beralih ke Musik Lokal (Anti-Error)

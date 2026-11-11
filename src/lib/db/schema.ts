@@ -107,6 +107,23 @@ export const guestTokens = pgTable("guest_tokens", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
+export const musicTracks = pgTable(
+  "music_tracks",
+  {
+    id: serial("id").primaryKey(),
+    slug: varchar("slug", { length: 120 }).notNull().unique(),
+    title: varchar("title", { length: 150 }).notNull(),
+    artist: varchar("artist", { length: 150 }).notNull(),
+    url: text("url").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("idx_music_tracks_slug").on(table.slug),
+    index("idx_music_tracks_is_active").on(table.isActive),
+  ]
+);
+
 export type WeddingSettings = typeof weddingSettings.$inferSelect;
 export type NewWeddingSettings = typeof weddingSettings.$inferInsert;
 
@@ -121,3 +138,6 @@ export type NewRsvpWish = typeof rsvpWishes.$inferInsert;
 
 export type GuestToken = typeof guestTokens.$inferSelect;
 export type NewGuestToken = typeof guestTokens.$inferInsert;
+
+export type MusicTrack = typeof musicTracks.$inferSelect;
+export type NewMusicTrack = typeof musicTracks.$inferInsert;

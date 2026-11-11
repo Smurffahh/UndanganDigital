@@ -21,10 +21,17 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const description =
     "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.";
   const title = verifiedName ? `${baseTitle} — Kepada Yth. ${verifiedName}` : baseTitle;
+  const hasGuestParam = Boolean(paramStr && paramStr.trim().length > 0);
 
   return {
     title,
     description,
+    alternates: {
+      canonical: "/",
+    },
+    robots: hasGuestParam
+      ? { index: false, follow: false, nocache: true }
+      : { index: true, follow: true },
     openGraph: {
       type: "website",
       locale: "id_ID",
@@ -132,14 +139,52 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     createdAt: item.createdAt || new Date(),
   }));
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: `The Wedding of ${settings.groomName.split(" ")[0]} & ${settings.brideName.split(" ")[0]}`,
+    description: `Undangan Pernikahan ${settings.groomName} & ${settings.brideName} (#SINgkatceritaFAUZAN)`,
+    startDate: settings.weddingDateIso,
+    endDate: "2027-01-03T17:00:00+07:00",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: settings.venueName,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: settings.venueAddress,
+        addressCountry: "ID",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: settings.mapsLatitude,
+        longitude: settings.mapsLongitude,
+      },
+    },
+    image: [settings.coverPhotoUrl, settings.heroPhotoUrl],
+    performer: [
+      { "@type": "Person", name: settings.groomName },
+      { "@type": "Person", name: settings.brideName },
+    ],
+  };
+
   return (
-    <InvitationOrchestrator
-      settings={settings}
-      galleryPhotos={galleryPhotos}
-      wishes={wishes}
-      guestName={guestName}
-      isVerifiedGuest={isVerified}
-      guestToken={validToken}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <InvitationOrchestrator
+        settings={settings}
+        galleryPhotos={galleryPhotos}
+        wishes={wishes}
+        guestName={guestName}
+        isVerifiedGuest={isVerified}
+        guestToken={validToken}
+      />
+    </>
   );
 }

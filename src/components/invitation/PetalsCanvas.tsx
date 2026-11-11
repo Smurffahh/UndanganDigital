@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-export function PetalsCanvas() {
+export function PetalsCanvas({ active = true }: { active?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    if (!active) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -112,7 +114,7 @@ export function PetalsCanvas() {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, []);
+  }, [active]);
 
   return (
     <canvas

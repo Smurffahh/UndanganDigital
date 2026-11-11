@@ -24,13 +24,13 @@ interface ButterflyMotionState {
   isFlappingFast: boolean;
 }
 
-export function ScrollLinkedButterflies() {
+export function ScrollLinkedButterflies({ active = true }: { active?: boolean }) {
   const b1Ref = useRef<HTMLDivElement>(null);
   const b2Ref = useRef<HTMLDivElement>(null);
   const b3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!active || typeof window === "undefined") return;
 
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mediaQuery.matches) {
@@ -208,13 +208,23 @@ export function ScrollLinkedButterflies() {
       rafId = requestAnimationFrame(updateButterflies);
     };
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+      } else {
+        rafId = requestAnimationFrame(updateButterflies);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     rafId = requestAnimationFrame(updateButterflies);
 
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, []);
+  }, [active]);
 
   return (
     <div

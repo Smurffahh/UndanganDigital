@@ -73,7 +73,7 @@ function RonceMelatiFlora({ className = "w-full h-full" }: { className?: string 
 
 export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: FixedInvitationBackgroundProps) {
   return (
-    <aside
+    <div
       className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none w-screen h-dvh"
       aria-hidden="true"
     >
@@ -87,9 +87,9 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         }}
       />
 
-      <svg className="absolute inset-0 w-full h-full opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute inset-0 w-full h-full opacity-[0.035] pointer-events-none" xmlns="http://www.w3.org/2000/svg" style={{ contain: "paint" }}>
         <filter id="paperNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" stitchTiles="stitch" />
           <feColorMatrix type="matrix" values="0 0 0 0 0.36  0 0 0 0 0.23  0 0 0 0 0.25  0 0 0 0.5 0" />
         </filter>
         <rect width="100%" height="100%" filter="url(#paperNoise)" />
@@ -165,6 +165,6 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
           <path d="M8 0 C12 4, 14 10, 8 16 C2 10, 4 4, 8 0 Z" fill="#c9a24b" opacity="0.6" />
         </svg>
       </div>
-    </aside>
+    </div>
   );
 }

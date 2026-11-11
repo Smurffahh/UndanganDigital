@@ -86,6 +86,10 @@ export default function RootLayout({
       lang="id"
       className={`${cormorant.variable} ${greatVibes.variable} ${plusJakarta.variable} ${amiri.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://i.pinimg.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://i.pinimg.com" />
+      </head>
       <body className="font-sans antialiased bg-cream text-ink min-h-screen">
         {children}
         <Toaster position="top-center" richColors />

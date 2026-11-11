@@ -18,11 +18,18 @@ interface WishItem {
 interface RsvpGuestbookProps {
   initialWishes: WishItem[];
   defaultGuestName?: string;
+  verifiedGuestName?: string | null;
+  guestToken?: string | null;
 }
 
-export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGuestbookProps) {
+export function RsvpGuestbook({
+  initialWishes,
+  defaultGuestName = "",
+  verifiedGuestName = null,
+  guestToken = null,
+}: RsvpGuestbookProps) {
   const [wishes, setWishes] = useState<WishItem[]>(initialWishes);
-  const [nama, setNama] = useState(defaultGuestName);
+  const [nama, setNama] = useState(verifiedGuestName || defaultGuestName);
   const [hadir, setHadir] = useState<"Hadir" | "Berhalangan" | "Masih Ragu">("Hadir");
   const [jumlah, setJumlah] = useState("1");
   const [pesan, setPesan] = useState("");
@@ -52,6 +59,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
           attendanceStatus: hadir,
           paxCount: hadir === "Hadir" ? parseInt(jumlah, 10) : 0,
           message: pesan.trim(),
+          guestToken: guestToken || undefined,
         }),
       });
 
@@ -148,21 +156,40 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
           >
             <div>
-              <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
-                Nama Anda
-              </label>
-              {/* iOS Safari auto-zooms inputs under 16px (text-base) */}
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#4b3a3e]">
+                  Nama Anda
+                </label>
+                {verifiedGuestName && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FAF4E6] text-[#7A5B1E] border border-[#C5A059]/40 shadow-xs">
+                    <CheckCircle2 className="w-3 h-3 text-[#B8913B]" />
+                    Undangan Terverifikasi
+                  </span>
+                )}
+              </div>
               <input
                 id="f-nama"
                 type="text"
                 required
                 aria-required="true"
+                readOnly={Boolean(verifiedGuestName)}
                 maxLength={60}
                 value={nama}
-                onChange={(e) => setNama(e.target.value)}
+                onChange={(e) => {
+                  if (!verifiedGuestName) setNama(e.target.value);
+                }}
                 placeholder="Contoh: Bpk. Budi Santoso"
-                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow]"
+                className={`w-full px-3.5 py-3 border rounded-xl font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 transition-[border-color,box-shadow] ${
+                  verifiedGuestName
+                    ? "bg-[#FAF7F2] border-[#C5A059]/45 text-[#3E2723] font-medium cursor-not-allowed select-none"
+                    : "bg-surface-white border-gold-500/45 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15"
+                }`}
               />
+              {verifiedGuestName && (
+                <p className="mt-1 text-[11px] text-[#8C6239] font-sans">
+                  Nama terkunci sesuai tautan undangan resmi.
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">

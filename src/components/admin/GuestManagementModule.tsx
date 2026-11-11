@@ -41,6 +41,10 @@ import {
   downloadCsvTemplate,
 } from "@/lib/guestTemplate";
 import { formatWaEventDate } from "@/lib/dateFormat";
+import {
+  generateEncryptedGuestToken,
+  generateBulkEncryptedGuestTokens,
+} from "@/app/actions/guest-encryption";
 
 interface GuestManagementModuleProps {
   guests: GuestData[];
@@ -80,6 +84,24 @@ export function GuestManagementModule({
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
+  useEffect(() => {
+    const unencrypted = guests.filter((g) => !g.slugQuery || !g.slugQuery.startsWith("v1."));
+    if (unencrypted.length === 0) return;
+
+    generateBulkEncryptedGuestTokens(unencrypted.map((g) => g.name))
+      .then((map) => {
+        onGuestsChange(
+          guests.map((g) => {
+            if ((!g.slugQuery || !g.slugQuery.startsWith("v1.")) && map[g.name]) {
+              return { ...g, slugQuery: map[g.name] };
+            }
+            return g;
+          })
+        );
+      })
+      .catch(() => {});
+  }, [guests, onGuestsChange]);
+
   const [historySearchQuery, setHistorySearchQuery] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -106,13 +128,13 @@ export function GuestManagementModule({
     }
   };
 
-  const renderMessageForGuest = (guestName: string) => {
+  const renderMessageForGuest = (guestName: string, guestToken?: string | null) => {
     const origin =
       typeof window !== "undefined"
         ? window.location.origin
-        : "https://undangan.fauzan-sinta.com";
-    const slug = encodeURIComponent(guestName.trim().replace(/\s+/g, "+"));
-    const link = `${origin}/?to=${slug}`;
+        : "https://www.fauzansinta.my.id";
+    const token = guestToken || "";
+    const link = token ? `${origin}/?to=${token}` : origin;
 
     return template
       .replace(/{nama_tamu}/g, guestName)
@@ -178,6 +200,11 @@ export function GuestManagementModule({
       }
     }
 
+    let waWindow: Window | null = null;
+    if (autoSendWhatsApp && formattedPhone) {
+      waWindow = window.open("about:blank", "_blank");
+    }
+
     setIsSavingGuest(true);
     try {
       const res = await fetch("/api/admin/guests", {
@@ -191,18 +218,55 @@ export function GuestManagementModule({
       });
 
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.error || "Gagal menambahkan tamu");
+      if (!res.ok || !data.success) {
+        if (waWindow) waWindow.close();
+        throw new Error(data.error || "Gagal menambahkan tamu");
+      }
 
       const createdGuest: GuestData = data.data;
-      onGuestsChange([createdGuest, ...guests]);
       setNewName("");
       setNewPhone("");
       toast.success(`Tamu "${createdGuest.name}" berhasil ditambahkan ke daftar!`);
 
       if (autoSendWhatsApp && formattedPhone) {
-        handleSendWhatsApp(createdGuest);
+        let token = createdGuest.slugQuery;
+        if (!token || !token.startsWith("v1.")) {
+          try {
+            token = await generateEncryptedGuestToken(createdGuest.name);
+          } catch {
+            token = createdGuest.slugQuery;
+          }
+        }
+        const message = renderMessageForGuest(createdGuest.name, token);
+        const waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+        if (waWindow) {
+          waWindow.location.href = waUrl;
+        } else {
+          window.open(waUrl, "_blank");
+        }
+
+        const nowIso = new Date().toISOString();
+        fetch("/api/admin/guests", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: createdGuest.id,
+            waSentStatus: true,
+            waSentAt: nowIso,
+          }),
+        }).then(() => {
+          onGuestsChange([
+            { ...createdGuest, slugQuery: token, waSentStatus: true, waSentAt: nowIso },
+            ...guests,
+          ]);
+        }).catch(() => {
+          onGuestsChange([{ ...createdGuest, slugQuery: token }, ...guests]);
+        });
+      } else {
+        onGuestsChange([createdGuest, ...guests]);
       }
     } catch (err: unknown) {
+      if (waWindow) waWindow.close();
       const msg = err instanceof Error ? err.message : "Gagal menambahkan tamu";
       toast.error(msg);
     } finally {
@@ -217,14 +281,23 @@ export function GuestManagementModule({
     }
 
     const phone = normalizePhoneNumber(guest.whatsappNumber) || guest.whatsappNumber;
-    const message = renderMessageForGuest(guest.name);
-    const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-    window.open(waUrl, "_blank");
-
-    const nowIso = new Date().toISOString();
+    const waWindow = window.open("about:blank", "_blank");
 
     try {
+      let token = guest.slugQuery;
+      if (!token || !token.startsWith("v1.")) {
+        token = await generateEncryptedGuestToken(guest.name);
+      }
+      const message = renderMessageForGuest(guest.name, token);
+      const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+      if (waWindow) {
+        waWindow.location.href = waUrl;
+      } else {
+        window.open(waUrl, "_blank");
+      }
+
+      const nowIso = new Date().toISOString();
       const res = await fetch("/api/admin/guests", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -237,12 +310,14 @@ export function GuestManagementModule({
       if (res.ok) {
         onGuestsChange(
           guests.map((g) =>
-            g.id === guest.id ? { ...g, waSentStatus: true, waSentAt: nowIso } : g
+            g.id === guest.id ? { ...g, slugQuery: token, waSentStatus: true, waSentAt: nowIso } : g
           )
         );
         toast.success(`Undangan untuk ${guest.name} dibuka di WhatsApp! Tercatat terkirim ✓`);
       }
     } catch {
+      if (waWindow) waWindow.close();
+      toast.error("Gagal membuka tautan WhatsApp.");
     }
   };
 
@@ -273,7 +348,15 @@ export function GuestManagementModule({
   };
 
   const handleCopyMessage = async (guest: GuestData) => {
-    const text = renderMessageForGuest(guest.name);
+    let token = guest.slugQuery;
+    if (!token || !token.startsWith("v1.")) {
+      try {
+        token = await generateEncryptedGuestToken(guest.name);
+      } catch {
+        token = guest.slugQuery;
+      }
+    }
+    const text = renderMessageForGuest(guest.name, token);
     try {
       await navigator.clipboard.writeText(text);
       setCopiedGuestId(guest.id);
@@ -518,7 +601,7 @@ export function GuestManagementModule({
                 Pratinjau Tampilan Pesan di WhatsApp:
               </span>
               <div className="text-xs sm:text-sm text-ink leading-relaxed whitespace-pre-wrap font-sans bg-white p-3.5 rounded-xl border border-emerald-300 shadow-inner">
-                {renderMessageForGuest("Bpk. H. Ahmad Fauzi & Keluarga")}
+                {renderMessageForGuest("Bpk. H. Ahmad Fauzi & Keluarga", "v1.contoh-token-enkripsi")}
               </div>
             </div>
             <p className="text-[10px] text-muted mt-2">
@@ -993,7 +1076,7 @@ export function GuestManagementModule({
                         </button>
 
                         <a
-                          href={`/?to=${guest.slugQuery}`}
+                          href={guest.slugQuery ? `/?to=${guest.slugQuery}` : "/"}
                           target="_blank"
                           rel="noopener noreferrer"
                           title="Buka Undangan Tamu Ini"
@@ -1100,7 +1183,7 @@ export function GuestManagementModule({
                               </button>
 
                               <a
-                                href={`/?to=${guest.slugQuery}`}
+                                href={guest.slugQuery ? `/?to=${guest.slugQuery}` : "/"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Buka Undangan Tamu Ini"

@@ -38,6 +38,8 @@ interface InvitationOrchestratorProps {
   galleryPhotos: GalleryItem[];
   wishes: WishItem[];
   guestName: string;
+  isVerifiedGuest?: boolean;
+  guestToken?: string | null;
 }
 
 export function InvitationOrchestrator({
@@ -45,6 +47,8 @@ export function InvitationOrchestrator({
   galleryPhotos,
   wishes,
   guestName,
+  isVerifiedGuest = false,
+  guestToken = null,
 }: InvitationOrchestratorProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
@@ -218,7 +222,9 @@ export function InvitationOrchestrator({
 
         <RsvpGuestbook
           initialWishes={wishes}
-          defaultGuestName={guestName}
+          defaultGuestName={isVerifiedGuest ? guestName : ""}
+          verifiedGuestName={isVerifiedGuest ? guestName : null}
+          guestToken={guestToken}
         />
 
         <DigitalEnvelope

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getRsvpWishes, createRsvpWish } from "@/lib/db/store";
+import { decryptGuestToken } from "@/lib/guest-crypto";
 
 const rsvpInputSchema = z
   .object({
     name: z.string().trim().min(1).max(60).optional(),
     guestName: z.string().trim().min(1).max(60).optional(),
+    guestToken: z.string().trim().optional(),
     attend: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
     attendanceStatus: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
     guests: z.coerce.number().int().min(0).max(10).optional(),
@@ -47,15 +49,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
 
-    const rawName = parsed.data.guestName || parsed.data.name;
-    if (!rawName || rawName.trim().length === 0) {
+    let finalGuestName = parsed.data.guestName || parsed.data.name || "";
+    if (parsed.data.guestToken) {
+      const decrypted = decryptGuestToken(parsed.data.guestToken);
+      if (decrypted.isVerified && decrypted.guestName) {
+        finalGuestName = decrypted.guestName;
+      }
+    }
+
+    if (!finalGuestName || finalGuestName.trim().length === 0) {
       return NextResponse.json({ success: false, error: "Nama tamu wajib diisi" }, { status: 400 });
     }
 
     const attendanceStatus = parsed.data.attendanceStatus || parsed.data.attend || "Hadir";
     const paxCount = parsed.data.paxCount !== undefined ? parsed.data.paxCount : (parsed.data.guests !== undefined ? parsed.data.guests : 1);
 
-    const sanitizedName = sanitizeString(rawName);
+    const sanitizedName = sanitizeString(finalGuestName);
     const sanitizedMessage = sanitizeString(parsed.data.message);
 
     const newWish = await createRsvpWish({

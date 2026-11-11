@@ -14,7 +14,7 @@ import {
   createBlindIndex,
   createPhoneBlindIndex,
 } from "../crypto";
-import { encryptGuestName } from "../guest-crypto";
+import { generateShortCode, createShortGuestToken, SHORT_CODE_REGEX } from "../guest-crypto";
 import { seedDatabase } from "./seed";
 
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
@@ -58,9 +58,12 @@ const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
 function decryptGuestRecord(r: any): GuestData {
   const decryptedName = decryptField(r.name);
   let slug = r.slugQuery;
-  if (!slug || !slug.startsWith("v1.")) {
+  const isShortCode = slug && SHORT_CODE_REGEX.test(slug);
+  const isV1Token = slug && slug.startsWith("v1.");
+  if (!isShortCode && !isV1Token) {
     try {
-      slug = encryptGuestName(decryptedName);
+      slug = generateShortCode(decryptedName);
+      createShortGuestToken(decryptedName).catch(() => {});
     } catch {
       slug = r.slugQuery;
     }
@@ -598,7 +601,8 @@ export async function createGuest(data: {
   category?: string;
 }): Promise<GuestData> {
   const cleanName = data.name.trim();
-  const slugQuery = encryptGuestName(cleanName);
+  const slugQuery = generateShortCode(cleanName);
+  createShortGuestToken(cleanName).catch(() => {});
   const cleanPhone = data.whatsappNumber?.trim() || null;
   const category = data.category?.trim() || "Reguler";
 
@@ -704,7 +708,8 @@ export async function updateGuest(
   if (updates.name !== undefined) {
     const cleanName = updates.name.trim();
     dbUpdates.name = encryptField(cleanName);
-    dbUpdates.slugQuery = encryptGuestName(cleanName);
+    dbUpdates.slugQuery = generateShortCode(cleanName);
+    createShortGuestToken(cleanName).catch(() => {});
     dbUpdates.nameBindex = createBlindIndex(cleanName);
   }
   if (updates.whatsappNumber !== undefined) {

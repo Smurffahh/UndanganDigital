@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getRsvpWishes, createRsvpWish } from "@/lib/db/store";
-import { decryptGuestToken } from "@/lib/guest-crypto";
+import { resolveGuestToken } from "@/lib/guest-crypto";
 
 const rsvpInputSchema = z
   .object({
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
 
     let finalGuestName = parsed.data.guestName || parsed.data.name || "";
     if (parsed.data.guestToken) {
-      const decrypted = decryptGuestToken(parsed.data.guestToken);
+      const decrypted = await resolveGuestToken(parsed.data.guestToken);
       if (decrypted.isVerified && decrypted.guestName) {
         finalGuestName = decrypted.guestName;
       }

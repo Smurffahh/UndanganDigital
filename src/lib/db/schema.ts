@@ -101,6 +101,12 @@ export const rsvpWishes = pgTable(
   ]
 );
 
+export const guestTokens = pgTable("guest_tokens", {
+  code: varchar("code", { length: 12 }).primaryKey(),
+  guestName: text("guest_name").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 export type WeddingSettings = typeof weddingSettings.$inferSelect;
 export type NewWeddingSettings = typeof weddingSettings.$inferInsert;
 
@@ -112,3 +118,6 @@ export type NewGuest = typeof guests.$inferInsert;
 
 export type RsvpWish = typeof rsvpWishes.$inferSelect;
 export type NewRsvpWish = typeof rsvpWishes.$inferInsert;
+
+export type GuestToken = typeof guestTokens.$inferSelect;
+export type NewGuestToken = typeof guestTokens.$inferInsert;

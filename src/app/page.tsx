@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/store";
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
-import { decryptGuestToken } from "@/lib/guest-crypto";
+import { resolveGuestToken } from "@/lib/guest-crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const rawParam = resolvedParams.to || resolvedParams.inv || "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
-  const { guestName: verifiedName } = decryptGuestToken(paramStr);
+  const { guestName: verifiedName } = await resolveGuestToken(paramStr);
 
   const baseTitle = "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)";
   const description =
@@ -65,7 +65,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
   const rawParam = resolvedParams.to || resolvedParams.inv || "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
-  const { guestName: decryptedName, isVerified, validToken } = decryptGuestToken(paramStr);
+  const { guestName: decryptedName, isVerified, validToken } = await resolveGuestToken(paramStr);
   const guestName = decryptedName || "Tamu Kehormatan";
 
   const [rawSettings, rawGalleryPhotos, rawWishes] = await Promise.all([

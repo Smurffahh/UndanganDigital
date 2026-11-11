@@ -168,6 +168,8 @@ export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) 
   );
 }
 
+export const MonogramCrest = MonogramFS;
+
 export function FloralCornerAccent({ className = "w-28 h-auto" }: { className?: string }) {
   return (
     <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">

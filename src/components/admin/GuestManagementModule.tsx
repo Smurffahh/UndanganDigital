@@ -46,6 +46,9 @@ import {
   generateBulkEncryptedGuestTokens,
 } from "@/app/actions/guest-encryption";
 
+const SHORT_CODE_REGEX = /^[2-9A-HJ-NP-Za-km-z]{6}$/;
+const isValidGuestToken = (t?: string | null) => Boolean(t && (SHORT_CODE_REGEX.test(t) || t.startsWith("v1.")));
+
 interface GuestManagementModuleProps {
   guests: GuestData[];
   settings: WeddingSettingsData;
@@ -85,14 +88,14 @@ export function GuestManagementModule({
   }, [searchQuery]);
 
   useEffect(() => {
-    const unencrypted = guests.filter((g) => !g.slugQuery || !g.slugQuery.startsWith("v1."));
+    const unencrypted = guests.filter((g) => !isValidGuestToken(g.slugQuery));
     if (unencrypted.length === 0) return;
 
     generateBulkEncryptedGuestTokens(unencrypted.map((g) => g.name))
       .then((map) => {
         onGuestsChange(
           guests.map((g) => {
-            if ((!g.slugQuery || !g.slugQuery.startsWith("v1.")) && map[g.name]) {
+            if (!isValidGuestToken(g.slugQuery) && map[g.name]) {
               return { ...g, slugQuery: map[g.name] };
             }
             return g;
@@ -230,7 +233,7 @@ export function GuestManagementModule({
 
       if (autoSendWhatsApp && formattedPhone) {
         let token = createdGuest.slugQuery;
-        if (!token || !token.startsWith("v1.")) {
+        if (!isValidGuestToken(token)) {
           try {
             token = await generateEncryptedGuestToken(createdGuest.name);
           } catch {
@@ -285,7 +288,7 @@ export function GuestManagementModule({
 
     try {
       let token = guest.slugQuery;
-      if (!token || !token.startsWith("v1.")) {
+      if (!isValidGuestToken(token)) {
         token = await generateEncryptedGuestToken(guest.name);
       }
       const message = renderMessageForGuest(guest.name, token);
@@ -349,7 +352,7 @@ export function GuestManagementModule({
 
   const handleCopyMessage = async (guest: GuestData) => {
     let token = guest.slugQuery;
-    if (!token || !token.startsWith("v1.")) {
+    if (!isValidGuestToken(token)) {
       try {
         token = await generateEncryptedGuestToken(guest.name);
       } catch {
@@ -601,7 +604,7 @@ export function GuestManagementModule({
                 Pratinjau Tampilan Pesan di WhatsApp:
               </span>
               <div className="text-xs sm:text-sm text-ink leading-relaxed whitespace-pre-wrap font-sans bg-white p-3.5 rounded-xl border border-emerald-300 shadow-inner">
-                {renderMessageForGuest("Bpk. H. Ahmad Fauzi & Keluarga", "v1.contoh-token-enkripsi")}
+                {renderMessageForGuest("Bpk. H. Ahmad Fauzi & Keluarga", "K9mP4x")}
               </div>
             </div>
             <p className="text-[10px] text-muted mt-2">

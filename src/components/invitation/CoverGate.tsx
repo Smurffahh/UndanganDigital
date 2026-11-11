@@ -6,7 +6,6 @@ import {
   CardCornerOrnament,
   MonogramFS,
 } from "./Ornaments";
-import { BotanicalHangingVines } from "./HeritageBotanicalAssets";
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
@@ -159,7 +158,16 @@ export function CoverGate({
       </div>
 
       {/* Ronce Melati & Hanging Vines */}
-      <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
+      <div className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ornament-gebyok-arch.svg"
+          alt=""
+          className="w-full h-full object-cover select-none pointer-events-none"
+          loading="eager"
+          draggable={false}
+        />
+      </div>
 
       {/* Main Center Overlay Content */}
       <div

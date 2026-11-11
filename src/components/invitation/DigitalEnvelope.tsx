@@ -28,61 +28,14 @@ interface DigitalEnvelopeProps {
 
 function AestheticGoldQRCode() {
   return (
-    <svg viewBox="0 0 160 160" className="w-44 h-44 mx-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SVG Kode QRIS Estetik Berbingkai Emas">
-      <rect x="2" y="2" width="156" height="156" rx="14" fill="#ffffff" stroke="#c9a24b" strokeWidth="1.5" />
-      
-      <rect x="14" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
-      <rect x="23" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
-      
-      <rect x="108" y="14" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
-      <rect x="117" y="23" width="20" height="20" rx="3.5" fill="#5d3a41" />
-      
-      <rect x="14" y="108" width="38" height="38" rx="7" stroke="#b8913b" strokeWidth="3.5" fill="#fcf9f2" />
-      <rect x="23" y="117" width="20" height="20" rx="3.5" fill="#5d3a41" />
-      
-      <rect x="60" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="74" y="16" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="88" y="16" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="60" y="30" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="74" y="30" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="88" y="30" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="60" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="88" y="44" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="60" y="58" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="74" y="58" width="8" height="8" rx="2" fill="#5d3a41" />
-      
-      <rect x="16" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="30" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="44" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="16" y="74" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="30" y="74" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="44" y="74" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="16" y="88" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="30" y="88" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="44" y="88" width="8" height="8" rx="2" fill="#5d3a41" />
-      
-      <rect x="108" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="122" y="60" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="136" y="60" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="108" y="74" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="122" y="74" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="136" y="74" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="108" y="88" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="122" y="88" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="136" y="88" width="8" height="8" rx="2" fill="#5d3a41" />
-      
-      <rect x="60" y="108" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="74" y="108" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="88" y="108" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="60" y="122" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="74" y="122" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="88" y="122" width="8" height="8" rx="2" fill="#c9a24b" />
-      <rect x="60" y="136" width="8" height="8" rx="2" fill="#5d3a41" />
-      <rect x="88" y="136" width="8" height="8" rx="2" fill="#5d3a41" />
-      
-      <circle cx="80" cy="80" r="12" fill="#ffffff" stroke="#c9a24b" strokeWidth="1.5" />
-      <text x="80" y="84" textAnchor="middle" fill="#5d3a41" fontFamily="'Cormorant Garamond', serif" fontSize="11" fontWeight="bold">FS</text>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/images/ornament-qris-gold.svg"
+      alt="SVG Kode QRIS Estetik Berbingkai Emas"
+      className="w-44 h-44 mx-auto object-contain select-none pointer-events-none"
+      loading="lazy"
+      draggable={false}
+    />
   );
 }
 

@@ -1,14 +1,74 @@
 "use client";
 
 import React from "react";
-import {
-  GebyokUkirArchLeft,
-  GebyokUkirArchRight,
-  RonceMelatiFlora,
-} from "./HeritageBotanicalAssets";
 
 interface FixedInvitationBackgroundProps {
   heroPhotoUrl?: string;
+}
+
+function RonceMelatiFlora({ className = "w-full h-full" }: { className?: string }) {
+  return (
+    <div className={`overflow-visible pointer-events-none select-none ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 1200 800"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full object-cover overflow-visible"
+        preserveAspectRatio="none"
+      >
+        <g className="animate-flora-sway" transform="translate(60, 0)">
+          <path d="M 0,0 Q 25,80 15,160 Q 5,230 18,310" stroke="#c9a24b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.75" />
+          {[
+            { y: 35, r: 8 },
+            { y: 75, r: 9 },
+            { y: 120, r: 10 },
+            { y: 170, r: 11 },
+            { y: 225, r: 10 },
+            { y: 275, r: 9 },
+          ].map((flower, idx) => (
+            <g key={`tl-flower-${idx}`} transform={`translate(${15 + Math.sin(idx) * 6}, ${flower.y})`} className="animate-flora-petal">
+              <circle cx="0" cy="0" r={flower.r} fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+              <circle cx="-3" cy="-2" r={flower.r * 0.6} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="3" cy="-2" r={flower.r * 0.6} fill="#fcf6ec" opacity="0.9" />
+              <circle cx="0" cy="3" r={flower.r * 0.6} fill="#f7e9e5" opacity="0.9" />
+              <circle cx="0" cy="0" r="2.4" fill="#c9a24b" />
+            </g>
+          ))}
+          <g transform="translate(18, 310)" className="animate-flora-leaf">
+            <path d="M 0,0 C -8,15 -10,35 0,55 C 10,35 8,15 0,0 Z" fill="#fdf0cd" stroke="#c9a24b" strokeWidth="1" />
+            <line x1="0" y1="5" x2="0" y2="45" stroke="#c9a24b" strokeWidth="0.75" />
+            <circle cx="0" cy="56" r="2.5" fill="#c9a24b" />
+          </g>
+        </g>
+        <g transform="translate(1200, 0) scale(-1, 1)">
+          <g className="animate-flora-sway" transform="translate(60, 0)">
+            <path d="M 0,0 Q 25,80 15,160 Q 5,230 18,310" stroke="#c9a24b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.75" />
+            {[
+              { y: 35, r: 8 },
+              { y: 75, r: 9 },
+              { y: 120, r: 10 },
+              { y: 170, r: 11 },
+              { y: 225, r: 10 },
+              { y: 275, r: 9 },
+            ].map((flower, idx) => (
+              <g key={`tr-flower-${idx}`} transform={`translate(${15 + Math.sin(idx) * 6}, ${flower.y})`} className="animate-flora-petal">
+                <circle cx="0" cy="0" r={flower.r} fill="#fffdfa" stroke="#c9a24b" strokeWidth="0.8" />
+                <circle cx="-3" cy="-2" r={flower.r * 0.6} fill="#fcf6ec" opacity="0.9" />
+                <circle cx="3" cy="-2" r={flower.r * 0.6} fill="#fcf6ec" opacity="0.9" />
+                <circle cx="0" cy="3" r={flower.r * 0.6} fill="#f7e9e5" opacity="0.9" />
+                <circle cx="0" cy="0" r="2.4" fill="#c9a24b" />
+              </g>
+            ))}
+            <g transform="translate(18, 310)" className="animate-flora-leaf">
+              <path d="M 0,0 C -8,15 -10,35 0,55 C 10,35 8,15 0,0 Z" fill="#fdf0cd" stroke="#c9a24b" strokeWidth="1" />
+              <line x1="0" y1="5" x2="0" y2="45" stroke="#c9a24b" strokeWidth="0.75" />
+              <circle cx="0" cy="56" r="2.5" fill="#c9a24b" />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
 }
 
 export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: FixedInvitationBackgroundProps) {
@@ -17,10 +77,8 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
       className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none w-screen h-dvh"
       aria-hidden="true"
     >
-      {/* Layer 1 — Base Silk Ivory Gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#FCF9F4_0%,_#F5EDE0_55%,_#EAE0CE_100%)]" />
 
-      {/* Layer 2 — Subtle Truntum Silk Damask with Vignette Mask */}
       <div
         className="absolute inset-0 bg-[url('/images/bg-truntum-damask.svg')] bg-repeat bg-[length:96px_96px] opacity-[0.055] pointer-events-none"
         style={{
@@ -29,7 +87,6 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         }}
       />
 
-      {/* Subtle Paper Fiber Texture */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
         <filter id="paperNoise">
           <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -38,11 +95,9 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         <rect width="100%" height="100%" filter="url(#paperNoise)" />
       </svg>
 
-      {/* Layer 3 — Ambient Sunlit Halo (Top & Bottom) */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,_rgba(197,160,89,0.14),_transparent_65%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_85%,_rgba(140,98,57,0.08),_transparent_60%)] pointer-events-none" />
 
-      {/* Layer 4 — Architectural Sanctuary Frame */}
       <div
         className="royal-seq-item absolute inset-2 sm:inset-4 md:inset-6 pointer-events-none opacity-80 z-[1] select-none"
         data-seq-dir="center-scale"
@@ -58,25 +113,34 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         />
       </div>
 
-      {/* Heritage Gebyok Ukir Arch (Top Left) */}
       <div
         className="royal-seq-item absolute left-0 top-0 w-1/2 h-36 sm:h-48 pointer-events-none z-[2]"
         data-seq-dir="left"
         style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
-        <GebyokUkirArchLeft />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ornament-gebyok-arch-left.svg"
+          alt=""
+          className="w-full h-full object-cover select-none pointer-events-none"
+          loading="eager"
+        />
       </div>
 
-      {/* Heritage Gebyok Ukir Arch (Top Right) */}
       <div
         className="royal-seq-item absolute right-0 top-0 w-1/2 h-36 sm:h-48 pointer-events-none z-[2]"
         data-seq-dir="right"
         style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
-        <GebyokUkirArchRight />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ornament-gebyok-arch-right.svg"
+          alt=""
+          className="w-full h-full object-cover select-none pointer-events-none"
+          loading="eager"
+        />
       </div>
 
-      {/* Ronce Melati & Kantil Keraton (Top Crest) */}
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
         data-seq-dir="top"
@@ -85,7 +149,6 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         <RonceMelatiFlora />
       </div>
 
-      {/* Floating Gold & Rose Petals */}
       <div
         className="absolute top-[28%] left-[22%] w-4 h-4 pointer-events-none animate-petal-drift z-[2]"
         style={{ willChange: "transform" }}

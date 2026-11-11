@@ -1,14 +1,6 @@
 import React from "react";
 import { GununganWayang as RichGununganWayang } from "./GununganWayang";
 
-export function RadiantStar({ className = "w-6 h-6 fill-gold-500" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
-      <path d="M24 2c1.7 14.5 9.5 22.3 22 22-12.5-.3-20.3 7.5-22 22-1.7-14.5-9.5-22.3-22-22 12.5.3 20.3-7.5 22-22z" />
-    </svg>
-  );
-}
-
 export function SongketRibbon({ className = "my-3.5 mx-auto" }: { className?: string }) {
   return <div className={`songket ${className}`} aria-hidden="true" />;
 }
@@ -73,29 +65,15 @@ export function Divider({ className = "my-4", light = false }: { className?: str
 
 export function ChipMetallic({ className = "w-11 h-8" }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 44 32"
-      className={className}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/images/ornament-chip-metallic.svg"
+      alt=""
       aria-hidden="true"
-    >
-      <rect width="44" height="32" rx="5" fill="url(#chipGrad)" />
-      <rect x="1" y="1" width="42" height="30" rx="4" stroke="#8c6a28" strokeWidth="0.8" />
-      <path
-        d="M0 11H13C15 11 16 12 16 14V18C16 20 15 21 13 21H0M44 11H31C29 11 28 12 28 14V18C28 20 29 21 31 21H44M16 16H28M22 0V11M22 21V32"
-        stroke="#594314"
-        strokeWidth="1.1"
-      />
-      <circle cx="22" cy="16" r="3.5" fill="#e9d3a3" stroke="#594314" strokeWidth="0.8" />
-      <defs>
-        <linearGradient id="chipGrad" x1="0" y1="0" x2="44" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#e9d3a3" />
-          <stop offset="0.5" stopColor="#c9a24b" />
-          <stop offset="1" stopColor="#a9823a" />
-        </linearGradient>
-      </defs>
-    </svg>
+      className={`object-contain select-none pointer-events-none ${className}`}
+      loading="lazy"
+      draggable={false}
+    />
   );
 }
 
@@ -137,81 +115,14 @@ export function CardCornerOrnament() {
 export function GoldenEmblemSeal({ className = "w-20 h-20" }: { className?: string }) {
   return (
     <div className={`relative grid place-items-center ${className}`} aria-hidden="true">
-      <svg
-        viewBox="0 0 100 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_8px_20px_rgba(169,130,58,0.55)]"
-      >
-        <circle cx="50" cy="50" r="47" stroke="#966d1e" strokeWidth="1" opacity="0.6" />
-        <circle cx="50" cy="50" r="45" fill="url(#sealGradBg)" stroke="#d4af37" strokeWidth="1.6" />
-        <circle cx="50" cy="50" r="40" stroke="#edd39b" strokeWidth="0.8" strokeDasharray="2 2" />
-        <circle cx="50" cy="50" r="37" fill="url(#sealInnerGrad)" stroke="#b8913b" strokeWidth="1" />
-        
-        {Array.from({ length: 24 }).map((_, i) => {
-          const angle = (i * 360) / 24;
-          const rad = (angle * Math.PI) / 180;
-          const x1 = 50 + 38 * Math.cos(rad);
-          const y1 = 50 + 38 * Math.sin(rad);
-          const x2 = 50 + 40 * Math.cos(rad);
-          const y2 = 50 + 40 * Math.sin(rad);
-          return (
-            <line
-              key={i}
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              stroke="#8c6a28"
-              strokeWidth="0.75"
-              opacity="0.85"
-            />
-          );
-        })}
-
-        <path
-          d="M50 21 L52 26 L57 26 L53 29.5 L55 35 L50 31.5 L45 35 L47 29.5 L43 26 L48 26 Z"
-          fill="#fff3d1"
-          opacity="0.95"
-        />
-        <text
-          x="50"
-          y="58"
-          textAnchor="middle"
-          fill="#3d2208"
-          fontFamily="'Cormorant Garamond', serif"
-          fontSize="21"
-          fontWeight="700"
-          letterSpacing="1"
-        >
-          F&amp;S
-        </text>
-        <text
-          x="50"
-          y="70"
-          textAnchor="middle"
-          fill="#594314"
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-          fontSize="6"
-          fontWeight="700"
-          letterSpacing="2.5"
-        >
-          03.01.2027
-        </text>
-        <defs>
-          <radialGradient id="sealGradBg" cx="30%" cy="30%" r="70%">
-            <stop stopColor="#fdf0cd" />
-            <stop offset="0.4" stopColor="#d8ae43" />
-            <stop offset="0.85" stopColor="#966d1e" />
-            <stop offset="1" stopColor="#69480e" />
-          </radialGradient>
-          <radialGradient id="sealInnerGrad" cx="35%" cy="35%" r="65%">
-            <stop stopColor="#f7e6b5" />
-            <stop offset="0.5" stopColor="#cfa53e" />
-            <stop offset="1" stopColor="#a37920" />
-          </radialGradient>
-        </defs>
-      </svg>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/ornament-golden-seal.svg"
+        alt="Segel Lambang Keraton F&S"
+        className="w-full h-full drop-shadow-[0_8px_20px_rgba(169,130,58,0.55)] object-contain select-none pointer-events-none"
+        loading="lazy"
+        draggable={false}
+      />
     </div>
   );
 }
@@ -321,17 +232,6 @@ export function FloralCornerAccent({ className = "w-28 h-auto" }: { className?: 
           <circle cx="72" cy="25.5" r="0.6" fill="#8c5835" />
         </g>
       </svg>
-    </div>
-  );
-}
-
-export function ScrollDownIndicator({ className = "w-7 h-12" }: { className?: string }) {
-  return (
-    <div
-      className={`rounded-full border-2 border-[#5d3a41]/60 flex items-start justify-center pt-2 ${className}`}
-      aria-hidden="true"
-    >
-      <span className="w-1.5 h-2.5 rounded-full bg-[#5d3a41] animate-mouse-wheel" />
     </div>
   );
 }

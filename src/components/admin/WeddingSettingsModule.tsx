@@ -1219,6 +1219,66 @@ export function WeddingSettingsModule({
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                Urutan Anak (Putri ke-...)
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  list="bride-child-order-presets"
+                  value={formData.brideChildOrder || ""}
+                  onChange={(e) => handleFieldChange("brideChildOrder", e.target.value)}
+                  placeholder="Putri Pertama"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+                <datalist id="bride-child-order-presets">
+                  <option value="Putri Pertama" />
+                  <option value="Putri Kedua" />
+                  <option value="Putri Ketiga" />
+                  <option value="Putri Keempat" />
+                  <option value="Putri Bungsu" />
+                  <option value="Putri Tunggal" />
+                </datalist>
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  {[
+                    "Putri Pertama",
+                    "Putri Kedua",
+                    "Putri Ketiga",
+                    "Putri Keempat",
+                    "Putri Bungsu",
+                    "Putri Tunggal",
+                  ].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => handleFieldChange("brideChildOrder", preset)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer border ${
+                        formData.brideChildOrder === preset
+                          ? "bg-rose-900 text-white border-rose-900 shadow-2xs"
+                          : "bg-surface-white/90 text-rose-950 border-gold-500/30 hover:bg-gold-500/10"
+                      }`}
+                    >
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                Nama Orang Tua (Ayah &amp; Ibu)
+              </label>
+              <input
+                type="text"
+                value={formData.brideParents || ""}
+                onChange={(e) => handleFieldChange("brideParents", e.target.value)}
+                placeholder="Bapak H. Utami & Ibu Hj. Maria"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+              />
+            </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
                 Kelahiran / Info Singkat
@@ -1268,6 +1328,66 @@ export function WeddingSettingsModule({
                 value={formData.groomName || ""}
                 onChange={(e) => handleFieldChange("groomName", e.target.value)}
                 placeholder="Fauzan Ma'ruf"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                Urutan Anak (Putra ke-...)
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  list="groom-child-order-presets"
+                  value={formData.groomChildOrder || ""}
+                  onChange={(e) => handleFieldChange("groomChildOrder", e.target.value)}
+                  placeholder="Putra Pertama"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                />
+                <datalist id="groom-child-order-presets">
+                  <option value="Putra Pertama" />
+                  <option value="Putra Kedua" />
+                  <option value="Putra Ketiga" />
+                  <option value="Putra Keempat" />
+                  <option value="Putra Bungsu" />
+                  <option value="Putra Tunggal" />
+                </datalist>
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  {[
+                    "Putra Pertama",
+                    "Putra Kedua",
+                    "Putra Ketiga",
+                    "Putra Keempat",
+                    "Putra Bungsu",
+                    "Putra Tunggal",
+                  ].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => handleFieldChange("groomChildOrder", preset)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer border ${
+                        formData.groomChildOrder === preset
+                          ? "bg-rose-900 text-white border-rose-900 shadow-2xs"
+                          : "bg-surface-white/90 text-rose-950 border-gold-500/30 hover:bg-gold-500/10"
+                      }`}
+                    >
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">
+                Nama Orang Tua (Ayah &amp; Ibu)
+              </label>
+              <input
+                type="text"
+                value={formData.groomParents || ""}
+                onChange={(e) => handleFieldChange("groomParents", e.target.value)}
+                placeholder="Bapak H. Ma'ruf & Ibu Hj. Siti Aminah"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>

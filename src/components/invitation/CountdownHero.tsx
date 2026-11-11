@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider, GununganWayang } from "./Ornaments";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
@@ -33,6 +33,9 @@ export function CountdownHero({
     seconds: 0,
     isDone: false,
   });
+  const [isSequenceDone, setIsSequenceDone] = useState(false);
+  const [isInView, setIsInView] = useState(true);
+  const heroRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const target = new Date(weddingDateIso).getTime();
@@ -58,9 +61,57 @@ export function CountdownHero({
     return () => clearInterval(timer);
   }, [weddingDateIso]);
 
+  useEffect(() => {
+    if (!isOpened) return;
+    const timer = setTimeout(() => {
+      setIsSequenceDone(true);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, [isOpened]);
+
+  useEffect(() => {
+    const node = heroRef.current;
+    if (!node || !isSequenceDone) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "-40px 0px -40px 0px",
+      }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isSequenceDone]);
+
+  const getItemStyle = (delay: string, dir: string) => {
+    if (!isSequenceDone) {
+      return { "--seq-delay": delay } as React.CSSProperties;
+    }
+    return {
+      "--seq-delay": "0ms",
+      opacity: isInView ? 1 : 0,
+      transform: isInView
+        ? "translate3d(0, 0, 0) scale(1)"
+        : dir === "top"
+        ? "translate3d(0, calc(-1 * var(--motion-distance)), 0) scale(0.96)"
+        : dir === "center-scale"
+        ? "translate3d(0, 0, 0) scale(0.90)"
+        : "translate3d(0, var(--motion-distance), 0) scale(0.96)",
+      transitionDuration: isInView ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+      transitionTimingFunction: "var(--motion-ease-royal)",
+      transitionProperty: "opacity, transform",
+      willChange: "transform, opacity",
+    } as React.CSSProperties;
+  };
+
   return (
     <section
       id="beranda"
+      ref={heroRef}
       className="relative bg-transparent pt-16 sm:pt-24 pb-20"
       aria-label="Beranda dan Hitung Mundur"
     >
@@ -68,7 +119,7 @@ export function CountdownHero({
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
           data-seq-dir="top"
-          style={{ "--seq-delay": "1800ms" } as React.CSSProperties}
+          style={getItemStyle("2200ms", "top")}
         >
           <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em]">
             THE WEDDING OF
@@ -78,7 +129,7 @@ export function CountdownHero({
         <div
           className="w-full flex justify-center mb-6 royal-seq-item"
           data-seq-dir="center-scale"
-          style={{ "--seq-delay": "2000ms" } as React.CSSProperties}
+          style={getItemStyle("2420ms", "center-scale")}
         >
           <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
             {coupleVisualMode === "svg" || !heroPhotoUrl ? (
@@ -102,7 +153,7 @@ export function CountdownHero({
         <div
           className="mt-2 text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={{ "--seq-delay": "2200ms" } as React.CSSProperties}
+          style={getItemStyle("2640ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#a9823a]">
             WITH LOVE
@@ -115,7 +166,7 @@ export function CountdownHero({
         <div
           className="mt-5 w-full royal-seq-item"
           data-seq-dir="bottom"
-          style={{ "--seq-delay": "2380ms" } as React.CSSProperties}
+          style={getItemStyle("2860ms", "bottom")}
         >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
@@ -136,7 +187,7 @@ export function CountdownHero({
         <div
           className="my-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
+          style={getItemStyle("3080ms", "bottom")}
         >
           <Divider />
         </div>
@@ -144,7 +195,7 @@ export function CountdownHero({
         <div
           className="text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
+          style={getItemStyle("3080ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#a9823a] mb-2">
             SAVE THE DATE
@@ -160,7 +211,7 @@ export function CountdownHero({
         <div
           className="mt-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={{ "--seq-delay": "2550ms" } as React.CSSProperties}
+          style={getItemStyle("3080ms", "bottom")}
         >
           {!timeLeft.isDone ? (
             <div

@@ -43,6 +43,10 @@ const updateSettingsSchema = z.object({
     .enum(["javanese-royal", "modern-editorial", "islamic-grace", "casual-botanical"])
     .optional(),
   isGalleryEnabled: z.boolean().optional(),
+  groomChildOrder: z.string().max(100).optional(),
+  brideChildOrder: z.string().max(100).optional(),
+  groomParents: z.string().max(255).optional(),
+  brideParents: z.string().max(255).optional(),
 }).passthrough();
 
 export async function GET() {

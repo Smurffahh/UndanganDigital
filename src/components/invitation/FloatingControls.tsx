@@ -256,7 +256,7 @@ export function FloatingControls({
             isOpened ? "pointer-events-auto" : "pointer-events-none"
           }`}
           data-seq-dir="right"
-          style={{ "--seq-delay": "2720ms" } as React.CSSProperties}
+          style={{ "--seq-delay": "3300ms" } as React.CSSProperties}
         >
           {showTitleBadge && !showFeedbackBadge && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-white/95 border border-gold-500/40 text-xs font-medium text-rose-950 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">

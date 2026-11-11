@@ -123,6 +123,10 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     coupleVisualMode: rawSettings.coupleVisualMode || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
     svgCharacterPreset: rawSettings.svgCharacterPreset || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
     isGalleryEnabled: rawSettings.isGalleryEnabled !== undefined ? rawSettings.isGalleryEnabled : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
+    groomChildOrder: rawSettings.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
+    groomParents: rawSettings.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
+    brideChildOrder: rawSettings.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
+    brideParents: rawSettings.brideParents || DEFAULT_WEDDING_SETTINGS.brideParents,
     waMessageTemplate: rawSettings.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 

@@ -46,7 +46,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none"
         data-seq-dir="center-scale"
-        style={{ "--seq-delay": "350ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "600ms" } as React.CSSProperties}
       >
         <BatikKawungTruntumBg />
       </div>
@@ -55,7 +55,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute left-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
         data-seq-dir="left"
-        style={{ "--seq-delay": "520ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
         <GebyokUkirArchLeft />
       </div>
@@ -64,7 +64,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute right-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
         data-seq-dir="right"
-        style={{ "--seq-delay": "600ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
         <GebyokUkirArchRight />
       </div>
@@ -73,7 +73,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
         data-seq-dir="top"
-        style={{ "--seq-delay": "720ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1040ms" } as React.CSSProperties}
       >
         <RonceMelatiFlora />
       </div>
@@ -82,7 +82,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
         data-seq-dir="center-scale"
-        style={{ "--seq-delay": "900ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1260ms" } as React.CSSProperties}
       >
         <GununganKayonSilhouette />
       </div>
@@ -91,7 +91,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute bottom-0 left-0 pointer-events-none z-[2]"
         data-seq-dir="left"
-        style={{ "--seq-delay": "1050ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
       >
         <HeritageCornerFloraLeft />
       </div>
@@ -100,7 +100,7 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
       <div
         className="royal-seq-item absolute bottom-0 right-0 pointer-events-none z-[2]"
         data-seq-dir="right"
-        style={{ "--seq-delay": "1120ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
       >
         <HeritageCornerFloraRight />
       </div>

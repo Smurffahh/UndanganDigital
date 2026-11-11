@@ -152,25 +152,27 @@ export function CountdownHero({
                 }
               }}
               title="Klik untuk beralih antara foto dan ilustrasi karakter"
-              className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center rounded-[990px_990px_16px_16px] border-2 border-[#C5A059]/50 cursor-pointer group active:scale-[0.98] transition-transform duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C5A059]"
+              className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(58,39,29,0.22)] bg-[#FAF6F0]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C5A059]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C5A059]"
             >
-              {activeMode === "svg" || !heroPhotoUrl ? (
-                <CoupleCharacterSvg
-                  preset={svgCharacterPreset}
-                  variant="couple"
-                  className="w-full h-full"
-                />
-              ) : (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={heroPhotoUrl}
-                  alt="Fauzan dan Sinta"
-                  className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-500 group-hover:scale-105"
-                  loading="eager"
-                />
-              )}
-              <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-[#3d2616]/75 backdrop-blur-md text-[#FFFDF8] text-[10px] font-sans font-medium tracking-wide flex items-center gap-1 shadow-sm opacity-85 group-hover:opacity-100 transition-opacity">
-                <span>{activeMode === "photo" ? "Ilustrasi ⇄" : "Foto ⇄"}</span>
+              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C5A059]/30 relative flex items-center justify-center bg-[#FAF6F0]">
+                {activeMode === "svg" || !heroPhotoUrl ? (
+                  <CoupleCharacterSvg
+                    preset={svgCharacterPreset}
+                    variant="couple"
+                    className="w-full h-full"
+                  />
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={heroPhotoUrl}
+                    alt="Fauzan dan Sinta"
+                    className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-500 group-hover:scale-105"
+                    loading="eager"
+                  />
+                )}
+                <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-[#3E2723]/80 backdrop-blur-md text-[#FAF6F0] text-[10px] font-sans font-medium tracking-wide flex items-center gap-1 shadow-sm opacity-85 group-hover:opacity-100 transition-opacity">
+                  <span>{activeMode === "photo" ? "Ilustrasi ⇄" : "Foto ⇄"}</span>
+                </div>
               </div>
             </div>
           </div>

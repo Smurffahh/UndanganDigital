@@ -2,11 +2,9 @@
 
 import React from "react";
 import {
-  BatikKawungTruntumBg,
   GebyokUkirArchLeft,
   GebyokUkirArchRight,
   RonceMelatiFlora,
-  RoyalSulurCornerSvg,
 } from "./HeritageBotanicalAssets";
 
 interface FixedInvitationBackgroundProps {
@@ -19,10 +17,19 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
       className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none w-screen h-dvh"
       aria-hidden="true"
     >
-      <div className="absolute inset-0 bg-[#F8F3EA] bg-[radial-gradient(ellipse_at_center,#FFFDF9_0%,#F8F3EA_50%,#EFE4D2_100%)]" />
+      {/* Layer 1 — Base Silk Ivory Gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#FCF9F4_0%,_#F5EDE0_55%,_#EAE0CE_100%)]" />
 
-      <div className="absolute inset-0 bg-[url('/images/bg-gunungan-pattern.svg')] bg-repeat bg-[length:400px_600px] opacity-30 pointer-events-none" />
+      {/* Layer 2 — Subtle Truntum Silk Damask with Vignette Mask */}
+      <div
+        className="absolute inset-0 bg-[url('/images/bg-truntum-damask.svg')] bg-repeat bg-[length:96px_96px] opacity-[0.055] pointer-events-none"
+        style={{
+          maskImage: "radial-gradient(circle at center, transparent 25%, black 90%)",
+          WebkitMaskImage: "radial-gradient(circle at center, transparent 25%, black 90%)",
+        }}
+      />
 
+      {/* Subtle Paper Fiber Texture */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
         <filter id="paperNoise">
           <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -31,95 +38,45 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         <rect width="100%" height="100%" filter="url(#paperNoise)" />
       </svg>
 
-      <div className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.09),transparent_70%)] blur-2xl" />
-      <div className="absolute top-[40%] -left-[180px] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(156,95,102,0.07),transparent_70%)] blur-2xl" />
-      <div className="absolute top-[65%] -right-[180px] w-[550px] h-[550px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.08),transparent_70%)] blur-2xl" />
+      {/* Layer 3 — Ambient Sunlit Halo (Top & Bottom) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,_rgba(197,160,89,0.14),_transparent_65%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_85%,_rgba(140,98,57,0.08),_transparent_60%)] pointer-events-none" />
 
-      {/* Layer 2: Siluet Gunungan Puncak Tengah Atas */}
+      {/* Layer 4 — Architectural Sanctuary Frame */}
       <div
-        className="royal-seq-item absolute -top-16 sm:-top-20 left-1/2 -translate-x-1/2 w-[280px] sm:w-[360px] opacity-[0.09] pointer-events-none z-[1] select-none"
-        data-seq-dir="top"
-        style={{ "--seq-delay": "1000ms" } as React.CSSProperties}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/gunungan-bg-harmonized.webp"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-auto object-contain"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      {/* Layer 2: Gunungan Sisi Kiri */}
-      <div
-        className="royal-seq-item absolute top-[36%] -left-16 sm:-left-12 -translate-y-1/2 w-[240px] sm:w-[320px] md:w-[380px] opacity-[0.14] mix-blend-multiply pointer-events-none z-[1] select-none"
-        data-seq-dir="left"
-        style={{ "--seq-delay": "1200ms" } as React.CSSProperties}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/gunungan-bg-harmonized.webp"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-auto object-contain -rotate-6"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      {/* Layer 2: Gunungan Sisi Kanan */}
-      <div
-        className="royal-seq-item absolute top-[36%] -right-16 sm:-right-12 -translate-y-1/2 w-[240px] sm:w-[320px] md:w-[380px] opacity-[0.14] mix-blend-multiply pointer-events-none z-[1] select-none"
-        data-seq-dir="right"
-        style={{ "--seq-delay": "1200ms" } as React.CSSProperties}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/gunungan-bg-harmonized.webp"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-auto object-contain rotate-6 scale-x-[-1]"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      {/* Layer 3: Vignette Pelindung Keterbacaan Kolom Tengah */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-[#F8F3EA]/75 to-transparent pointer-events-none z-[2]"
-      />
-
-      {/* Layer 1: Pola Dasar Batik Kawung & Truntum (Center Scale) */}
-      <div
-        className="royal-seq-item absolute inset-0 pointer-events-none"
+        className="royal-seq-item absolute inset-2 sm:inset-4 md:inset-6 pointer-events-none opacity-80 z-[1] select-none"
         data-seq-dir="center-scale"
-        style={{ "--seq-delay": "600ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "700ms" } as React.CSSProperties}
       >
-        <BatikKawungTruntumBg />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/bg-royal-sanctuary.svg"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-fill pointer-events-none"
+          loading="eager"
+        />
       </div>
 
-      {/* Layer 2: Gebyok Ukir Sisi Kiri (Left) */}
+      {/* Heritage Gebyok Ukir Arch (Top Left) */}
       <div
-        className="royal-seq-item absolute left-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
+        className="royal-seq-item absolute left-0 top-0 w-1/2 h-36 sm:h-48 pointer-events-none z-[2]"
         data-seq-dir="left"
         style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
         <GebyokUkirArchLeft />
       </div>
 
-      {/* Layer 2: Gebyok Ukir Sisi Kanan (Right) */}
+      {/* Heritage Gebyok Ukir Arch (Top Right) */}
       <div
-        className="royal-seq-item absolute right-0 top-0 w-1/2 h-40 sm:h-52 pointer-events-none z-[2]"
+        className="royal-seq-item absolute right-0 top-0 w-1/2 h-36 sm:h-48 pointer-events-none z-[2]"
         data-seq-dir="right"
         style={{ "--seq-delay": "820ms" } as React.CSSProperties}
       >
         <GebyokUkirArchRight />
       </div>
 
-      {/* Layer 3: Untaian Ronce Melati & Kantil Keraton (Top) */}
+      {/* Ronce Melati & Kantil Keraton (Top Crest) */}
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none z-[3]"
         data-seq-dir="top"
@@ -128,24 +85,7 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         <RonceMelatiFlora />
       </div>
 
-      {/* Layer 4: Ornamen SVG Sulur Keraton Sudut Bawah (Left) */}
-      <div
-        className="royal-seq-item absolute bottom-1 left-1 pointer-events-none z-[2]"
-        data-seq-dir="left"
-        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
-      >
-        <RoyalSulurCornerSvg className="w-28 sm:w-36 h-28 sm:h-36 opacity-25" />
-      </div>
-
-      {/* Layer 4: Ornamen SVG Sulur Keraton Sudut Bawah (Right) */}
-      <div
-        className="royal-seq-item absolute bottom-1 right-1 pointer-events-none z-[2]"
-        data-seq-dir="right"
-        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
-      >
-        <RoyalSulurCornerSvg className="w-28 sm:w-36 h-28 sm:h-36 opacity-25" mirror />
-      </div>
-
+      {/* Floating Gold & Rose Petals */}
       <div
         className="absolute top-[28%] left-[22%] w-4 h-4 pointer-events-none animate-petal-drift z-[2]"
         style={{ willChange: "transform" }}

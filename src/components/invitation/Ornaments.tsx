@@ -27,16 +27,19 @@ export function GununganWayang({
 
 export function WayangDivider({ className = "my-4", light = false }: { className?: string; light?: boolean }) {
   return (
-    <div className={`flex items-center justify-center gap-3 mx-auto max-w-[300px] ${className}`} aria-hidden="true">
+    <div className={`flex items-center justify-center gap-2.5 sm:gap-3 mx-auto max-w-[300px] ${className}`} aria-hidden="true">
       <div className="flex items-center flex-1">
         <span
           className={`h-px flex-1 ${
             light
-              ? "bg-gradient-to-r from-transparent to-[#e9d3a3]"
-              : "bg-gradient-to-r from-transparent to-[#c9a24b]"
+              ? "bg-gradient-to-r from-transparent via-[#E5D1A6] to-[#C5A059]"
+              : "bg-gradient-to-r from-transparent via-[#C5A059]/50 to-[#C5A059]"
           }`}
         />
-        <span className="w-1.5 h-1.5 rotate-45 border border-[#c9a24b]/70 shrink-0 ml-1" />
+        <svg className="w-3.5 h-3.5 text-[#C5A059] shrink-0 ml-1 opacity-80" viewBox="0 0 16 16" fill="none">
+          <path d="M 2,14 C 4,10 8,6 14,2" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+          <circle cx="14" cy="2" r="1.5" fill="currentColor" />
+        </svg>
       </div>
       <div className="relative flex items-center justify-center shrink-0">
         <div className="w-6 sm:w-7 h-7 sm:h-8 flex items-center justify-center">
@@ -44,12 +47,15 @@ export function WayangDivider({ className = "my-4", light = false }: { className
         </div>
       </div>
       <div className="flex items-center flex-1">
-        <span className="w-1.5 h-1.5 rotate-45 border border-[#c9a24b]/70 shrink-0 mr-1" />
+        <svg className="w-3.5 h-3.5 text-[#C5A059] shrink-0 mr-1 opacity-80 scale-x-[-1]" viewBox="0 0 16 16" fill="none">
+          <path d="M 2,14 C 4,10 8,6 14,2" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+          <circle cx="14" cy="2" r="1.5" fill="currentColor" />
+        </svg>
         <span
           className={`h-px flex-1 ${
             light
-              ? "bg-gradient-to-l from-transparent to-[#e9d3a3]"
-              : "bg-gradient-to-l from-transparent to-[#c9a24b]"
+              ? "bg-gradient-to-l from-transparent via-[#E5D1A6] to-[#C5A059]"
+              : "bg-gradient-to-l from-transparent via-[#C5A059]/50 to-[#C5A059]"
           }`}
         />
       </div>

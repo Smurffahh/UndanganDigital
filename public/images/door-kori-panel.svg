@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000" fill="none" width="100%" height="100%" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="doorBevelShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8C6239" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#8C6239" stop-opacity="0.03" />
+    </linearGradient>
+
+    <linearGradient id="goldTrimGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C5A059" stop-opacity="0.75" />
+      <stop offset="50%" stop-color="#E5D1A6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#B8860B" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="brassStileSeam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#C5A059" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="#F5E5C9" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#8C6239" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Panel Corner Lung-lungan (matching bg-royal-sanctuary.svg) -->
+    <g id="panelCornerFiligree">
+      <path d="M 0,36 C 4,18 18,4 36,0" stroke="url(#goldTrimGrad)" stroke-width="0.95" stroke-linecap="round" fill="none" />
+      <path d="M 0,24 C 5,12 12,5 24,0" stroke="#C5A059" stroke-width="0.65" stroke-dasharray="2 2" fill="none" />
+      <path d="M 8,18 C 14,12 20,14 18,20 C 16,24 10,22 10,18" stroke="#C5A059" stroke-width="0.7" fill="none" />
+      <circle cx="6" cy="6" r="2.2" fill="#C5A059" fill-opacity="0.35" />
+      <circle cx="36" cy="0" r="1.5" fill="#C5A059" />
+      <circle cx="0" cy="36" r="1.5" fill="#C5A059" />
+    </g>
+  </defs>
+
+  <!-- Outer Architectural Door Stile Border -->
+  <rect x="8" y="10" width="384" height="980" rx="3" stroke="url(#goldTrimGrad)" stroke-width="1.2" opacity="0.55" />
+  <rect x="14" y="16" width="372" height="968" rx="2" stroke="#4A3222" stroke-width="0.6" opacity="0.16" />
+
+  <!-- ==================== UPPER RECESSED PANEL ==================== -->
+  <g id="upperPanel">
+    <rect x="24" y="30" width="352" height="500" rx="4" fill="url(#doorBevelShadow)" />
+    <rect x="26" y="32" width="348" height="496" rx="3" stroke="url(#goldTrimGrad)" stroke-width="1.1" fill="none" />
+    <rect x="32" y="38" width="336" height="484" rx="2" stroke="#4A3222" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.22" fill="none" />
+
+    <!-- Corner Lung-lungan (Upper Panel) -->
+    <!-- Top-Left -->
+    <g transform="translate(34, 40)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <!-- Top-Right -->
+    <g transform="translate(366, 40) scale(-1, 1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <!-- Bottom-Left -->
+    <g transform="translate(34, 520) scale(1, -1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <!-- Bottom-Right -->
+    <g transform="translate(366, 520) scale(-1, -1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+
+    <!-- Center Rosette Accent -->
+    <g transform="translate(200, 280)" stroke="url(#goldTrimGrad)" stroke-width="0.8" fill="none" opacity="0.55">
+      <circle cx="0" cy="0" r="32" stroke-dasharray="2 3" />
+      <circle cx="0" cy="0" r="18" stroke-width="1" />
+      <circle cx="0" cy="0" r="4" fill="#C5A059" fill-opacity="0.4" />
+      <path d="M 0,-26 L 0,-10 M 0,10 L 0,26 M -26,0 L -10,0 M 10,0 L 26,0" stroke-width="0.75" />
+      <path d="M -16,-16 L -7,-7 M 7,7 L 16,16 M -16,16 L -7,7 M 7,-7 L 16,-16" stroke-width="0.5" />
+    </g>
+  </g>
+
+  <!-- ==================== MIDDLE TRANSOM / RAIL ==================== -->
+  <rect x="18" y="546" width="364" height="38" rx="2" fill="url(#doorBevelShadow)" />
+  <rect x="18" y="546" width="364" height="38" rx="2" stroke="url(#goldTrimGrad)" stroke-width="0.9" fill="none" />
+  <line x1="26" y1="565" x2="374" y2="565" stroke="#4A3222" stroke-width="0.6" opacity="0.2" stroke-dasharray="3 3" />
+  <circle cx="200" cy="565" r="4.5" stroke="url(#goldTrimGrad)" stroke-width="0.8" fill="#FAF6F0" />
+  <circle cx="200" cy="565" r="1.8" fill="#C5A059" />
+
+  <!-- ==================== LOWER RECESSED PANEL ==================== -->
+  <g id="lowerPanel">
+    <rect x="24" y="600" width="352" height="364" rx="4" fill="url(#doorBevelShadow)" />
+    <rect x="26" y="602" width="348" height="360" rx="3" stroke="url(#goldTrimGrad)" stroke-width="1.1" fill="none" />
+    <rect x="32" y="608" width="336" height="348" rx="2" stroke="#4A3222" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.22" fill="none" />
+
+    <!-- Corner Lung-lungan (Lower Panel) -->
+    <g transform="translate(34, 610)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <g transform="translate(366, 610) scale(-1, 1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <g transform="translate(34, 954) scale(1, -1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+    <g transform="translate(366, 954) scale(-1, -1)">
+      <use href="#panelCornerFiligree" />
+    </g>
+
+    <!-- Lower Rosette Accent -->
+    <g transform="translate(200, 782)" stroke="url(#goldTrimGrad)" stroke-width="0.8" fill="none" opacity="0.55">
+      <circle cx="0" cy="0" r="22" stroke-dasharray="2 2" />
+      <circle cx="0" cy="0" r="12" stroke-width="1" />
+      <circle cx="0" cy="0" r="3" fill="#C5A059" fill-opacity="0.4" />
+    </g>
+  </g>
+
+  <!-- Vertical Inner Edge Brass Astragal Plate / Seam -->
+  <rect x="394" y="0" width="6" height="1000" fill="url(#brassStileSeam)" />
+</svg>

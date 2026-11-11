@@ -38,6 +38,7 @@ import {
   type SvgCharacterPreset,
 } from "@/lib/db/seed-data";
 import { CoupleCharacterSvg } from "@/components/invitation/CoupleCharacterSvg";
+import { normalizeUrlOrPath, isValidUrlOrLocalPath } from "@/lib/urlUtils";
 
 interface WeddingSettingsModuleProps {
   initialSettings: WeddingSettingsData | any;
@@ -270,12 +271,19 @@ export function WeddingSettingsModule({
   };
 
   const handleResolveMaps = async () => {
-    const targetUrl = formData.googleMapsUrl;
-    if (!targetUrl || !targetUrl.trim()) {
+    const rawUrl = formData.googleMapsUrl;
+    if (!rawUrl || !rawUrl.trim()) {
       toast.error("Masukkan tautan Google Maps terlebih dahulu");
       return;
     }
 
+    const targetUrl = normalizeUrlOrPath(rawUrl, "maps");
+    if (!isValidUrlOrLocalPath(targetUrl)) {
+      toast.error("Format tautan Google Maps tidak valid");
+      return;
+    }
+
+    setFormData((prev: any) => ({ ...prev, googleMapsUrl: targetUrl }));
     setIsResolvingMaps(true);
     try {
       const res = await fetch(`/api/admin/resolve-maps?url=${encodeURIComponent(targetUrl)}`);
@@ -371,12 +379,43 @@ export function WeddingSettingsModule({
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const normalizedMusicUrl = normalizeUrlOrPath(formData.musicUrl, "asset");
+    const normalizedMapsUrl = normalizeUrlOrPath(formData.googleMapsUrl, "maps");
+    const normalizedBridePhoto = normalizeUrlOrPath(formData.bridePhotoUrl, "asset");
+    const normalizedGroomPhoto = normalizeUrlOrPath(formData.groomPhotoUrl, "asset");
+
+    if (formData.musicUrl && !isValidUrlOrLocalPath(normalizedMusicUrl)) {
+      toast.error("Format tautan audio tidak valid. Gunakan path lokal (/audio/...) atau URL web (https://...)");
+      return;
+    }
+    if (formData.googleMapsUrl && !isValidUrlOrLocalPath(normalizedMapsUrl)) {
+      toast.error("Format tautan Google Maps tidak valid");
+      return;
+    }
+    if (formData.bridePhotoUrl && !isValidUrlOrLocalPath(normalizedBridePhoto)) {
+      toast.error("Format tautan foto mempelai wanita tidak valid");
+      return;
+    }
+    if (formData.groomPhotoUrl && !isValidUrlOrLocalPath(normalizedGroomPhoto)) {
+      toast.error("Format tautan foto mempelai pria tidak valid");
+      return;
+    }
+
+    const payload = {
+      ...formData,
+      musicUrl: normalizedMusicUrl,
+      googleMapsUrl: normalizedMapsUrl,
+      bridePhotoUrl: normalizedBridePhoto,
+      groomPhotoUrl: normalizedGroomPhoto,
+    };
+
     setIsSaving(true);
     try {
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -396,7 +435,7 @@ export function WeddingSettingsModule({
   };
 
   return (
-    <form onSubmit={handleSave} id="wedding-settings-form" className="space-y-8 pb-8">
+    <form onSubmit={handleSave} id="wedding-settings-form" noValidate className="space-y-8 pb-8">
       <audio
         ref={audioTestRef}
         src={effectiveAudioUrl}
@@ -709,10 +748,15 @@ export function WeddingSettingsModule({
                   </label>
                   <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                     <input
-                      type="url"
+                      type="text"
+                      inputMode="url"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
                       value={formData.musicUrl || ""}
                       onChange={(e) => handleFieldChange("musicUrl", e.target.value)}
-                      placeholder="https://.../lagu-pernikahan.mp3"
+                      onBlur={(e) => handleFieldChange("musicUrl", normalizeUrlOrPath(e.target.value, "asset"))}
+                      placeholder="https://.../lagu-pernikahan.mp3 atau /audio/nama-lagu.mp3"
                       className="flex-1 px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm font-mono text-ink focus:outline-none focus:border-rose-500"
                     />
                     <label className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 text-rose-900 border border-gold-500/30 font-semibold text-xs cursor-pointer transition-colors shrink-0">
@@ -864,9 +908,14 @@ export function WeddingSettingsModule({
             </label>
             <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={formData.googleMapsUrl || ""}
                 onChange={(e) => handleFieldChange("googleMapsUrl", e.target.value)}
+                onBlur={(e) => handleFieldChange("googleMapsUrl", normalizeUrlOrPath(e.target.value, "maps"))}
                 placeholder="https://maps.app.goo.gl/HFXpTdshy7Vhwoxs8"
                 className="flex-1 px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink font-mono focus:outline-none focus:border-rose-500"
               />
@@ -1307,9 +1356,15 @@ export function WeddingSettingsModule({
                 URL Foto Profil Wanita
               </label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={formData.bridePhotoUrl || ""}
                 onChange={(e) => handleFieldChange("bridePhotoUrl", e.target.value)}
+                onBlur={(e) => handleFieldChange("bridePhotoUrl", normalizeUrlOrPath(e.target.value, "asset"))}
+                placeholder="https://.../foto-wanita.jpg atau /images/..."
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>
@@ -1419,9 +1474,15 @@ export function WeddingSettingsModule({
                 URL Foto Profil Pria
               </label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={formData.groomPhotoUrl || ""}
                 onChange={(e) => handleFieldChange("groomPhotoUrl", e.target.value)}
+                onBlur={(e) => handleFieldChange("groomPhotoUrl", normalizeUrlOrPath(e.target.value, "asset"))}
+                placeholder="https://.../foto-pria.jpg atau /images/..."
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
               />
             </div>

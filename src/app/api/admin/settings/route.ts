@@ -3,18 +3,25 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { isAuthenticated } from "@/lib/auth";
 import { getWeddingSettings, updateWeddingSettings } from "@/lib/db/store";
+import { normalizeUrlOrPath, isValidUrlOrLocalPath } from "@/lib/urlUtils";
+
+const safeUrlOrPath = z
+  .string()
+  .refine(isValidUrlOrLocalPath, { message: "Format URL atau path tidak valid" })
+  .transform((val) => normalizeUrlOrPath(val))
+  .optional();
 
 const updateSettingsSchema = z.object({
   brideName: z.string().max(100).optional(),
   brideBirth: z.string().max(150).optional(),
   brideBio: z.string().max(1000).optional(),
-  bridePhotoUrl: z.string().optional(),
+  bridePhotoUrl: safeUrlOrPath,
   groomName: z.string().max(100).optional(),
   groomBirth: z.string().max(150).optional(),
   groomBio: z.string().max(1000).optional(),
-  groomPhotoUrl: z.string().optional(),
-  coverPhotoUrl: z.string().optional(),
-  heroPhotoUrl: z.string().optional(),
+  groomPhotoUrl: safeUrlOrPath,
+  coverPhotoUrl: safeUrlOrPath,
+  heroPhotoUrl: safeUrlOrPath,
   weddingDateIso: z.string().max(50).optional(),
   eventDateLabel: z.string().max(100).optional(),
   akadTime: z.string().max(100).optional(),
@@ -22,7 +29,7 @@ const updateSettingsSchema = z.object({
   venueName: z.string().max(255).optional(),
   venueAddress: z.string().max(1000).optional(),
   venuePlusCode: z.string().max(100).optional(),
-  googleMapsUrl: z.string().optional(),
+  googleMapsUrl: safeUrlOrPath,
   googleMapsEmbed: z.string().optional(),
   mapsLatitude: z.string().max(50).optional(),
   mapsLongitude: z.string().max(50).optional(),
@@ -30,11 +37,11 @@ const updateSettingsSchema = z.object({
   musicEnabled: z.boolean().optional(),
   musicTitle: z.string().max(255).optional(),
   musicSourceType: z.enum(["preset", "audio_url", "youtube"]).optional(),
-  musicUrl: z.string().optional(),
+  musicUrl: safeUrlOrPath,
   bankAccounts: z.array(z.any()).optional(),
   ewallets: z.array(z.any()).optional(),
   giftAddress: z.any().optional(),
-  qrisImageUrl: z.string().optional(),
+  qrisImageUrl: safeUrlOrPath,
   loveStoryText: z.string().max(2000).optional(),
   storyHashtag: z.string().max(100).optional(),
   waMessageTemplate: z.string().max(4000).optional(),

@@ -44,16 +44,13 @@ export function ScrollLinkedItem({
         const [entry] = entries;
         isIntersectingRef.current = entry.isIntersecting;
 
-        if (entry.isIntersecting) {
-          if (trigger === undefined || trigger === true) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
+        if (trigger === undefined || trigger === true) {
+          setIsVisible(entry.isIntersecting);
         }
       },
       {
         threshold: 0.12,
-        rootMargin: "0px 0px -40px 0px",
+        rootMargin: "-40px 0px -40px 0px",
       }
     );
 
@@ -76,10 +73,10 @@ export function ScrollLinkedItem({
       : direction === "right"
       ? "translate3d(28px, 0, 0) scale3d(0.96, 0.96, 1)"
       : direction === "top"
-      ? "translate3d(0, -24px, 0) scale3d(0.96, 0.96, 1)"
+      ? "translate3d(0, -28px, 0) scale3d(0.96, 0.96, 1)"
       : direction === "center-scale"
-      ? "translate3d(0, 6px, 0) scale3d(0.90, 0.90, 1)"
-      : `translate3d(0, ${offsetY}px, 0) scale3d(0.96, 0.96, 1)`;
+      ? "translate3d(0, 0, 0) scale3d(0.90, 0.90, 1)"
+      : `translate3d(0, ${offsetY || 28}px, 0) scale3d(0.96, 0.96, 1)`;
 
   const animatedStyle: CSSProperties = {
     ...style,
@@ -88,9 +85,9 @@ export function ScrollLinkedItem({
       ? "translate3d(0, 0, 0) scale3d(1, 1, 1)"
       : initialTransform,
     transitionProperty: "transform, opacity",
-    transitionDuration: "750ms",
-    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-    transitionDelay: `${delay}ms`,
+    transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+    transitionTimingFunction: "var(--motion-ease-royal)",
+    transitionDelay: isVisible ? `${delay}ms` : "0ms",
     willChange: "transform, opacity",
     backfaceVisibility: "hidden",
   };

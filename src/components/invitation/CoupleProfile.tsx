@@ -17,6 +17,10 @@ interface CoupleProfileProps {
   groomPhotoUrl: string;
   coupleVisualMode?: CoupleVisualMode;
   svgCharacterPreset?: SvgCharacterPreset;
+  groomChildOrder?: string;
+  groomParents?: string;
+  brideChildOrder?: string;
+  brideParents?: string;
 }
 
 export function CoupleProfile({
@@ -30,8 +34,20 @@ export function CoupleProfile({
   groomPhotoUrl,
   coupleVisualMode = "photo",
   svgCharacterPreset = "javanese-royal",
+  groomChildOrder,
+  groomParents,
+  brideChildOrder,
+  brideParents,
 }: CoupleProfileProps) {
   const isSvgMode = coupleVisualMode === "svg";
+
+  const groomOrderText = groomChildOrder
+    ? (groomChildOrder.toLowerCase().includes("dari") ? groomChildOrder : `${groomChildOrder} dari Pasangan`)
+    : "Putra dari Pasangan";
+
+  const brideOrderText = brideChildOrder
+    ? (brideChildOrder.toLowerCase().includes("dari") ? brideChildOrder : `${brideChildOrder} dari Pasangan`)
+    : "Putri dari Pasangan";
 
   return (
     <section id="mempelai" className="py-20 relative bg-transparent" aria-label="Profil Mempelai">
@@ -105,9 +121,17 @@ export function CoupleProfile({
                 <h3 className="typo-card-title mt-1">
                   {groomName}
                 </h3>
-                <p className="mt-2 typo-eyebrow text-[#a9823a]">
-                  {groomBirth}
+                <p className="mt-2 text-xs sm:text-sm font-serif italic text-[#7a5c61]">
+                  {groomOrderText}
                 </p>
+                <p className="text-xs sm:text-sm font-medium text-[#5d3a41] mt-0.5">
+                  {groomParents || "Bapak H. Ma'ruf & Ibu Hj. Siti Aminah"}
+                </p>
+                {groomBirth && (
+                  <p className="mt-1.5 typo-eyebrow text-[#a9823a] text-[10px] sm:text-xs">
+                    {groomBirth}
+                  </p>
+                )}
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
@@ -168,9 +192,17 @@ export function CoupleProfile({
                 <h3 className="typo-card-title mt-1">
                   {brideName}
                 </h3>
-                <p className="mt-2 typo-eyebrow text-[#a9823a]">
-                  {brideBirth}
+                <p className="mt-2 text-xs sm:text-sm font-serif italic text-[#7a5c61]">
+                  {brideOrderText}
                 </p>
+                <p className="text-xs sm:text-sm font-medium text-[#5d3a41] mt-0.5">
+                  {brideParents || "Bapak H. Utami & Ibu Hj. Maria"}
+                </p>
+                {brideBirth && (
+                  <p className="mt-1.5 typo-eyebrow text-[#a9823a] text-[10px] sm:text-xs">
+                    {brideBirth}
+                  </p>
+                )}
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">

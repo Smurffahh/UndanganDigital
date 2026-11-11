@@ -71,6 +71,10 @@ export async function seedDatabase(): Promise<{
         qrisImageUrl: DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
         loveStoryText: DEFAULT_WEDDING_SETTINGS.loveStoryText,
         storyHashtag: DEFAULT_WEDDING_SETTINGS.storyHashtag,
+        groomChildOrder: DEFAULT_WEDDING_SETTINGS.groomChildOrder,
+        groomParents: DEFAULT_WEDDING_SETTINGS.groomParents,
+        brideChildOrder: DEFAULT_WEDDING_SETTINGS.brideChildOrder,
+        brideParents: DEFAULT_WEDDING_SETTINGS.brideParents,
         waMessageTemplate: DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
       });
       settingsInserted = true;

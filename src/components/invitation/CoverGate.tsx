@@ -110,7 +110,7 @@ export function CoverGate({
 
     setTimeout(() => {
       setGone(true);
-    }, 1050);
+    }, 1950);
   };
 
   if (gone) return null;
@@ -124,12 +124,14 @@ export function CoverGate({
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform duration-[750ms] ease-[cubic-bezier(0.65,0,0.15,1)] ${
+        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform ${
           isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "250ms" : "0ms",
+          transitionDuration: "var(--motion-duration-gate)",
+          transitionTimingFunction: "var(--motion-ease-royal)",
+          transitionDelay: isOpening ? "350ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -142,12 +144,14 @@ export function CoverGate({
       </div>
 
       <div
-        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform duration-[750ms] ease-[cubic-bezier(0.65,0,0.15,1)] ${
+        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform ${
           isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
           willChange: "transform",
-          transitionDelay: isOpening ? "250ms" : "0ms",
+          transitionDuration: "var(--motion-duration-gate)",
+          transitionTimingFunction: "var(--motion-ease-royal)",
+          transitionDelay: isOpening ? "350ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -162,13 +166,14 @@ export function CoverGate({
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
 
       <div
-        className={`relative z-20 w-full h-dvh min-h-dvh max-w-[440px] mx-auto flex flex-col justify-between items-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[opacity,transform] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`relative z-20 w-full h-dvh min-h-dvh max-w-[440px] mx-auto flex flex-col justify-between items-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[opacity,transform] duration-[550ms] ${
           isOpening
             ? "opacity-0 scale-[0.98] -translate-y-3.5 pointer-events-none"
             : "opacity-100 scale-100 translate-y-0"
         }`}
         style={{
           willChange: "transform, opacity",
+          transitionTimingFunction: "var(--motion-ease-royal)",
           backfaceVisibility: "hidden",
         }}
       >
@@ -221,12 +226,15 @@ export function CoverGate({
           </span>
 
           <div
-            className={`relative my-2 sm:my-2.5 transition-[transform,opacity] duration-[350ms] ease-out ${
+            className={`relative my-2 sm:my-2.5 transition-[transform,opacity] duration-[550ms] ${
               isOpening
                 ? "scale-[1.08] rotate-12 opacity-0"
                 : "scale-100 rotate-0 opacity-100"
             }`}
-            style={{ willChange: "transform, opacity" }}
+            style={{
+              willChange: "transform, opacity",
+              transitionTimingFunction: "var(--motion-ease-royal)",
+            }}
           >
             <GoldenEmblemSeal className="size-14 sm:size-16" />
             {isOpening && (

@@ -160,6 +160,10 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     coupleVisualMode: (row.coupleVisualMode as typeof DEFAULT_WEDDING_SETTINGS.coupleVisualMode) || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
     svgCharacterPreset: (row.svgCharacterPreset as typeof DEFAULT_WEDDING_SETTINGS.svgCharacterPreset) || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
     isGalleryEnabled: row.isGalleryEnabled !== undefined ? Boolean(row.isGalleryEnabled) : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
+    groomChildOrder: row.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
+    groomParents: row.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
+    brideChildOrder: row.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
+    brideParents: row.brideParents || DEFAULT_WEDDING_SETTINGS.brideParents,
     waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 }
@@ -322,6 +326,10 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS couple_visual_mode VARCHAR(20) DEFAULT 'photo'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS svg_character_preset VARCHAR(50) DEFAULT 'javanese-royal'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS is_gallery_enabled BOOLEAN DEFAULT true`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS groom_child_order VARCHAR(100) DEFAULT 'Putra Pertama'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS bride_child_order VARCHAR(100) DEFAULT 'Putri Pertama'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS groom_parents VARCHAR(255) DEFAULT 'Bapak H. Ma''ruf & Ibu Hj. Siti Aminah'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS bride_parents VARCHAR(255) DEFAULT 'Bapak H. Utami & Ibu Hj. Maria'`;
     hasEnsuredColumns = true;
   } catch (err) {
     console.warn("Could not ensure wedding_settings columns:", err);

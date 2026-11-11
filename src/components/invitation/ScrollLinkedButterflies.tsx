@@ -224,7 +224,7 @@ export function ScrollLinkedButterflies() {
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none"
         data-seq-dir="left-diagonal"
-        style={{ "--seq-delay": "1350ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1750ms" } as React.CSSProperties}
       >
         <div
           ref={b1Ref}
@@ -244,7 +244,7 @@ export function ScrollLinkedButterflies() {
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none"
         data-seq-dir="right-diagonal"
-        style={{ "--seq-delay": "1500ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "1970ms" } as React.CSSProperties}
       >
         <div
           ref={b2Ref}
@@ -264,7 +264,7 @@ export function ScrollLinkedButterflies() {
       <div
         className="royal-seq-item absolute inset-0 pointer-events-none hidden sm:block"
         data-seq-dir="bottom"
-        style={{ "--seq-delay": "1650ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "2190ms" } as React.CSSProperties}
       >
         <div
           ref={b3Ref}

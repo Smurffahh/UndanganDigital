@@ -191,6 +191,10 @@ export function InvitationOrchestrator({
           groomPhotoUrl={settings.groomPhotoUrl}
           coupleVisualMode={settings.coupleVisualMode}
           svgCharacterPreset={settings.svgCharacterPreset}
+          groomChildOrder={settings.groomChildOrder}
+          groomParents={settings.groomParents}
+          brideChildOrder={settings.brideChildOrder}
+          brideParents={settings.brideParents}
         />
 
         <LoveStoryTimeline

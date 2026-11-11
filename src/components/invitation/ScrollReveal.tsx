@@ -49,14 +49,11 @@ export function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
+        setIsVisible(entry.isIntersecting);
       },
       {
         threshold,
-        rootMargin: "0px 0px -40px 0px",
+        rootMargin: "-40px 0px -40px 0px",
       }
     );
 
@@ -84,12 +81,12 @@ export function ScrollReveal({
         case "right":
           return "opacity-0 translate-x-7 scale-[0.96]";
         case "top":
-          return "opacity-0 -translate-y-6 scale-[0.96]";
+          return "opacity-0 -translate-y-7 scale-[0.96]";
         case "center-scale":
-          return "opacity-0 translate-y-1.5 scale-[0.90]";
+          return "opacity-0 translate-y-0 scale-[0.90]";
         case "bottom":
         default:
-          return "opacity-0 translate-y-6 scale-[0.96]";
+          return "opacity-0 translate-y-7 scale-[0.96]";
       }
     }
 
@@ -99,9 +96,12 @@ export function ScrollReveal({
   return (
     <Component
       ref={elementRef}
-      className={`transition-[opacity,transform] duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${getVariantStyles()} ${className}`}
+      className={`transition-[opacity,transform] ${getVariantStyles()} ${className}`}
       style={{
+        transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+        transitionTimingFunction: "var(--motion-ease-royal)",
         transitionDelay: isVisible ? `${delay}ms` : "0ms",
+        willChange: "transform, opacity",
       }}
     >
       {children}
@@ -144,13 +144,11 @@ export function ParallaxPhotoFrame({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        setIsVisible(entry.isIntersecting);
       },
       {
         threshold: 0.08,
-        rootMargin: "0px 0px -20px 0px",
+        rootMargin: "-40px 0px -40px 0px",
       }
     );
 
@@ -189,10 +187,12 @@ export function ParallaxPhotoFrame({
   return (
     <div
       ref={frameRef}
-      className={`overflow-hidden transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`overflow-hidden transition-[opacity,transform] ${
         isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.97]"
       } ${className}`}
       style={{
+        transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+        transitionTimingFunction: "var(--motion-ease-royal)",
         transitionDelay: isVisible ? `${delay}ms` : "0ms",
       }}
     >

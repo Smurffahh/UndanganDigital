@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, type FormEvent } from "react";
-import { SongketRibbon } from "./Ornaments";
+import { WayangDivider } from "./Ornaments";
 import { Send, CheckCircle2, XCircle, HelpCircle, MessageSquare, Users, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
@@ -135,7 +135,7 @@ export function RsvpGuestbook({ initialWishes, defaultGuestName = "" }: RsvpGues
             <h2 className="typo-section-title">
               Konfirmasi &amp; Ucapan
             </h2>
-            <SongketRibbon />
+            <WayangDivider />
             <p className="typo-body text-center max-w-[400px] mx-auto mt-3 text-[#4b3a3e]">
               Mohon konfirmasi kehadiran Anda dan tinggalkan doa terbaik untuk kedua mempelai.
             </p>

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
-import { Divider, GununganWayang } from "./Ornaments";
+import { Divider } from "./Ornaments";
+import { GununganWayang } from "./GununganWayang";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
@@ -131,22 +132,28 @@ export function CountdownHero({
           data-seq-dir="center-scale"
           style={getItemStyle("2420ms", "center-scale")}
         >
-          <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
-            {coupleVisualMode === "svg" || !heroPhotoUrl ? (
-              <CoupleCharacterSvg
-                preset={svgCharacterPreset}
-                variant="couple"
-                className="w-full h-full"
-              />
-            ) : (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={heroPhotoUrl}
-                alt="Fauzan dan Sinta"
-                className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-                loading="eager"
-              />
-            )}
+          <div className="relative flex justify-center items-center w-full">
+            <div className="absolute -top-10 sm:-top-14 z-0 w-64 sm:w-80 md:w-88 pointer-events-none opacity-85">
+              <GununganWayang variant="watermark" tone="luminous-crest" priority />
+            </div>
+
+            <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
+              {coupleVisualMode === "svg" || !heroPhotoUrl ? (
+                <CoupleCharacterSvg
+                  preset={svgCharacterPreset}
+                  variant="couple"
+                  className="w-full h-full"
+                />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={heroPhotoUrl}
+                  alt="Fauzan dan Sinta"
+                  className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
+                  loading="eager"
+                />
+              )}
+            </div>
           </div>
         </div>
 

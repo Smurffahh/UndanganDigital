@@ -6,6 +6,7 @@ import {
   CardCornerOrnament,
   MonogramFS,
 } from "./Ornaments";
+import { GununganWayang } from "./GununganWayang";
 import {
   BatikKawungStamp,
   BotanicalHangingVines,
@@ -141,6 +142,22 @@ export function CoverGate({
           <BatikKawungStamp className="w-full h-full" />
         </div>
         <CardCornerOrnament />
+        <div
+          className={`absolute -right-8 sm:-right-10 top-1/2 -translate-y-1/2 z-20 w-24 sm:w-32 md:w-36 pointer-events-none transition-transform ${
+            isOpening
+              ? "-rotate-15 -translate-x-12 opacity-30"
+              : "-rotate-3 translate-x-0 opacity-85"
+          }`}
+          style={{
+            transformOrigin: "bottom right",
+            willChange: "transform, opacity",
+            transitionDuration: "var(--motion-duration-gate)",
+            transitionTimingFunction: "var(--motion-ease-royal)",
+            transitionDelay: isOpening ? "350ms" : "0ms",
+          }}
+        >
+          <GununganWayang variant="royal-solid" tone="luminous-crest" />
+        </div>
       </div>
 
       <div
@@ -161,6 +178,22 @@ export function CoverGate({
           <BatikKawungStamp className="w-full h-full" mirror />
         </div>
         <CardCornerOrnament />
+        <div
+          className={`absolute -left-8 sm:-left-10 top-1/2 -translate-y-1/2 z-20 w-24 sm:w-32 md:w-36 pointer-events-none transition-transform ${
+            isOpening
+              ? "rotate-15 translate-x-12 opacity-30"
+              : "rotate-3 translate-x-0 opacity-85"
+          }`}
+          style={{
+            transformOrigin: "bottom left",
+            willChange: "transform, opacity",
+            transitionDuration: "var(--motion-duration-gate)",
+            transitionTimingFunction: "var(--motion-ease-royal)",
+            transitionDelay: isOpening ? "350ms" : "0ms",
+          }}
+        >
+          <GununganWayang variant="royal-solid" tone="luminous-crest" flipHorizontal />
+        </div>
       </div>
 
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />

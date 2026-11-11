@@ -5,11 +5,11 @@ import {
   BatikKawungTruntumBg,
   GebyokUkirArchLeft,
   GebyokUkirArchRight,
-  GununganKayonSilhouette,
   RonceMelatiFlora,
   HeritageCornerFloraLeft,
   HeritageCornerFloraRight,
 } from "./HeritageBotanicalAssets";
+import { GununganWayang } from "./GununganWayang";
 
 interface FixedInvitationBackgroundProps {
   heroPhotoUrl?: string;
@@ -78,13 +78,32 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
         <RonceMelatiFlora />
       </div>
 
-      {/* Layer 4: Siluet Gunungan (Kayon) Kalpataru (Center Scale) */}
+      {/* Layer 4: Kayon Agung Tengah (Center Scale) */}
       <div
-        className="royal-seq-item absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
+        className="royal-seq-item bg-layer-gunungan absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
         data-seq-dir="center-scale"
         style={{ "--seq-delay": "1260ms" } as React.CSSProperties}
       >
-        <GununganKayonSilhouette />
+        <div className="animate-gunungan-breathe-slow w-[280px] sm:w-[360px] md:w-[420px] opacity-[0.11]">
+          <GununganWayang variant="watermark" tone="antique-bronze" priority />
+        </div>
+      </div>
+
+      {/* Sepasang Gunungan Penjaga Sudut Bawah (Twin Corner Kayon) */}
+      <div
+        className="royal-seq-item absolute -bottom-8 -left-10 sm:-bottom-6 sm:-left-6 pointer-events-none z-[1] w-44 sm:w-56 md:w-64 opacity-[0.08] -rotate-12"
+        data-seq-dir="left"
+        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
+      >
+        <GununganWayang variant="watermark" tone="antique-bronze" />
+      </div>
+
+      <div
+        className="royal-seq-item absolute -bottom-8 -right-10 sm:-bottom-6 sm:-right-6 pointer-events-none z-[1] w-44 sm:w-56 md:w-64 opacity-[0.08] rotate-12"
+        data-seq-dir="right"
+        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
+      >
+        <GununganWayang variant="watermark" tone="antique-bronze" flipHorizontal />
       </div>
 
       {/* Layer 5: Bunga Sudut Kiri Bawah (Left) */}

@@ -355,6 +355,19 @@ body {
   }
 }
 
+@keyframes gununganBreatheSlow {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0) scale(1.015);
+  }
+}
+
+.animate-gunungan-breathe-slow {
+  animation: gununganBreatheSlow 9s ease-in-out infinite;
+}
+
 @keyframes wingFlapLeft {
   0%, 100% {
     transform: scaleX(1) skewY(0deg);

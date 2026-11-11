@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { SongketRibbon } from "./Ornaments";
+import { WayangDivider } from "./Ornaments";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
@@ -64,7 +64,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             <h2 className="typo-section-title">
               Galeri Momen
             </h2>
-            <SongketRibbon />
+            <WayangDivider />
             <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
               #SINgkatceritaFAUZAN
             </p>

@@ -32,6 +32,7 @@ import NumberFlow from "@number-flow/react";
 import type { WeddingSettingsData } from "@/lib/db/store";
 import {
   WEDDING_MUSIC_PRESETS,
+  AVAILABLE_WEDDING_TRACKS,
   SVG_CHARACTER_PRESETS,
   type MusicPreset,
   type CoupleVisualMode,
@@ -95,6 +96,7 @@ export function WeddingSettingsModule({
     : "/audio/raim-laode-komang.mp3";
 
   const [isPlayingTest, setIsPlayingTest] = useState(false);
+  const [activePreviewTrackUrl, setActivePreviewTrackUrl] = useState<string | null>(null);
   const audioTestRef = useRef<HTMLAudioElement | null>(null);
 
   const [countdownPreview, setCountdownPreview] = useState({
@@ -182,12 +184,13 @@ export function WeddingSettingsModule({
   };
 
   const handleSelectMusicPreset = (presetId: string) => {
-    const selected = WEDDING_MUSIC_PRESETS.find((p) => p.id === presetId);
+    const selected = AVAILABLE_WEDDING_TRACKS.find((p) => p.id === presetId);
     if (!selected) return;
 
     if (audioTestRef.current) {
       audioTestRef.current.pause();
       setIsPlayingTest(false);
+      setActivePreviewTrackUrl(null);
     }
 
     setFormData((prev: any) => ({
@@ -198,7 +201,39 @@ export function WeddingSettingsModule({
       youtubeVideoId: selected.youtubeId || prev.youtubeVideoId || "In8kDy_WU4s",
     }));
 
-    toast.success(`Lagu preset "${selected.title}" dipilih! ✓`);
+    toast.success(`Lagu "${selected.title}" dipilih! ✓`);
+  };
+
+  const handleToggleTrackPreview = (e: React.MouseEvent, preset: MusicPreset) => {
+    e.stopPropagation();
+
+    if (preset.sourceType === "youtube") {
+      handleSelectMusicPreset(preset.id);
+      return;
+    }
+
+    const audio = audioTestRef.current;
+    if (!audio) return;
+
+    if (isPlayingTest && activePreviewTrackUrl === preset.url) {
+      audio.pause();
+      setIsPlayingTest(false);
+      setActivePreviewTrackUrl(null);
+    } else {
+      audio.src = preset.url;
+      audio.volume = 0.8;
+      audio
+        .play()
+        .then(() => {
+          setIsPlayingTest(true);
+          setActivePreviewTrackUrl(preset.url);
+          toast.success(`Memutar pratinjau: ${preset.title}`);
+        })
+        .catch((err) => {
+          console.error("Preset preview failed:", err);
+          toast.error("Gagal memutar audio pratinjau.");
+        });
+    }
   };
 
   const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,6 +263,7 @@ export function WeddingSettingsModule({
       if (audioTestRef.current) {
         audioTestRef.current.pause();
         setIsPlayingTest(false);
+        setActivePreviewTrackUrl(null);
       }
       toast.success(`File audio "${file.name}" berhasil dimuat! Simpan perubahan untuk menerapkan.`);
     };
@@ -241,6 +277,7 @@ export function WeddingSettingsModule({
         if (isPlayingTest) {
           iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*");
           setIsPlayingTest(false);
+          setActivePreviewTrackUrl(null);
         } else {
           iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*");
           setIsPlayingTest(true);
@@ -258,11 +295,16 @@ export function WeddingSettingsModule({
     if (isPlayingTest) {
       audio.pause();
       setIsPlayingTest(false);
+      setActivePreviewTrackUrl(null);
     } else {
+      audio.src = effectiveAudioUrl;
       audio.volume = 0.8;
       audio
         .play()
-        .then(() => setIsPlayingTest(true))
+        .then(() => {
+          setIsPlayingTest(true);
+          setActivePreviewTrackUrl(effectiveAudioUrl);
+        })
         .catch((err) => {
           console.error("Test audio play failed:", err);
           toast.error("Gagal memutar audio preview. Periksa berkas atau gunakan preset audio lokal.");
@@ -440,7 +482,10 @@ export function WeddingSettingsModule({
         ref={audioTestRef}
         src={effectiveAudioUrl}
         preload="none"
-        onEnded={() => setIsPlayingTest(false)}
+        onEnded={() => {
+          setIsPlayingTest(false);
+          setActivePreviewTrackUrl(null);
+        }}
         className="hidden"
       />
 
@@ -679,34 +724,89 @@ export function WeddingSettingsModule({
             </div>
 
             {(formData.musicSourceType === "preset" || !formData.musicSourceType) && (
-              <div className="p-4 rounded-2xl bg-cream/40 border border-gold-500/25 space-y-3">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
-                  Pilih Lagu Romantis Siap Pakai:
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {WEDDING_MUSIC_PRESETS.map((preset) => {
-                    const isSelected = formData.musicTitle === preset.title;
+              <div className="p-4 rounded-2xl bg-cream/40 border border-gold-500/25 space-y-3.5">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-1 border-b border-gold-500/15">
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600">
+                      Pilih Lagu Romantis Siap Pakai ({AVAILABLE_WEDDING_TRACKS.length} Koleksi Lagu):
+                    </label>
+                    <p className="text-[11px] text-muted mt-0.5">
+                      Pilih dari menu dropdown atau klik kartu lagu di bawah untuk langsung menerapkan.
+                    </p>
+                  </div>
+                  <div className="w-full sm:w-auto shrink-0">
+                    <select
+                      aria-label="Pilih lagu preset dari dropdown"
+                      value={
+                        AVAILABLE_WEDDING_TRACKS.find(
+                          (p) => p.url === formData.musicUrl || p.title === formData.musicTitle
+                        )?.id || ""
+                      }
+                      onChange={(e) => handleSelectMusicPreset(e.target.value)}
+                      className="w-full sm:w-72 px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs font-medium text-ink focus:outline-none focus:border-rose-500 cursor-pointer shadow-2xs"
+                    >
+                      <option value="" disabled>-- Pilih Cepat dari Menu Dropdown --</option>
+                      {AVAILABLE_WEDDING_TRACKS.map((preset) => (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+                  {AVAILABLE_WEDDING_TRACKS.map((preset) => {
+                    const isSelected =
+                      formData.musicTitle === preset.title || formData.musicUrl === preset.url;
+                    const isPreviewPlaying =
+                      isPlayingTest && activePreviewTrackUrl === preset.url;
+
                     return (
                       <div
                         key={preset.id}
                         onClick={() => handleSelectMusicPreset(preset.id)}
-                        className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                        className={`p-3 rounded-xl border transition-colors cursor-pointer flex items-center justify-between gap-3 ${
                           isSelected
                             ? "bg-emerald-50/90 border-emerald-500 shadow-2xs"
                             : "bg-surface-white border-gold-500/25 hover:bg-rose-50/50"
                         }`}
                       >
-                        <div>
-                          <p className="font-semibold text-xs text-rose-950 leading-tight">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-xs text-rose-950 leading-tight truncate">
                             {preset.title}
                           </p>
-                          <p className="text-[11px] text-muted mt-0.5">
-                            {preset.artist} &bull; <span className="uppercase text-[9px] font-mono">{preset.sourceType}</span>
+                          <p className="text-[11px] text-muted mt-0.5 truncate">
+                            {preset.artist} &bull;{" "}
+                            <span className="uppercase text-[9px] font-mono tracking-wider font-semibold text-gold-700">
+                              {preset.sourceType === "youtube" ? "YouTube" : "Audio Lokal"}
+                            </span>
                           </p>
                         </div>
-                        {isSelected && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        )}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {preset.sourceType !== "youtube" && (
+                            <button
+                              type="button"
+                              title={isPreviewPlaying ? "Jeda Pratinjau Lagu" : "Putar Pratinjau Lagu"}
+                              aria-label={`Pratinjau lagu ${preset.title}`}
+                              onClick={(e) => handleToggleTrackPreview(e, preset)}
+                              className={`w-8 h-8 rounded-lg grid place-items-center transition-colors cursor-pointer ${
+                                isPreviewPlaying
+                                  ? "bg-rose-600 text-white shadow-2xs animate-pulse"
+                                  : "bg-gold-500/15 text-gold-800 hover:bg-gold-500/30"
+                              }`}
+                            >
+                              {isPreviewPlaying ? (
+                                <Pause className="w-3.5 h-3.5 fill-current" />
+                              ) : (
+                                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                              )}
+                            </button>
+                          )}
+                          {isSelected && (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          )}
+                        </div>
                       </div>
                     );
                   })}

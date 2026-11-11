@@ -1,4 +1,7 @@
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+import { neon } from "@neondatabase/serverless";
 
 if (typeof window !== "undefined") {
   throw new Error("This module can only be executed in a server-side environment.");
@@ -10,6 +13,61 @@ const AUTH_TAG_LENGTH = 16;
 const TOKEN_PREFIX = "v1.";
 const DEV_FALLBACK_KEY_HEX = "e4f9b2d88c0147983ea1c5d90396489a2b5e7d189f3458c971624a0d9b4317fe";
 const DEV_FALLBACK_PIN = "20270103";
+
+export const SHORT_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+export const SHORT_CODE_LENGTH = 6;
+export const SHORT_CODE_REGEX = /^[2-9A-HJ-NP-Za-km-z]{6}$/;
+
+const shortCodeCache = new Map<string, string>();
+let isTableInitialized = false;
+
+const DATA_DIR = path.join(process.cwd(), "data");
+const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
+
+function getLocalTokens(): Record<string, string> {
+  try {
+    if (fs.existsSync(DB_FILE_PATH)) {
+      const data = JSON.parse(fs.readFileSync(DB_FILE_PATH, "utf8"));
+      return data.guestTokens || {};
+    }
+  } catch {}
+  return {};
+}
+
+function saveLocalToken(code: string, guestName: string) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    let data: Record<string, unknown> = {};
+    if (fs.existsSync(DB_FILE_PATH)) {
+      data = JSON.parse(fs.readFileSync(DB_FILE_PATH, "utf8"));
+    }
+    const currentTokens = (data.guestTokens as Record<string, string>) || {};
+    currentTokens[code] = guestName;
+    data.guestTokens = currentTokens;
+    fs.writeFileSync(DB_FILE_PATH, JSON.stringify(data, null, 2), "utf8");
+  } catch {}
+}
+
+async function ensureGuestTokensTable() {
+  if (isTableInitialized) return;
+  const dbUrl = process.env.DATABASE_URL;
+  if (!dbUrl) return;
+
+  try {
+    const sql = neon(dbUrl);
+    await sql`
+      CREATE TABLE IF NOT EXISTS guest_tokens (
+        code VARCHAR(12) PRIMARY KEY,
+        guest_name TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `;
+    isTableInitialized = true;
+  } catch {
+  }
+}
 
 function getSecretKey(): Buffer {
   const envKey = process.env.INVITATION_SECRET_KEY?.trim();
@@ -24,7 +82,7 @@ function getSecretKey(): Buffer {
   return Buffer.from(DEV_FALLBACK_KEY_HEX, "hex");
 }
 
-function sanitizeGuestName(rawName: string): string {
+export function sanitizeGuestName(rawName: string): string {
   return rawName
     .replace(/<[^>]*>/g, "")
     .replace(/[<>"\\`]/g, "")
@@ -37,6 +95,142 @@ export interface DecryptResult {
   guestName: string | null;
   isVerified: boolean;
   validToken: string | null;
+}
+
+export function generateShortCode(guestName: string, attempt = 0): string {
+  const key = getSecretKey();
+  const normalized = guestName.trim().toLowerCase();
+  const message = `${normalized}${attempt > 0 ? `#${attempt}` : ""}`;
+  const hmac = crypto.createHmac("sha256", key).update(message).digest();
+  let code = "";
+  for (let i = 0; i < SHORT_CODE_LENGTH; i++) {
+    code += SHORT_CODE_ALPHABET[hmac[i] % SHORT_CODE_ALPHABET.length];
+  }
+  return code;
+}
+
+export async function createShortGuestToken(
+  rawGuestName: string
+): Promise<{ code: string; guestName: string }> {
+  const cleanName = sanitizeGuestName(rawGuestName);
+  if (!cleanName) {
+    throw new Error("Nama tamu tidak boleh kosong.");
+  }
+
+  await ensureGuestTokensTable();
+
+  let attempt = 0;
+  let code = "";
+  let success = false;
+  const dbUrl = process.env.DATABASE_URL;
+
+  while (attempt < 10) {
+    code = generateShortCode(cleanName, attempt);
+
+    const cachedName = shortCodeCache.get(code);
+    if (cachedName && cachedName.toLowerCase() !== cleanName.toLowerCase()) {
+      attempt++;
+      continue;
+    }
+
+    if (dbUrl) {
+      try {
+        const sql = neon(dbUrl);
+        const existing = await sql`SELECT guest_name FROM guest_tokens WHERE code = ${code} LIMIT 1`;
+        if (existing.length > 0) {
+          const rowName = existing[0].guest_name as string;
+          if (rowName.toLowerCase() !== cleanName.toLowerCase()) {
+            attempt++;
+            continue;
+          }
+        }
+        await sql`
+          INSERT INTO guest_tokens (code, guest_name, created_at)
+          VALUES (${code}, ${cleanName}, NOW())
+          ON CONFLICT (code) DO UPDATE SET guest_name = EXCLUDED.guest_name
+        `;
+        success = true;
+        break;
+      } catch {
+      }
+    }
+
+    saveLocalToken(code, cleanName);
+    success = true;
+    break;
+  }
+
+  if (!success) {
+    code = generateShortCode(cleanName, 0);
+  }
+
+  shortCodeCache.set(code, cleanName);
+  saveLocalToken(code, cleanName);
+
+  return { code, guestName: cleanName };
+}
+
+export async function resolveGuestToken(
+  token: string | null | undefined
+): Promise<DecryptResult> {
+  if (!token || typeof token !== "string") {
+    return { guestName: null, isVerified: false, validToken: null };
+  }
+
+  const trimmed = token.trim();
+  if (!trimmed) {
+    return { guestName: null, isVerified: false, validToken: null };
+  }
+
+  if (SHORT_CODE_REGEX.test(trimmed)) {
+    const cached = shortCodeCache.get(trimmed);
+    if (cached) {
+      return {
+        guestName: cached,
+        isVerified: true,
+        validToken: trimmed,
+      };
+    }
+
+    const dbUrl = process.env.DATABASE_URL;
+    if (dbUrl) {
+      try {
+        await ensureGuestTokensTable();
+        const sql = neon(dbUrl);
+        const rows = await sql`SELECT guest_name FROM guest_tokens WHERE code = ${trimmed} LIMIT 1`;
+        if (rows.length > 0 && rows[0].guest_name) {
+          const name = rows[0].guest_name as string;
+          shortCodeCache.set(trimmed, name);
+          saveLocalToken(trimmed, name);
+          return {
+            guestName: name,
+            isVerified: true,
+            validToken: trimmed,
+          };
+        }
+      } catch {
+      }
+    }
+
+    const localTokens = getLocalTokens();
+    if (localTokens[trimmed]) {
+      const name = localTokens[trimmed];
+      shortCodeCache.set(trimmed, name);
+      return {
+        guestName: name,
+        isVerified: true,
+        validToken: trimmed,
+      };
+    }
+
+    return { guestName: null, isVerified: false, validToken: null };
+  }
+
+  if (trimmed.startsWith(TOKEN_PREFIX)) {
+    return decryptGuestToken(trimmed);
+  }
+
+  return { guestName: null, isVerified: false, validToken: null };
 }
 
 export function encryptGuestName(guestName: string): string {

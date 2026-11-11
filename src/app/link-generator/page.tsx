@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { LinkGeneratorClient } from "./LinkGeneratorClient";
 
 export const metadata: Metadata = {
-  title: "Generator Link Undangan — Fauzan & Sinta",
+  title: "Generator Link Undangan (Kode 6 Digit) — Fauzan & Sinta",
   robots: {
     index: false,
     follow: false,
@@ -11,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function LinkGeneratorPage() {
-  redirect("/admin/dashboard");
+  return <LinkGeneratorClient />;
 }

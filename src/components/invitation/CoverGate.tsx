@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   GoldenEmblemSeal,
   CardCornerOrnament,
-  MonogramFS,
+  MonogramCrest,
 } from "./Ornaments";
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
@@ -184,15 +184,18 @@ export function CoverGate({
       >
         {/* Royal Arch Sanctuary Plaque (Center Top) */}
         <div className="w-full max-w-[340px] sm:max-w-[380px] p-1.5 bg-[#FAF6F0]/90 backdrop-blur-md border border-[#C5A059]/45 shadow-[0_12px_36px_-8px_rgba(58,39,29,0.14)] rounded-t-full rounded-b-2xl flex flex-col items-center shrink-0 my-auto">
-          <div className="w-full rounded-t-full rounded-b-[10px] border border-[#C5A059]/25 px-5 sm:px-6 pt-6 sm:pt-7 pb-5 sm:pb-6 flex flex-col items-center text-center relative overflow-hidden">
+          <div className="w-full rounded-t-full rounded-b-[10px] border border-[#C5A059]/25 px-5 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6 flex flex-col items-center text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/images/bg-truntum-damask.svg')] bg-repeat bg-[length:72px_72px] opacity-[0.04] pointer-events-none" />
 
-            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-2.5 relative z-10">
-              <MonogramFS className="w-7 h-7 sm:w-8 sm:h-8" />
-              <span className="w-3.5 h-px bg-[#C5A059]/60" />
-              <p className="typo-eyebrow text-[#8C6239] tracking-[0.28em] text-[10px] sm:text-xs uppercase font-medium">
-                THE WEDDING OF
-              </p>
+            <div className="flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10">
+              <MonogramCrest className="size-10 sm:size-11" />
+              <div className="mt-2.5 flex items-center justify-center gap-2.5">
+                <span className="h-px w-5 bg-[#C5A059]/45" aria-hidden="true" />
+                <p className="font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8C6239]">
+                  THE WEDDING OF
+                </p>
+                <span className="h-px w-5 bg-[#C5A059]/45" aria-hidden="true" />
+              </div>
             </div>
 
             <div className="w-28 sm:w-36 aspect-[4/5] mx-auto rounded-t-full rounded-b-xl p-1 bg-[#FFFDF9] shadow-sm border border-[#C5A059]/35 shrink-0 mb-3 relative z-10">

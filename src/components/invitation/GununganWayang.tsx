@@ -34,10 +34,7 @@ export function GununganWayang({
   flipHorizontal = false,
   alt = "Gunungan Wayang Kulit Jawa",
 }: GununganWayangProps) {
-  const src =
-    variant === "watermark"
-      ? "/images/gunungan-wayang-watermark.webp"
-      : "/images/gunungan-wayang.webp";
+  const src = "/images/ornament-gunungan-wayang.webp";
 
   const filterStyle = TONE_FILTERS[tone];
   const transformStyle = flipHorizontal ? "scaleX(-1)" : undefined;

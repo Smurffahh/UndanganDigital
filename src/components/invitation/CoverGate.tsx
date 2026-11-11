@@ -216,9 +216,9 @@ export function CoverGate({
               </div>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#3E2723] relative z-10">
+            <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#3E2723] relative z-10">
               Fauzan <span className="font-script text-[#C5A059] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
-            </h1>
+            </h2>
 
             <div className="mt-1.5 flex items-center justify-center gap-2 relative z-10">
               <span className="w-4 sm:w-6 h-px bg-gradient-to-r from-transparent to-[#C5A059]" />
@@ -246,6 +246,7 @@ export function CoverGate({
             }
           }}
           title="Buka Undangan"
+          aria-label="Buka Undangan Pernikahan Fauzan dan Sinta"
           className={`relative my-2 sm:my-3 cursor-pointer select-none transition-[transform,opacity] duration-[550ms] ${
             isOpening
               ? "scale-[1.14] rotate-45 opacity-0"

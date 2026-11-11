@@ -125,6 +125,7 @@ export function CountdownHero({
       aria-label="Beranda dan Hitung Mundur"
     >
       <div className="w-[min(100%-2.75rem,560px)] mx-auto flex flex-col items-center text-center">
+        <h1 className="sr-only">The Wedding of Fauzan &amp; Sinta</h1>
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
           data-seq-dir="top"

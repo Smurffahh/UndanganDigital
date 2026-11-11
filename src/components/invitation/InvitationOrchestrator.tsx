@@ -159,8 +159,8 @@ export function InvitationOrchestrator({
 
       <FixedInvitationBackground heroPhotoUrl={settings.heroPhotoUrl} />
 
-      <PetalsCanvas />
-      <ScrollLinkedButterflies />
+      <PetalsCanvas active={isOpening || isOpened} />
+      <ScrollLinkedButterflies active={isOpening || isOpened} />
 
       <CoverGate
         guestName={guestName}

@@ -173,6 +173,7 @@ export function RsvpGuestbook({
                 required
                 aria-required="true"
                 readOnly={Boolean(verifiedGuestName)}
+                aria-readonly={Boolean(verifiedGuestName)}
                 maxLength={60}
                 value={nama}
                 onChange={(e) => {
@@ -285,7 +286,8 @@ export function RsvpGuestbook({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari doa pengirim..."
-                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white font-sans text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
+                  aria-label="Cari doa pengirim ucapan"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white font-sans text-base sm:text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
                 />
               </div>
             </div>

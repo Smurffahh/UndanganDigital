@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SongketRibbon, ChipMetallic } from "./Ornaments";
+import { WayangDivider, ChipMetallic } from "./Ornaments";
 import { Copy, Check, QrCode, X, MapPin, Download } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
@@ -149,7 +149,7 @@ export function DigitalEnvelope({
             <h2 className="typo-section-title">
               Amplop Digital
             </h2>
-            <SongketRibbon />
+            <WayangDivider />
             <p className="typo-body text-center max-w-[420px] mx-auto mt-3 text-[#4b3a3e]">
               Doa restu Anda merupakan hadiah terindah bagi kami. Namun apabila Anda ingin memberikan tanda kasih secara digital, dapat melalui:
             </p>

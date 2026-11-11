@@ -1,4 +1,5 @@
 import React from "react";
+import { GununganWayang as RichGununganWayang } from "./GununganWayang";
 
 export function RadiantStar({ className = "w-6 h-6 fill-gold-500" }: { className?: string }) {
   return (
@@ -12,65 +13,56 @@ export function SongketRibbon({ className = "my-3.5 mx-auto" }: { className?: st
   return <div className={`songket ${className}`} aria-hidden="true" />;
 }
 
-export function GununganWayang({ className = "w-14 mx-auto text-gold-500 opacity-85" }: { className?: string }) {
+export function GununganWayang({
+  className = "w-14 mx-auto",
+  variant = "royal-solid",
+  tone = "luminous-crest",
+}: {
+  className?: string;
+  variant?: "royal-solid" | "watermark";
+  tone?: "gold-harmony" | "antique-bronze" | "luminous-crest";
+}) {
+  return <RichGununganWayang className={className} variant={variant} tone={tone} />;
+}
+
+export function WayangDivider({ className = "my-5", light = false }: { className?: string; light?: boolean }) {
   return (
-    <div className={className} aria-hidden="true">
-      <svg
-        viewBox="0 0 64 76"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-full h-auto"
-      >
-        <path d="M32 3 C39 12 49 20 49 33 C49 48 41 59 32 68 C23 59 15 48 15 33 C15 20 25 12 32 3 Z" />
-        <path
-          d="M32 14 C37 21 43 27 43 35 C43 45 37 54 32 61 C27 54 21 45 21 35 C21 27 27 21 32 14 Z"
-          strokeWidth="0.8"
-          strokeDasharray="2 2"
-          opacity="0.65"
+    <div className={`flex items-center justify-center gap-3.5 mx-auto max-w-[340px] ${className}`} aria-hidden="true">
+      <div className="flex items-center flex-1">
+        <span
+          className={`h-px flex-1 ${
+            light
+              ? "bg-gradient-to-r from-transparent to-[#e9d3a3]"
+              : "bg-gradient-to-r from-transparent to-[#c9a24b]"
+          }`}
         />
-        <line x1="32" y1="3" x2="32" y2="72" strokeWidth="1" />
-        <line x1="22" y1="35" x2="42" y2="35" strokeWidth="0.9" />
-        <line x1="25" y1="46" x2="39" y2="46" strokeWidth="0.8" />
-        <circle cx="32" cy="35" r="3.2" fill="currentColor" fillOpacity="0.2" strokeWidth="1" />
-        <circle cx="32" cy="35" r="1.2" fill="currentColor" />
-        <path d="M28 72 H36 M30 75 H34" strokeWidth="1" />
-      </svg>
+        <span className="w-1.5 h-1.5 rotate-45 border border-[#c9a24b]/70 shrink-0 ml-1" />
+      </div>
+      <div className="relative flex items-center justify-center shrink-0">
+        <div className="w-8 sm:w-10 h-10 sm:h-12 flex items-center justify-center">
+          <RichGununganWayang variant="royal-solid" tone="luminous-crest" />
+        </div>
+      </div>
+      <div className="flex items-center flex-1">
+        <span className="w-1.5 h-1.5 rotate-45 border border-[#c9a24b]/70 shrink-0 mr-1" />
+        <span
+          className={`h-px flex-1 ${
+            light
+              ? "bg-gradient-to-l from-transparent to-[#e9d3a3]"
+              : "bg-gradient-to-l from-transparent to-[#c9a24b]"
+          }`}
+        />
+      </div>
     </div>
   );
 }
 
+export function SectionOrnament({ className = "my-5" }: { className?: string }) {
+  return <WayangDivider className={className} />;
+}
+
 export function Divider({ light = false }: { light?: boolean }) {
-  return (
-    <div className="flex items-center justify-center gap-3.5 my-6 mx-auto max-w-[320px]" aria-hidden="true">
-      <div className="flex items-center flex-1">
-        <span
-          className={`h-px flex-1 ${
-            light
-              ? "bg-gradient-to-r from-transparent to-gold-300"
-              : "bg-gradient-to-r from-transparent to-gold-500"
-          }`}
-        />
-        <span className="w-1.5 h-1.5 rotate-45 border border-gold-500/60 shrink-0 ml-1" />
-      </div>
-      <div className="relative flex items-center justify-center">
-        <RadiantStar className={light ? "w-5 h-5 fill-gold-300" : "w-5 h-5 fill-gold-500"} />
-        <span className="absolute w-7 h-7 rounded-full border border-gold-500/25 pointer-events-none" />
-      </div>
-      <div className="flex items-center flex-1">
-        <span className="w-1.5 h-1.5 rotate-45 border border-gold-500/60 shrink-0 mr-1" />
-        <span
-          className={`h-px flex-1 ${
-            light
-              ? "bg-gradient-to-l from-transparent to-gold-300"
-              : "bg-gradient-to-l from-transparent to-gold-500"
-          }`}
-        />
-      </div>
-    </div>
-  );
+  return <WayangDivider light={light} />;
 }
 
 export function ChipMetallic({ className = "w-11 h-8" }: { className?: string }) {

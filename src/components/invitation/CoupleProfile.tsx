@@ -1,6 +1,7 @@
 "use client";
 
-import { SongketRibbon, GununganWayang } from "./Ornaments";
+import { SongketRibbon } from "./Ornaments";
+import { GununganWayang } from "./GununganWayang";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
@@ -136,8 +137,8 @@ export function CoupleProfile({
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
                 <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
-                    <GununganWayang className="w-full h-auto" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.08]">
+                    <GununganWayang variant="watermark" tone="antique-bronze" />
                   </div>
                   <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                     {groomBio}
@@ -147,15 +148,31 @@ export function CoupleProfile({
             </article>
           </ScrollReveal>
 
-          <ScrollReveal direction="center-scale">
-            <div className="flex flex-col items-center justify-center my-4 md:my-0">
+          <div className="flex items-center justify-center gap-2 sm:gap-3.5 my-4 md:my-0">
+            <ScrollReveal direction="left">
+              <ScrollLinkedItem offsetY={24}>
+                <div className="-rotate-12 w-10 sm:w-12 h-14 sm:h-16 flex items-center justify-center opacity-85">
+                  <GununganWayang variant="royal-solid" tone="gold-harmony" />
+                </div>
+              </ScrollLinkedItem>
+            </ScrollReveal>
+
+            <ScrollReveal direction="center-scale">
               <ScrollLinkedItem offsetY={36}>
                 <span className="font-script text-5xl sm:text-6xl text-[#c9a24b] drop-shadow-sm select-none leading-none animate-gold-sheen">
                   &amp;
                 </span>
               </ScrollLinkedItem>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
+
+            <ScrollReveal direction="right">
+              <ScrollLinkedItem offsetY={24}>
+                <div className="rotate-12 w-10 sm:w-12 h-14 sm:h-16 flex items-center justify-center opacity-85">
+                  <GununganWayang variant="royal-solid" tone="gold-harmony" flipHorizontal />
+                </div>
+              </ScrollLinkedItem>
+            </ScrollReveal>
+          </div>
 
           <ScrollReveal direction="right">
             <article className="text-center p-4 sm:p-6 flex flex-col items-center">
@@ -207,8 +224,8 @@ export function CoupleProfile({
 
               <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
                 <div className="p-4 rounded-2xl bg-[#fffdfa]/88 backdrop-blur-sm border border-[#c9a24b]/40 shadow-xs relative overflow-hidden">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
-                    <GununganWayang className="w-full h-auto" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-auto pointer-events-none opacity-[0.08]">
+                    <GununganWayang variant="watermark" tone="antique-bronze" />
                   </div>
                   <p className="typo-body text-center mx-auto text-[#4b3a3e] relative z-10">
                     {brideBio}

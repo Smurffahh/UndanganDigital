@@ -1,6 +1,6 @@
 "use client";
 
-import { SongketRibbon } from "./Ornaments";
+import { WayangDivider } from "./Ornaments";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { Sparkles, Heart, Compass } from "lucide-react";
 
@@ -63,7 +63,7 @@ export function LoveStoryTimeline({
             <h2 className="typo-section-title mt-3">
               Perjalanan Dua Jiwa
             </h2>
-            <SongketRibbon />
+            <WayangDivider />
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>

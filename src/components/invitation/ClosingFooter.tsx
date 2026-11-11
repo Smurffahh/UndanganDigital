@@ -3,7 +3,9 @@
 import { Divider } from "./Ornaments";
 import { formatFooterSignatureDate } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
+import { GununganWayang } from "./GununganWayang";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface ClosingFooterProps {
@@ -25,6 +27,17 @@ export function ClosingFooter({
       aria-label="Penutup Undangan"
     >
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">
+        <ScrollReveal direction="bottom">
+          <div className="flex flex-col items-center justify-center mb-6">
+            <div className="h-28 sm:h-36 w-auto flex items-center justify-center">
+              <GununganWayang variant="royal-solid" tone="luminous-crest" />
+            </div>
+            <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em] text-[10px] sm:text-xs uppercase mt-3">
+              Tancep Kayon &bull; Doa &amp; Restu
+            </p>
+          </div>
+        </ScrollReveal>
+
         <ScrollLinkedItem offsetY={36}>
           <p className="font-sans text-[15px] sm:text-base font-normal leading-[1.7] text-[#4b3a3e] max-w-[480px] mx-auto">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai.

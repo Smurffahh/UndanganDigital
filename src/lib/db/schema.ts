@@ -68,7 +68,7 @@ export const guests = pgTable(
   {
     id: serial("id").primaryKey(),
     name: text("name").notNull(),
-    slugQuery: varchar("slug_query", { length: 120 }).notNull(),
+    slugQuery: text("slug_query").notNull(),
     whatsappNumber: text("whatsapp_number"),
     category: text("category").default("Reguler"),
     nameBindex: varchar("name_bindex", { length: 64 }),

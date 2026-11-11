@@ -14,6 +14,7 @@ import {
   createBlindIndex,
   createPhoneBlindIndex,
 } from "../crypto";
+import { encryptGuestName } from "../guest-crypto";
 import { seedDatabase } from "./seed";
 
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
@@ -55,13 +56,23 @@ const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
 
 function decryptGuestRecord(r: any): GuestData {
+  const decryptedName = decryptField(r.name);
+  let slug = r.slugQuery;
+  if (!slug || !slug.startsWith("v1.")) {
+    try {
+      slug = encryptGuestName(decryptedName);
+    } catch {
+      slug = r.slugQuery;
+    }
+  }
+
   return {
     id: r.id,
-    name: decryptField(r.name),
-    slugQuery: r.slugQuery,
+    name: decryptedName,
+    slugQuery: slug,
     whatsappNumber: r.whatsappNumber ? decryptField(r.whatsappNumber) : null,
     category: r.category ? decryptField(r.category) : "Reguler",
-    nameBindex: r.nameBindex || createBlindIndex(decryptField(r.name)),
+    nameBindex: r.nameBindex || createBlindIndex(decryptedName),
     waBindex: r.waBindex || (r.whatsappNumber ? createPhoneBlindIndex(decryptField(r.whatsappNumber)) : null),
     waSentStatus: Boolean(r.waSentStatus),
     waSentAt: r.waSentAt || null,
@@ -587,7 +598,7 @@ export async function createGuest(data: {
   category?: string;
 }): Promise<GuestData> {
   const cleanName = data.name.trim();
-  const slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
+  const slugQuery = encryptGuestName(cleanName);
   const cleanPhone = data.whatsappNumber?.trim() || null;
   const category = data.category?.trim() || "Reguler";
 
@@ -693,7 +704,7 @@ export async function updateGuest(
   if (updates.name !== undefined) {
     const cleanName = updates.name.trim();
     dbUpdates.name = encryptField(cleanName);
-    dbUpdates.slugQuery = encodeURIComponent(cleanName.replace(/\s+/g, "+"));
+    dbUpdates.slugQuery = encryptGuestName(cleanName);
     dbUpdates.nameBindex = createBlindIndex(cleanName);
   }
   if (updates.whatsappNumber !== undefined) {

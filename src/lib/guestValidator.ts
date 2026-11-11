@@ -1,5 +1,12 @@
-import { GuestData } from "./db/store";
-import { createBlindIndex, createPhoneBlindIndex } from "./crypto";
+import type { GuestData } from "./db/store";
+
+function normalizeNameKey(name: string): string {
+  return name.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function normalizePhoneKey(phone: string): string {
+  return phone.replace(/\D/g, "");
+}
 
 export interface ValidatedGuest {
   rowNumber: number;
@@ -89,10 +96,10 @@ export function validateGuestImport(
 
   for (const g of existingGuests) {
     if (g.name) {
-      existingNameIndices.add(createBlindIndex(g.name));
+      existingNameIndices.add(normalizeNameKey(g.name));
     }
     if (g.whatsappNumber) {
-      existingPhoneIndices.add(createPhoneBlindIndex(g.whatsappNumber));
+      existingPhoneIndices.add(normalizePhoneKey(g.whatsappNumber));
     }
   }
 
@@ -188,7 +195,7 @@ export function validateGuestImport(
       }
     }
 
-    const nameBindex = createBlindIndex(cleanName);
+    const nameBindex = normalizeNameKey(cleanName);
     if (seenNameIndices.has(nameBindex)) {
       invalidRows.push({
         rowNumber,
@@ -201,7 +208,7 @@ export function validateGuestImport(
     }
 
     if (normalizedPhone) {
-      const phoneBindex = createPhoneBlindIndex(normalizedPhone);
+      const phoneBindex = normalizePhoneKey(normalizedPhone);
       if (seenPhoneIndices.has(phoneBindex)) {
         invalidRows.push({
           rowNumber,
@@ -227,7 +234,7 @@ export function validateGuestImport(
     }
 
     if (normalizedPhone) {
-      const phoneBindex = createPhoneBlindIndex(normalizedPhone);
+      const phoneBindex = normalizePhoneKey(normalizedPhone);
       if (existingPhoneIndices.has(phoneBindex)) {
         invalidRows.push({
           rowNumber,

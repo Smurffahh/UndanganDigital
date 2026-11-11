@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/store";
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
+import { decryptGuestToken } from "@/lib/guest-crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -11,23 +12,15 @@ interface PageProps {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedParams = await searchParams;
-  const rawParam =
-    resolvedParams.to || resolvedParams.nama || resolvedParams.tamu || "";
+  const rawParam = resolvedParams.to || resolvedParams.inv || "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
-  let guestName = "";
-  if (paramStr) {
-    guestName = decodeURIComponent(paramStr)
-      .replace(/[+_-]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 60);
-  }
+  const { guestName: verifiedName } = decryptGuestToken(paramStr);
 
   const baseTitle = "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)";
   const description =
     "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.";
-  const title = guestName ? `${baseTitle} — Kepada Yth. ${guestName}` : baseTitle;
+  const title = verifiedName ? `${baseTitle} — Kepada Yth. ${verifiedName}` : baseTitle;
 
   return {
     title,
@@ -62,18 +55,11 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function InvitationPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
 
-  const rawParam =
-    resolvedParams.to || resolvedParams.nama || resolvedParams.tamu || "";
+  const rawParam = resolvedParams.to || resolvedParams.inv || "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
-  let guestName = "Tamu Undangan";
-  if (paramStr) {
-    guestName = decodeURIComponent(paramStr)
-      .replace(/[+_-]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 60);
-  }
+  const { guestName: decryptedName, isVerified, validToken } = decryptGuestToken(paramStr);
+  const guestName = decryptedName || "Tamu Kehormatan";
 
   const [rawSettings, rawGalleryPhotos, rawWishes] = await Promise.all([
     getWeddingSettings(),
@@ -152,6 +138,8 @@ export default async function InvitationPage({ searchParams }: PageProps) {
       galleryPhotos={galleryPhotos}
       wishes={wishes}
       guestName={guestName}
+      isVerifiedGuest={isVerified}
+      guestToken={validToken}
     />
   );
 }

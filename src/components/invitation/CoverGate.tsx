@@ -6,11 +6,7 @@ import {
   CardCornerOrnament,
   MonogramFS,
 } from "./Ornaments";
-import { GununganWayang } from "./GununganWayang";
-import {
-  BatikKawungStamp,
-  BotanicalHangingVines,
-} from "./HeritageBotanicalAssets";
+import { BotanicalHangingVines } from "./HeritageBotanicalAssets";
 import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
@@ -125,7 +121,7 @@ export function CoverGate({
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
       <div
-        className={`absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-r border-[#c9a24b]/60 shadow-[14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform ${
+        className={`gate-wing-left absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-r from-[#EFE3CE] via-[#E8D7BE] to-[#DEC8AC] border-r border-[#C5A059]/70 shadow-[18px_0_40px_-6px_rgba(61,38,22,0.32)] transition-transform ${
           isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
@@ -136,32 +132,13 @@ export function CoverGate({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
-        <div className="absolute inset-2 sm:inset-3 border-r border-t border-b border-[#c9a24b]/40 rounded-r-[999px_999px] pointer-events-none" />
-        <div className="absolute top-2 left-2 w-32 sm:w-44 h-32 sm:h-44 opacity-45 pointer-events-none">
-          <BatikKawungStamp className="w-full h-full" />
-        </div>
-        <CardCornerOrnament />
-        <div
-          className={`absolute -right-8 sm:-right-10 top-1/2 -translate-y-1/2 z-20 w-24 sm:w-32 md:w-36 pointer-events-none transition-transform ${
-            isOpening
-              ? "-rotate-15 -translate-x-12 opacity-30"
-              : "-rotate-3 translate-x-0 opacity-85"
-          }`}
-          style={{
-            transformOrigin: "bottom right",
-            willChange: "transform, opacity",
-            transitionDuration: "var(--motion-duration-gate)",
-            transitionTimingFunction: "var(--motion-ease-royal)",
-            transitionDelay: isOpening ? "350ms" : "0ms",
-          }}
-        >
-          <GununganWayang variant="royal-solid" tone="luminous-crest" />
-        </div>
+        <div className="absolute inset-0 bg-[url('/images/cover-door-leaf.svg')] bg-cover bg-right-center opacity-90 pointer-events-none" />
+        <div className="absolute inset-3 sm:inset-4 border border-[#C5A059]/40 rounded-sm pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-[3px] bg-gradient-to-b from-[#D4AF37]/40 via-[#C5A059] to-[#D4AF37]/40 shadow-[0_0_15px_rgba(197,160,89,0.4)] pointer-events-none" />
       </div>
 
       <div
-        className={`absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#fdf8f3] via-[#faf1ec] to-[#f7e9e5] border-l border-[#c9a24b]/60 shadow-[-14px_0_36px_-6px_rgba(93,58,65,0.28)] transition-transform ${
+        className={`gate-wing-right absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-l from-[#EFE3CE] via-[#E8D7BE] to-[#DEC8AC] border-l border-[#C5A059]/70 shadow-[-18px_0_40px_-6px_rgba(61,38,22,0.32)] transition-transform ${
           isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
@@ -172,28 +149,9 @@ export function CoverGate({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.14] pointer-events-none" />
-        <div className="absolute inset-2 sm:inset-3 border-l border-t border-b border-[#c9a24b]/40 rounded-l-[999px_999px] pointer-events-none" />
-        <div className="absolute top-2 right-2 w-32 sm:w-44 h-32 sm:h-44 opacity-35 pointer-events-none">
-          <BatikKawungStamp className="w-full h-full" mirror />
-        </div>
-        <CardCornerOrnament />
-        <div
-          className={`absolute -left-8 sm:-left-10 top-1/2 -translate-y-1/2 z-20 w-24 sm:w-32 md:w-36 pointer-events-none transition-transform ${
-            isOpening
-              ? "rotate-15 translate-x-12 opacity-30"
-              : "rotate-3 translate-x-0 opacity-85"
-          }`}
-          style={{
-            transformOrigin: "bottom left",
-            willChange: "transform, opacity",
-            transitionDuration: "var(--motion-duration-gate)",
-            transitionTimingFunction: "var(--motion-ease-royal)",
-            transitionDelay: isOpening ? "350ms" : "0ms",
-          }}
-        >
-          <GununganWayang variant="royal-solid" tone="luminous-crest" flipHorizontal />
-        </div>
+        <div className="absolute inset-0 bg-[url('/images/cover-door-leaf.svg')] bg-cover bg-left-center scale-x-[-1] opacity-90 pointer-events-none" />
+        <div className="absolute inset-3 sm:inset-4 border border-[#C5A059]/40 rounded-sm pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-[#D4AF37]/40 via-[#C5A059] to-[#D4AF37]/40 shadow-[0_0_15px_rgba(197,160,89,0.4)] pointer-events-none" />
       </div>
 
       <BotanicalHangingVines className="absolute top-0 inset-x-0 h-24 sm:h-32 overflow-hidden pointer-events-none z-15 opacity-80" />
@@ -219,7 +177,7 @@ export function CoverGate({
             </p>
           </div>
 
-          <div className="w-44 sm:w-52 md:w-60 aspect-[4/5] mx-auto rounded-t-full rounded-b-2xl p-2 bg-white/80 shadow-xs border border-amber-900/15 backdrop-blur-[2px] shrink-0">
+          <div className="w-40 sm:w-48 aspect-[4/5] mx-auto rounded-t-full rounded-b-2xl p-2 bg-[#FFFDF9]/90 shadow-md border border-[#C5A059]/35 backdrop-blur-[2px] shrink-0">
             <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-[#fdfaf5] flex items-center justify-center">
               {coupleVisualMode === "svg" || !coverPhotoUrl ? (
                 <CoupleCharacterSvg
@@ -242,34 +200,47 @@ export function CoverGate({
         </div>
 
         <div className="flex flex-col items-center shrink-0 w-full my-auto">
-          <h1 className="text-3xl sm:text-4xl font-serif tracking-tight drop-shadow-xs font-bold text-ink">
-            Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-0.5 font-normal">&amp;</span> Sinta
-          </h1>
+          <div className="w-full max-w-xs sm:max-w-sm bg-[#FFFDF9]/95 backdrop-blur-md px-5 py-3 rounded-2xl border border-[#C5A059]/50 shadow-[0_12px_28px_-8px_rgba(61,38,22,0.18)] text-center relative overflow-hidden">
+            <CardCornerOrnament />
+            <h1 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-ink">
+              Fauzan <span className="font-script text-[#c9a24b] text-[0.85em] px-0.5 font-normal">&amp;</span> Sinta
+            </h1>
 
-          <div className="mt-1 flex items-center justify-center gap-2">
-            <span className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
-            <p className="font-sans text-xs sm:text-sm font-medium tracking-[0.14em] uppercase text-[#4b3a3e] tabular-nums">
-              {formattedDate}
-            </p>
-            <span className="w-5 sm:w-8 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
+            <div className="mt-1 flex items-center justify-center gap-2">
+              <span className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent to-[#e9d3a3]" />
+              <p className="font-sans text-xs sm:text-sm font-medium tracking-[0.14em] uppercase text-[#4b3a3e] tabular-nums">
+                {formattedDate}
+              </p>
+              <span className="w-5 sm:w-8 h-px bg-gradient-to-l from-transparent to-[#e9d3a3]" />
+            </div>
+
+            <span className="mt-1.5 inline-block px-3 py-0.5 rounded-full bg-[#f7e9e5]/90 text-[#9c5f66] border border-[#e9d3a3] font-sans text-[11px] sm:text-xs font-semibold normal-case tracking-wide shadow-2xs">
+              #SINgkatceritaFAUZAN
+            </span>
           </div>
 
-          <span className="mt-1.5 inline-block px-3 py-0.5 rounded-full bg-[#f7e9e5]/90 text-[#9c5f66] border border-[#e9d3a3] font-sans text-[11px] sm:text-xs font-semibold normal-case tracking-wide shadow-2xs">
-            #SINgkatceritaFAUZAN
-          </span>
-
           <div
-            className={`relative my-2 sm:my-2.5 transition-[transform,opacity] duration-[550ms] ${
+            role="button"
+            tabIndex={0}
+            onClick={handleOpen}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleOpen();
+              }
+            }}
+            title="Buka Undangan"
+            className={`relative my-2.5 cursor-pointer transition-[transform,opacity] duration-[550ms] ${
               isOpening
-                ? "scale-[1.08] rotate-12 opacity-0"
-                : "scale-100 rotate-0 opacity-100"
+                ? "scale-[1.12] rotate-45 opacity-0"
+                : "scale-100 rotate-0 opacity-100 hover:scale-105 active:scale-95"
             }`}
             style={{
               willChange: "transform, opacity",
               transitionTimingFunction: "var(--motion-ease-royal)",
             }}
           >
-            <GoldenEmblemSeal className="size-14 sm:size-16" />
+            <GoldenEmblemSeal className="size-13 sm:size-15" />
             {isOpening && (
               <div className="absolute inset-0 rounded-full border-2 border-[#d4af37] animate-ping opacity-75 pointer-events-none" />
             )}

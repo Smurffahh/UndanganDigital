@@ -3,7 +3,6 @@
 import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Download } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { FloralCornerAccent, WayangDivider, SongketRibbon } from "./Ornaments";
-import { GununganWayang } from "./GununganWayang";
 import { formatGoogleCalendarUrl, generateIcsContent, parseEventDate } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
@@ -83,10 +82,6 @@ export function EventDetails({
 
         <ScrollLinkedItem direction="left" className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.08]">
-              <GununganWayang variant="watermark" tone="antique-bronze" />
-            </div>
-
             <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
@@ -157,10 +152,6 @@ export function EventDetails({
 
         <ScrollLinkedItem direction="right" className="mb-8">
           <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 pointer-events-none opacity-[0.08]">
-              <GununganWayang variant="watermark" tone="antique-bronze" />
-            </div>
-
             <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>

@@ -6,10 +6,8 @@ import {
   GebyokUkirArchLeft,
   GebyokUkirArchRight,
   RonceMelatiFlora,
-  HeritageCornerFloraLeft,
-  HeritageCornerFloraRight,
+  RoyalSulurCornerSvg,
 } from "./HeritageBotanicalAssets";
-import { GununganWayang } from "./GununganWayang";
 
 interface FixedInvitationBackgroundProps {
   heroPhotoUrl?: string;
@@ -78,50 +76,22 @@ export function FixedInvitationBackground({ heroPhotoUrl }: FixedInvitationBackg
         <RonceMelatiFlora />
       </div>
 
-      {/* Layer 4: Kayon Agung Tengah (Center Scale) */}
+      {/* Layer 4: Ornamen SVG Sulur Keraton Sudut Bawah (Left) */}
       <div
-        className="royal-seq-item bg-layer-gunungan absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
-        data-seq-dir="center-scale"
-        style={{ "--seq-delay": "1260ms" } as React.CSSProperties}
-      >
-        <div className="animate-gunungan-breathe-slow w-[280px] sm:w-[360px] md:w-[420px] opacity-[0.11]">
-          <GununganWayang variant="watermark" tone="antique-bronze" priority />
-        </div>
-      </div>
-
-      {/* Sepasang Gunungan Penjaga Sudut Bawah (Twin Corner Kayon) */}
-      <div
-        className="royal-seq-item absolute -bottom-8 -left-10 sm:-bottom-6 sm:-left-6 pointer-events-none z-[1] w-44 sm:w-56 md:w-64 opacity-[0.08] -rotate-12"
+        className="royal-seq-item absolute bottom-1 left-1 pointer-events-none z-[2]"
         data-seq-dir="left"
         style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
       >
-        <GununganWayang variant="watermark" tone="antique-bronze" />
+        <RoyalSulurCornerSvg className="w-28 sm:w-36 h-28 sm:h-36 opacity-25" />
       </div>
 
+      {/* Layer 4: Ornamen SVG Sulur Keraton Sudut Bawah (Right) */}
       <div
-        className="royal-seq-item absolute -bottom-8 -right-10 sm:-bottom-6 sm:-right-6 pointer-events-none z-[1] w-44 sm:w-56 md:w-64 opacity-[0.08] rotate-12"
+        className="royal-seq-item absolute bottom-1 right-1 pointer-events-none z-[2]"
         data-seq-dir="right"
         style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
       >
-        <GununganWayang variant="watermark" tone="antique-bronze" flipHorizontal />
-      </div>
-
-      {/* Layer 5: Bunga Sudut Kiri Bawah (Left) */}
-      <div
-        className="royal-seq-item absolute bottom-0 left-0 pointer-events-none z-[2]"
-        data-seq-dir="left"
-        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
-      >
-        <HeritageCornerFloraLeft />
-      </div>
-
-      {/* Layer 6: Bunga Sudut Kanan Bawah (Right) */}
-      <div
-        className="royal-seq-item absolute bottom-0 right-0 pointer-events-none z-[2]"
-        data-seq-dir="right"
-        style={{ "--seq-delay": "1480ms" } as React.CSSProperties}
-      >
-        <HeritageCornerFloraRight />
+        <RoyalSulurCornerSvg className="w-28 sm:w-36 h-28 sm:h-36 opacity-25" mirror />
       </div>
 
       <div

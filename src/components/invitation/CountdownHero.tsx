@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { Divider } from "./Ornaments";
 import { GununganWayang } from "./GununganWayang";
-import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CountdownHeroProps {
@@ -133,26 +132,38 @@ export function CountdownHero({
           style={getItemStyle("2420ms", "center-scale")}
         >
           <div className="relative flex justify-center items-center w-full">
-            <div className="absolute -top-10 sm:-top-14 z-0 w-64 sm:w-80 md:w-88 pointer-events-none opacity-85">
-              <GununganWayang variant="watermark" tone="luminous-crest" priority />
-            </div>
+            <div className="arch w-[min(76%,290px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden rounded-t-full rounded-b-2xl shadow-[0_20px_48px_-12px_rgba(93,58,65,0.22)] bg-gradient-to-b from-[#FAF5EC] via-[#F3E9D8] to-[#EADBC4] p-3 sm:p-4 border border-[#C5A059]/40 relative z-10 flex flex-col items-center justify-between">
+              <div className="absolute inset-2 sm:inset-2.5 rounded-t-full rounded-b-xl border border-[#C5A059]/30 pointer-events-none" />
+              <div className="absolute inset-0 bg-[var(--kawung-pattern)] opacity-[0.06] pointer-events-none" />
 
-            <div className="arch w-[min(76%,310px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(93,58,65,0.28)] bg-[#fffdfa]/95 relative z-10 flex items-center justify-center">
-              {coupleVisualMode === "svg" || !heroPhotoUrl ? (
-                <CoupleCharacterSvg
-                  preset={svgCharacterPreset}
-                  variant="couple"
-                  className="w-full h-full"
-                />
-              ) : (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={heroPhotoUrl}
-                  alt="Fauzan dan Sinta"
-                  className="w-full h-full object-cover rounded-[990px_990px_14px_14px] outline outline-1 -outline-offset-1 outline-black/10"
-                  loading="eager"
-                />
-              )}
+              <div
+                aria-hidden="true"
+                className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-radial from-amber-400/25 via-[#c9a24b]/10 to-transparent blur-xl pointer-events-none"
+              />
+
+              <div className="relative z-10 flex-1 flex items-center justify-center w-full min-h-0 pt-2 sm:pt-3">
+                <div className="w-32 sm:w-40 max-h-[82%] flex items-center justify-center">
+                  <GununganWayang
+                    variant="royal-solid"
+                    tone="luminous-crest"
+                    priority
+                    alt="Gunungan Wayang Keraton Jawa"
+                  />
+                </div>
+              </div>
+
+              <div className="relative z-10 shrink-0 w-full pb-1 sm:pb-2 flex flex-col items-center">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="w-4 sm:w-6 h-px bg-gradient-to-r from-transparent to-[#C5A059]/70" />
+                  <span className="font-serif text-xs sm:text-sm font-bold tracking-widest text-[#5d3a41]">
+                    FAUZAN <span className="font-script text-[#c9a24b] text-sm sm:text-base font-normal px-0.5">&amp;</span> SINTA
+                  </span>
+                  <span className="w-4 sm:w-6 h-px bg-gradient-to-l from-transparent to-[#C5A059]/70" />
+                </div>
+                <p className="text-[9px] sm:text-[10px] font-sans tracking-[0.22em] text-[#a9823a] uppercase font-semibold mt-0.5">
+                  03 &bull; 01 &bull; 2027
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -176,9 +187,6 @@ export function CountdownHero({
           style={getItemStyle("2860ms", "bottom")}
         >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-auto pointer-events-none opacity-[0.06] text-[#c9a24b]">
-              <GununganWayang className="w-full h-auto" />
-            </div>
             <p className="typo-arabic leading-loose text-rose-900 relative z-10" dir="rtl">
               وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعELَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>

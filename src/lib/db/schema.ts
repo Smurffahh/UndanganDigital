@@ -47,6 +47,7 @@ export const weddingSettings = pgTable("wedding_settings", {
   coupleVisualMode: varchar("couple_visual_mode", { length: 20 }).default("photo"),
   svgCharacterPreset: varchar("svg_character_preset", { length: 50 }).default("javanese-royal"),
   isGalleryEnabled: boolean("is_gallery_enabled").default(true),
+  isLoveStoryEnabled: boolean("is_love_story_enabled").default(true),
   groomChildOrder: varchar("groom_child_order", { length: 100 }).default("Putra Pertama"),
   brideChildOrder: varchar("bride_child_order", { length: 100 }).default("Putri Pertama"),
   groomParents: varchar("groom_parents", { length: 255 }).default("Bapak H. Ma'ruf & Ibu Hj. Siti Aminah"),

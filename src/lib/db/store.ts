@@ -175,6 +175,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     coupleVisualMode: (row.coupleVisualMode as typeof DEFAULT_WEDDING_SETTINGS.coupleVisualMode) || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
     svgCharacterPreset: (row.svgCharacterPreset as typeof DEFAULT_WEDDING_SETTINGS.svgCharacterPreset) || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
     isGalleryEnabled: row.isGalleryEnabled !== undefined ? Boolean(row.isGalleryEnabled) : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
+    isLoveStoryEnabled: row.isLoveStoryEnabled !== undefined ? Boolean(row.isLoveStoryEnabled) : DEFAULT_WEDDING_SETTINGS.isLoveStoryEnabled,
     groomChildOrder: row.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
     groomParents: row.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
     brideChildOrder: row.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
@@ -341,6 +342,7 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS couple_visual_mode VARCHAR(20) DEFAULT 'photo'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS svg_character_preset VARCHAR(50) DEFAULT 'javanese-royal'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS is_gallery_enabled BOOLEAN DEFAULT true`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS is_love_story_enabled BOOLEAN DEFAULT true`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS groom_child_order VARCHAR(100) DEFAULT 'Putra Pertama'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS bride_child_order VARCHAR(100) DEFAULT 'Putri Pertama'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS groom_parents VARCHAR(255) DEFAULT 'Bapak H. Ma''ruf & Ibu Hj. Siti Aminah'`;

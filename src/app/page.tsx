@@ -5,6 +5,7 @@ import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 import { resolveGuestToken } from "@/lib/guest-crypto";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -12,7 +13,15 @@ interface PageProps {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedParams = await searchParams;
-  const rawParam = resolvedParams.to || resolvedParams.inv || "";
+  const rawParam =
+    resolvedParams.to ||
+    resolvedParams.kpd ||
+    resolvedParams.guest ||
+    resolvedParams.code ||
+    resolvedParams.inv ||
+    resolvedParams.tamu ||
+    resolvedParams.name ||
+    "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
   const { guestName: verifiedName } = await resolveGuestToken(paramStr);
@@ -62,11 +71,19 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function InvitationPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
 
-  const rawParam = resolvedParams.to || resolvedParams.inv || "";
+  const rawParam =
+    resolvedParams.to ||
+    resolvedParams.kpd ||
+    resolvedParams.guest ||
+    resolvedParams.code ||
+    resolvedParams.inv ||
+    resolvedParams.tamu ||
+    resolvedParams.name ||
+    "";
   const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
   const { guestName: decryptedName, isVerified, validToken } = await resolveGuestToken(paramStr);
-  const guestName = decryptedName || "Tamu Kehormatan";
+  const guestName = decryptedName || "Tamu Undangan";
 
   const [rawSettings, rawGalleryPhotos, rawWishes] = await Promise.all([
     getWeddingSettings(),
@@ -116,6 +133,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     coupleVisualMode: rawSettings.coupleVisualMode || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
     svgCharacterPreset: rawSettings.svgCharacterPreset || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
     isGalleryEnabled: rawSettings.isGalleryEnabled !== undefined ? rawSettings.isGalleryEnabled : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
+    isLoveStoryEnabled: rawSettings.isLoveStoryEnabled !== undefined ? rawSettings.isLoveStoryEnabled : DEFAULT_WEDDING_SETTINGS.isLoveStoryEnabled,
     groomChildOrder: rawSettings.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
     groomParents: rawSettings.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
     brideChildOrder: rawSettings.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,

@@ -22,6 +22,8 @@ interface CoupleProfileProps {
   groomParents?: string;
   brideChildOrder?: string;
   brideParents?: string;
+  loveStoryText?: string;
+  storyHashtag?: string;
 }
 
 export function CoupleProfile({
@@ -39,6 +41,8 @@ export function CoupleProfile({
   groomParents,
   brideChildOrder,
   brideParents,
+  loveStoryText,
+  storyHashtag,
 }: CoupleProfileProps) {
   const isSvgMode = coupleVisualMode === "svg";
 
@@ -73,12 +77,12 @@ export function CoupleProfile({
           <ScrollLinkedItem offsetY={36}>
             <div className="mt-5 max-w-[540px] mx-auto px-5 py-4 rounded-2xl bg-surface-white/90 backdrop-blur-md border border-gold-500/30 shadow-[0_12px_24px_-10px_rgba(93,58,65,0.12)]">
               <p className="typo-body italic text-center mx-auto text-[#4b3a3e]">
-                &ldquo;Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit&mdash;satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.&rdquo;
+                &ldquo;{loveStoryText || "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan."}&rdquo;
               </p>
               <div className="mt-2.5 flex items-center justify-center gap-2">
                 <span className="w-6 h-px bg-gold-500/50" />
                 <span className="font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
-                  #SINgkatceritaFAUZAN
+                  {storyHashtag || "#SINgkatceritaFAUZAN"}
                 </span>
                 <span className="w-6 h-px bg-gold-500/50" />
               </div>

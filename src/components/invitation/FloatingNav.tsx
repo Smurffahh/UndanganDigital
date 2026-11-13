@@ -6,6 +6,7 @@ import { Users, Sparkles, Calendar, Image as ImageIcon, Gift, MessageSquare } fr
 interface FloatingNavProps {
   isOpened: boolean;
   isGalleryEnabled?: boolean;
+  isLoveStoryEnabled?: boolean;
 }
 
 const NAV_ITEMS = [
@@ -17,11 +18,16 @@ const NAV_ITEMS = [
   { id: "rsvp", label: "RSVP", icon: MessageSquare },
 ];
 
-export function FloatingNav({ isOpened, isGalleryEnabled = true }: FloatingNavProps) {
+export function FloatingNav({
+  isOpened,
+  isGalleryEnabled = true,
+  isLoveStoryEnabled = true,
+}: FloatingNavProps) {
   const [activeSection, setActiveSection] = useState<string>("mempelai");
 
   const effectiveItems = NAV_ITEMS.filter((item) => {
     if (item.id === "galeri" && isGalleryEnabled === false) return false;
+    if (item.id === "cerita" && isLoveStoryEnabled === false) return false;
     return true;
   });
 

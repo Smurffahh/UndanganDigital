@@ -277,8 +277,8 @@ export function CoverGate({
             <p className="typo-meta text-[11px] mt-0.5 text-[#6D4C3D]">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="typo-card-title mt-1 font-semibold text-[#3E2723] text-sm sm:text-base truncate">
-              {guestName || "Tamu Kehormatan"}
+            <p className="typo-card-title mt-1 font-semibold text-[#3E2723] text-sm sm:text-base text-balance break-words line-clamp-2 max-w-[280px] sm:max-w-[320px] mx-auto">
+              {guestName || "Tamu Undangan"}
             </p>
           </div>
 

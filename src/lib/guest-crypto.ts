@@ -2,6 +2,7 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { neon } from "@neondatabase/serverless";
+import { decryptField } from "./crypto";
 
 if (typeof window !== "undefined") {
   throw new Error("This module can only be executed in a server-side environment.");
@@ -182,6 +183,13 @@ export async function resolveGuestToken(
     return { guestName: null, isVerified: false, validToken: null };
   }
 
+  let decoded = trimmed;
+  try {
+    decoded = decodeURIComponent(trimmed.replace(/\+/g, " ")).trim();
+  } catch {
+    decoded = trimmed;
+  }
+
   if (SHORT_CODE_REGEX.test(trimmed)) {
     const cached = shortCodeCache.get(trimmed);
     if (cached) {
@@ -208,8 +216,7 @@ export async function resolveGuestToken(
             validToken: trimmed,
           };
         }
-      } catch {
-      }
+      } catch {}
     }
 
     const localTokens = getLocalTokens();
@@ -222,12 +229,73 @@ export async function resolveGuestToken(
         validToken: trimmed,
       };
     }
-
-    return { guestName: null, isVerified: false, validToken: null };
   }
 
   if (trimmed.startsWith(TOKEN_PREFIX)) {
     return decryptGuestToken(trimmed);
+  }
+
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl) {
+    try {
+      const sql = neon(dbUrl);
+      const normalizedPlus = encodeURIComponent(decoded).replace(/%20/g, "+");
+      const normalizedEnc = encodeURIComponent(decoded);
+      const rows = await sql`
+        SELECT name, slug_query 
+        FROM guests 
+        WHERE slug_query = ${trimmed}
+           OR slug_query = ${decoded}
+           OR slug_query = ${normalizedPlus}
+           OR slug_query = ${normalizedEnc}
+        LIMIT 1
+      `;
+      if (rows.length > 0 && rows[0].name) {
+        const rawName = rows[0].name as string;
+        const decryptedName = decryptField(rawName);
+        if (decryptedName) {
+          const cleanName = sanitizeGuestName(decryptedName);
+          return {
+            guestName: cleanName,
+            isVerified: true,
+            validToken: rows[0].slug_query as string,
+          };
+        }
+      }
+    } catch {}
+  }
+
+  try {
+    if (fs.existsSync(DB_FILE_PATH)) {
+      const data = JSON.parse(fs.readFileSync(DB_FILE_PATH, "utf8"));
+      if (Array.isArray(data.guests)) {
+        const found = data.guests.find(
+          (g: any) =>
+            g.slugQuery === trimmed ||
+            g.slugQuery === decoded ||
+            g.slugQuery === encodeURIComponent(decoded)
+        );
+        if (found && found.name) {
+          const decryptedName = decryptField(found.name);
+          if (decryptedName) {
+            return {
+              guestName: sanitizeGuestName(decryptedName),
+              isVerified: true,
+              validToken: found.slugQuery,
+            };
+          }
+        }
+      }
+    }
+  } catch {}
+
+  const cleanPlainName = sanitizeGuestName(decoded);
+  if (cleanPlainName && cleanPlainName.length >= 2) {
+    return {
+      guestName: cleanPlainName,
+      isVerified: false,
+      validToken: trimmed,
+    };
   }
 
   return { guestName: null, isVerified: false, validToken: null };

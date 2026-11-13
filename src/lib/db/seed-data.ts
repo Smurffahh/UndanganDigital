@@ -302,6 +302,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   coupleVisualMode: "photo" as CoupleVisualMode,
   svgCharacterPreset: "javanese-royal" as SvgCharacterPreset,
   isGalleryEnabled: true,
+  isLoveStoryEnabled: true,
   groomChildOrder: "Putra Pertama",
   groomParents: "Bapak H. Ma'ruf & Ibu Hj. Siti Aminah",
   brideChildOrder: "Putri Pertama",

@@ -199,12 +199,16 @@ export function InvitationOrchestrator({
           groomParents={settings.groomParents}
           brideChildOrder={settings.brideChildOrder}
           brideParents={settings.brideParents}
-        />
-
-        <LoveStoryTimeline
           loveStoryText={settings.loveStoryText}
           storyHashtag={settings.storyHashtag}
         />
+
+        {settings.isLoveStoryEnabled && (
+          <LoveStoryTimeline
+            loveStoryText={settings.loveStoryText}
+            storyHashtag={settings.storyHashtag}
+          />
+        )}
 
         <EventDetails
           akadTime={settings.akadTime}
@@ -241,7 +245,11 @@ export function InvitationOrchestrator({
         />
       </div>
 
-      <FloatingNav isOpened={isOpened} isGalleryEnabled={settings.isGalleryEnabled} />
+      <FloatingNav
+        isOpened={isOpened}
+        isGalleryEnabled={settings.isGalleryEnabled}
+        isLoveStoryEnabled={settings.isLoveStoryEnabled}
+      />
 
       <FloatingControls
         isOpened={isOpened}

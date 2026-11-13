@@ -1605,6 +1605,47 @@ export function WeddingSettingsModule({
           </div>
         </div>
 
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-cream/35 border border-gold-500/25">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold text-sm text-ink font-serif">
+                Tampilkan Alur Perjalanan (Love Story)
+              </h4>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                  formData.isLoveStoryEnabled !== false
+                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                    : "bg-rose-100 text-rose-800 border border-rose-300"
+                }`}
+              >
+                {formData.isLoveStoryEnabled !== false ? "Aktif (ON)" : "Disembunyikan (OFF)"}
+              </span>
+            </div>
+            <p className="text-xs text-muted max-w-[560px] leading-relaxed">
+              {formData.isLoveStoryEnabled !== false
+                ? "Seksi alur perjalanan cinta dan tombol menu navigasi Cerita ditampilkan pada undangan publik."
+                : "Seksi alur perjalanan cinta dan tombol menu navigasi Cerita disembunyikan dari undangan publik."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formData.isLoveStoryEnabled !== false}
+            aria-label="Tampilkan Alur Perjalanan (Love Story)"
+            onClick={() => handleFieldChange("isLoveStoryEnabled", formData.isLoveStoryEnabled === false)}
+            className={`min-w-[52px] w-[52px] h-[30px] rounded-full p-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-rose-700 shrink-0 cursor-pointer active:scale-[0.96] ${
+              formData.isLoveStoryEnabled !== false ? "bg-emerald-600" : "bg-stone-300"
+            }`}
+          >
+            <div
+              className={`w-[22px] h-[22px] rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                formData.isLoveStoryEnabled !== false ? "translate-x-[22px]" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gold-600 mb-1.5">

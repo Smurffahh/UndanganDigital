@@ -50,6 +50,7 @@ const updateSettingsSchema = z.object({
     .enum(["javanese-royal", "modern-editorial", "islamic-grace", "casual-botanical"])
     .optional(),
   isGalleryEnabled: z.boolean().optional(),
+  isLoveStoryEnabled: z.boolean().optional(),
   groomChildOrder: z.string().max(100).optional(),
   brideChildOrder: z.string().max(100).optional(),
   groomParents: z.string().max(255).optional(),
@@ -84,7 +85,9 @@ export async function PUT(request: Request) {
     }
 
     const updated = await updateWeddingSettings(parseResult.data);
-    revalidatePath("/");
+    revalidatePath("/", "page");
+    revalidatePath("/", "layout");
+    revalidatePath("/dashboard");
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
     console.error("Failed to update settings:", err);

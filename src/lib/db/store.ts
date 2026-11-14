@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "./index";
 import * as schema from "./schema";
 import {
@@ -628,18 +628,35 @@ export async function createGuest(data: {
         if (existing.length > 0) {
           const [updated] = await db
             .update(schema.guests)
-            .set({ name: encName, category: encCategory, slugQuery })
+            .set({ name: encName, category: encCategory })
             .where(eq(schema.guests.id, existing[0].id))
             .returning();
           return decryptGuestRecord(updated);
         }
-      } else if (nameBindex) {
+      }
+      if (nameBindex) {
         const existing = await db
           .select()
           .from(schema.guests)
           .where(eq(schema.guests.nameBindex, nameBindex))
           .limit(1);
         if (existing.length > 0) {
+          const updates: any = {};
+          if (cleanPhone) {
+            updates.whatsappNumber = encPhone;
+            updates.waBindex = waBindex;
+          }
+          if (category) {
+            updates.category = encCategory;
+          }
+          if (Object.keys(updates).length > 0) {
+            const [updated] = await db
+              .update(schema.guests)
+              .set(updates)
+              .where(eq(schema.guests.id, existing[0].id))
+              .returning();
+            return decryptGuestRecord(updated);
+          }
           return decryptGuestRecord(existing[0]);
         }
       }
@@ -671,15 +688,23 @@ export async function createGuest(data: {
       local.guests[existingIdx] = {
         ...local.guests[existingIdx],
         name: encName,
-        slugQuery,
         category: encCategory,
       };
       saveLocalDb(local);
       return decryptGuestRecord(local.guests[existingIdx]);
     }
-  } else if (nameBindex) {
+  }
+  if (nameBindex) {
     const existingIdx = local.guests.findIndex((g) => g.nameBindex === nameBindex);
     if (existingIdx !== -1) {
+      if (cleanPhone) {
+        local.guests[existingIdx].whatsappNumber = encPhone;
+        local.guests[existingIdx].waBindex = waBindex;
+      }
+      if (category) {
+        local.guests[existingIdx].category = encCategory;
+      }
+      saveLocalDb(local);
       return decryptGuestRecord(local.guests[existingIdx]);
     }
   }
@@ -771,6 +796,78 @@ export async function deleteGuest(id: number): Promise<boolean> {
   local.guests = local.guests.filter((g) => g.id !== id);
   saveLocalDb(local);
   return true;
+}
+
+export async function bulkUpdateGuestStatus(
+  ids: number[],
+  waSentStatus: boolean,
+  waSentAt?: string | null
+): Promise<number> {
+  if (!ids || ids.length === 0) return 0;
+
+  const sentAtVal =
+    waSentAt !== undefined
+      ? waSentAt
+        ? new Date(waSentAt)
+        : null
+      : waSentStatus
+      ? new Date()
+      : null;
+
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const updated = await db
+        .update(schema.guests)
+        .set({
+          waSentStatus,
+          waSentAt: sentAtVal,
+        })
+        .where(inArray(schema.guests.id, ids))
+        .returning();
+      return updated.length;
+    } catch (e) {
+      console.warn("DB bulk update guest status failed, using local JSON fallback:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  const idSet = new Set(ids);
+  let updatedCount = 0;
+  local.guests = local.guests.map((g) => {
+    if (idSet.has(g.id)) {
+      updatedCount++;
+      return {
+        ...g,
+        waSentStatus,
+        waSentAt: sentAtVal ? sentAtVal.toISOString() : null,
+      };
+    }
+    return g;
+  });
+  saveLocalDb(local);
+  return updatedCount;
+}
+
+export async function bulkDeleteGuests(ids: number[]): Promise<number> {
+  if (!ids || ids.length === 0) return 0;
+
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      await db.delete(schema.guests).where(inArray(schema.guests.id, ids));
+      return ids.length;
+    } catch (e) {
+      console.warn("DB bulk delete guests failed, using local JSON fallback:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  const idSet = new Set(ids);
+  const initialLength = local.guests.length;
+  local.guests = local.guests.filter((g) => !idSet.has(g.id));
+  saveLocalDb(local);
+  return initialLength - local.guests.length;
 }
 
 export async function importGuests(

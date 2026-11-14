@@ -1,4 +1,5 @@
 import type { GuestData } from "./db/store";
+import { normalizePhoneNumber, parseRawPhoneToString } from "./phoneUtils";
 
 function normalizeNameKey(name: string): string {
   return name.trim().toLowerCase().replace(/\s+/g, " ");
@@ -8,11 +9,25 @@ function normalizePhoneKey(phone: string): string {
   return phone.replace(/\D/g, "");
 }
 
+function findRowValue(row: Record<string, any>, candidates: string[]): any {
+  const normCandidates = candidates.map((c) => c.toLowerCase().replace(/[^a-z0-9]/g, ""));
+  for (const [key, value] of Object.entries(row)) {
+    const normKey = key.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (normCandidates.includes(normKey)) {
+      if (value !== undefined && value !== null && String(value).trim() !== "") {
+        return value;
+      }
+    }
+  }
+  return "";
+}
+
 export interface ValidatedGuest {
   rowNumber: number;
   name: string;
   whatsappNumber: string | null;
   category: string;
+  isUpdate?: boolean;
 }
 
 export interface InvalidGuestRow {
@@ -29,58 +44,6 @@ export interface GuestValidationResult {
   invalidRows: InvalidGuestRow[];
 }
 
-export function parseRawPhoneToString(rawPhone: any): string {
-  if (rawPhone === null || rawPhone === undefined) return "";
-  if (typeof rawPhone === "number") {
-    // Converts scientific notation or float safely to plain string without exponential formatting
-    return rawPhone.toLocaleString("fullwide", { useGrouping: false });
-  }
-
-  const str = String(rawPhone).trim();
-  if (/^[+-]?\d+(\.\d+)?[eE][+-]?\d+$/.test(str)) {
-    const num = Number(str);
-    if (!isNaN(num)) {
-      return num.toLocaleString("fullwide", { useGrouping: false });
-    }
-  }
-
-  return str;
-}
-
-export function normalizePhoneNumber(rawPhone: any): string | null {
-  if (rawPhone === null || rawPhone === undefined) return null;
-  const str = parseRawPhoneToString(rawPhone);
-  if (!str) return null;
-
-  if (/[a-zA-Z]/.test(str)) return null;
-
-  let digits = str.replace(/\D/g, "");
-  if (!digits) return null;
-
-  if (/^0[2-9][0-9]{1,2}[0-9]+/.test(str.replace(/\D/g, "")) && !digits.startsWith("08")) {
-    return null;
-  }
-
-  // Excel strips leading 0 on numeric cells; normalizes 08... and 8... to 628...
-  if (digits.startsWith("8") && digits.length >= 9 && digits.length <= 13) {
-    digits = "628" + digits.slice(1);
-  } else if (digits.startsWith("08")) {
-    digits = "628" + digits.slice(2);
-  } else if (digits.startsWith("00628")) {
-    digits = "628" + digits.slice(5);
-  }
-
-  if (digits.startsWith("628") && digits.length >= 10 && digits.length <= 15) {
-    return digits;
-  }
-
-  if (digits.length >= 10 && digits.length <= 15 && !digits.startsWith("0")) {
-    return digits;
-  }
-
-  return null;
-}
-
 export function validateGuestImport(
   rawRows: Array<Record<string, any>>,
   existingGuests: GuestData[] = []
@@ -91,68 +54,84 @@ export function validateGuestImport(
   const seenNameIndices = new Set<string>();
   const seenPhoneIndices = new Set<string>();
 
-  const existingNameIndices = new Set<string>();
-  const existingPhoneIndices = new Set<string>();
+  const existingNameMap = new Map<string, GuestData>();
+  const existingPhoneMap = new Map<string, GuestData>();
 
   for (const g of existingGuests) {
     if (g.name) {
-      existingNameIndices.add(normalizeNameKey(g.name));
+      existingNameMap.set(normalizeNameKey(g.name), g);
     }
     if (g.whatsappNumber) {
-      existingPhoneIndices.add(normalizePhoneKey(g.whatsappNumber));
+      existingPhoneMap.set(normalizePhoneKey(g.whatsappNumber), g);
     }
   }
 
   rawRows.forEach((row, index) => {
     const rowNumber = index + 2;
 
-    const rawName =
-      row["Nama_Tamu"] ||
-      row["nama_tamu"] ||
-      row["Nama Tamu"] ||
-      row["Nama"] ||
-      row["nama"] ||
-      row["name"] ||
-      row["Name"] ||
-      row["Guest Name"] ||
-      row["guest_name"] ||
-      "";
+    const rawName = findRowValue(row, [
+      "namatamu",
+      "nama_tamu",
+      "nama tamu",
+      "nama",
+      "namalengkap",
+      "name",
+      "guestname",
+      "guest_name",
+      "penerima",
+      "tamu",
+      "tamuundangan",
+    ]);
 
-    const rawPhone =
-      row["Nomor_WhatsApp"] !== undefined
-        ? row["Nomor_WhatsApp"]
-        : row["nomor_whatsapp"] !== undefined
-        ? row["nomor_whatsapp"]
-        : row["Nomor WhatsApp"] !== undefined
-        ? row["Nomor WhatsApp"]
-        : row["Nomor WA"] !== undefined
-        ? row["Nomor WA"]
-        : row["nomor_wa"] !== undefined
-        ? row["nomor_wa"]
-        : row["WhatsApp"] !== undefined
-        ? row["WhatsApp"]
-        : row["whatsapp"] !== undefined
-        ? row["whatsapp"]
-        : row["No HP"] !== undefined
-        ? row["No HP"]
-        : row["no_hp"] !== undefined
-        ? row["no_hp"]
-        : row["No WA"] !== undefined
-        ? row["No WA"]
-        : row["phone"] !== undefined
-        ? row["phone"]
-        : row["Phone"] !== undefined
-        ? row["Phone"]
-        : row["Telepon"] !== undefined
-        ? row["Telepon"]
-        : "";
+    const rawPhone = findRowValue(row, [
+      "nomorwhatsapp",
+      "nomor_whatsapp",
+      "nomor whatsapp",
+      "nomorwa",
+      "nomor_wa",
+      "nomor wa",
+      "nowa",
+      "no_wa",
+      "no wa",
+      "whatsapp",
+      "wa",
+      "kontakwhatsapp",
+      "kontak wa",
+      "kontak_wa",
+      "kontak",
+      "nokontak",
+      "nomorkontak",
+      "nohp",
+      "no_hp",
+      "no hp",
+      "nomorhp",
+      "nomor_hp",
+      "nomor hp",
+      "handphone",
+      "phone",
+      "phonenumber",
+      "phone_number",
+      "mobile",
+      "cell",
+      "telepon",
+      "notelepon",
+      "nomortelepon",
+      "telp",
+      "notelp",
+      "nomortelp",
+      "hp",
+    ]);
 
     const rawCategory =
-      row["Kategori"] ||
-      row["kategori"] ||
-      row["Category"] ||
-      row["category"] ||
-      "Reguler";
+      findRowValue(row, [
+        "kategori",
+        "category",
+        "kelompok",
+        "grup",
+        "group",
+        "sesi",
+        "relasi",
+      ]) || "Reguler";
 
     const cleanName = String(rawName).trim();
     const phoneInput = parseRawPhoneToString(rawPhone);
@@ -222,31 +201,7 @@ export function validateGuestImport(
       seenPhoneIndices.add(phoneBindex);
     }
 
-    if (existingNameIndices.has(nameBindex)) {
-      invalidRows.push({
-        rowNumber,
-        rawName: cleanName,
-        rawPhone: phoneInput || "-",
-        rawCategory: cleanCategory,
-        reason: "Nama tamu sudah terdaftar sebelumnya di database",
-      });
-      return;
-    }
-
-    if (normalizedPhone) {
-      const phoneBindex = normalizePhoneKey(normalizedPhone);
-      if (existingPhoneIndices.has(phoneBindex)) {
-        invalidRows.push({
-          rowNumber,
-          rawName: cleanName,
-          rawPhone: phoneInput,
-          rawCategory: cleanCategory,
-          reason: "Nomor WhatsApp sudah terdaftar sebelumnya di database",
-        });
-        return;
-      }
-    }
-
+    const isExisting = existingNameMap.has(nameBindex);
     seenNameIndices.add(nameBindex);
 
     validGuests.push({
@@ -254,6 +209,7 @@ export function validateGuestImport(
       name: cleanName,
       whatsappNumber: normalizedPhone,
       category: cleanCategory,
+      isUpdate: isExisting,
     });
   });
 

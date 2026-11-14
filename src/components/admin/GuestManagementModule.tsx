@@ -52,6 +52,8 @@ import {
 import {
   downloadExcelTemplate,
   downloadCsvTemplate,
+  exportGuestsToExcel,
+  exportGuestsToCsv,
 } from "@/lib/guestTemplate";
 import { formatWaEventDate } from "@/lib/dateFormat";
 import {
@@ -147,9 +149,10 @@ export function GuestManagementModule({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "unsent" | "sent">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "unsent" | "sent" | "no_phone">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [copiedGuestId, setCopiedGuestId] = useState<number | null>(null);
+  const [isBulkOperating, setIsBulkOperating] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -472,15 +475,146 @@ export function GuestManagementModule({
   };
 
   const handleStartQueueSelected = () => {
-    const selected = guests.filter((g) => selectedGuestIds.has(g.id) && g.whatsappNumber);
-    if (selected.length === 0) {
-      toast.error("Pilih minimal satu tamu dengan nomor WhatsApp.");
+    const selected = guests.filter((g) => selectedGuestIds.has(g.id));
+    const withPhone = selected.filter((g) => g.whatsappNumber);
+    const withoutPhoneCount = selected.length - withPhone.length;
+    if (withPhone.length === 0) {
+      toast.error("Tamu terpilih tidak memiliki nomor WhatsApp.");
       return;
     }
-    setQueueList(selected);
+    if (withoutPhoneCount > 0) {
+      toast.info(`${withoutPhoneCount} tamu tanpa nomor WhatsApp dilewati dari antrean.`);
+    }
+    setQueueList(withPhone);
     setCurrentQueueIndex(0);
     setCooldownRemaining(0);
     setIsQueueModalOpen(true);
+  };
+
+  const handleBulkMarkSent = async (status: boolean) => {
+    const ids = Array.from(selectedGuestIds);
+    if (ids.length === 0) return;
+
+    setIsBulkOperating(true);
+    const nowIso = status ? new Date().toISOString() : null;
+    try {
+      const res = await fetch("/api/admin/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ids,
+          waSentStatus: status,
+          waSentAt: nowIso,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || "Gagal memperbarui status");
+
+      const idSet = new Set(ids);
+      onGuestsChange(
+        guests.map((g) =>
+          idSet.has(g.id) ? { ...g, waSentStatus: status, waSentAt: nowIso } : g
+        )
+      );
+      toast.success(
+        status
+          ? `${ids.length} tamu berhasil ditandai Terkirim ✓`
+          : `Status ${ids.length} tamu dikembalikan ke Belum Dikirim`
+      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal memperbarui status";
+      toast.error(msg);
+    } finally {
+      setIsBulkOperating(false);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selectedGuestIds);
+    if (ids.length === 0) return;
+    if (!confirm(`Hapus permanen ${ids.length} tamu terpilih dari daftar undangan?`)) return;
+
+    setIsBulkOperating(true);
+    try {
+      const res = await fetch("/api/admin/guests", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || "Gagal menghapus tamu");
+
+      const idSet = new Set(ids);
+      onGuestsChange(guests.filter((g) => !idSet.has(g.id)));
+      setSelectedGuestIds(new Set());
+      toast.success(`${ids.length} tamu berhasil dihapus dari daftar.`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal menghapus tamu";
+      toast.error(msg);
+    } finally {
+      setIsBulkOperating(false);
+    }
+  };
+
+  const handleBulkCopyLinks = async () => {
+    const selected = guests.filter((g) => selectedGuestIds.has(g.id));
+    if (selected.length === 0) return;
+
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://www.fauzansinta.my.id";
+
+    const lines = selected.map((g) => {
+      const link = g.slugQuery ? `${origin}/?kpd=${g.slugQuery}` : origin;
+      return `${g.name}: ${link}`;
+    });
+
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      toast.success(`${selected.length} link undangan tamu berhasil disalin!`);
+    } catch {
+      toast.error("Gagal menyalin link.");
+    }
+  };
+
+  const handleExportSelected = (type: "xlsx" | "csv") => {
+    const selected = guests.filter((g) => selectedGuestIds.has(g.id));
+    if (selected.length === 0) {
+      toast.error("Pilih minimal satu tamu untuk diekspor.");
+      return;
+    }
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://www.fauzansinta.my.id";
+
+    if (type === "xlsx") {
+      exportGuestsToExcel(selected, origin);
+      toast.success(`${selected.length} data tamu terpilih berhasil diekspor ke Excel!`);
+    } else {
+      exportGuestsToCsv(selected, origin);
+      toast.success(`${selected.length} data tamu terpilih berhasil diekspor ke CSV!`);
+    }
+  };
+
+  const handleExportAll = (type: "xlsx" | "csv") => {
+    if (guests.length === 0) {
+      toast.error("Belum ada data tamu untuk diekspor.");
+      return;
+    }
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://www.fauzansinta.my.id";
+
+    if (type === "xlsx") {
+      exportGuestsToExcel(guests, origin);
+      toast.success(`Seluruh ${guests.length} data tamu berhasil diekspor ke Excel!`);
+    } else {
+      exportGuestsToCsv(guests, origin);
+      toast.success(`Seluruh ${guests.length} data tamu berhasil diekspor ke CSV!`);
+    }
   };
 
   const handleStartQueueUnsent = () => {
@@ -707,12 +841,13 @@ export function GuestManagementModule({
       if (refreshJson.success) onGuestsChange(refreshJson.data);
 
       const invalidCount = validationResult.invalidRows.length;
+      const countMsg = `${json.count} tamu berhasil disimpan (${json.withPhone || 0} dengan WA, ${json.noPhone || 0} tanpa WA)`;
       if (invalidCount > 0) {
         toast.success(
-          `Berhasil menyimpan ${json.count} tamu valid! (${invalidCount} baris bermasalah dilewati)`
+          `${countMsg}! (${invalidCount} baris bermasalah dilewati)`
         );
       } else {
-        toast.success(`Seluruh ${json.count} tamu berhasil diimpor ke database! ✓`);
+        toast.success(`${countMsg}! ✓`);
       }
 
       setIsStagingModalOpen(false);
@@ -737,7 +872,8 @@ export function GuestManagementModule({
       const matchStatus =
         statusFilter === "all" ||
         (statusFilter === "sent" && g.waSentStatus) ||
-        (statusFilter === "unsent" && !g.waSentStatus);
+        (statusFilter === "unsent" && !g.waSentStatus) ||
+        (statusFilter === "no_phone" && !g.whatsappNumber);
 
       const matchCategory = categoryFilter === "all" || g.category === categoryFilter;
 
@@ -774,6 +910,10 @@ export function GuestManagementModule({
 
   const unsentWithPhoneCount = useMemo(() => {
     return guests.filter((g) => !g.waSentStatus && g.whatsappNumber).length;
+  }, [guests]);
+
+  const noPhoneCount = useMemo(() => {
+    return guests.filter((g) => !g.whatsappNumber).length;
   }, [guests]);
 
   const parsedBulkGuests = useMemo(() => {
@@ -946,22 +1086,42 @@ export function GuestManagementModule({
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               type="button"
-              onClick={downloadExcelTemplate}
-              aria-label="Unduh Template Excel resmi .xlsx"
+              onClick={() => handleExportAll("xlsx")}
+              aria-label="Ekspor seluruh daftar tamu ke berkas Excel resmi .xlsx"
               className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-emerald-600/40 bg-emerald-50/80 text-emerald-900 text-xs font-semibold hover:bg-emerald-100/90 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-700 shrink-0" />
-              <span>Unduh Template Excel (.xlsx)</span>
+              <span>Ekspor Excel (.xlsx)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleExportAll("csv")}
+              aria-label="Ekspor seluruh daftar tamu ke berkas CSV resmi .csv"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold-500/40 bg-cream/70 text-rose-950 text-xs font-semibold hover:bg-rose-100/80 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
+            >
+              <Download className="w-4 h-4 text-gold-600 shrink-0" />
+              <span>Ekspor CSV (.csv)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={downloadExcelTemplate}
+              aria-label="Unduh Template Excel resmi .xlsx"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold-500/40 bg-surface-white text-rose-950 text-xs font-semibold hover:bg-rose-50 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-gold-600 shrink-0" />
+              <span>Unduh Template (.xlsx)</span>
             </button>
 
             <button
               type="button"
               onClick={downloadCsvTemplate}
               aria-label="Unduh Contoh CSV resmi .csv"
-              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold-500/40 bg-cream/70 text-rose-950 text-xs font-semibold hover:bg-rose-100/80 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold-500/40 bg-surface-white text-rose-950 text-xs font-semibold hover:bg-rose-50 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
             >
               <Download className="w-4 h-4 text-gold-600 shrink-0" />
-              <span>Unduh Contoh CSV (.csv)</span>
+              <span>Unduh Template (.csv)</span>
             </button>
 
             <button
@@ -1332,6 +1492,17 @@ export function GuestManagementModule({
                   >
                     Sudah Terkirim ({sentCount})
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter("no_phone")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-medium transition-colors ${
+                      statusFilter === "no_phone"
+                        ? "bg-slate-700 text-white"
+                        : "text-muted hover:text-slate-700"
+                    }`}
+                  >
+                    Belum Ada WA ({noPhoneCount})
+                  </button>
                 </div>
 
                 {availableCategories.length > 0 && (
@@ -1352,25 +1523,89 @@ export function GuestManagementModule({
             </div>
 
             {selectedGuestIds.size > 0 && (
-              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-rose-50/90 border border-rose-300 text-rose-950 text-xs shadow-2xs animate-in fade-in duration-150">
-                <div className="flex items-center gap-2 font-semibold">
-                  <CheckSquare className="w-4 h-4 text-rose-700" />
+              <div className="sticky top-3 z-30 flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-rose-300 text-rose-950 text-xs shadow-md animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="flex items-center gap-2 font-semibold text-rose-900">
+                  <CheckSquare className="w-4 h-4 text-rose-700 shrink-0" />
                   <span>{selectedGuestIds.size} Tamu Terpilih</span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={handleStartQueueSelected}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 active:scale-[0.96] transition-transform duration-150 cursor-pointer shadow-xs"
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 active:scale-[0.96] transition-transform duration-150 cursor-pointer shadow-xs disabled:opacity-50"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Kirim Antrean Terpilih ({selectedGuestIds.size})</span>
+                    <span>Kirim WA Massal ({selectedGuestIds.size})</span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleBulkMarkSent(true)}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-emerald-600/40 bg-emerald-50 text-emerald-900 font-semibold text-xs hover:bg-emerald-100 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Tandai Terkirim</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleBulkMarkSent(false)}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-amber-500/40 bg-amber-50 text-amber-900 font-semibold text-xs hover:bg-amber-100 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Reset Status</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleBulkCopyLinks}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gold-500/40 bg-cream/70 text-rose-950 font-semibold text-xs hover:bg-rose-100 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <Copy className="w-3.5 h-3.5 text-gold-600" />
+                    <span>Salin Link</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleExportSelected("xlsx")}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-emerald-600/40 bg-white text-emerald-900 font-semibold text-xs hover:bg-emerald-50 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                    title="Ekspor tamu terpilih ke Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Ekspor .xlsx</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleExportSelected("csv")}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gold-500/40 bg-white text-rose-950 font-semibold text-xs hover:bg-cream active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                    title="Ekspor tamu terpilih ke CSV (.csv)"
+                  >
+                    <Download className="w-3.5 h-3.5 text-gold-600" />
+                    <span>Ekspor .csv</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleBulkDelete}
+                    disabled={isBulkOperating}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-rose-300 bg-rose-100 text-rose-900 font-semibold text-xs hover:bg-rose-200 active:scale-[0.96] transition-transform duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-rose-700" />
+                    <span>Hapus Terpilih</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setSelectedGuestIds(new Set())}
-                    className="px-3 py-2 rounded-full border border-rose-300 bg-white text-rose-800 hover:bg-rose-100 text-xs font-medium cursor-pointer"
+                    className="px-3 py-2 rounded-xl border border-rose-300 bg-white text-rose-800 hover:bg-rose-50 text-xs font-medium cursor-pointer"
                   >
                     Batal Pilih
                   </button>
@@ -1964,10 +2199,17 @@ export function GuestManagementModule({
                               </td>
                               <td className="py-2.5 px-3">{v.category}</td>
                               <td className="py-2.5 px-3 text-right">
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                                  <Check className="w-3 h-3" />
-                                  <span>Valid</span>
-                                </span>
+                                {v.isUpdate ? (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200" title="Nama tamu sudah ada di database, kontak/kategori akan diperbarui tanpa merusak link undangan">
+                                    <Check className="w-3 h-3 text-blue-700" />
+                                    <span>Perbarui Data</span>
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                                    <Check className="w-3 h-3" />
+                                    <span>Tamu Baru</span>
+                                  </span>
+                                )}
                               </td>
                             </tr>
                           ))}

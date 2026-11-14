@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       tokens.push({
         name: res.guestName,
         code: res.code,
-        url: `${baseUrl}/?to=${res.code}`,
+        url: `${baseUrl}/?kpd=${res.code}`,
       });
     }
 

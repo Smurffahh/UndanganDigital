@@ -29,13 +29,26 @@ import {
   XCircle,
   Lightbulb,
   Upload,
+  Play,
+  SkipForward,
+  FileText,
+  CornerDownLeft,
+  Link as LinkIcon,
+  Square,
+  CheckSquare,
+  Smartphone,
+  Laptop,
 } from "lucide-react";
 import type { GuestData, WeddingSettingsData } from "@/lib/db/store";
 import {
   validateGuestImport,
   type GuestValidationResult,
-  normalizePhoneNumber,
 } from "@/lib/guestValidator";
+import {
+  normalizePhoneNumber,
+  isValidPhoneNumber,
+  formatPhoneDisplay,
+} from "@/lib/phoneUtils";
 import {
   downloadExcelTemplate,
   downloadCsvTemplate,
@@ -48,6 +61,64 @@ import {
 
 const SHORT_CODE_REGEX = /^[2-9A-HJ-NP-Za-km-z]{6}$/;
 const isValidGuestToken = (t?: string | null) => Boolean(t && (SHORT_CODE_REGEX.test(t) || t.startsWith("v1.")));
+
+function parseBulkGuestLines(
+  rawText: string
+): Array<{ name: string; rawPhone: string; normalizedPhone: string | null }> {
+  const lines = rawText.split(/\r?\n/);
+  const results: Array<{ name: string; rawPhone: string; normalizedPhone: string | null }> = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    let name = "";
+    let rawPhone = "";
+
+    if (trimmed.includes("|")) {
+      const parts = trimmed.split("|");
+      name = parts[0].trim();
+      rawPhone = parts.slice(1).join("|").trim();
+    } else if (trimmed.includes(" - ")) {
+      const parts = trimmed.split(" - ");
+      name = parts[0].trim();
+      rawPhone = parts.slice(1).join(" - ").trim();
+    } else if (trimmed.includes(",")) {
+      const lastCommaIdx = trimmed.lastIndexOf(",");
+      const possiblePhone = trimmed.slice(lastCommaIdx + 1).trim();
+      const possibleName = trimmed.slice(0, lastCommaIdx).trim();
+      if (/\d{7,}/.test(possiblePhone)) {
+        name = possibleName;
+        rawPhone = possiblePhone;
+      } else {
+        name = trimmed;
+      }
+    } else if (trimmed.includes("\t")) {
+      const parts = trimmed.split("\t");
+      name = parts[0].trim();
+      rawPhone = parts.slice(1).join("\t").trim();
+    } else {
+      const match = trimmed.match(/^(.*?)[,\s]+(08\d{8,12}|628\d{8,12}|\+628\d{8,12})$/);
+      if (match) {
+        name = match[1].trim();
+        rawPhone = match[2].trim();
+      } else {
+        name = trimmed;
+      }
+    }
+
+    if (name) {
+      const norm = normalizePhoneNumber(rawPhone);
+      results.push({
+        name,
+        rawPhone,
+        normalizedPhone: norm || null,
+      });
+    }
+  }
+
+  return results;
+}
 
 interface GuestManagementModuleProps {
   guests: GuestData[];
@@ -131,21 +202,44 @@ export function GuestManagementModule({
     }
   };
 
+  const [selectedGuestIds, setSelectedGuestIds] = useState<Set<number>>(new Set());
+
+  const [isBulkTextModalOpen, setIsBulkTextModalOpen] = useState(false);
+  const [bulkTextInput, setBulkTextInput] = useState("");
+  const [bulkTextCategory, setBulkTextCategory] = useState("Reguler");
+  const [isImportingBulkText, setIsImportingBulkText] = useState(false);
+
+  const [isQueueModalOpen, setIsQueueModalOpen] = useState(false);
+  const [queueList, setQueueList] = useState<GuestData[]>([]);
+  const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+  const [isQueueSending, setIsQueueSending] = useState(false);
+  const [copiedLinkId, setCopiedLinkId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (cooldownRemaining <= 0) return;
+    const timer = setTimeout(() => {
+      setCooldownRemaining((c) => Math.max(0, c - 1));
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [cooldownRemaining]);
+
   const renderMessageForGuest = (guestName: string, guestToken?: string | null) => {
     const origin =
       typeof window !== "undefined"
         ? window.location.origin
         : "https://www.fauzansinta.my.id";
     const token = guestToken || "";
-    const link = token ? `${origin}/?to=${token}` : origin;
+    const link = token ? `${origin}/?kpd=${token}` : origin;
+    const mempelai = `${settings.brideName.split(" ")[0]} & ${settings.groomName.split(" ")[0]}`;
 
     return template
       .replace(/{nama_tamu}/g, guestName)
+      .replace(/{nama}/g, guestName)
       .replace(/{link_undangan}/g, link)
-      .replace(
-        /{nama_mempelai}/g,
-        `${settings.brideName.split(" ")[0]} & ${settings.groomName.split(" ")[0]}`
-      )
+      .replace(/{link}/g, link)
+      .replace(/{nama_mempelai}/g, mempelai)
+      .replace(/{mempelai}/g, mempelai)
       .replace(/{tanggal_acara}/g, formatWaEventDate(settings.weddingDateIso))
       .replace(/{lokasi_acara}/g, `${settings.venueName}, ${settings.venueAddress}`);
   };
@@ -284,7 +378,6 @@ export function GuestManagementModule({
     }
 
     const phone = normalizePhoneNumber(guest.whatsappNumber) || guest.whatsappNumber;
-    const waWindow = window.open("about:blank", "_blank");
 
     try {
       let token = guest.slugQuery;
@@ -292,13 +385,14 @@ export function GuestManagementModule({
         token = await generateEncryptedGuestToken(guest.name);
       }
       const message = renderMessageForGuest(guest.name, token);
-      const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      const isMobile =
+        typeof navigator !== "undefined" &&
+        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const waUrl = isMobile
+        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`
+        : `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
 
-      if (waWindow) {
-        waWindow.location.href = waUrl;
-      } else {
-        window.open(waUrl, "_blank");
-      }
+      window.open(waUrl, "undangan_wa_sender");
 
       const nowIso = new Date().toISOString();
       const res = await fetch("/api/admin/guests", {
@@ -319,8 +413,180 @@ export function GuestManagementModule({
         toast.success(`Undangan untuk ${guest.name} dibuka di WhatsApp! Tercatat terkirim ✓`);
       }
     } catch {
-      if (waWindow) waWindow.close();
       toast.error("Gagal membuka tautan WhatsApp.");
+    }
+  };
+
+  const handleCopyLink = async (guest: GuestData) => {
+    let token = guest.slugQuery;
+    if (!isValidGuestToken(token)) {
+      try {
+        token = await generateEncryptedGuestToken(guest.name);
+      } catch {
+        token = guest.slugQuery;
+      }
+    }
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://www.fauzansinta.my.id";
+    const link = token ? `${origin}/?kpd=${token}` : origin;
+
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedLinkId(guest.id);
+      toast.success(`Link undangan untuk "${guest.name}" berhasil disalin!`);
+      setTimeout(() => setCopiedLinkId((c) => (c === guest.id ? null : c)), 2500);
+    } catch {
+      toast.error("Gagal menyalin link.");
+    }
+  };
+
+  const handleToggleSentStatus = async (guest: GuestData) => {
+    const nextStatus = !guest.waSentStatus;
+    const nowIso = nextStatus ? new Date().toISOString() : null;
+    try {
+      const res = await fetch("/api/admin/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: guest.id,
+          waSentStatus: nextStatus,
+          waSentAt: nowIso,
+        }),
+      });
+      if (!res.ok) throw new Error("Gagal mengubah status");
+      onGuestsChange(
+        guests.map((g) =>
+          g.id === guest.id ? { ...g, waSentStatus: nextStatus, waSentAt: nowIso } : g
+        )
+      );
+      toast.success(
+        nextStatus
+          ? `Status "${guest.name}" ditandai Terkirim ✓`
+          : `Status "${guest.name}" dikembalikan ke Belum Dikirim`
+      );
+    } catch {
+      toast.error("Gagal memperbarui status pengiriman.");
+    }
+  };
+
+  const handleStartQueueSelected = () => {
+    const selected = guests.filter((g) => selectedGuestIds.has(g.id) && g.whatsappNumber);
+    if (selected.length === 0) {
+      toast.error("Pilih minimal satu tamu dengan nomor WhatsApp.");
+      return;
+    }
+    setQueueList(selected);
+    setCurrentQueueIndex(0);
+    setCooldownRemaining(0);
+    setIsQueueModalOpen(true);
+  };
+
+  const handleStartQueueUnsent = () => {
+    const unsent = guests.filter((g) => !g.waSentStatus && g.whatsappNumber);
+    if (unsent.length === 0) {
+      toast.error("Tidak ada tamu belum dikirim yang memiliki nomor WhatsApp.");
+      return;
+    }
+    setQueueList(unsent);
+    setCurrentQueueIndex(0);
+    setCooldownRemaining(0);
+    setIsQueueModalOpen(true);
+  };
+
+  const handleQueueSendCurrent = async () => {
+    if (cooldownRemaining > 0 || isQueueSending) return;
+    const currentGuest = queueList[currentQueueIndex];
+    if (!currentGuest) return;
+
+    setIsQueueSending(true);
+    try {
+      let token = currentGuest.slugQuery;
+      if (!isValidGuestToken(token)) {
+        try {
+          token = await generateEncryptedGuestToken(currentGuest.name);
+        } catch {
+          token = currentGuest.slugQuery;
+        }
+      }
+
+      const message = renderMessageForGuest(currentGuest.name, token);
+      const phone = normalizePhoneNumber(currentGuest.whatsappNumber) || currentGuest.whatsappNumber;
+
+      const isMobile =
+        typeof navigator !== "undefined" &&
+        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const waUrl = isMobile
+        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`
+        : `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+
+      window.open(waUrl, "undangan_wa_sender");
+
+      const nowIso = new Date().toISOString();
+      fetch("/api/admin/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: currentGuest.id,
+          waSentStatus: true,
+          waSentAt: nowIso,
+        }),
+      }).then(() => {
+        onGuestsChange(
+          guests.map((g) =>
+            g.id === currentGuest.id
+              ? { ...g, slugQuery: token, waSentStatus: true, waSentAt: nowIso }
+              : g
+          )
+        );
+      }).catch(() => {});
+
+      setCooldownRemaining(2);
+      setCurrentQueueIndex((prev) => prev + 1);
+    } catch {
+      toast.error("Gagal mengirim pesan WhatsApp.");
+    } finally {
+      setIsQueueSending(false);
+    }
+  };
+
+  const handleConfirmBulkTextImport = async () => {
+    const parsed = parseBulkGuestLines(bulkTextInput);
+    if (parsed.length === 0) {
+      toast.error("Tidak ada baris tamu valid untuk disimpan.");
+      return;
+    }
+
+    setIsImportingBulkText(true);
+    try {
+      const payload = parsed.map((item) => ({
+        name: item.name,
+        whatsappNumber: item.normalizedPhone,
+        category: bulkTextCategory,
+      }));
+
+      const res = await fetch("/api/admin/guests/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ guests: payload }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || "Gagal mengimpor tamu");
+
+      const refreshRes = await fetch("/api/admin/guests");
+      const refreshJson = await refreshRes.json();
+      if (refreshJson.success) onGuestsChange(refreshJson.data);
+
+      toast.success(`${data.count || parsed.length} tamu berhasil disimpan ke database! ✓`);
+      setBulkTextInput("");
+      setIsBulkTextModalOpen(false);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal mengimpor tamu";
+      toast.error(msg);
+    } finally {
+      setIsImportingBulkText(false);
     }
   };
 
@@ -506,15 +772,66 @@ export function GuestManagementModule({
     return Array.from(set);
   }, [guests]);
 
+  const unsentWithPhoneCount = useMemo(() => {
+    return guests.filter((g) => !g.waSentStatus && g.whatsappNumber).length;
+  }, [guests]);
+
+  const parsedBulkGuests = useMemo(() => {
+    return parseBulkGuestLines(bulkTextInput);
+  }, [bulkTextInput]);
+
+  const isAllSelected = useMemo(() => {
+    if (filteredGuests.length === 0) return false;
+    return filteredGuests.every((g) => selectedGuestIds.has(g.id));
+  }, [filteredGuests, selectedGuestIds]);
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedGuestIds(new Set());
+    } else {
+      setSelectedGuestIds(new Set(filteredGuests.map((g) => g.id)));
+    }
+  };
+
+  const toggleSelectGuest = (id: number) => {
+    setSelectedGuestIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   useEffect(() => {
+    if (!isQueueModalOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isStagingModalOpen) {
-        setIsStagingModalOpen(false);
+      if (
+        e.key === "Enter" &&
+        cooldownRemaining === 0 &&
+        !isQueueSending &&
+        currentQueueIndex < queueList.length
+      ) {
+        e.preventDefault();
+        handleQueueSendCurrent();
+      } else if (e.key === "Escape") {
+        setIsQueueModalOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isStagingModalOpen]);
+  }, [isQueueModalOpen, cooldownRemaining, isQueueSending, currentQueueIndex, queueList]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isStagingModalOpen) {
+        setIsStagingModalOpen(false);
+      } else if (e.key === "Escape" && isBulkTextModalOpen) {
+        setIsBulkTextModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isStagingModalOpen, isBulkTextModalOpen]);
 
   const sentCount = guests.filter((g) => g.waSentStatus).length;
   const unsentCount = guests.length - sentCount;
@@ -570,17 +887,17 @@ export function GuestManagementModule({
             Variabel Otomatis:
           </span>
           {[
-            { tag: "{nama_tamu}", label: "+ Nama Tamu" },
-            { tag: "{link_undangan}", label: "+ Link Undangan" },
-            { tag: "{nama_mempelai}", label: "+ Nama Mempelai" },
-            { tag: "{tanggal_acara}", label: "+ Tanggal Acara" },
-            { tag: "{lokasi_acara}", label: "+ Lokasi Acara" },
+            { tag: "{nama}", label: "+ {nama}" },
+            { tag: "{link}", label: "+ {link}" },
+            { tag: "{mempelai}", label: "+ {mempelai}" },
+            { tag: "{tanggal_acara}", label: "+ {tanggal_acara}" },
+            { tag: "{lokasi_acara}", label: "+ {lokasi_acara}" },
           ].map((v) => (
             <button
               key={v.tag}
               type="button"
               onClick={() => handleInsertTag(v.tag)}
-              className="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-800 text-[11px] font-medium hover:bg-rose-200 transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-800 text-[11px] font-mono font-medium hover:bg-rose-200 transition-colors cursor-pointer"
             >
               {v.label}
             </button>
@@ -645,6 +962,16 @@ export function GuestManagementModule({
             >
               <Download className="w-4 h-4 text-gold-600 shrink-0" />
               <span>Unduh Contoh CSV (.csv)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsBulkTextModalOpen(true)}
+              aria-label="Tambah tamu massal dari teks"
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-950 text-xs font-semibold hover:bg-rose-100 active:scale-[0.96] transition-transform duration-150 ease-out cursor-pointer shadow-2xs"
+            >
+              <FileText className="w-4 h-4 text-rose-700 shrink-0" />
+              <span>+ Tambah Massal (Teks)</span>
             </button>
 
             <button
@@ -876,6 +1203,14 @@ export function GuestManagementModule({
             <div className="sm:col-span-12 flex flex-wrap gap-2 justify-end pt-2">
               <button
                 type="button"
+                onClick={() => setIsBulkTextModalOpen(true)}
+                className="px-4 py-2 rounded-full border border-gold-600/40 text-rose-950 bg-cream/70 text-xs font-semibold hover:bg-rose-100 cursor-pointer flex items-center gap-1.5 active:scale-[0.96] transition-transform duration-150"
+              >
+                <FileText className="w-3.5 h-3.5 text-gold-600" />
+                <span>+ Tambah Massal (Teks)</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => handleCreateGuest(false)}
                 disabled={isSavingGuest}
                 className="px-5 py-2 rounded-full border border-gold-600/50 text-gold-600 bg-surface-white text-xs font-semibold hover:bg-rose-100 cursor-pointer disabled:opacity-50"
@@ -939,16 +1274,29 @@ export function GuestManagementModule({
 
         {activeViewTab === "list" && (
           <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-              <div className="relative w-full md:w-72">
-                <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder="Cari nama, WhatsApp, kategori..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-full border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
-                />
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Cari nama, WhatsApp, kategori..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 rounded-full border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleStartQueueUnsent}
+                  disabled={unsentWithPhoneCount === 0}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-700 text-white text-xs font-semibold hover:bg-emerald-800 disabled:opacity-50 cursor-pointer shadow-xs active:scale-[0.96] transition-transform duration-150"
+                  title="Mulai antrean pengiriman pesan WhatsApp untuk seluruh tamu yang belum dikirimi undangan"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Kirim Massal Belum Terkirim ({unsentWithPhoneCount})</span>
+                </button>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -1003,42 +1351,103 @@ export function GuestManagementModule({
               </div>
             </div>
 
+            {selectedGuestIds.size > 0 && (
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-rose-50/90 border border-rose-300 text-rose-950 text-xs shadow-2xs animate-in fade-in duration-150">
+                <div className="flex items-center gap-2 font-semibold">
+                  <CheckSquare className="w-4 h-4 text-rose-700" />
+                  <span>{selectedGuestIds.size} Tamu Terpilih</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleStartQueueSelected}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 active:scale-[0.96] transition-transform duration-150 cursor-pointer shadow-xs"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Kirim Antrean Terpilih ({selectedGuestIds.size})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedGuestIds(new Set())}
+                    className="px-3 py-2 rounded-full border border-rose-300 bg-white text-rose-800 hover:bg-rose-100 text-xs font-medium cursor-pointer"
+                  >
+                    Batal Pilih
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="md:hidden space-y-3">
+              {filteredGuests.length > 0 && (
+                <div className="flex items-center justify-between px-2 py-1 text-xs text-muted">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      className="rounded border-gold-500/50 text-rose-700 focus:ring-rose-500 cursor-pointer w-4 h-4"
+                    />
+                    <span>Pilih Semua Tamu ({filteredGuests.length})</span>
+                  </label>
+                </div>
+              )}
+
               {filteredGuests.length === 0 ? (
                 <div className="py-8 text-center text-muted text-xs bg-surface-white rounded-2xl border border-gold-500/25 p-4">
                   Tidak ada tamu yang cocok dengan filter atau pencarian.
                 </div>
               ) : (
                 filteredGuests.map((guest) => {
-                  const isCopied = copiedGuestId === guest.id;
+                  const isCopiedMsg = copiedGuestId === guest.id;
+                  const isCopiedLnk = copiedLinkId === guest.id;
 
                   return (
                     <article
                       key={guest.id}
-                      className="p-4 rounded-2xl bg-surface-white border border-gold-500/25 shadow-xs space-y-3"
+                      className={`p-4 rounded-2xl bg-surface-white border transition-colors shadow-xs space-y-3 ${
+                        selectedGuestIds.has(guest.id)
+                          ? "border-rose-400 bg-rose-50/40"
+                          : "border-gold-500/25"
+                      }`}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
-                            {guest.name}
-                          </h4>
-                          <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-cream border border-gold-500/30 text-[10px] font-medium text-gold-700">
-                            {guest.category || "Reguler"}
-                          </span>
+                      <div className="flex items-start justify-between gap-2.5">
+                        <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                          <input
+                            type="checkbox"
+                            checked={selectedGuestIds.has(guest.id)}
+                            onChange={() => toggleSelectGuest(guest.id)}
+                            aria-label={`Pilih ${guest.name}`}
+                            className="mt-1 rounded border-gold-500/50 text-rose-700 focus:ring-rose-500 cursor-pointer w-4 h-4 shrink-0"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-semibold text-base text-[#4b3a3e] break-words leading-snug">
+                              {guest.name}
+                            </h4>
+                            <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-cream border border-gold-500/30 text-[10px] font-medium text-gold-700">
+                              {guest.category || "Reguler"}
+                            </span>
+                          </div>
                         </div>
-                        <div className="shrink-0">
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSentStatus(guest)}
+                          title="Klik untuk mengubah status pengiriman"
+                          className="shrink-0 cursor-pointer active:scale-[0.96] transition-transform duration-150"
+                        >
                           {guest.waSentStatus ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300 hover:bg-emerald-200">
                               <CheckCircle className="w-3 h-3 text-emerald-600" />
                               <span>Terkirim</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold border border-amber-300">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold border border-amber-300 hover:bg-amber-200">
                               <Clock className="w-3 h-3 text-amber-600" />
                               <span>Belum Dikirim</span>
                             </span>
                           )}
-                        </div>
+                        </button>
                       </div>
 
                       <div className="flex items-center gap-2 text-sm text-[#8d757c] tabular-nums font-mono">
@@ -1066,20 +1475,34 @@ export function GuestManagementModule({
 
                         <button
                           type="button"
-                          onClick={() => handleCopyMessage(guest)}
-                          title="Salin Pesan Pengantar"
-                          aria-label={`Salin pesan pengantar untuk ${guest.name}`}
+                          onClick={() => handleCopyLink(guest)}
+                          title="Salin Link Undangan (?kpd=...)"
+                          aria-label={`Salin link undangan untuk ${guest.name}`}
                           className={`min-h-11 min-w-11 inline-flex items-center justify-center rounded-xl border text-xs transition-colors duration-150 active:scale-[0.96] cursor-pointer ${
-                            isCopied
+                            isCopiedLnk
                               ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                               : "bg-surface-white text-muted border-gold-500/30 hover:bg-rose-100 hover:text-rose-900"
                           }`}
                         >
-                          {isCopied ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
+                          {isCopiedLnk ? <Check className="w-4 h-4 text-emerald-700" /> : <LinkIcon className="w-4 h-4" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleCopyMessage(guest)}
+                          title="Salin Pesan Pengantar"
+                          aria-label={`Salin pesan pengantar untuk ${guest.name}`}
+                          className={`min-h-11 min-w-11 inline-flex items-center justify-center rounded-xl border text-xs transition-colors duration-150 active:scale-[0.96] cursor-pointer ${
+                            isCopiedMsg
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                              : "bg-surface-white text-muted border-gold-500/30 hover:bg-rose-100 hover:text-rose-900"
+                          }`}
+                        >
+                          {isCopiedMsg ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
                         </button>
 
                         <a
-                          href={guest.slugQuery ? `/?to=${guest.slugQuery}` : "/"}
+                          href={guest.slugQuery ? `/?kpd=${guest.slugQuery}` : "/"}
                           target="_blank"
                           rel="noopener noreferrer"
                           title="Buka Undangan Tamu Ini"
@@ -1109,6 +1532,15 @@ export function GuestManagementModule({
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-cream/80 border-b border-gold-500/30 text-rose-900 font-serif font-bold uppercase tracking-wider text-[11px]">
                   <tr>
+                    <th className="py-3 px-3 w-10 text-center">
+                      <input
+                        type="checkbox"
+                        checked={isAllSelected}
+                        onChange={toggleSelectAll}
+                        aria-label="Pilih semua tamu"
+                        className="rounded border-gold-500/50 text-rose-700 focus:ring-rose-500 cursor-pointer w-4 h-4"
+                      />
+                    </th>
                     <th className="py-3 px-4">Nama Tamu</th>
                     <th className="py-3 px-4">Nomor WhatsApp</th>
                     <th className="py-3 px-4">Kategori</th>
@@ -1119,16 +1551,33 @@ export function GuestManagementModule({
                 <tbody className="divide-y divide-gold-500/15">
                   {filteredGuests.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-muted text-xs">
+                      <td colSpan={6} className="py-8 text-center text-muted text-xs">
                         Tidak ada tamu yang cocok dengan filter atau pencarian.
                       </td>
                     </tr>
                   ) : (
                     filteredGuests.map((guest) => {
-                      const isCopied = copiedGuestId === guest.id;
+                      const isCopiedMsg = copiedGuestId === guest.id;
+                      const isCopiedLnk = copiedLinkId === guest.id;
+                      const isSelected = selectedGuestIds.has(guest.id);
 
                       return (
-                        <tr key={guest.id} className="hover:bg-rose-50/50 transition-colors">
+                        <tr
+                          key={guest.id}
+                          className={`hover:bg-rose-50/50 transition-colors ${
+                            isSelected ? "bg-rose-50/60" : ""
+                          }`}
+                        >
+                          <td className="py-3 px-3 text-center">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelectGuest(guest.id)}
+                              aria-label={`Pilih ${guest.name}`}
+                              className="rounded border-gold-500/50 text-rose-700 focus:ring-rose-500 cursor-pointer w-4 h-4"
+                            />
+                          </td>
+
                           <td className="py-3 px-4 font-medium text-rose-900 break-words">
                             {guest.name}
                           </td>
@@ -1144,17 +1593,24 @@ export function GuestManagementModule({
                           </td>
 
                           <td className="py-3 px-4">
-                            {guest.waSentStatus ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300">
-                                <CheckCircle className="w-3 h-3 text-emerald-600" />
-                                <span>Sudah Dikirim</span>
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold border border-amber-300">
-                                <Clock className="w-3 h-3 text-amber-600" />
-                                <span>Belum Dikirim</span>
-                              </span>
-                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleSentStatus(guest)}
+                              title="Klik untuk mengubah status pengiriman"
+                              className="cursor-pointer active:scale-[0.96] transition-transform duration-150"
+                            >
+                              {guest.waSentStatus ? (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-300 hover:bg-emerald-200">
+                                  <CheckCircle className="w-3 h-3 text-emerald-600" />
+                                  <span>Sudah Dikirim</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold border border-amber-300 hover:bg-amber-200">
+                                  <Clock className="w-3 h-3 text-amber-600" />
+                                  <span>Belum Dikirim</span>
+                                </span>
+                              )}
+                            </button>
                           </td>
 
                           <td className="py-3 px-4 text-right">
@@ -1173,20 +1629,34 @@ export function GuestManagementModule({
 
                               <button
                                 type="button"
-                                onClick={() => handleCopyMessage(guest)}
-                                title="Salin Teks Pengantar & Link"
-                                aria-label={`Salin pesan pengantar untuk ${guest.name}`}
+                                onClick={() => handleCopyLink(guest)}
+                                title="Salin Link Undangan (?kpd=...)"
+                                aria-label={`Salin link undangan untuk ${guest.name}`}
                                 className={`p-1.5 rounded-lg border text-xs transition-colors cursor-pointer ${
-                                  isCopied
+                                  isCopiedLnk
                                     ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                                     : "bg-surface-white text-muted border-gold-500/30 hover:bg-rose-100 hover:text-rose-900"
                                 }`}
                               >
-                                {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                                {isCopiedLnk ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <LinkIcon className="w-3.5 h-3.5" />}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleCopyMessage(guest)}
+                                title="Salin Teks Pengantar & Link"
+                                aria-label={`Salin pesan pengantar untuk ${guest.name}`}
+                                className={`p-1.5 rounded-lg border text-xs transition-colors cursor-pointer ${
+                                  isCopiedMsg
+                                    ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                                    : "bg-surface-white text-muted border-gold-500/30 hover:bg-rose-100 hover:text-rose-900"
+                                }`}
+                              >
+                                {isCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                               </button>
 
                               <a
-                                href={guest.slugQuery ? `/?to=${guest.slugQuery}` : "/"}
+                                href={guest.slugQuery ? `/?kpd=${guest.slugQuery}` : "/"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Buka Undangan Tamu Ini"
@@ -1573,6 +2043,330 @@ export function GuestManagementModule({
                   )}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isBulkTextModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="bulk-text-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+        >
+          <div className="w-full max-w-2xl max-h-[90vh] bg-surface-white rounded-3xl border border-gold-500/40 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-5 sm:p-6 border-b border-gold-500/20 bg-cream/50 flex items-start justify-between gap-4">
+              <div>
+                <h3
+                  id="bulk-text-modal-title"
+                  className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2"
+                >
+                  <FileText className="w-5 h-5 text-gold-600" />
+                  <span>Tambah Tamu Massal (Teks)</span>
+                </h3>
+                <p className="text-xs text-muted mt-1 leading-relaxed">
+                  Tempelkan daftar tamu banyak baris sekaligus. Format yang didukung: <code>Nama | 08123...</code>, <code>Nama - 08123...</code>, atau nama saja.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsBulkTextModalOpen(false)}
+                className="p-1.5 rounded-full hover:bg-rose-100 text-muted hover:text-rose-900 cursor-pointer"
+                aria-label="Tutup modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-700 mb-1.5">
+                  Kategori untuk Tamu yang Diimpor:
+                </label>
+                <select
+                  value={bulkTextCategory}
+                  onChange={(e) => setBulkTextCategory(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
+                >
+                  <option value="Keluarga Fauzan">Keluarga Fauzan</option>
+                  <option value="Keluarga Sinta">Keluarga Sinta</option>
+                  <option value="VIP">VIP</option>
+                  <option value="Sahabat">Sahabat</option>
+                  <option value="Teman Kantor">Teman Kantor</option>
+                  <option value="Tetangga">Tetangga</option>
+                  <option value="Reguler">Reguler</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-gold-700 mb-1.5">
+                  Daftar Tamu (Satu Tamu Per Baris):
+                </label>
+                <textarea
+                  rows={7}
+                  value={bulkTextInput}
+                  onChange={(e) => setBulkTextInput(e.target.value)}
+                  placeholder={"Contoh:\nBpk. H. Joko Widodo | 081234567890\nIbu Hj. Siti Aminah - 081398765432\nDr. Hendra, 081287654321\nKeluarga Besar Bpk. Rahmat"}
+                  className="w-full p-3.5 rounded-2xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink font-mono leading-relaxed focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 resize-y"
+                />
+              </div>
+
+              {parsedBulkGuests.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-muted">
+                    <span>
+                      Pratinjau Hasil Pembacaan: <strong>{parsedBulkGuests.length} baris</strong>
+                    </span>
+                    <span>
+                      Nomor WA Valid: <strong className="text-emerald-700">{parsedBulkGuests.filter((g) => g.normalizedPhone).length}</strong>
+                    </span>
+                  </div>
+
+                  <div className="max-h-48 overflow-y-auto rounded-xl border border-gold-500/25">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead className="bg-cream/80 border-b border-gold-500/25 text-rose-900 font-semibold text-[11px] sticky top-0">
+                        <tr>
+                          <th className="py-2 px-3">#</th>
+                          <th className="py-2 px-3">Nama Tamu</th>
+                          <th className="py-2 px-3">Nomor WhatsApp</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gold-500/15">
+                        {parsedBulkGuests.map((g, idx) => (
+                          <tr key={idx} className="hover:bg-cream/40">
+                            <td className="py-2 px-3 font-mono text-muted tabular-nums">#{idx + 1}</td>
+                            <td className="py-2 px-3 font-medium text-rose-900">{g.name}</td>
+                            <td className="py-2 px-3 font-mono tabular-nums">
+                              {g.normalizedPhone ? (
+                                <span className="text-emerald-800 font-semibold">+{g.normalizedPhone}</span>
+                              ) : (
+                                <span className="text-slate-400">Tanpa nomor WA</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 sm:p-5 border-t border-gold-500/20 bg-cream/40 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => setIsBulkTextModalOpen(false)}
+                className="px-4 py-2 rounded-full border border-gold-500/40 bg-surface-white text-xs font-semibold text-muted hover:text-ink hover:bg-rose-50 cursor-pointer"
+              >
+                Batal
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmBulkTextImport}
+                disabled={isImportingBulkText || parsedBulkGuests.length === 0}
+                className="px-6 py-2.5 rounded-full bg-emerald-700 text-white text-xs font-bold tracking-wider hover:bg-emerald-800 cursor-pointer disabled:opacity-50 shadow-sm flex items-center gap-1.5 active:scale-[0.96] transition-transform duration-150"
+              >
+                {isImportingBulkText ? (
+                  <span>Menyimpan ke Database...</span>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4 stroke-[2.5]" />
+                    <span>Simpan {parsedBulkGuests.length} Tamu ke Database</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isQueueModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="queue-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+        >
+          <div className="w-full max-w-xl bg-surface-white rounded-3xl border border-gold-500/40 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-5 sm:p-6 border-b border-gold-500/20 bg-cream/50 flex items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3
+                    id="queue-modal-title"
+                    className="font-serif font-bold text-xl text-rose-900"
+                  >
+                    Antrean Kirim WhatsApp Web
+                  </h3>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold border border-emerald-300">
+                    {typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
+                      <>
+                        <Smartphone className="w-3 h-3" />
+                        <span>Mode Mobile</span>
+                      </>
+                    ) : (
+                      <>
+                        <Laptop className="w-3 h-3" />
+                        <span>Mode WhatsApp Web</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+                <p className="text-xs text-muted mt-1">
+                  Target tab tunggal (<code>undangan_wa_sender</code>) &mdash; browser hanya memperbarui 1 tab.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsQueueModalOpen(false)}
+                className="p-1.5 rounded-full hover:bg-rose-100 text-muted hover:text-rose-900 cursor-pointer"
+                aria-label="Tutup antrean"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-5 sm:px-6 py-3 bg-cream/30 border-b border-gold-500/15 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-rose-950">
+                  {currentQueueIndex < queueList.length
+                    ? `Tamu ke-${currentQueueIndex + 1} dari ${queueList.length}`
+                    : `Selesai (${queueList.length} dari ${queueList.length} tamu)`}
+                </span>
+                <span className="text-muted tabular-nums font-mono text-[11px]">
+                  {Math.round((Math.min(currentQueueIndex, queueList.length) / (queueList.length || 1)) * 100)}%
+                </span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-cream border border-gold-500/20 overflow-hidden">
+                <div
+                  className="h-full bg-emerald-600 transition-[width] duration-300 ease-out"
+                  style={{
+                    width: `${Math.round((Math.min(currentQueueIndex, queueList.length) / (queueList.length || 1)) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
+              {currentQueueIndex < queueList.length ? (
+                (() => {
+                  const currentGuest = queueList[currentQueueIndex];
+                  const token = currentGuest.slugQuery;
+                  const message = renderMessageForGuest(currentGuest.name, token);
+                  const phone = normalizePhoneNumber(currentGuest.whatsappNumber) || currentGuest.whatsappNumber;
+
+                  return (
+                    <div className="space-y-4">
+                      <div className="p-4 rounded-2xl bg-cream/50 border border-gold-500/25 flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gold-700 block mb-0.5">
+                            Penerima Undangan:
+                          </span>
+                          <h4 className="font-serif font-bold text-lg text-rose-950 break-words">
+                            {currentGuest.name}
+                          </h4>
+                          <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-white border border-gold-500/30 text-[10px] font-medium text-gold-800">
+                            {currentGuest.category || "Reguler"}
+                          </span>
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted block mb-0.5">
+                            Nomor WhatsApp:
+                          </span>
+                          <span className="font-mono text-sm font-bold text-emerald-800 tabular-nums">
+                            +{phone}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-xs font-semibold text-rose-900">
+                            Pratinjau Pesan yang Akan Dikirim:
+                          </span>
+                          <span className="text-[10px] text-muted font-mono">
+                            Link: ?kpd={token || "..."}
+                          </span>
+                        </div>
+                        <div className="max-h-48 overflow-y-auto p-3.5 rounded-2xl bg-white border border-gold-500/30 text-xs text-ink whitespace-pre-wrap font-sans leading-relaxed shadow-inner">
+                          {message}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : (
+                <div className="py-10 text-center space-y-3">
+                  <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 mx-auto grid place-items-center">
+                    <CheckCircle2 className="w-8 h-8 stroke-[2]" />
+                  </div>
+                  <h4 className="font-serif font-bold text-xl text-emerald-950">
+                    Pengiriman Antrean Selesai!
+                  </h4>
+                  <p className="text-xs text-muted max-w-sm mx-auto leading-relaxed">
+                    Seluruh <strong>{queueList.length} tamu</strong> dalam antrean ini telah selesai diproses. Status masing-masing tamu telah tercatat di riwayat terkirim.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 sm:p-5 border-t border-gold-500/20 bg-cream/40 flex items-center justify-between gap-3">
+              {currentQueueIndex < queueList.length ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsQueueModalOpen(false)}
+                      className="px-3.5 py-2 rounded-full border border-rose-300 text-rose-800 bg-white hover:bg-rose-50 text-xs font-medium cursor-pointer"
+                    >
+                      Hentikan Antrean
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentQueueIndex((prev) => prev + 1)}
+                      className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full border border-gold-500/40 text-rose-950 bg-white hover:bg-cream text-xs font-medium cursor-pointer"
+                    >
+                      <SkipForward className="w-3.5 h-3.5 text-gold-600" />
+                      <span>Lewati Tamu Ini</span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleQueueSendCurrent}
+                    disabled={cooldownRemaining > 0 || isQueueSending}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 disabled:opacity-60 shadow-md cursor-pointer active:scale-[0.96] transition-transform duration-150"
+                  >
+                    {cooldownRemaining > 0 ? (
+                      <span>Menunggu Jeda Aman ({cooldownRemaining}s)...</span>
+                    ) : isQueueSending ? (
+                      <span>Membuka WhatsApp...</span>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 stroke-[2.5]" />
+                        <span>Kirim Sekarang &amp; Lanjut</span>
+                        <kbd className="hidden sm:inline-block ml-1 px-1.5 py-0.5 rounded bg-emerald-900/60 text-[10px] font-mono border border-emerald-500/40">
+                          Enter ↵
+                        </kbd>
+                      </>
+                    )}
+                  </button>
+                </>
+              ) : (
+                <div className="w-full flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setIsQueueModalOpen(false)}
+                    className="px-6 py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 cursor-pointer shadow-xs"
+                  >
+                    Tutup Antrean
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

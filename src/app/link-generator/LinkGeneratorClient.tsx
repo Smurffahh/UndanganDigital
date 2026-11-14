@@ -86,7 +86,7 @@ export function LinkGeneratorClient() {
             Generator Link Tamu (Kode 6 Digit)
           </h1>
           <p className="font-sans text-xs sm:text-sm text-[#A68850] mt-1">
-            Format resmi aman anti-pemalsuan: <code className="text-amber-300 font-mono">?to=K9mP4x</code>
+            Format resmi aman anti-pemalsuan: <code className="text-amber-300 font-mono">?kpd=K9mP4x</code>
           </p>
         </div>
 

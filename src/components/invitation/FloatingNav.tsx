@@ -99,8 +99,19 @@ export function FloatingNav({
     el.scrollIntoView({ behavior: "smooth" });
 
     if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+
+    const onScrollEnd = () => {
+      isClickingRef.current = false;
+      window.removeEventListener("scrollend", onScrollEnd);
+    };
+
+    if ("onscrollend" in window) {
+      window.addEventListener("scrollend", onScrollEnd, { once: true });
+    }
+
     clickTimeoutRef.current = setTimeout(() => {
       isClickingRef.current = false;
+      window.removeEventListener("scrollend", onScrollEnd);
     }, 850);
   };
 
@@ -128,21 +139,27 @@ export function FloatingNav({
                 onClick={() => handleNavClick(item.id)}
                 aria-label={item.label}
                 aria-current={isActive ? "true" : undefined}
-                className={`min-h-[44px] min-w-[38px] sm:min-w-[44px] rounded-full text-xs font-medium flex items-center justify-center transition-[background-color,color,box-shadow,transform,padding] duration-250 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a24b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffdfa] ${
+                className={`min-h-[44px] min-w-[36px] sm:min-w-[44px] rounded-full text-xs font-medium flex items-center justify-center motion-safe:transition-[background-color,color,box-shadow,transform,padding] motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a24b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffdfa] ${
                   isActive
                     ? "bg-[#5d3a41] text-[#fffdfa] shadow-xs ps-3 pe-3.5 sm:ps-3.5 sm:pe-4 py-2"
-                    : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60 px-2 sm:px-2.5 py-2"
+                    : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60 px-1.5 sm:px-2.5 py-2"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0 stroke-[1.8]" />
+                <Icon
+                  className={`w-4 h-4 shrink-0 stroke-[1.8] motion-safe:transition-transform motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isActive ? "scale-105" : "scale-100"
+                  }`}
+                />
                 <span
-                  className={`inline-block whitespace-nowrap text-[11px] sm:text-xs font-medium tracking-wide motion-safe:transition-[max-width,opacity,margin] motion-safe:duration-250 motion-safe:ease-out ${
+                  className={`grid overflow-hidden motion-safe:transition-[grid-template-columns,width,opacity,margin] motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isActive
-                      ? "max-w-[90px] opacity-100 ms-1.5"
-                      : "max-w-0 opacity-0 ms-0 overflow-hidden pointer-events-none"
+                      ? "grid-cols-[1fr] w-[max-content] opacity-100 ms-1.5 sm:ms-2"
+                      : "grid-cols-[0fr] w-0 opacity-0 ms-0 pointer-events-none"
                   }`}
                 >
-                  {item.label}
+                  <span className="whitespace-nowrap text-[11px] sm:text-xs font-medium tracking-wide">
+                    {item.label}
+                  </span>
                 </span>
               </button>
             );

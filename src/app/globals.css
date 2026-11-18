@@ -29,6 +29,7 @@
 }
 
 :root {
+  interpolate-size: allow-keywords;
   --motion-ease-royal: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-duration-gate: 1500ms;
   --motion-duration-reveal: 1150ms;

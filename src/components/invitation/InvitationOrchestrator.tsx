@@ -224,18 +224,18 @@ export function InvitationOrchestrator({
 
         {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
 
-        <RsvpGuestbook
-          initialWishes={wishes}
-          defaultGuestName={isVerifiedGuest ? guestName : ""}
-          verifiedGuestName={isVerifiedGuest ? guestName : null}
-          guestToken={guestToken}
-        />
-
         <DigitalEnvelope
           bankAccounts={settings.bankAccounts}
           ewallets={settings.ewallets}
           giftAddress={settings.giftAddress}
           qrisImageUrl={settings.qrisImageUrl}
+        />
+
+        <RsvpGuestbook
+          initialWishes={wishes}
+          defaultGuestName={isVerifiedGuest ? guestName : ""}
+          verifiedGuestName={isVerifiedGuest ? guestName : null}
+          guestToken={guestToken}
         />
 
         <ClosingFooter

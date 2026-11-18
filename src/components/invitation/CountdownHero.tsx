@@ -187,7 +187,7 @@ export function CountdownHero({
           <p className="typo-eyebrow text-[#a9823a]">
             WITH LOVE
           </p>
-          <p className="typo-arabic leading-loose text-rose-700 mt-2" dir="rtl">
+          <p className="typo-arabic leading-[2] text-rose-700 mt-2" dir="rtl" lang="ar">
             بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
           </p>
         </div>
@@ -198,8 +198,8 @@ export function CountdownHero({
           style={getItemStyle("2860ms", "bottom")}
         >
           <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
-            <p className="typo-arabic leading-loose text-rose-900 relative z-10" dir="rtl">
-              وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعELَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
+            <p className="typo-arabic leading-[2] text-rose-900 relative z-10" dir="rtl" lang="ar">
+              وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>
             <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
               &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;

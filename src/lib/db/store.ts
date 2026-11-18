@@ -84,13 +84,30 @@ function decryptGuestRecord(r: any): GuestData {
   };
 }
 
+function sanitizeArabicOrthography<T>(value: T): T {
+  if (typeof value === "string") {
+    return value.replace(/وَجَعELَ/g, "وَجَعَلَ") as unknown as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeArabicOrthography(item)) as unknown as T;
+  }
+  if (value !== null && typeof value === "object") {
+    const sanitized: Record<string, any> = {};
+    for (const [key, val] of Object.entries(value)) {
+      sanitized[key] = sanitizeArabicOrthography(val);
+    }
+    return sanitized as T;
+  }
+  return value;
+}
+
 function decryptWishRecord(r: any): RsvpWishData {
   return {
     id: r.id,
-    guestName: decryptField(r.guestName),
+    guestName: sanitizeArabicOrthography(decryptField(r.guestName)),
     attendanceStatus: r.attendanceStatus,
     paxCount: r.paxCount,
-    message: decryptField(r.message),
+    message: sanitizeArabicOrthography(decryptField(r.message)),
     isApproved: r.isApproved ?? true,
     createdAt: r.createdAt || new Date(),
   };
@@ -139,7 +156,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     }
   }
 
-  return {
+  return sanitizeArabicOrthography({
     brideName: row.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
     brideBirth: row.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,
     brideBio: row.brideBio || DEFAULT_WEDDING_SETTINGS.brideBio,
@@ -181,7 +198,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     brideChildOrder: row.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
     brideParents: row.brideParents || DEFAULT_WEDDING_SETTINGS.brideParents,
     waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
-  };
+  });
 }
 
 function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
@@ -217,6 +234,11 @@ function migrateLocalDbIfNecessary(data: LocalDatabase): boolean {
       data.settings.musicTitle = "Raim Laode — Komang (Official Romantic Wedding Theme)";
       data.settings.musicSourceType = "preset";
       data.settings.musicUrl = "/audio/raim-laode-komang.mp3";
+      modified = true;
+    }
+    const settingsStr = JSON.stringify(data.settings);
+    if (settingsStr.includes("وَجَعELَ")) {
+      data.settings = sanitizeArabicOrthography(data.settings);
       modified = true;
     }
   }
@@ -375,7 +397,7 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
 }
 
 export async function updateWeddingSettings(updates: Partial<WeddingSettingsData>): Promise<WeddingSettingsData> {
-  const dbUpdates: any = { ...updates };
+  const dbUpdates: any = sanitizeArabicOrthography({ ...updates });
 
   if (updates.bankAccounts) {
     dbUpdates.bankAccounts = encryptField(JSON.stringify(updates.bankAccounts));

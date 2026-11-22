@@ -4,18 +4,20 @@ import React from "react";
 
 interface FixedInvitationBackgroundProps {
   heroPhotoUrl?: string;
+  showCornerAssets?: boolean;
 }
 
-export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: FixedInvitationBackgroundProps) {
+export function FixedInvitationBackground({
+  heroPhotoUrl: _heroPhotoUrl,
+  showCornerAssets = false,
+}: FixedInvitationBackgroundProps) {
   return (
     <>
-      {/* Base Background Image Layer (z-0) */}
       <div
         className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none w-screen h-dvh"
         aria-hidden="true"
       >
         <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/javanese/background.webp"
             alt=""
@@ -30,83 +32,76 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         </div>
       </div>
 
-      {/* Persistent 4-Corner Decorative Frame Layer (z-[1]) */}
-      <div
-        className="fixed inset-0 z-[1] pointer-events-none overflow-hidden select-none w-screen h-dvh"
-        aria-hidden="true"
-      >
-        {/* Top Left Corner Ornament (Pojok Atas) */}
+      {showCornerAssets && (
         <div
-          className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
-          style={{ animationDelay: "180ms" }}
+          className="fixed inset-0 z-[1] pointer-events-none overflow-hidden select-none w-screen h-dvh"
+          aria-hidden="true"
         >
-          <div className="w-full h-full leaf-sway-top-left">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/javanese/pojok-atas.webp"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-contain pointer-events-none select-none"
-              loading="eager"
-              draggable={false}
-            />
+          <div
+            className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
+            style={{ animationDelay: "180ms" }}
+          >
+            <div className="w-full h-full leaf-sway-top-left">
+              <img
+                src="/assets/javanese/pojok-atas.webp"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain pointer-events-none select-none"
+                loading="eager"
+                draggable={false}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Top Right Corner Ornament (Pojok Atas Mirrored) */}
-        <div
-          className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
-          style={{ animationDelay: "180ms" }}
-        >
-          <div className="w-full h-full leaf-sway-top-right">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/javanese/pojok-atas.webp"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
-              loading="eager"
-              draggable={false}
-            />
+          <div
+            className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
+            style={{ animationDelay: "180ms" }}
+          >
+            <div className="w-full h-full leaf-sway-top-right">
+              <img
+                src="/assets/javanese/pojok-atas.webp"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
+                loading="eager"
+                draggable={false}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Bottom Left Corner Ornament (Pojok Bawah Mirrored) */}
-        <div
-          className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
-          style={{ animationDelay: "320ms" }}
-        >
-          <div className="w-full h-full leaf-sway-bottom-left">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/javanese/pojok-bawah.webp"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
-              loading="lazy"
-              draggable={false}
-            />
+          <div
+            className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
+            style={{ animationDelay: "320ms" }}
+          >
+            <div className="w-full h-full leaf-sway-bottom-left">
+              <img
+                src="/assets/javanese/pojok-bawah.webp"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
+                loading="lazy"
+                draggable={false}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Bottom Right Corner Ornament (Pojok Bawah Normal) */}
-        <div
-          className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
-          style={{ animationDelay: "320ms" }}
-        >
-          <div className="w-full h-full leaf-sway-bottom-right">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/javanese/pojok-bawah.webp"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-contain pointer-events-none select-none"
-              loading="lazy"
-              draggable={false}
-            />
+          <div
+            className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
+            style={{ animationDelay: "320ms" }}
+          >
+            <div className="w-full h-full leaf-sway-bottom-right">
+              <img
+                src="/assets/javanese/pojok-bawah.webp"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain pointer-events-none select-none"
+                loading="lazy"
+                draggable={false}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

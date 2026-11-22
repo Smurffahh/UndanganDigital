@@ -42,6 +42,8 @@ interface InvitationOrchestratorProps {
   guestToken?: string | null;
 }
 
+type RevealPhase = "cover" | "opening" | "assets-entering" | "content-ready";
+
 export function InvitationOrchestrator({
   settings,
   galleryPhotos,
@@ -50,9 +52,7 @@ export function InvitationOrchestrator({
   isVerifiedGuest = false,
   guestToken = null,
 }: InvitationOrchestratorProps) {
-  const [isOpened, setIsOpened] = useState(false);
-  const [isOpening, setIsOpening] = useState(false);
-  const [isHeroReady, setIsHeroReady] = useState(false);
+  const [revealPhase, setRevealPhase] = useState<RevealPhase>("cover");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const hasUserPausedRef = useRef(false);
@@ -61,7 +61,7 @@ export function InvitationOrchestrator({
   const effectiveAudioUrl = settings.musicUrl || "/audio/raim-laode-komang.mp3";
   const isYouTube = settings.musicSourceType === "youtube";
 
-  const handleOpenCover = () => {
+  const handleStartOpening = () => {
     if (audioRef.current && settings.musicEnabled && !isYouTube) {
       audioRef.current.volume = 0.15;
       const playPromise = audioRef.current.play();
@@ -85,12 +85,99 @@ export function InvitationOrchestrator({
       }
     }
 
-    setIsOpening(true);
-    setIsOpened(true);
-    setTimeout(() => {
-      setIsHeroReady(true);
-    }, 450);
+    setRevealPhase("opening");
   };
+
+  const handleOpenComplete = () => {
+    setRevealPhase("assets-entering");
+  };
+
+  useEffect(() => {
+    if (revealPhase !== "assets-entering") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setRevealPhase("content-ready");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setRevealPhase("content-ready");
+    }, 850);
+
+    return () => clearTimeout(timer);
+  }, [revealPhase]);
+
+  useEffect(() => {
+    if (revealPhase === "content-ready") {
+      document.documentElement.style.removeProperty("overflow");
+      document.documentElement.style.removeProperty("height");
+      document.documentElement.style.removeProperty("position");
+      document.documentElement.style.removeProperty("width");
+      document.documentElement.style.removeProperty("touch-action");
+
+      document.body.style.removeProperty("overflow");
+      document.body.style.removeProperty("height");
+      document.body.style.removeProperty("position");
+      document.body.style.removeProperty("width");
+      document.body.style.removeProperty("touch-action");
+      return;
+    }
+
+    const preventScroll = (e: Event) => {
+      e.preventDefault();
+    };
+
+    const preventKeys = (e: KeyboardEvent) => {
+      if (
+        [
+          "ArrowDown",
+          "ArrowUp",
+          "PageDown",
+          "PageUp",
+          "Space",
+          "Home",
+          "End",
+        ].includes(e.code)
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.documentElement.style.setProperty("overflow", "hidden", "important");
+    document.documentElement.style.setProperty("height", "100dvh", "important");
+    document.documentElement.style.setProperty("position", "fixed", "important");
+    document.documentElement.style.setProperty("width", "100%", "important");
+    document.documentElement.style.setProperty("touch-action", "none", "important");
+
+    document.body.style.setProperty("overflow", "hidden", "important");
+    document.body.style.setProperty("height", "100dvh", "important");
+    document.body.style.setProperty("position", "fixed", "important");
+    document.body.style.setProperty("width", "100%", "important");
+    document.body.style.setProperty("touch-action", "none", "important");
+
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
+    window.addEventListener("keydown", preventKeys, { passive: false });
+
+    return () => {
+      document.documentElement.style.removeProperty("overflow");
+      document.documentElement.style.removeProperty("height");
+      document.documentElement.style.removeProperty("position");
+      document.documentElement.style.removeProperty("width");
+      document.documentElement.style.removeProperty("touch-action");
+
+      document.body.style.removeProperty("overflow");
+      document.body.style.removeProperty("height");
+      document.body.style.removeProperty("position");
+      document.body.style.removeProperty("width");
+      document.body.style.removeProperty("touch-action");
+
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
+      window.removeEventListener("keydown", preventKeys);
+    };
+  }, [revealPhase]);
 
   useEffect(() => {
     if (isPlayingAudio) {
@@ -99,7 +186,7 @@ export function InvitationOrchestrator({
   }, [isPlayingAudio]);
 
   useEffect(() => {
-    if (!isOpened || isPlayingAudio || !settings.musicEnabled || isYouTube || hasUserPausedRef.current || hasEverPlayedRef.current) return;
+    if (revealPhase !== "content-ready" || isPlayingAudio || !settings.musicEnabled || isYouTube || hasUserPausedRef.current || hasEverPlayedRef.current) return;
 
     const tryPlayFallback = () => {
       if (audioRef.current && !isPlayingAudio && !hasUserPausedRef.current) {
@@ -120,7 +207,7 @@ export function InvitationOrchestrator({
       window.removeEventListener("touchstart", tryPlayFallback);
       window.removeEventListener("scroll", tryPlayFallback);
     };
-  }, [isOpened, isPlayingAudio, settings.musicEnabled, isYouTube]);
+  }, [revealPhase, isPlayingAudio, settings.musicEnabled, isYouTube]);
 
   const toggleAudioPlayback = () => {
     if (!audioRef.current) return;
@@ -141,7 +228,7 @@ export function InvitationOrchestrator({
   return (
     <main
       className={`relative min-h-screen overflow-x-clip bg-transparent text-ink ${
-        isOpened ? "royal-seq-active" : ""
+        revealPhase === "content-ready" ? "royal-seq-active" : ""
       }`}
     >
       {settings.musicEnabled && !isYouTube && (
@@ -159,14 +246,18 @@ export function InvitationOrchestrator({
         />
       )}
 
-      <FixedInvitationBackground heroPhotoUrl={settings.heroPhotoUrl} />
+      <FixedInvitationBackground
+        heroPhotoUrl={settings.heroPhotoUrl}
+        showCornerAssets={revealPhase === "assets-entering" || revealPhase === "content-ready"}
+      />
 
-      <PetalsCanvas active={isOpening || isOpened} />
-      <FloatingFlowers active={true} />
+      <PetalsCanvas active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
+      <FloatingFlowers active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
 
       <CoverGate
         guestName={guestName}
-        onOpen={handleOpenCover}
+        onStartOpening={handleStartOpening}
+        onOpenComplete={handleOpenComplete}
         coverPhotoUrl={settings.coverPhotoUrl}
         weddingDateIso={settings.weddingDateIso}
         eventDateLabel={settings.eventDateLabel}
@@ -174,13 +265,19 @@ export function InvitationOrchestrator({
         svgCharacterPreset={settings.svgCharacterPreset}
       />
 
-      <div className="relative z-10">
+      <div
+        className={`relative z-10 transition-opacity duration-[700ms] ${
+          revealPhase === "content-ready"
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
         <CountdownHero
           weddingDateIso={settings.weddingDateIso}
           heroPhotoUrl={settings.heroPhotoUrl}
-          isOpening={isOpening}
-          isOpened={isOpened}
-          isHeroReady={isHeroReady}
+          isOpening={revealPhase === "opening"}
+          isOpened={revealPhase === "content-ready"}
+          isHeroReady={revealPhase === "content-ready"}
           eventDateLabel={settings.eventDateLabel}
           coupleVisualMode={settings.coupleVisualMode}
           svgCharacterPreset={settings.svgCharacterPreset}
@@ -248,13 +345,13 @@ export function InvitationOrchestrator({
       </div>
 
       <FloatingNav
-        isOpened={isOpened}
+        isOpened={revealPhase === "content-ready"}
         isGalleryEnabled={settings.isGalleryEnabled}
         isLoveStoryEnabled={settings.isLoveStoryEnabled}
       />
 
       <FloatingControls
-        isOpened={isOpened}
+        isOpened={revealPhase === "content-ready"}
         isPlaying={isPlayingAudio}
         onTogglePlay={toggleAudioPlayback}
         onToggleMusic={toggleAudioPlayback}

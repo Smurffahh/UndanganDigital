@@ -13,7 +13,9 @@ import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CoverGateProps {
   guestName: string;
-  onOpen: () => void;
+  onOpen?: () => void;
+  onStartOpening?: () => void;
+  onOpenComplete?: () => void;
   coverPhotoUrl: string;
   weddingDateIso?: string;
   eventDateLabel?: string;
@@ -24,6 +26,8 @@ interface CoverGateProps {
 export function CoverGate({
   guestName,
   onOpen,
+  onStartOpening,
+  onOpenComplete,
   coverPhotoUrl,
   weddingDateIso,
   eventDateLabel,
@@ -43,77 +47,23 @@ export function CoverGate({
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (gone) return;
-
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
-    };
-
-    const preventKeys = (e: KeyboardEvent) => {
-      if (
-        [
-          "ArrowDown",
-          "ArrowUp",
-          "PageDown",
-          "PageUp",
-          "Space",
-          "Home",
-          "End",
-        ].includes(e.code)
-      ) {
-        e.preventDefault();
-      }
-    };
-
-    document.documentElement.style.setProperty("overflow", "hidden", "important");
-    document.documentElement.style.setProperty("height", "100dvh", "important");
-    document.documentElement.style.setProperty("position", "fixed", "important");
-    document.documentElement.style.setProperty("width", "100%", "important");
-    document.documentElement.style.setProperty("touch-action", "none", "important");
-
-    document.body.style.setProperty("overflow", "hidden", "important");
-    document.body.style.setProperty("height", "100dvh", "important");
-    document.body.style.setProperty("position", "fixed", "important");
-    document.body.style.setProperty("width", "100%", "important");
-    document.body.style.setProperty("touch-action", "none", "important");
-
-    window.addEventListener("wheel", preventScroll, { passive: false });
-    window.addEventListener("touchmove", preventScroll, { passive: false });
-    window.addEventListener("keydown", preventKeys, { passive: false });
-
-    return () => {
-      document.documentElement.style.removeProperty("overflow");
-      document.documentElement.style.removeProperty("height");
-      document.documentElement.style.removeProperty("position");
-      document.documentElement.style.removeProperty("width");
-      document.documentElement.style.removeProperty("touch-action");
-
-      document.body.style.removeProperty("overflow");
-      document.body.style.removeProperty("height");
-      document.body.style.removeProperty("position");
-      document.body.style.removeProperty("width");
-      document.body.style.removeProperty("touch-action");
-
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventScroll);
-      window.removeEventListener("keydown", preventKeys);
-    };
-  }, [gone]);
-
   const handleOpen = () => {
     if (isReducedMotion) {
-      onOpen();
+      onStartOpening?.();
+      onOpen?.();
+      onOpenComplete?.();
       setGone(true);
       return;
     }
 
     setIsOpening(true);
-    onOpen();
+    onStartOpening?.();
+    onOpen?.();
 
     setTimeout(() => {
+      onOpenComplete?.();
       setGone(true);
-    }, 1500);
+    }, 1550);
   };
 
   if (gone) return null;
@@ -184,7 +134,7 @@ export function CoverGate({
 
       {/* Four Corner Framing Ornaments on CoverGate */}
       <div
-        className={`absolute inset-0 z-15 pointer-events-none overflow-hidden select-none transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute inset-0 z-15 pointer-events-none overflow-hidden select-none transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isOpening ? "opacity-0" : "opacity-100"
         }`}
       >

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId } from "react";
+import React, { useEffect, useId, useState } from "react";
 
 interface FloatingFlowersProps {
   active?: boolean;
@@ -16,8 +16,18 @@ const FLOWER_PARTICLES = [
   { id: 7, left: "93%", size: 22, duration: 13.5, delay: 5.0, driftX: -30, rot: 195, opacity: 0.60 },
 ];
 
-export function FloatingFlowers({ active = true }: FloatingFlowersProps) {
+export function FloatingFlowers({ active = false }: FloatingFlowersProps) {
   const containerId = useId();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (active) {
+      const raf = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(raf);
+    } else {
+      setVisible(false);
+    }
+  }, [active]);
 
   if (!active) return null;
 
@@ -25,7 +35,9 @@ export function FloatingFlowers({ active = true }: FloatingFlowersProps) {
     <div
       id={`floating-flowers-${containerId}`}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none select-none overflow-hidden z-[1]"
+      className={`fixed inset-0 pointer-events-none select-none overflow-hidden z-[1] transition-opacity duration-[1100ms] ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
     >
       {FLOWER_PARTICLES.map((flower) => (
         <div

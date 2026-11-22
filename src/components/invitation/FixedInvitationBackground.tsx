@@ -37,10 +37,10 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
       >
         {/* Top Left Corner Ornament (Pojok Atas) */}
         <div
-          className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down motion-safe:animate-asset-enter-down"
+          className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
           style={{ animationDelay: "180ms" }}
         >
-          <div className="w-full h-full origin-top-left motion-safe:animate-wind-sway-left">
+          <div className="w-full h-full leaf-sway-top-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/javanese/pojok-atas.webp"
@@ -55,10 +55,10 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
 
         {/* Top Right Corner Ornament (Pojok Atas Mirrored) */}
         <div
-          className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down motion-safe:animate-asset-enter-down"
+          className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down"
           style={{ animationDelay: "180ms" }}
         >
-          <div className="w-full h-full origin-top-right motion-safe:animate-wind-sway-right">
+          <div className="w-full h-full leaf-sway-top-right">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/javanese/pojok-atas.webp"
@@ -73,10 +73,10 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
 
         {/* Bottom Left Corner Ornament (Pojok Bawah Mirrored) */}
         <div
-          className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up motion-safe:animate-asset-enter-up"
+          className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
           style={{ animationDelay: "320ms" }}
         >
-          <div className="w-full h-full origin-bottom-left motion-safe:animate-wind-sway-bottom-left">
+          <div className="w-full h-full leaf-sway-bottom-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/javanese/pojok-bawah.webp"
@@ -91,10 +91,10 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
 
         {/* Bottom Right Corner Ornament (Pojok Bawah Normal) */}
         <div
-          className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up motion-safe:animate-asset-enter-up"
+          className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up"
           style={{ animationDelay: "320ms" }}
         >
-          <div className="w-full h-full origin-bottom-right motion-safe:animate-wind-sway-bottom-right">
+          <div className="w-full h-full leaf-sway-bottom-right">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/javanese/pojok-bawah.webp"

@@ -390,40 +390,118 @@ body {
     opacity: 0.8;
   }
   50% {
-    transform: translate3d(calc(var(--float-x, 24px) * 0.5), 50vh, 0) rotate(180deg);
+    transform: translate3d(calc(var(--float-x, 24px) * 0.5), 50vh, 0) rotate(calc(var(--float-rot, 360deg) * 0.5));
   }
   85% {
     opacity: 0.8;
   }
   100% {
-    transform: translate3d(var(--float-x, 24px), 110vh, 0) rotate(360deg);
+    transform: translate3d(var(--float-x, 24px), 110vh, 0) rotate(var(--float-rot, 360deg));
     opacity: 0;
   }
+}
+
+@keyframes wind-sway-top-left {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: rotate(3.8deg) translate3d(3px, 2px, 0);
+  }
+  65% {
+    transform: rotate(-2.2deg) translate3d(-2px, 1px, 0);
+  }
+}
+
+@keyframes wind-sway-top-right {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  35% {
+    transform: rotate(-3.8deg) translate3d(-3px, 2px, 0);
+  }
+  70% {
+    transform: rotate(2.2deg) translate3d(2px, 1px, 0);
+  }
+}
+
+@keyframes wind-sway-bottom-left {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  35% {
+    transform: rotate(-2.6deg) translate3d(2px, -1px, 0);
+  }
+  70% {
+    transform: rotate(1.8deg) translate3d(-1px, 0, 0);
+  }
+}
+
+@keyframes wind-sway-bottom-right {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: rotate(2.6deg) translate3d(-2px, -1px, 0);
+  }
+  65% {
+    transform: rotate(-1.8deg) translate3d(1px, 0, 0);
+  }
+}
+
+.leaf-sway-top-left {
+  transform-origin: top left;
+  animation: wind-sway-top-left 5.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.leaf-sway-top-right {
+  transform-origin: top right;
+  animation: wind-sway-top-right 6.4s ease-in-out infinite;
+  animation-delay: -1.4s;
+  will-change: transform;
+}
+
+.leaf-sway-bottom-left {
+  transform-origin: bottom left;
+  animation: wind-sway-bottom-left 6.8s ease-in-out infinite;
+  animation-delay: -0.9s;
+  will-change: transform;
+}
+
+.leaf-sway-bottom-right {
+  transform-origin: bottom right;
+  animation: wind-sway-bottom-right 7.4s ease-in-out infinite;
+  animation-delay: -2.1s;
+  will-change: transform;
 }
 
 .animate-wind-sway-left,
 .animate-ambient-sway-left {
   transform-origin: top left;
-  animation: windSwayLeft 5.5s ease-in-out infinite;
+  animation: wind-sway-top-left 5.6s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-wind-sway-right,
 .animate-ambient-sway-right {
   transform-origin: top right;
-  animation: windSwayRight 6.4s ease-in-out infinite;
+  animation: wind-sway-top-right 6.4s ease-in-out infinite;
+  animation-delay: -1.4s;
   will-change: transform;
 }
 
 .animate-wind-sway-bottom-left {
   transform-origin: bottom left;
-  animation: windSwayBottomLeft 6.8s ease-in-out infinite;
+  animation: wind-sway-bottom-left 6.8s ease-in-out infinite;
+  animation-delay: -0.9s;
   will-change: transform;
 }
 
 .animate-wind-sway-bottom-right {
   transform-origin: bottom right;
-  animation: windSwayBottomRight 7.6s ease-in-out infinite;
+  animation: wind-sway-bottom-right 7.4s ease-in-out infinite;
+  animation-delay: -2.1s;
   will-change: transform;
 }
 
@@ -687,9 +765,18 @@ body {
     transform: none !important;
     opacity: 1 !important;
   }
+  .leaf-sway-top-left,
+  .leaf-sway-top-right,
+  .leaf-sway-bottom-left,
+  .leaf-sway-bottom-right,
+  .animate-wind-sway-left,
+  .animate-wind-sway-right,
+  .animate-wind-sway-bottom-left,
+  .animate-wind-sway-bottom-right,
   .animate-vinyl-spin,
   .animate-asset-enter-down,
-  .animate-asset-enter-up {
+  .animate-asset-enter-up,
+  .animate-ambient-float {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

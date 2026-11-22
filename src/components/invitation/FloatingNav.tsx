@@ -127,7 +127,7 @@ export function FloatingNav({
         data-seq-dir="bottom"
         style={{ "--seq-delay": "3300ms" } as React.CSSProperties}
       >
-        <div className="bg-[#fffdfa]/92 backdrop-blur-md border border-[#e9d3a3]/85 shadow-[0_14px_36px_-10px_rgba(93,58,65,0.22)] rounded-full p-1 sm:p-1.5 flex items-center gap-0.5 sm:gap-1">
+        <div className="bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 shadow-[0_14px_36px_-10px_rgba(67,10,20,0.22)] rounded-full p-1 sm:p-1.5 flex items-center gap-0.5 sm:gap-1">
           {effectiveItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -139,10 +139,10 @@ export function FloatingNav({
                 onClick={() => handleNavClick(item.id)}
                 aria-label={item.label}
                 aria-current={isActive ? "true" : undefined}
-                className={`min-h-[44px] min-w-[36px] sm:min-w-[44px] rounded-full text-xs font-medium flex items-center justify-center motion-safe:transition-[background-color,color,box-shadow,transform,padding] motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a24b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffdfa] ${
+                className={`min-h-[44px] min-w-[36px] sm:min-w-[44px] rounded-full text-xs font-medium flex items-center justify-center motion-safe:transition-[background-color,color,box-shadow,transform,padding] motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C59B6D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FBF7F2] ${
                   isActive
-                    ? "bg-[#5d3a41] text-[#fffdfa] shadow-xs ps-3 pe-3.5 sm:ps-3.5 sm:pe-4 py-2"
-                    : "text-[#8d757c] hover:text-[#5d3a41] hover:bg-[#f7e9e5]/60 px-1.5 sm:px-2.5 py-2"
+                    ? "bg-[#6B1222] text-[#FBF7F2] shadow-xs ps-3 pe-3.5 sm:ps-3.5 sm:pe-4 py-2"
+                    : "text-[#6E4A50] hover:text-[#6B1222] hover:bg-[#6B1222]/10 px-1.5 sm:px-2.5 py-2"
                 }`}
               >
                 <Icon

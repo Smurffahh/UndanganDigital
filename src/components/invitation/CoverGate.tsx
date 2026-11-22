@@ -183,30 +183,24 @@ export function CoverGate({
         }}
       >
         {/* Royal Arch Sanctuary Plaque (Center Top) */}
-        <div className="w-full max-w-[340px] sm:max-w-[380px] p-1.5 bg-[#FAF6F0]/90 backdrop-blur-md border border-[#C5A059]/45 shadow-[0_12px_36px_-8px_rgba(58,39,29,0.14)] rounded-t-full rounded-b-2xl flex flex-col items-center shrink-0 my-auto">
-          <div className="w-full rounded-t-full rounded-b-[10px] border border-[#C5A059]/25 px-5 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6 flex flex-col items-center text-center relative overflow-hidden">
+        <div className="w-full max-w-[340px] sm:max-w-[380px] p-1.5 bg-[#FBF7F2]/90 backdrop-blur-md border border-[#6B1222]/20 shadow-[0_12px_36px_-8px_rgba(67,10,20,0.18)] rounded-t-full rounded-b-2xl flex flex-col items-center shrink-0 my-auto">
+          <div className="w-full rounded-t-full rounded-b-[10px] border border-[#C59B6D]/35 px-5 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6 flex flex-col items-center text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/images/bg-truntum-damask.svg')] bg-repeat bg-[length:72px_72px] opacity-[0.04] pointer-events-none" />
 
             <div className="flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10">
               <MonogramCrest className="size-10 sm:size-11" />
               <div className="mt-2.5 flex items-center justify-center gap-2.5">
-                <span className="h-px w-5 bg-[#C5A059]/45" aria-hidden="true" />
-                <p className="font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8C6239]">
+                <span className="h-px w-5 bg-[#C59B6D]/45" aria-hidden="true" />
+                <p className="font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C59B6D]">
                   THE WEDDING OF
                 </p>
-                <span className="h-px w-5 bg-[#C5A059]/45" aria-hidden="true" />
+                <span className="h-px w-5 bg-[#C59B6D]/45" aria-hidden="true" />
               </div>
             </div>
 
-            <div className="w-28 sm:w-36 aspect-[4/5] mx-auto rounded-t-full rounded-b-xl p-1 bg-[#FFFDF9] shadow-sm border border-[#C5A059]/35 shrink-0 mb-3 relative z-10">
-              <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-[#fdfaf5] flex items-center justify-center">
-                {coupleVisualMode === "svg" || !coverPhotoUrl ? (
-                  <CoupleCharacterSvg
-                    preset={svgCharacterPreset}
-                    variant="couple"
-                    className="w-full h-full"
-                  />
-                ) : (
+            <div className="w-28 sm:w-36 aspect-[4/5] mx-auto rounded-t-full rounded-b-xl p-1 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/35 shrink-0 mb-3 relative z-10">
+              <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6] flex items-center justify-center">
+                {coupleVisualMode === "photo" && coverPhotoUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={coverPhotoUrl}
@@ -215,23 +209,42 @@ export function CoverGate({
                     fetchPriority="high"
                     loading="eager"
                   />
+                ) : (
+                  <div className="relative w-full h-full flex items-end justify-center overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/javanese/pengantin-pria.webp"
+                      alt="Mempelai Pria"
+                      className="h-[96%] w-auto object-contain object-bottom -mr-3.5 drop-shadow-sm select-none pointer-events-none"
+                      loading="eager"
+                      draggable={false}
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/javanese/pengantin-wanita.webp"
+                      alt="Mempelai Wanita"
+                      className="h-[93%] w-auto object-contain object-bottom -ml-3.5 drop-shadow-sm select-none pointer-events-none"
+                      loading="eager"
+                      draggable={false}
+                    />
+                  </div>
                 )}
               </div>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#3E2723] relative z-10">
-              Fauzan <span className="font-script text-[#C5A059] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
+            <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#6B1222] relative z-10">
+              Fauzan <span className="font-script text-[#C59B6D] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
             </h2>
 
             <div className="mt-1.5 flex items-center justify-center gap-2 relative z-10">
-              <span className="w-4 sm:w-6 h-px bg-gradient-to-r from-transparent to-[#C5A059]" />
-              <p className="font-sans text-[11px] sm:text-xs font-medium tracking-[0.2em] uppercase text-[#6D4C3D] tabular-nums">
+              <span className="w-4 sm:w-6 h-px bg-gradient-to-r from-transparent to-[#C59B6D]" />
+              <p className="font-sans text-[11px] sm:text-xs font-medium tracking-[0.2em] uppercase text-[#6E4A50] tabular-nums">
                 {formattedDate.toUpperCase().replace(/,/g, " ·")}
               </p>
-              <span className="w-4 sm:w-6 h-px bg-gradient-to-l from-transparent to-[#C5A059]" />
+              <span className="w-4 sm:w-6 h-px bg-gradient-to-l from-transparent to-[#C59B6D]" />
             </div>
 
-            <span className="mt-2 inline-block px-3 py-0.5 rounded-full bg-[#F5EDE0] text-[#8C6239] border border-[#C5A059]/40 font-sans text-[11px] font-semibold normal-case tracking-wide shadow-2xs relative z-10">
+            <span className="mt-2 inline-block px-3 py-0.5 rounded-full bg-[#6B1222]/10 text-[#6B1222] border border-[#6B1222]/25 font-sans text-[11px] font-semibold normal-case tracking-wide shadow-2xs relative z-10">
               #SINgkatceritaFAUZAN
             </span>
           </div>
@@ -262,22 +275,22 @@ export function CoverGate({
         >
           <GoldenEmblemSeal className="size-13 sm:size-15" />
           {isOpening && (
-            <div className="absolute inset-0 rounded-full border-2 border-[#d4af37] animate-ping opacity-75 pointer-events-none" />
+            <div className="absolute inset-0 rounded-full border-2 border-[#C59B6D] animate-ping opacity-75 pointer-events-none" />
           )}
         </div>
 
         {/* Guest Card & Open Button (Bottom) */}
         <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center shrink-0">
-          <div className="w-full bg-[#FAF6F0]/88 backdrop-blur-md border border-[#C5A059]/35 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(58,39,29,0.14)] relative overflow-hidden group text-center">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C5A059]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+          <div className="w-full bg-[#FBF7F2]/90 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C59B6D]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
             <CardCornerOrnament />
-            <p className="typo-eyebrow text-[#8C6239] tracking-[0.2em] text-[10px]">
+            <p className="typo-eyebrow text-[#C59B6D] tracking-[0.2em] text-[10px]">
               KEPADA YTH.
             </p>
-            <p className="typo-meta text-[11px] mt-0.5 text-[#6D4C3D]">
+            <p className="typo-meta text-[11px] mt-0.5 text-[#6E4A50]">
               Bapak / Ibu / Saudara/i
             </p>
-            <p className="typo-card-title mt-1 font-semibold text-[#3E2723] text-sm sm:text-base text-balance break-words line-clamp-2 max-w-[280px] sm:max-w-[320px] mx-auto">
+            <p className="typo-card-title mt-1 font-semibold text-[#6B1222] text-sm sm:text-base text-balance break-words line-clamp-2 max-w-[280px] sm:max-w-[320px] mx-auto">
               {guestName || "Tamu Undangan"}
             </p>
           </div>
@@ -285,15 +298,15 @@ export function CoverGate({
           <button
             type="button"
             onClick={handleOpen}
-            className="typo-button mt-3 inline-flex items-center justify-center gap-2.5 ps-6 pe-7 min-h-11 w-full max-w-xs rounded-full bg-gradient-to-r from-[#4A3222] via-[#5D4037] to-[#4A3222] hover:from-[#3E2723] hover:to-[#3E2723] text-[#FAF6F0] uppercase border border-[#C5A059]/50 shadow-[0_12px_28px_-6px_rgba(58,39,29,0.35)] transition-[transform,box-shadow,background-color] duration-200 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C5A059]"
+            className="typo-button mt-3 inline-flex items-center justify-center gap-2.5 ps-6 pe-7 min-h-11 w-full max-w-xs rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase border border-[#C59B6D]/50 shadow-[0_12px_28px_-6px_rgba(107,18,34,0.45)] transition-[transform,box-shadow,background-color] duration-200 ease-out active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
           >
-            <Mail className="w-4 h-4 shrink-0 stroke-[#FAF6F0] stroke-[2]" />
+            <Mail className="w-4 h-4 shrink-0 stroke-[#FBF7F2] stroke-[2]" />
             <span className="whitespace-nowrap text-xs sm:text-sm font-semibold tracking-wider uppercase">
               Buka Undangan
             </span>
           </button>
 
-          <p className="text-[10px] sm:text-xs text-[#8C6239] mt-2 text-center tracking-tight">
+          <p className="text-[10px] sm:text-xs text-[#6E4A50] mt-2 text-center tracking-tight">
             *Mohon maaf apabila terdapat kekeliruan penulisan nama &amp; gelar
           </p>
         </div>

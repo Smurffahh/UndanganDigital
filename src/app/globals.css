@@ -14,13 +14,23 @@
   --color-muted: oklch(56.8% 0.038 15);
   --color-surface-white: oklch(99.2% 0.005 60);
 
+  /* Tema Jawa Maroon Tokens */
+  --color-primary-maroon: #6B1222;
+  --color-primary-maroon-hover: #520D1A;
+  --color-primary-maroon-deep: #430A14;
+  --color-secondary-maroon: #8C2D3E;
+  --color-javanese-gold: #C59B6D;
+  --color-surface-card: #FBF7F2;
+  --color-body-espresso: #3B1A20;
+  --color-muted-maroon: #6E4A50;
+
   --color-admin-bg: oklch(98.5% 0.004 85);
   --color-admin-surface: oklch(100% 0 0);
   --color-admin-border: oklch(90.5% 0.008 85);
   --color-admin-ink: oklch(24% 0.015 85);
   --color-admin-subtle: oklch(56% 0.012 85);
-  --color-admin-primary: oklch(38% 0.065 15);
-  --color-admin-primary-hover: oklch(30% 0.065 15);
+  --color-admin-primary: #6B1222;
+  --color-admin-primary-hover: #520D1A;
 
   --font-serif: var(--font-serif), "Cormorant Garamond", "Times New Roman", serif;
   --font-script: var(--font-script), "Great Vibes", cursive;
@@ -30,16 +40,26 @@
 
 :root {
   interpolate-size: allow-keywords;
-  --motion-ease-royal: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-royal: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-duration-gate: 1500ms;
-  --motion-duration-reveal: 1150ms;
-  --motion-duration-exit: 650ms;
-  --motion-stagger-step: 220ms;
-  --motion-distance: 28px;
+  --motion-duration-reveal: 550ms;
+  --motion-duration-fast: 350ms;
+  --motion-duration-exit: 350ms;
+  --motion-stagger-step: 140ms;
+  --motion-distance: 24px;
 
-  --kawung-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23a9823a' stroke-width='1' opacity='0.10'%3E%3Cellipse cx='28' cy='13' rx='8' ry='12'/%3E%3Cellipse cx='28' cy='43' rx='8' ry='12'/%3E%3Cellipse cx='13' cy='28' rx='12' ry='8'/%3E%3Cellipse cx='43' cy='28' rx='12' ry='8'/%3E%3Ccircle cx='28' cy='28' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
-  --songket-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='14' viewBox='0 0 26 14'%3E%3Cpath d='M13 2 L21 7 L13 12 L5 7 Z' fill='none' stroke='%23c9a24b' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='7' r='1.1' fill='%23c9a24b'/%3E%3C/svg%3E");
-  --anatomy-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M32 0 L0 0 0 32' fill='none' stroke='%23c9a24b' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+  --color-primary-maroon: #6B1222;
+  --color-primary-maroon-hover: #520D1A;
+  --color-primary-maroon-deep: #430A14;
+  --color-secondary-maroon: #8C2D3E;
+  --color-javanese-gold: #C59B6D;
+  --color-surface-card: #FBF7F2;
+  --color-body-espresso: #3B1A20;
+  --color-muted-maroon: #6E4A50;
+
+  --kawung-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23C59B6D' stroke-width='1' opacity='0.08'%3E%3Cellipse cx='28' cy='13' rx='8' ry='12'/%3E%3Cellipse cx='28' cy='43' rx='8' ry='12'/%3E%3Cellipse cx='13' cy='28' rx='12' ry='8'/%3E%3Cellipse cx='43' cy='28' rx='12' ry='8'/%3E%3Ccircle cx='28' cy='28' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  --songket-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='14' viewBox='0 0 26 14'%3E%3Cpath d='M13 2 L21 7 L13 12 L5 7 Z' fill='none' stroke='%23C59B6D' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='7' r='1.1' fill='%23C59B6D'/%3E%3C/svg%3E");
+  --anatomy-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M32 0 L0 0 0 32' fill='none' stroke='%23C59B6D' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after {
@@ -54,9 +74,9 @@ html {
 
 body {
   overflow-x: clip;
-  background-color: var(--color-cream);
+  background-color: var(--color-surface-card);
   background-image: var(--kawung-pattern);
-  color: var(--color-ink);
+  color: var(--color-body-espresso);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -68,9 +88,9 @@ body {
 
 .arch {
   padding: 10px;
-  border: 1px solid rgba(201, 162, 75, 0.55);
+  border: 1px solid rgba(197, 155, 109, 0.55);
   border-radius: 999px 999px 22px 22px;
-  background: linear-gradient(180deg, rgba(233, 211, 163, 0.35), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(180deg, rgba(251, 247, 242, 0.7), rgba(251, 247, 242, 0.95));
   position: relative;
 }
 
@@ -78,21 +98,28 @@ body {
   content: "";
   position: absolute;
   inset: 5px;
-  border: 1px solid rgba(201, 162, 75, 0.4);
+  border: 1px solid rgba(197, 155, 109, 0.35);
   border-radius: 999px 999px 18px 18px;
   pointer-events: none;
 }
 
 .gold-grad-text {
-  background: linear-gradient(135deg, #8a601e 10%, #b88a38 50%, #7d5416 90%);
+  background: linear-gradient(135deg, #C59B6D 10%, #D8B286 50%, #A67B48 90%);
   -webkit-background-clip: text;
   background-clip: text;
-  color: #8a601e;
+  color: #C59B6D;
+}
+
+.maroon-grad-text {
+  background: linear-gradient(135deg, #6B1222 10%, #8C2D3E 50%, #520D1A 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #6B1222;
 }
 
 .glass {
-  background: rgba(255, 250, 246, 0.14);
-  border: 1px solid rgba(233, 211, 163, 0.45);
+  background: rgba(251, 247, 242, 0.88);
+  border: 1px solid rgba(107, 18, 34, 0.16);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -121,14 +148,14 @@ body {
 .card-ornament::before {
   top: 9px;
   left: 9px;
-  border-top: 1px solid var(--color-gold-500);
-  border-left: 1px solid var(--color-gold-500);
+  border-top: 1px solid #C59B6D;
+  border-left: 1px solid #C59B6D;
 }
 .card-ornament::after {
   bottom: 9px;
   right: 9px;
-  border-bottom: 1px solid var(--color-gold-500);
-  border-right: 1px solid var(--color-gold-500);
+  border-bottom: 1px solid #C59B6D;
+  border-right: 1px solid #C59B6D;
 }
 
 .typo-display {
@@ -137,7 +164,7 @@ body {
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.025em;
-  color: #5d3a41;
+  color: #6B1222;
 }
 @media (min-width: 640px) {
   .typo-display {
@@ -150,7 +177,7 @@ body {
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 1.3;
-  color: #a9823a;
+  color: #C59B6D;
 }
 @media (min-width: 640px) {
   .typo-script-accent {
@@ -164,7 +191,7 @@ body {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  color: #5d3a41;
+  color: #6B1222;
 }
 @media (min-width: 640px) {
   .typo-section-title {
@@ -177,7 +204,7 @@ body {
   font-size: 1.375rem;
   font-weight: 600;
   line-height: 1.28;
-  color: #5d3a41;
+  color: #6B1222;
 }
 @media (min-width: 640px) {
   .typo-card-title {
@@ -192,7 +219,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   line-height: 1.4;
-  color: #a9823a;
+  color: #C59B6D;
 }
 
 .typo-body {
@@ -200,7 +227,7 @@ body {
   font-size: 15px;
   font-weight: 400;
   line-height: 1.7;
-  color: #4b3a3e;
+  color: #3B1A20;
   max-width: 60ch;
 }
 @media (min-width: 640px) {
@@ -214,7 +241,7 @@ body {
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 2.1;
-  color: #5d3a41;
+  color: #6B1222;
 }
 @media (min-width: 640px) {
   .typo-arabic {
@@ -227,7 +254,7 @@ body {
   font-size: 13px;
   font-weight: 400;
   line-height: 1.5;
-  color: #8d757c;
+  color: #6E4A50;
 }
 @media (min-width: 640px) {
   .typo-meta {
@@ -304,6 +331,59 @@ body {
 
 .animate-gold-sheen {
   animation: goldSheen 3.2s ease-in-out infinite;
+}
+
+@keyframes ambientSwayLeft {
+  0% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes ambientSwayRight {
+  0% {
+    transform: scaleX(-1) rotate(-2deg);
+  }
+  100% {
+    transform: scaleX(-1) rotate(2deg);
+  }
+}
+
+@keyframes ambientFloat {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(var(--float-x, 24px), 110vh, 0) rotate(var(--float-rot, 210deg));
+    opacity: 0;
+  }
+}
+
+.animate-ambient-sway-left {
+  transform-origin: top left;
+  animation: ambientSwayLeft 6s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.animate-ambient-sway-right {
+  transform-origin: top right;
+  animation: ambientSwayRight 6s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.animate-ambient-float {
+  animation: ambientFloat var(--float-duration, 12s) linear infinite;
+  animation-delay: var(--float-delay, 0s);
+  will-change: transform, opacity;
 }
 
 @keyframes butterflyDrift {

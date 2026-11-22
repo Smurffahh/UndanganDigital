@@ -67,13 +67,13 @@ export function EventDetails({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
           <ScrollLinkedItem offsetY={36}>
-            <span className="inline-block px-4 py-1 rounded-full border border-gold-500/40 bg-surface-white/90 typo-eyebrow text-[#a9823a] tracking-[0.22em] uppercase shadow-xs mb-3">
+            <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
             </span>
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <h2 className="typo-section-title">
+            <h2 className="typo-section-title text-[#6B1222]">
               Waktu &amp; Tempat
             </h2>
             <WayangDivider />
@@ -81,45 +81,45 @@ export function EventDetails({
         </header>
 
         <ScrollLinkedItem direction="left" className="mb-8">
-          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(67,10,20,0.22)] transition-[box-shadow] duration-300">
+            <div className="w-14 h-14 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 text-[#6B1222] mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
 
-            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#5d3a41]">
+            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#6B1222]">
               Akad Nikah
             </h3>
 
             <div className="my-5 flex flex-col items-center justify-center">
-              <span className="typo-eyebrow text-[#a9823a] tracking-[0.25em] uppercase text-xs mb-1">
+              <span className="typo-eyebrow text-[#C59B6D] tracking-[0.25em] uppercase text-xs mb-1">
                 Minggu
               </span>
               <div className="flex items-baseline justify-center">
                 <NumberFlow
                   value={dayNumber}
                   format={{ minimumIntegerDigits: 2 }}
-                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
+                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
                 />
               </div>
-              <span className="typo-eyebrow text-[#9c5f66] tracking-[0.2em] uppercase text-xs mt-1">
+              <span className="typo-eyebrow text-[#6E4A50] tracking-[0.2em] uppercase text-xs mt-1">
                 Januari 2027
               </span>
             </div>
 
-            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5 mb-3">
-              <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
+            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#6B1222] flex items-center justify-center gap-1.5 mb-3">
+              <Clock className="w-4 h-4 text-[#C59B6D] stroke-[1.8]" />
               {akadTime}
             </p>
 
             <SongketRibbon className="w-28 my-3 mx-auto" />
 
-            <p className="font-sans text-base font-semibold text-[#5d3a41]">
+            <p className="font-sans text-base font-semibold text-[#3B1A20]">
               {venueName}
             </p>
-            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e] max-w-[320px]">
+            <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
               {venueAddress}
               <br />
-              <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
+              <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
@@ -127,9 +127,9 @@ export function EventDetails({
                 href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
-                <MapPin className="w-3.5 h-3.5 text-gold-300" />
+                <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
                 <span className="text-xs tracking-wider uppercase font-semibold">Buka Petunjuk Arah Google Maps</span>
               </a>
 
@@ -137,9 +137,9 @@ export function EventDetails({
                 href={googleCalendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#FBF7F2] text-[#6B1222] hover:bg-[#6B1222]/10 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
-                <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
+                <CalendarPlus className="w-3.5 h-3.5 text-[#C59B6D]" />
                 <span className="text-xs tracking-wider uppercase font-semibold">Simpan ke Kalender</span>
               </a>
             </div>
@@ -151,45 +151,45 @@ export function EventDetails({
         </ScrollLinkedItem>
 
         <ScrollLinkedItem direction="right" className="mb-8">
-          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#c9a24b]/70 bg-[#fffdfa]/88 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(93,58,65,0.25)] transition-[box-shadow] duration-300">
-            <div className="w-14 h-14 rounded-full bg-rose-100 border border-gold-500/40 text-gold-600 mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
+          <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(67,10,20,0.22)] transition-[box-shadow] duration-300">
+            <div className="w-14 h-14 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 text-[#6B1222] mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
               <Calendar className="w-6 h-6 stroke-[1.6]" />
             </div>
 
-            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#5d3a41]">
+            <h3 className="typo-card-title text-2xl sm:text-3xl text-[#6B1222]">
               Resepsi
             </h3>
 
             <div className="my-5 flex flex-col items-center justify-center">
-              <span className="typo-eyebrow text-[#a9823a] tracking-[0.25em] uppercase text-xs mb-1">
+              <span className="typo-eyebrow text-[#C59B6D] tracking-[0.25em] uppercase text-xs mb-1">
                 Minggu
               </span>
               <div className="flex items-baseline justify-center">
                 <NumberFlow
                   value={dayNumber}
                   format={{ minimumIntegerDigits: 2 }}
-                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#5d3a41]"
+                  className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
                 />
               </div>
-              <span className="typo-eyebrow text-[#9c5f66] tracking-[0.2em] uppercase text-xs mt-1">
+              <span className="typo-eyebrow text-[#6E4A50] tracking-[0.2em] uppercase text-xs mt-1">
                 Januari 2027
               </span>
             </div>
 
-            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#5d3a41] flex items-center justify-center gap-1.5 mb-3">
-              <Clock className="w-4 h-4 text-[#a9823a] stroke-[1.8]" />
+            <p className="font-sans text-[15px] sm:text-base font-semibold tabular-nums text-[#6B1222] flex items-center justify-center gap-1.5 mb-3">
+              <Clock className="w-4 h-4 text-[#C59B6D] stroke-[1.8]" />
               {resepsiTime}
             </p>
 
             <SongketRibbon className="w-28 my-3 mx-auto" />
 
-            <p className="font-sans text-base font-semibold text-[#5d3a41]">
+            <p className="font-sans text-base font-semibold text-[#3B1A20]">
               {venueName}
             </p>
-            <p className="mt-1 typo-body text-center mx-auto text-[#4b3a3e] max-w-[320px]">
+            <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
               {venueAddress}
               <br />
-              <span className="text-xs text-[#7a5c61]">{venuePlusCode}</span>
+              <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
@@ -197,9 +197,9 @@ export function EventDetails({
                 href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#5d3a41] text-[#fffdfa] hover:bg-[#4b2f34] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
-                <MapPin className="w-3.5 h-3.5 text-gold-300" />
+                <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
                 <span className="text-xs tracking-wider uppercase font-semibold">Buka Petunjuk Arah Google Maps</span>
               </a>
 
@@ -207,9 +207,9 @@ export function EventDetails({
                 href={googleCalendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-gold-500/50 bg-[#fffdfa] text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
+                className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#FBF7F2] text-[#6B1222] hover:bg-[#6B1222]/10 active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11"
               >
-                <CalendarPlus className="w-3.5 h-3.5 text-[#a9823a]" />
+                <CalendarPlus className="w-3.5 h-3.5 text-[#C59B6D]" />
                 <span className="text-xs tracking-wider uppercase font-semibold">Simpan ke Kalender</span>
               </a>
             </div>
@@ -224,16 +224,16 @@ export function EventDetails({
           <button
             type="button"
             onClick={handleDownloadIcs}
-            className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gold-500/40 bg-surface-white/80 text-[#5d3a41] hover:bg-rose-100/70 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
+            className="typo-button inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 text-[#6B1222] hover:bg-[#6B1222]/10 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
           >
-            <Download className="w-3.5 h-3.5 text-[#a9823a]" />
+            <Download className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>Unduh Pengingat Kalender (.ics)</span>
           </button>
         </ScrollLinkedItem>
 
         <ScrollLinkedItem offsetY={36}>
-          <div className="card-ornament bg-surface-white border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-5 sm:p-6 text-center">
-            <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-gold-500/25 mb-4 shadow-inner">
+          <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-5 sm:p-6 text-center">
+            <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[#C59B6D]/30 mb-4 shadow-inner">
               <iframe
                 src={googleMapsEmbed}
                 title={`Peta Lokasi Pernikahan Fauzan dan Sinta di ${venueName}`}
@@ -247,7 +247,7 @@ export function EventDetails({
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-rose-700 to-rose-900 text-white uppercase shadow-[0_12px_24px_-8px_rgba(93,58,65,0.5)] active:scale-[0.96] transition-transform duration-150 hover:brightness-110"
+              className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_12px_24px_-8px_rgba(107,18,34,0.4)] active:scale-[0.96] transition-transform duration-150"
             >
               <MapPin className="w-4 h-4" />
               <span>Buka Google Maps</span>

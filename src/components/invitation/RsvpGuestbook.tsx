@@ -134,17 +134,17 @@ export function RsvpGuestbook({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
           <ScrollLinkedItem offsetY={36}>
-            <p className="typo-eyebrow text-[#a9823a] mb-2">
+            <p className="typo-eyebrow text-[#C59B6D] mb-2">
               RSVP &amp; Prayers
             </p>
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <h2 className="typo-section-title">
+            <h2 className="typo-section-title text-[#6B1222]">
               Konfirmasi &amp; Ucapan
             </h2>
             <WayangDivider />
-            <p className="typo-body text-center max-w-[400px] mx-auto mt-3 text-[#4b3a3e]">
+            <p className="typo-body text-center max-w-[400px] mx-auto mt-3 text-[#3B1A20]">
               Mohon konfirmasi kehadiran Anda dan tinggalkan doa terbaik untuk kedua mempelai.
             </p>
           </ScrollLinkedItem>
@@ -153,16 +153,16 @@ export function RsvpGuestbook({
         <ScrollLinkedItem offsetY={36}>
           <form
             onSubmit={handleSubmit}
-            className="card-ornament bg-gradient-to-b from-surface-white to-[#fdf5f1] border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-6 sm:p-7 space-y-4"
+            className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-6 sm:p-7 space-y-4"
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#4b3a3e]">
+                <label htmlFor="f-nama" className="block font-sans text-sm font-semibold text-[#3B1A20]">
                   Nama Anda
                 </label>
                 {verifiedGuestName && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FAF4E6] text-[#7A5B1E] border border-[#C5A059]/40 shadow-xs">
-                    <CheckCircle2 className="w-3 h-3 text-[#B8913B]" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FBF7F2] text-[#6B1222] border border-[#C59B6D]/45 shadow-xs">
+                    <CheckCircle2 className="w-3 h-3 text-[#C59B6D]" />
                     Undangan Terverifikasi
                   </span>
                 )}
@@ -180,14 +180,14 @@ export function RsvpGuestbook({
                   if (!verifiedGuestName) setNama(e.target.value);
                 }}
                 placeholder="Contoh: Bpk. Budi Santoso"
-                className={`w-full px-3.5 py-3 border rounded-xl font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 transition-[border-color,box-shadow] ${
+                className={`w-full px-3.5 py-3 border rounded-xl font-sans text-base sm:text-sm text-[#3B1A20] placeholder:text-[#6E4A50]/60 transition-[border-color,box-shadow] ${
                   verifiedGuestName
-                    ? "bg-[#FAF7F2] border-[#C5A059]/45 text-[#3E2723] font-medium cursor-not-allowed select-none"
-                    : "bg-surface-white border-gold-500/45 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15"
+                    ? "bg-[#FBF7F2] border-[#C59B6D]/45 text-[#6B1222] font-medium cursor-not-allowed select-none"
+                    : "bg-[#FBF7F2] border-[#C59B6D]/45 focus:outline-none focus:border-[#6B1222] focus:ring-4 focus:ring-[#6B1222]/15"
                 }`}
               />
               {verifiedGuestName && (
-                <p className="mt-1 text-[11px] text-[#8C6239] font-sans">
+                <p className="mt-1 text-[11px] text-[#6E4A50] font-sans">
                   Nama terkunci sesuai tautan undangan resmi.
                 </p>
               )}
@@ -195,14 +195,14 @@ export function RsvpGuestbook({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label htmlFor="f-hadir" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
+                <label htmlFor="f-hadir" className="block font-sans text-sm font-semibold text-[#3B1A20] mb-1.5">
                   Konfirmasi Kehadiran
                 </label>
                 <select
                   id="f-hadir"
                   value={hadir}
                   onChange={(e) => setHadir(e.target.value as "Hadir" | "Berhalangan" | "Masih Ragu")}
-                  className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
+                  className="w-full px-3.5 py-3 border border-[#C59B6D]/45 rounded-xl bg-[#FBF7F2] font-sans text-base sm:text-sm text-[#3B1A20] focus:outline-none focus:border-[#6B1222] focus:ring-4 focus:ring-[#6B1222]/15 transition-[border-color,box-shadow] cursor-pointer"
                 >
                   <option value="Hadir">Hadir</option>
                   <option value="Berhalangan">Berhalangan</option>
@@ -211,14 +211,14 @@ export function RsvpGuestbook({
               </div>
 
               <div>
-                <label htmlFor="f-jumlah" className="block font-sans text-sm font-semibold text-[#4b3a3e] mb-1.5">
+                <label htmlFor="f-jumlah" className="block font-sans text-sm font-semibold text-[#3B1A20] mb-1.5">
                   Jumlah Tamu
                 </label>
                 <select
                   id="f-jumlah"
                   value={jumlah}
                   onChange={(e) => setJumlah(e.target.value)}
-                  className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] cursor-pointer"
+                  className="w-full px-3.5 py-3 border border-[#C59B6D]/45 rounded-xl bg-[#FBF7F2] font-sans text-base sm:text-sm text-[#3B1A20] focus:outline-none focus:border-[#6B1222] focus:ring-4 focus:ring-[#6B1222]/15 transition-[border-color,box-shadow] cursor-pointer"
                 >
                   {[1, 2, 3, 4, 5].map((n) => (
                     <option key={n} value={n}>
@@ -231,10 +231,10 @@ export function RsvpGuestbook({
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label htmlFor="f-pesan" className="block font-sans text-sm font-semibold text-[#4b3a3e]">
+                <label htmlFor="f-pesan" className="block font-sans text-sm font-semibold text-[#3B1A20]">
                   Ucapan &amp; Doa Restu
                 </label>
-                <span className="font-sans text-xs text-[#8d757c] tabular-nums">
+                <span className="font-sans text-xs text-[#6E4A50] tabular-nums">
                   {pesan.length}/500
                 </span>
               </div>
@@ -247,14 +247,14 @@ export function RsvpGuestbook({
                 value={pesan}
                 onChange={(e) => setPesan(e.target.value)}
                 placeholder="Tuliskan ucapan dan doa terbaik Anda untuk kedua mempelai..."
-                className="w-full px-3.5 py-3 border border-gold-500/45 rounded-xl bg-surface-white font-sans text-base sm:text-sm text-[#4b3a3e] placeholder:text-muted/60 focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15 transition-[border-color,box-shadow] resize-y min-h-[96px]"
+                className="w-full px-3.5 py-3 border border-[#C59B6D]/45 rounded-xl bg-[#FBF7F2] font-sans text-base sm:text-sm text-[#3B1A20] placeholder:text-[#6E4A50]/60 focus:outline-none focus:border-[#6B1222] focus:ring-4 focus:ring-[#6B1222]/15 transition-[border-color,box-shadow] resize-y min-h-[96px]"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="typo-button w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#b98a35] via-[#e9d3a3] to-[#c9a24b] text-[#443114] uppercase shadow-[0_14px_30px_-10px_rgba(169,130,58,0.55)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="typo-button w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_14px_30px_-10px_rgba(107,18,34,0.45)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
@@ -274,20 +274,20 @@ export function RsvpGuestbook({
         <ScrollLinkedItem offsetY={36}>
           <div className="mt-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <h3 className="typo-card-title flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-gold-600" />
-                Doa &amp; Harapan <span className="text-gold-600 italic text-base">({wishes.length})</span>
+              <h3 className="typo-card-title flex items-center gap-2 text-[#6B1222]">
+                <MessageSquare className="w-5 h-5 text-[#C59B6D]" />
+                Doa &amp; Harapan <span className="text-[#C59B6D] italic text-base">({wishes.length})</span>
               </h3>
 
               <div className="relative w-full sm:w-56">
-                <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-4 h-4 text-[#6E4A50] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari doa pengirim..."
                   aria-label="Cari doa pengirim ucapan"
-                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-gold-500/35 bg-surface-white font-sans text-base sm:text-xs text-ink placeholder:text-muted focus:outline-none focus:border-rose-500"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2] font-sans text-base sm:text-xs text-[#3B1A20] placeholder:text-[#6E4A50]/60 focus:outline-none focus:border-[#6B1222]"
                 />
               </div>
             </div>
@@ -300,8 +300,8 @@ export function RsvpGuestbook({
                   onClick={() => setFilterStatus(st)}
                   className={`px-3 py-1.5 rounded-full font-sans text-xs font-semibold tracking-wide transition-colors cursor-pointer ${
                     filterStatus === st
-                      ? "bg-rose-700 text-white shadow-xs"
-                      : "bg-surface-white text-muted border border-gold-500/30 hover:bg-rose-100"
+                      ? "bg-[#6B1222] text-[#FBF7F2] shadow-xs"
+                      : "bg-[#FBF7F2] text-[#6E4A50] border border-[#C59B6D]/35 hover:bg-[#6B1222]/10"
                   }`}
                 >
                   {st} <span className="tabular-nums text-xs ml-1 opacity-90">({counts[st]})</span>
@@ -311,23 +311,23 @@ export function RsvpGuestbook({
 
             <div className="max-h-[380px] overflow-y-auto space-y-3 pr-1 scrollbar-thin">
               {filteredWishes.length === 0 ? (
-                <div className="text-center py-8 bg-surface-white rounded-2xl border border-gold-500/20 text-muted font-sans text-xs">
+                <div className="text-center py-8 bg-[#FBF7F2] rounded-2xl border border-[#6B1222]/16 text-[#6E4A50] font-sans text-xs">
                   Belum ada ucapan yang sesuai filter pencarian.
                 </div>
               ) : (
                 filteredWishes.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start gap-3 bg-surface-white border border-gold-500/25 rounded-2xl p-4 shadow-xs"
+                    className="flex items-start gap-3 bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl p-4 shadow-xs"
                   >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-gold-500 text-white font-serif font-bold text-base grid place-items-center shrink-0 shadow-xs">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6B1222] to-[#C59B6D] text-[#FBF7F2] font-serif font-bold text-base grid place-items-center shrink-0 shadow-xs">
                       {(item.guestName || "?").trim().charAt(0).toUpperCase()}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center justify-between gap-1.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-sans text-[15px] font-semibold text-[#5d3a41] break-words">
+                          <span className="font-sans text-[15px] font-semibold text-[#6B1222] break-words">
                             {item.guestName}
                           </span>
                           <span
@@ -340,7 +340,7 @@ export function RsvpGuestbook({
                           </span>
                         </div>
 
-                        <span className="font-sans text-xs text-[#8d757c] tabular-nums">
+                        <span className="font-sans text-xs text-[#6E4A50] tabular-nums">
                           {new Date(item.createdAt).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
@@ -350,13 +350,13 @@ export function RsvpGuestbook({
                       </div>
 
                       {item.paxCount && item.paxCount > 0 && (
-                        <p className="font-sans text-xs text-[#8d757c] flex items-center gap-1 mt-0.5">
-                          <Users className="w-3.5 h-3.5 text-gold-600" />
+                        <p className="font-sans text-xs text-[#6E4A50] flex items-center gap-1 mt-0.5">
+                          <Users className="w-3.5 h-3.5 text-[#C59B6D]" />
                           {item.paxCount} Tamu
                         </p>
                       )}
 
-                      <p className="mt-2 typo-body leading-relaxed break-words font-normal">
+                      <p className="mt-2 typo-body leading-relaxed break-words font-normal text-[#3B1A20]">
                         {item.message}
                       </p>
                     </div>

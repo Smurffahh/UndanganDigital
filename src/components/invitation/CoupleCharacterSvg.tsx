@@ -17,6 +17,60 @@ export function CoupleCharacterSvg({
   aspectRatio,
 }: CoupleCharacterSvgProps) {
   const isCouple = variant === "couple";
+
+  if (preset === "javanese-royal") {
+    if (isCouple) {
+      return (
+        <div
+          className={`relative flex items-end justify-center overflow-hidden select-none ${className}`}
+          style={aspectRatio ? { aspectRatio } : undefined}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/javanese/pengantin-pria.webp"
+            alt="Ilustrasi Mempelai Pria"
+            className="h-[96%] w-auto object-contain object-bottom -mr-3.5 drop-shadow-xs pointer-events-none select-none"
+            loading="eager"
+            draggable={false}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/javanese/pengantin-wanita.webp"
+            alt="Ilustrasi Mempelai Wanita"
+            className="h-[93%] w-auto object-contain object-bottom -ml-3.5 drop-shadow-xs pointer-events-none select-none"
+            loading="eager"
+            draggable={false}
+          />
+        </div>
+      );
+    }
+
+    const webpSrc =
+      variant === "groom"
+        ? "/assets/javanese/pengantin-pria.webp"
+        : "/assets/javanese/pengantin-wanita.webp";
+    const altText =
+      variant === "groom"
+        ? "Ilustrasi Mempelai Pria — Fauzan Ma'ruf"
+        : "Ilustrasi Mempelai Wanita — Sinta Maria Utami";
+
+    return (
+      <div
+        className={`relative flex items-end justify-center overflow-hidden select-none ${className}`}
+        style={aspectRatio ? { aspectRatio } : undefined}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={webpSrc}
+          alt={altText}
+          className="h-[96%] w-auto object-contain object-bottom drop-shadow-xs pointer-events-none select-none"
+          loading="lazy"
+          draggable={false}
+        />
+      </div>
+    );
+  }
+
   const fileName = isCouple ? `couple-${preset}.svg` : `couple-${preset}-${variant}.svg`;
   const src = `/images/${fileName}`;
   const titleText = isCouple
@@ -26,13 +80,15 @@ export function CoupleCharacterSvg({
     : "Ilustrasi Mempelai Wanita — Sinta Maria Utami";
 
   return (
-    <div className={`relative flex items-center justify-center overflow-hidden select-none ${className}`}>
+    <div
+      className={`relative flex items-center justify-center overflow-hidden select-none ${className}`}
+      style={aspectRatio ? { aspectRatio } : undefined}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={titleText}
         className="w-full h-full object-contain drop-shadow-sm transition-transform duration-300 pointer-events-none"
-        style={aspectRatio ? { aspectRatio } : undefined}
         loading="lazy"
         draggable={false}
       />

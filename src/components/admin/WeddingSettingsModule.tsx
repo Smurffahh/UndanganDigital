@@ -84,6 +84,12 @@ export function WeddingSettingsModule({
   const [isSaving, setIsSaving] = useState(false);
   const [isResolvingMaps, setIsResolvingMaps] = useState(false);
 
+  useEffect(() => {
+    if (initialSettings) {
+      setFormData(initialSettings);
+    }
+  }, [initialSettings]);
+
   const isCurrentYouTube =
     formData.musicSourceType === "youtube" ||
     (typeof formData.musicUrl === "string" && formData.musicUrl.includes("youtube.com"));
@@ -464,8 +470,11 @@ export function WeddingSettingsModule({
         throw new Error(data.error || "Gagal menyimpan pengaturan");
       }
       toast.success("Pengaturan Countdown, Musik, dan Lokasi berhasil disimpan & disinkronkan ke halaman publik! ✓");
-      if (onSettingsUpdate && data.data) {
-        onSettingsUpdate(data.data);
+      if (data.data) {
+        setFormData(data.data);
+        if (onSettingsUpdate) {
+          onSettingsUpdate(data.data);
+        }
       }
     } catch (err: unknown) {
       toast.error(

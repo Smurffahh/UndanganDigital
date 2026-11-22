@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PetalsCanvas } from "./PetalsCanvas";
-import { ScrollLinkedButterflies } from "./ScrollLinkedButterflies";
+import { FloatingFlowers } from "./FloatingFlowers";
 import { CoverGate } from "./CoverGate";
 import { CountdownHero } from "./CountdownHero";
 import { CoupleProfile } from "./CoupleProfile";
@@ -160,7 +160,7 @@ export function InvitationOrchestrator({
       <FixedInvitationBackground heroPhotoUrl={settings.heroPhotoUrl} />
 
       <PetalsCanvas active={isOpening || isOpened} />
-      <ScrollLinkedButterflies active={isOpening || isOpened} />
+      <FloatingFlowers active={isOpening || isOpened} />
 
       <CoverGate
         guestName={guestName}

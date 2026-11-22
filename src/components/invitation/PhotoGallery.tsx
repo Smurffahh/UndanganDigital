@@ -55,17 +55,17 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
         <header className="text-center mb-9">
           <ScrollLinkedItem offsetY={36}>
-            <p className="typo-eyebrow text-[#a9823a] mb-2">
+            <p className="typo-eyebrow text-[#C59B6D] mb-2">
               Our Gallery
             </p>
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <h2 className="typo-section-title">
+            <h2 className="typo-section-title text-[#6B1222]">
               Galeri Momen
             </h2>
             <WayangDivider />
-            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
+            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#6B1222]">
               #SINgkatceritaFAUZAN
             </p>
           </ScrollLinkedItem>
@@ -97,7 +97,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                   tabIndex={0}
                   role="button"
                   aria-label={`Perbesar foto: ${item.caption || "Galeri prewedding"}`}
-                  className="relative rounded-2xl overflow-hidden border border-gold-500/35 shadow-md cursor-zoom-in bg-rose-100/50 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-rose-700"
+                  className="relative rounded-2xl overflow-hidden border border-[#C59B6D]/40 shadow-md cursor-zoom-in bg-[#FBF7F2]/50 group transition-transform duration-300 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-[#6B1222]"
                 >
                   <div className={`w-full ${aspectClass} rounded-2xl overflow-hidden relative`}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -108,7 +108,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                       loading="lazy"
                     />
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#5d3a41]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#6B1222]/45 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </figure>
               </ScrollLinkedItem>
             );

@@ -44,3 +44,4 @@ debug-*.png
 /data/*.json
 *.sqlite
 *.db
+/assets/

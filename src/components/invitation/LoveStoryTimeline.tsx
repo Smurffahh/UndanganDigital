@@ -53,24 +53,24 @@ export function LoveStoryTimeline({
       <div className="w-full max-w-[920px] mx-auto px-4 sm:px-6 box-border">
         <header className="text-center mb-14">
           <ScrollLinkedItem offsetY={36}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-white/90 border border-gold-500/40 typo-eyebrow text-[#a9823a] shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-gold-600" />
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FBF7F2]/90 border border-[#C59B6D]/40 typo-eyebrow text-[#C59B6D] shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#C59B6D]" />
               <span>Behind The Story</span>
             </span>
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <h2 className="typo-section-title mt-3">
+            <h2 className="typo-section-title mt-3 text-[#6B1222]">
               Perjalanan Dua Jiwa
             </h2>
             <WayangDivider />
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <p className="mt-3.5 typo-body text-center max-w-[580px] mx-auto leading-relaxed text-[#4b3a3e]">
+            <p className="mt-3.5 typo-body text-center max-w-[580px] mx-auto leading-relaxed text-[#3B1A20]">
               &ldquo;{loveStoryText}&rdquo;
             </p>
-            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#a9823a]">
+            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#6B1222]">
               {storyHashtag}
             </p>
           </ScrollLinkedItem>
@@ -114,34 +114,34 @@ export function LoveStoryTimeline({
                     }`}
                   >
                     <ScrollLinkedItem direction={isEven ? "right" : "left"}>
-                      <article className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-white/95 backdrop-blur-md border border-gold-500/35 shadow-[0_16px_36px_-12px_rgba(93,58,65,0.18)] hover:shadow-[0_22px_44px_-10px_rgba(93,58,65,0.24)] transition-[box-shadow,transform] duration-200 relative overflow-hidden group">
-                        <span className="absolute top-2.5 left-2.5 w-2.5 h-2.5 border-t border-l border-gold-500/50 pointer-events-none" />
-                        <span className="absolute bottom-2.5 right-2.5 w-2.5 h-2.5 border-b border-r border-gold-500/50 pointer-events-none" />
+                      <article className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 shadow-[0_16px_36px_-12px_rgba(67,10,20,0.14)] hover:shadow-[0_22px_44px_-10px_rgba(67,10,20,0.20)] transition-[box-shadow,transform] duration-200 relative overflow-hidden group">
+                        <span className="absolute top-2.5 left-2.5 w-2.5 h-2.5 border-t border-l border-[#C59B6D]/50 pointer-events-none" />
+                        <span className="absolute bottom-2.5 right-2.5 w-2.5 h-2.5 border-b border-r border-[#C59B6D]/50 pointer-events-none" />
 
                         <div className={`flex items-center gap-2 mb-2 ${isEven ? "" : "md:justify-end"}`}>
-                          <span className="px-2.5 py-0.5 rounded-md bg-[#f7e9e5] text-rose-900 border border-gold-500/30 text-[10px] font-bold tracking-widest uppercase tabular-nums">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#6B1222]/10 text-[#6B1222] border border-[#6B1222]/25 text-[10px] font-bold tracking-widest uppercase tabular-nums">
                             {ch.badge}
                           </span>
-                          <span className="text-[11px] font-mono tabular-nums text-gold-600 font-bold">
+                          <span className="text-[11px] font-mono tabular-nums text-[#C59B6D] font-bold">
                             STEP {ch.index}
                           </span>
                         </div>
 
-                        <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#5d3a41] leading-snug">
+                        <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#6B1222] leading-snug">
                           {ch.title}
                         </h3>
 
-                        <p className="text-[11px] uppercase tracking-wider text-gold-700 font-semibold mt-1">
+                        <p className="text-[11px] uppercase tracking-wider text-[#C59B6D] font-semibold mt-1">
                           {ch.subtitle}
                         </p>
 
-                        <p className="typo-body text-xs sm:text-sm text-[#4b3a3e] mt-3 leading-relaxed">
+                        <p className="typo-body text-xs sm:text-sm text-[#3B1A20] mt-3 leading-relaxed">
                           {ch.desc}
                         </p>
 
                         {ch.hasHashtag && (
-                          <div className={`mt-4 pt-3 border-t border-gold-500/20 flex items-center gap-2 ${isEven ? "" : "md:justify-end"}`}>
-                            <span className="font-sans text-xs font-semibold text-rose-900 normal-case">
+                          <div className={`mt-4 pt-3 border-t border-[#C59B6D]/20 flex items-center gap-2 ${isEven ? "" : "md:justify-end"}`}>
+                            <span className="font-sans text-xs font-semibold text-[#6B1222] normal-case">
                               #SINgkatceritaFAUZAN
                             </span>
                           </div>
@@ -150,9 +150,9 @@ export function LoveStoryTimeline({
                     </ScrollLinkedItem>
                   </div>
 
-                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-6 z-10 w-12 h-12 rounded-full bg-surface-white border-2 border-gold-500 shadow-md items-center justify-center text-rose-900 group">
-                    <IconComp className="w-5 h-5 text-gold-600" />
-                    <span className="absolute -bottom-5 font-mono text-[9px] font-bold text-gold-700 tabular-nums">
+                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-6 z-10 w-12 h-12 rounded-full bg-[#FBF7F2] border-2 border-[#C59B6D] shadow-md items-center justify-center text-[#6B1222] group">
+                    <IconComp className="w-5 h-5 text-[#C59B6D]" />
+                    <span className="absolute -bottom-5 font-mono text-[9px] font-bold text-[#C59B6D] tabular-nums">
                       {ch.index}
                     </span>
                   </div>

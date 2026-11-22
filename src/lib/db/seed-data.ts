@@ -299,7 +299,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   loveStoryText:
     "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.",
   storyHashtag: "#SINgkatceritaFAUZAN",
-  coupleVisualMode: "photo" as CoupleVisualMode,
+  coupleVisualMode: "svg" as CoupleVisualMode,
   svgCharacterPreset: "javanese-royal" as SvgCharacterPreset,
   isGalleryEnabled: true,
   isLoveStoryEnabled: true,

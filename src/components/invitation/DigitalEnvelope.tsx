@@ -93,17 +93,17 @@ export function DigitalEnvelope({
       <div className="w-[min(100%-2.75rem,720px)] mx-auto">
         <header className="text-center mb-9">
           <ScrollLinkedItem offsetY={36}>
-            <p className="typo-eyebrow text-[#a9823a] mb-2">
+            <p className="typo-eyebrow text-[#C59B6D] mb-2">
               Wedding Gift
             </p>
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <h2 className="typo-section-title">
+            <h2 className="typo-section-title text-[#6B1222]">
               Amplop Digital
             </h2>
             <WayangDivider />
-            <p className="typo-body text-center max-w-[420px] mx-auto mt-3 text-[#4b3a3e]">
+            <p className="typo-body text-center max-w-[420px] mx-auto mt-3 text-[#3B1A20]">
               Doa restu Anda merupakan hadiah terindah bagi kami. Namun apabila Anda ingin memberikan tanda kasih secara digital, dapat melalui:
             </p>
           </ScrollLinkedItem>
@@ -113,9 +113,9 @@ export function DigitalEnvelope({
           <button
             type="button"
             onClick={openQrisModal}
-            className="typo-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-surface-white border border-gold-500/60 text-[#a9823a] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-rose-100 cursor-pointer min-h-11"
+            className="typo-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#FBF7F2] border border-[#C59B6D]/60 text-[#6B1222] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-[#6B1222]/10 cursor-pointer min-h-11"
           >
-            <QrCode className="w-4 h-4 stroke-[2]" />
+            <QrCode className="w-4 h-4 stroke-[2] text-[#C59B6D]" />
             <span>Lihat Kode QRIS (Semua Bank / E-Wallet)</span>
           </button>
         </ScrollLinkedItem>
@@ -129,35 +129,35 @@ export function DigitalEnvelope({
               return (
                 <article
                   key={copyKey}
-                  className="relative overflow-hidden rounded-2xl p-5 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-[0_24px_48px_-14px_rgba(93,58,65,0.26)] transition-[transform,box-shadow] duration-300"
+                  className="relative overflow-hidden rounded-2xl p-5 border border-[#6B1222]/16 shadow-[0_20px_40px_-16px_rgba(67,10,20,0.14)] bg-gradient-to-br from-[#FBF7F2] via-[#F8EFE6] to-[#F1E0CE] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-[0_24px_48px_-14px_rgba(67,10,20,0.22)] transition-[transform,box-shadow] duration-300"
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-gold-500" />
-                      <span className="font-sans text-sm font-bold uppercase tracking-[0.08em] text-[#a9823a]">
+                      <span className="w-2 h-2 rounded-full bg-[#C59B6D]" />
+                      <span className="font-sans text-sm font-bold uppercase tracking-[0.08em] text-[#C59B6D]">
                         {acc.brand}
                       </span>
                     </div>
-                    <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#a9823a]">
+                    <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#C59B6D]">
                       {acc.type}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <ChipMetallic />
-                    <svg className="w-6 h-6 text-gold-600/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-6 h-6 text-[#C59B6D]/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M8.5 16.5a5 5 0 0 1 0-7M12 19a8.5 8.5 0 0 0 0-14M15.5 21.5a12 12 0 0 0 0-19" strokeLinecap="round" />
                     </svg>
                   </div>
 
                   <div className="mb-4">
-                    <p className="font-sans text-xl sm:text-2xl font-bold tabular-nums tracking-[0.06em] text-[#5d3a41]">
+                    <p className="font-sans text-xl sm:text-2xl font-bold tabular-nums tracking-[0.06em] text-[#6B1222]">
                       {acc.number}
                     </p>
-                    <p className="font-sans text-sm font-medium text-[#4b3a3e] mt-1">
-                      a.n. <span className="font-semibold text-rose-900">{acc.holder}</span>
+                    <p className="font-sans text-sm font-medium text-[#3B1A20] mt-1">
+                      a.n. <span className="font-semibold text-[#6B1222]">{acc.holder}</span>
                     </p>
                   </div>
 
@@ -167,7 +167,7 @@ export function DigitalEnvelope({
                     className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                       isCopied
                         ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
-                        : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
+                        : "bg-[#FBF7F2] border-[#C59B6D]/50 text-[#6B1222] hover:bg-[#6B1222] hover:text-[#FBF7F2] hover:border-[#6B1222]"
                     }`}
                   >
                     <span className="relative w-4 h-4 grid place-items-center">
@@ -191,25 +191,25 @@ export function DigitalEnvelope({
         </ScrollLinkedItem>
 
         <ScrollLinkedItem offsetY={36}>
-          <article className="rounded-2xl p-6 border border-gold-500/40 shadow-[0_20px_40px_-16px_rgba(93,58,65,0.2)] bg-gradient-to-br from-[#fffcf9] via-[#fcf5f1] to-[#f7e9e5]">
+          <article className="rounded-2xl p-6 border border-[#6B1222]/16 shadow-[0_20px_40px_-16px_rgba(67,10,20,0.14)] bg-gradient-to-br from-[#FBF7F2] via-[#F8EFE6] to-[#F1E0CE]">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-rose-700" />
-                <span className="typo-card-title text-base sm:text-lg">
+                <MapPin className="w-4 h-4 text-[#6B1222]" />
+                <span className="typo-card-title text-base sm:text-lg text-[#6B1222]">
                   Kirim Kado Fisik
                 </span>
               </div>
-              <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#a9823a]">
+              <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#C59B6D]">
                 Alamat Penerima
               </span>
             </div>
 
-            <p className="typo-body text-xs sm:text-sm text-[#4b3a3e] leading-relaxed mb-2 font-normal">
+            <p className="typo-body text-xs sm:text-sm text-[#3B1A20] leading-relaxed mb-2 font-normal">
               {giftAddress.address}
             </p>
 
-            <p className="font-sans text-sm text-[#4b3a3e] mb-4">
-              Penerima: <span className="font-semibold text-rose-900">{giftAddress.receiver}</span> &middot;{" "}
+            <p className="font-sans text-sm text-[#3B1A20] mb-4">
+              Penerima: <span className="font-semibold text-[#6B1222]">{giftAddress.receiver}</span> &middot;{" "}
               <span className="tabular-nums font-medium">{giftAddress.phone}</span>
             </p>
 
@@ -219,7 +219,7 @@ export function DigitalEnvelope({
               className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                 copiedKey === "addr-copy"
                   ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
-                  : "bg-surface-white border-gold-600/50 text-[#a9823a] hover:bg-gold-500 hover:text-white hover:border-gold-500"
+                  : "bg-[#FBF7F2] border-[#C59B6D]/50 text-[#6B1222] hover:bg-[#6B1222] hover:text-[#FBF7F2] hover:border-[#6B1222]"
               }`}
             >
               <span className="relative w-4 h-4 grid place-items-center">
@@ -255,7 +255,7 @@ export function DigitalEnvelope({
           onClick={closeQrisModal}
         >
           <div
-            className={`w-full max-w-sm bg-gradient-to-b from-[#fffcf9] to-[#fbf1ed] rounded-3xl border border-gold-500/60 shadow-2xl p-6 text-center relative overflow-hidden transition-[transform,opacity] duration-300 ${
+            className={`w-full max-w-sm bg-gradient-to-b from-[#FBF7F2] to-[#F1E0CE] rounded-3xl border border-[#C59B6D]/60 shadow-2xl p-6 text-center relative overflow-hidden transition-[transform,opacity] duration-300 ${
               isModalVisible ? "scale-100 translate-y-0 opacity-100" : "scale-95 translate-y-4 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -264,23 +264,23 @@ export function DigitalEnvelope({
               type="button"
               onClick={closeQrisModal}
               aria-label="Tutup modal QRIS"
-              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-rose-100 text-rose-900 grid place-items-center hover:bg-rose-200 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
+              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-[#6B1222]/10 text-[#6B1222] grid place-items-center hover:bg-[#6B1222]/20 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
             >
               <X className="w-5 h-5 stroke-[2]" />
             </button>
 
-            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] inline-block px-4 py-1 rounded-full bg-rose-100 mb-3">
+            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#6B1222] inline-block px-4 py-1 rounded-full bg-[#6B1222]/10 mb-3">
               QRIS Statis
             </span>
 
-            <h3 className="typo-card-title text-xl sm:text-2xl mb-1">
+            <h3 className="typo-card-title text-xl sm:text-2xl mb-1 text-[#6B1222]">
               Pindai QRIS
             </h3>
-            <p className="typo-body text-xs sm:text-sm mb-4 mx-auto text-center text-[#8d757c]">
+            <p className="typo-body text-xs sm:text-sm mb-4 mx-auto text-center text-[#6E4A50]">
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
             </p>
 
-            <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-gold-500/40 shadow-inner grid place-items-center relative">
+            <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-[#C59B6D]/40 shadow-inner grid place-items-center relative">
               {qrisImageUrl && !qrisImgError ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -296,7 +296,7 @@ export function DigitalEnvelope({
               )}
             </div>
 
-            <p className="font-sans text-sm font-semibold text-[#5d3a41] mt-3.5">
+            <p className="font-sans text-sm font-semibold text-[#6B1222] mt-3.5">
               a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
             </p>
 
@@ -305,7 +305,7 @@ export function DigitalEnvelope({
               download="qris-fauzan-sinta.png"
               target="_blank"
               rel="noopener noreferrer"
-              className="typo-button mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#c9a24b] hover:bg-[#b8913b] text-white uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
+              className="typo-button mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#6B1222] hover:bg-[#520D1A] text-[#FBF7F2] uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
             >
               <Download className="w-4 h-4 stroke-[2]" />
               <span>Simpan Gambar QR</span>

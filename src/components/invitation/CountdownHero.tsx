@@ -129,9 +129,9 @@ export function CountdownHero({
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
           data-seq-dir="top"
-          style={getItemStyle("2200ms", "top")}
+          style={getItemStyle("2000ms", "top")}
         >
-          <p className="typo-eyebrow text-[#a9823a] tracking-[0.25em]">
+          <p className="typo-eyebrow text-[#C59B6D] tracking-[0.25em]">
             THE WEDDING OF
           </p>
         </div>
@@ -139,7 +139,7 @@ export function CountdownHero({
         <div
           className="w-full flex justify-center mb-6 royal-seq-item"
           data-seq-dir="center-scale"
-          style={getItemStyle("2420ms", "center-scale")}
+          style={getItemStyle("2140ms", "center-scale")}
         >
           <div className="relative flex justify-center items-center w-full">
             <div
@@ -153,9 +153,9 @@ export function CountdownHero({
                 }
               }}
               title="Klik untuk beralih antara foto dan ilustrasi karakter"
-              className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(58,39,29,0.22)] bg-[#FAF6F0]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C5A059]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C5A059]"
+              className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
             >
-              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C5A059]/30 relative flex items-center justify-center bg-[#FAF6F0]">
+              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-center justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
                 {activeMode === "svg" || !heroPhotoUrl ? (
                   <CoupleCharacterSvg
                     preset={svgCharacterPreset}
@@ -171,7 +171,7 @@ export function CountdownHero({
                     loading="eager"
                   />
                 )}
-                <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-[#3E2723]/80 backdrop-blur-md text-[#FAF6F0] text-[10px] font-sans font-medium tracking-wide flex items-center gap-1 shadow-sm opacity-85 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-[#6B1222]/85 backdrop-blur-md text-[#FBF7F2] text-[10px] font-sans font-medium tracking-wide flex items-center gap-1 shadow-sm opacity-85 group-hover:opacity-100 transition-opacity">
                   <span>{activeMode === "photo" ? "Ilustrasi ⇄" : "Foto ⇄"}</span>
                 </div>
               </div>
@@ -182,12 +182,12 @@ export function CountdownHero({
         <div
           className="mt-2 text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2640ms", "bottom")}
+          style={getItemStyle("2280ms", "bottom")}
         >
-          <p className="typo-eyebrow text-[#a9823a]">
+          <p className="typo-eyebrow text-[#C59B6D]">
             WITH LOVE
           </p>
-          <p className="typo-arabic leading-[2] text-rose-700 mt-2" dir="rtl" lang="ar">
+          <p className="typo-arabic leading-[2] text-[#6B1222] mt-2" dir="rtl" lang="ar">
             بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
           </p>
         </div>
@@ -195,16 +195,16 @@ export function CountdownHero({
         <div
           className="mt-5 w-full royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2860ms", "bottom")}
+          style={getItemStyle("2420ms", "bottom")}
         >
-          <figure className="card-ornament bg-surface-white/95 backdrop-blur-md border border-gold-500/35 rounded-2xl shadow-[0_24px_50px_-18px_rgba(93,58,65,0.22)] p-7 sm:p-8 text-center relative overflow-hidden">
-            <p className="typo-arabic leading-[2] text-rose-900 relative z-10" dir="rtl" lang="ar">
+          <figure className="card-ornament bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-7 sm:p-8 text-center relative overflow-hidden">
+            <p className="typo-arabic leading-[2] text-[#6B1222] relative z-10" dir="rtl" lang="ar">
               وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>
-            <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#4b3a3e]">
+            <blockquote className="typo-body mt-4 mx-auto text-center font-normal leading-relaxed text-[#3B1A20]">
               &ldquo;Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.&rdquo;
             </blockquote>
-            <figcaption className="typo-meta mt-3 font-medium text-[#a9823a]">
+            <figcaption className="typo-meta mt-3 font-medium text-[#C59B6D]">
               &mdash; QS. Ar-Rum : 21 &mdash;
             </figcaption>
           </figure>
@@ -213,7 +213,7 @@ export function CountdownHero({
         <div
           className="my-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("3080ms", "bottom")}
+          style={getItemStyle("2560ms", "bottom")}
         >
           <Divider />
         </div>
@@ -221,15 +221,15 @@ export function CountdownHero({
         <div
           className="text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("3080ms", "bottom")}
+          style={getItemStyle("2700ms", "bottom")}
         >
-          <p className="typo-eyebrow text-[#a9823a] mb-2">
+          <p className="typo-eyebrow text-[#C59B6D] mb-2">
             SAVE THE DATE
           </p>
           <h2 className="typo-section-title">
             Hitung Mundur
           </h2>
-          <p className="typo-body text-center mx-auto mt-2 text-[#4b3a3e]">
+          <p className="typo-body text-center mx-auto mt-2 text-[#3B1A20]">
             Menuju Hari Bahagia &amp; Ikrar Suci Pernikahan
           </p>
         </div>
@@ -237,7 +237,7 @@ export function CountdownHero({
         <div
           className="mt-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("3080ms", "bottom")}
+          style={getItemStyle("2840ms", "bottom")}
         >
           {!timeLeft.isDone ? (
             <div
@@ -252,34 +252,34 @@ export function CountdownHero({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="relative py-3 sm:py-4 px-1.5 sm:px-2 bg-surface-white/95 backdrop-blur-md border border-gold-500/40 rounded-xl sm:rounded-2xl shadow-[0_16px_30px_-16px_rgba(93,58,65,0.25)] flex flex-col items-center justify-center overflow-hidden min-w-0"
+                  className="relative py-3 sm:py-4 px-1.5 sm:px-2 bg-[#FBF7F2]/95 backdrop-blur-md border border-[#C59B6D]/45 rounded-xl sm:rounded-2xl shadow-[0_16px_30px_-16px_rgba(67,10,20,0.15)] flex flex-col items-center justify-center overflow-hidden min-w-0"
                 >
                   <div className="w-full flex justify-between px-2 sm:px-3 mb-1 opacity-50" aria-hidden="true">
-                    <span className="w-px h-1.5 bg-gold-600" />
-                    <span className="w-px h-1 bg-gold-400" />
-                    <span className="w-px h-1 bg-gold-400" />
-                    <span className="w-px h-1 bg-gold-400" />
-                    <span className="w-px h-1.5 bg-gold-600" />
+                    <span className="w-px h-1.5 bg-[#C59B6D]" />
+                    <span className="w-px h-1 bg-[#C59B6D]/60" />
+                    <span className="w-px h-1 bg-[#C59B6D]/60" />
+                    <span className="w-px h-1 bg-[#C59B6D]/60" />
+                    <span className="w-px h-1.5 bg-[#C59B6D]" />
                   </div>
 
                   <NumberFlow
                     value={item.value}
                     format={{ minimumIntegerDigits: 2 }}
-                    className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#5d3a41] leading-none tracking-tight"
-                    style={{ color: "#5d3a41" }}
+                    className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#6B1222] leading-none tracking-tight"
+                    style={{ color: "#6B1222" }}
                   />
                   
-                  <span className="font-sans text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#9c5f66] mt-1.5">
+                  <span className="font-sans text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#6E4A50] mt-1.5">
                     {item.label}
                   </span>
 
-                  <div className="w-6 h-px bg-gold-500/40 mt-1.5" aria-hidden="true" />
+                  <div className="w-6 h-px bg-[#C59B6D]/40 mt-1.5" aria-hidden="true" />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="p-4 rounded-2xl bg-cream/90 backdrop-blur-md border border-gold-500/30 max-w-md mx-auto text-center">
-              <p className="typo-body italic text-center mx-auto text-rose-900">
+            <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-md border border-[#C59B6D]/30 max-w-md mx-auto text-center">
+              <p className="typo-body italic text-center mx-auto text-[#6B1222]">
                 Alhamdulillah, rangkaian acara pernikahan Fauzan &amp; Sinta telah berlangsung 🤍
               </p>
             </div>

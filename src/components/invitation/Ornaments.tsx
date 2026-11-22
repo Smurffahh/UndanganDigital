@@ -140,12 +140,12 @@ export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) 
         <circle cx="40" cy="40" r="35" stroke="#c9a24b" strokeWidth="0.6" strokeDasharray="1 3" opacity="0.5" />
       </svg>
       <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <circle cx="40" cy="40" r="32" stroke="#5d3a41" strokeWidth="1" opacity="0.65" />
+        <circle cx="40" cy="40" r="32" stroke="#6B1222" strokeWidth="1" opacity="0.65" />
         <text
           x="34"
           y="49"
           textAnchor="middle"
-          fill="#5d3a41"
+          fill="#6B1222"
           fontFamily="'Great Vibes', cursive"
           fontSize="35"
         >
@@ -155,14 +155,14 @@ export function MonogramFS({ className = "w-16 h-16" }: { className?: string }) 
           x="46"
           y="53"
           textAnchor="middle"
-          fill="#c9a24b"
+          fill="#C59B6D"
           fontFamily="'Great Vibes', cursive"
           fontSize="35"
         >
           S
         </text>
-        <circle cx="40" cy="21" r="1.6" fill="#c9a24b" />
-        <circle cx="40" cy="59" r="1.6" fill="#c9a24b" />
+        <circle cx="40" cy="21" r="1.6" fill="#C59B6D" />
+        <circle cx="40" cy="59" r="1.6" fill="#C59B6D" />
       </svg>
     </div>
   );

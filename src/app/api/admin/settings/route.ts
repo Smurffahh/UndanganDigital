@@ -88,6 +88,7 @@ export async function PUT(request: Request) {
     revalidatePath("/", "page");
     revalidatePath("/", "layout");
     revalidatePath("/dashboard");
+    revalidatePath("/api/admin/settings");
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
     console.error("Failed to update settings:", err);

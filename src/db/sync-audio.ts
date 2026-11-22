@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { neon } from "@neondatabase/serverless";
+import { put, list } from "@vercel/blob";
 import { WEDDING_MUSIC_PRESETS } from "../lib/db/seed-data";
 import { syncMusicTracks } from "../lib/db/store";
 
@@ -47,11 +48,56 @@ export async function runAudioSync() {
     }
   }
 
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const existingBlobMap = new Map<string, string>();
+
+  if (token) {
+    try {
+      console.log("[Audio Sync] Memeriksa daftar audio yang telah ada di Vercel Blob...");
+      const blobList = await list({ prefix: "audio/", token });
+      for (const blob of blobList.blobs) {
+        const basename = path.basename(blob.pathname);
+        existingBlobMap.set(basename, blob.url);
+      }
+      console.log(`[Audio Sync] Ditemukan ${existingBlobMap.size} audio yang sudah ada di Vercel Blob.`);
+    } catch (err) {
+      console.warn("[Audio Sync Warning] Gagal memeriksa Vercel Blob:", err);
+    }
+  }
+
   const tracksToSync: AudioTrackRecord[] = [];
+  let uploadedCount = 0;
 
   for (const file of files) {
-    const url = `/audio/${file}`;
     const slug = file.replace(/\.(mp3|wav|ogg)$/i, "");
+    let finalUrl = `/audio/${file}`;
+
+    // If Vercel Blob token is available, ensure uploaded to Blob
+    if (token) {
+      if (existingBlobMap.has(file)) {
+        finalUrl = existingBlobMap.get(file)!;
+      } else {
+        const filePath = path.join(audioDir, file);
+        const fileBuffer = fs.readFileSync(filePath);
+        const contentType = file.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
+
+        console.log(`[Audio Sync] Mengunggah ${file} (${(fileBuffer.length / (1024 * 1024)).toFixed(2)} MB) ke Vercel Blob...`);
+        try {
+          const blob = await put(`audio/${file}`, fileBuffer, {
+            access: "public",
+            addRandomSuffix: false,
+            contentType,
+            token,
+          });
+          finalUrl = blob.url;
+          existingBlobMap.set(file, blob.url);
+          uploadedCount++;
+          console.log(`[Audio Sync] Berhasil diunggah: ${blob.url}`);
+        } catch (uploadErr) {
+          console.error(`[Audio Sync Error] Gagal mengunggah ${file}:`, uploadErr);
+        }
+      }
+    }
 
     const matchedPreset = presetMap.get(file);
     let title = "";
@@ -70,15 +116,39 @@ export async function runAudioSync() {
       slug,
       title,
       artist,
-      url,
+      url: finalUrl,
       isActive: true,
     });
   }
 
   const count = await syncMusicTracks(tracksToSync);
+
+  // Sync wedding_settings.music_url to Blob URL if matching
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl) {
+    try {
+      const sql = neon(dbUrl);
+      const settingsRows = await sql`SELECT id, music_url FROM wedding_settings LIMIT 1`;
+      if (settingsRows.length > 0) {
+        const currentMusicUrl = settingsRows[0].music_url as string;
+        if (currentMusicUrl && currentMusicUrl.startsWith("/audio/")) {
+          const targetFilename = currentMusicUrl.replace(/^\/audio\//, "");
+          const targetBlobUrl = existingBlobMap.get(targetFilename);
+          if (targetBlobUrl) {
+            await sql`UPDATE wedding_settings SET music_url = ${targetBlobUrl} WHERE id = ${settingsRows[0].id}`;
+            console.log(`[Audio Sync] Diperbarui wedding_settings.music_url -> ${targetBlobUrl}`);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[Audio Sync Warning] Gagal sinkronisasi settings music_url:", e);
+    }
+  }
+
   return {
     success: true,
     totalFiles: files.length,
+    uploadedCount,
     syncedCount: count,
     tracks: tracksToSync,
   };
@@ -94,7 +164,7 @@ export async function queryAllMusicTracks() {
 if (process.argv[1]?.replace(/\\/g, "/").includes("sync-audio")) {
   runAudioSync()
     .then(async (res) => {
-      console.log(`[Audio Sync] Berhasil sinkronisasi ${res.syncedCount} lagu ke PostgreSQL & store!`);
+      console.log(`[Audio Sync] Selesai. Total files: ${res.totalFiles}, baru diunggah ke Blob: ${res.uploadedCount}, disinkronkan ke DB: ${res.syncedCount}`);
       const rows = await queryAllMusicTracks();
       console.log(`[Audio Verify] Total baris di tabel music_tracks: ${rows.length}`);
       for (const r of rows) {

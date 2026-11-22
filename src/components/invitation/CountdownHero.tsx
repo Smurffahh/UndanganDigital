@@ -74,7 +74,7 @@ export function CountdownHero({
     if (!isOpened) return;
     const timer = setTimeout(() => {
       setIsSequenceDone(true);
-    }, 2800);
+    }, 2000);
     return () => clearTimeout(timer);
   }, [isOpened]);
 
@@ -129,7 +129,7 @@ export function CountdownHero({
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
           data-seq-dir="top"
-          style={getItemStyle("550ms", "top")}
+          style={getItemStyle("400ms", "top")}
         >
           <p className="typo-eyebrow text-[#C59B6D] tracking-[0.25em]">
             THE WEDDING OF
@@ -139,7 +139,7 @@ export function CountdownHero({
         <div
           className="w-full flex justify-center mb-6 royal-seq-item"
           data-seq-dir="center-scale"
-          style={getItemStyle("700ms", "center-scale")}
+          style={getItemStyle("550ms", "center-scale")}
         >
           <div className="relative flex justify-center items-center w-full">
             <div
@@ -155,7 +155,7 @@ export function CountdownHero({
               title="Klik untuk beralih antara foto dan ilustrasi karakter"
               className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
             >
-              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-center justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
+              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE]">
                 {activeMode === "svg" || !heroPhotoUrl ? (
                   <CoupleCharacterSvg
                     preset={svgCharacterPreset}
@@ -182,7 +182,7 @@ export function CountdownHero({
         <div
           className="mt-2 text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("880ms", "bottom")}
+          style={getItemStyle("720ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#C59B6D]">
             WITH LOVE
@@ -195,7 +195,7 @@ export function CountdownHero({
         <div
           className="mt-5 w-full royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("1050ms", "bottom")}
+          style={getItemStyle("900ms", "bottom")}
         >
           <figure className="card-ornament bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-7 sm:p-8 text-center relative overflow-hidden">
             <p className="typo-arabic leading-[2] text-[#6B1222] relative z-10" dir="rtl" lang="ar">
@@ -213,7 +213,7 @@ export function CountdownHero({
         <div
           className="my-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("1220ms", "bottom")}
+          style={getItemStyle("1050ms", "bottom")}
         >
           <Divider />
         </div>
@@ -221,7 +221,7 @@ export function CountdownHero({
         <div
           className="text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("1380ms", "bottom")}
+          style={getItemStyle("1200ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#C59B6D] mb-2">
             SAVE THE DATE
@@ -237,7 +237,7 @@ export function CountdownHero({
         <div
           className="mt-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("1550ms", "bottom")}
+          style={getItemStyle("1350ms", "bottom")}
         >
           {!timeLeft.isDone ? (
             <div

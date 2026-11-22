@@ -30,9 +30,9 @@ export function FixedInvitationBackground({ heroPhotoUrl: _heroPhotoUrl }: Fixed
         </div>
       </div>
 
-      {/* Persistent 4-Corner Decorative Frame Layer (z-[52]) */}
+      {/* Persistent 4-Corner Decorative Frame Layer (z-[1]) */}
       <div
-        className="fixed inset-0 z-[52] pointer-events-none overflow-hidden select-none w-screen h-dvh"
+        className="fixed inset-0 z-[1] pointer-events-none overflow-hidden select-none w-screen h-dvh"
         aria-hidden="true"
       >
         {/* Top Left Corner Ornament (Pojok Atas) */}

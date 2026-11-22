@@ -103,8 +103,8 @@ export function CoupleProfile({
                 </span>
               </ScrollLinkedItem>
 
-              <ScrollLinkedItem offsetY={36} stage={3} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
-                <div className="w-full h-full rounded-[999px] overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
+              <ScrollLinkedItem offsetY={36} stage={3} className="w-44 h-56 sm:w-52 sm:h-64 p-1.5 rounded-t-full rounded-b-2xl border border-[#6B1222]/25 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
+                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] p-1">
                   {isSvgMode || !groomPhotoUrl ? (
                     <CoupleCharacterSvg
                       preset={svgCharacterPreset}
@@ -116,7 +116,7 @@ export function CoupleProfile({
                     <img
                       src={groomPhotoUrl}
                       alt={`${groomName} - Mempelai Pria`}
-                      className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                      className="w-full h-full object-cover rounded-t-full rounded-b-xl outline outline-1 -outline-offset-1 outline-black/10"
                       loading="lazy"
                     />
                   )}
@@ -188,8 +188,8 @@ export function CoupleProfile({
                 </span>
               </ScrollLinkedItem>
 
-              <ScrollLinkedItem offsetY={36} stage={3} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
-                <div className="w-full h-full rounded-[999px] overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
+              <ScrollLinkedItem offsetY={36} stage={3} className="w-44 h-56 sm:w-52 sm:h-64 p-1.5 rounded-t-full rounded-b-2xl border border-[#6B1222]/25 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
+                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] p-1">
                   {isSvgMode || !bridePhotoUrl ? (
                     <CoupleCharacterSvg
                       preset={svgCharacterPreset}
@@ -201,7 +201,7 @@ export function CoupleProfile({
                     <img
                       src={bridePhotoUrl}
                       alt={`${brideName} - Mempelai Wanita`}
-                      className="w-full h-full object-cover rounded-[999px] outline outline-1 -outline-offset-1 outline-black/10"
+                      className="w-full h-full object-cover rounded-t-full rounded-b-xl outline outline-1 -outline-offset-1 outline-black/10"
                       loading="lazy"
                     />
                   )}

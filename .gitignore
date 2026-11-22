@@ -45,3 +45,7 @@ debug-*.png
 *.sqlite
 *.db
 /assets/
+
+# Large Media / Audio Hosted on Vercel Blob
+public/audio/
+

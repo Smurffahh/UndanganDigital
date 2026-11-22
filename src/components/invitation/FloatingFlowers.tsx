@@ -25,7 +25,7 @@ export function FloatingFlowers({ active = true }: FloatingFlowersProps) {
     <div
       id={`floating-flowers-${containerId}`}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none select-none overflow-hidden z-[4]"
+      className="fixed inset-0 pointer-events-none select-none overflow-hidden z-[1]"
     >
       {FLOWER_PARTICLES.map((flower) => (
         <div

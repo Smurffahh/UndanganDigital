@@ -27,17 +27,9 @@ export function CoupleCharacterSvg({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/javanese/pengantin-pria.webp"
-            alt="Ilustrasi Mempelai Pria"
-            className="h-[96%] w-auto object-contain object-bottom -mr-3.5 drop-shadow-xs pointer-events-none select-none"
-            loading="eager"
-            draggable={false}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/javanese/pengantin-wanita.webp"
-            alt="Ilustrasi Mempelai Wanita"
-            className="h-[93%] w-auto object-contain object-bottom -ml-3.5 drop-shadow-xs pointer-events-none select-none"
+            src="/assets/javanese/dua-pengantin.webp"
+            alt="Ilustrasi Dua Pengantin Fauzan dan Sinta"
+            className="h-[98%] w-auto max-w-full object-contain object-bottom drop-shadow-xs pointer-events-none select-none"
             loading="eager"
             draggable={false}
           />

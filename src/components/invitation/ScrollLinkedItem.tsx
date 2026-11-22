@@ -10,16 +10,16 @@ interface ScrollLinkedItemProps {
   offsetY?: number;
   delay?: number;
   stage?: 1 | 2 | 3 | 4 | 5;
-  direction?: "bottom" | "top" | "left" | "right" | "center-scale";
+  direction?: "bottom" | "top" | "left" | "right" | "center-scale" | "up" | "down" | "none";
   trigger?: boolean;
 }
 
 const STAGE_DELAYS: Record<number, number> = {
   1: 0,
-  2: 140,
-  3: 280,
-  4: 420,
-  5: 560,
+  2: 220,
+  3: 440,
+  4: 660,
+  5: 880,
 };
 
 export function ScrollLinkedItem({
@@ -81,14 +81,16 @@ export function ScrollLinkedItem({
 
   const initialTransform =
     direction === "left"
-      ? "translate3d(-28px, 0, 0) scale3d(0.96, 0.96, 1)"
+      ? "translate3d(-22px, 0, 0) scale3d(0.97, 0.97, 1)"
       : direction === "right"
-      ? "translate3d(28px, 0, 0) scale3d(0.96, 0.96, 1)"
-      : direction === "top"
-      ? "translate3d(0, -28px, 0) scale3d(0.96, 0.96, 1)"
+      ? "translate3d(22px, 0, 0) scale3d(0.97, 0.97, 1)"
+      : direction === "top" || direction === "down"
+      ? "translate3d(0, -22px, 0) scale3d(0.97, 0.97, 1)"
+      : direction === "none"
+      ? "translate3d(0, 0, 0) scale3d(1, 1, 1)"
       : direction === "center-scale"
       ? "translate3d(0, 0, 0) scale3d(0.90, 0.90, 1)"
-      : `translate3d(0, ${offsetY || 28}px, 0) scale3d(0.96, 0.96, 1)`;
+      : `translate3d(0, ${offsetY || 22}px, 0) scale3d(0.97, 0.97, 1)`;
 
   const animatedStyle: CSSProperties = {
     ...style,
@@ -97,7 +99,7 @@ export function ScrollLinkedItem({
       ? "translate3d(0, 0, 0) scale3d(1, 1, 1)"
       : initialTransform,
     transitionProperty: "transform, opacity",
-    transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+    transitionDuration: isVisible ? "900ms" : "var(--motion-duration-exit)",
     transitionTimingFunction: "var(--motion-ease-royal)",
     transitionDelay: isVisible ? `${effectiveDelay}ms` : "0ms",
     willChange: "transform, opacity",

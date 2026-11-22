@@ -133,7 +133,7 @@ export function RsvpGuestbook({
     <section id="rsvp" className="py-20 relative bg-transparent" aria-label="Konfirmasi Kehadiran dan Buku Tamu">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
-          <ScrollLinkedItem offsetY={36}>
+          <ScrollLinkedItem direction="down" offsetY={22}>
             <p className="typo-eyebrow text-[#C59B6D] mb-2">
               RSVP &amp; Prayers
             </p>

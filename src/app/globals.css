@@ -42,11 +42,11 @@
   interpolate-size: allow-keywords;
   --motion-ease-royal: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-duration-gate: 1500ms;
-  --motion-duration-reveal: 550ms;
+  --motion-duration-reveal: 900ms;
   --motion-duration-fast: 350ms;
   --motion-duration-exit: 350ms;
-  --motion-stagger-step: 140ms;
-  --motion-distance: 24px;
+  --motion-stagger-step: 220ms;
+  --motion-distance: 22px;
 
   --color-primary-maroon: #6B1222;
   --color-primary-maroon-hover: #520D1A;
@@ -433,6 +433,44 @@ body {
   will-change: transform, opacity;
 }
 
+@keyframes asset-enter-down {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -36px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes asset-enter-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@utility animate-asset-enter-down {
+  animation: asset-enter-down 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-asset-enter-up {
+  animation: asset-enter-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-asset-enter-down {
+  animation: asset-enter-down 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-asset-enter-up {
+  animation: asset-enter-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes butterflyDrift {
   0%, 100% {
     transform: translate3d(0, 0, 0) rotate(0deg);
@@ -649,8 +687,12 @@ body {
     transform: none !important;
     opacity: 1 !important;
   }
-  .animate-vinyl-spin {
+  .animate-vinyl-spin,
+  .animate-asset-enter-down,
+  .animate-asset-enter-up {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

@@ -92,7 +92,7 @@ export function DigitalEnvelope({
     <section id="amplop" className="py-20 relative bg-transparent" aria-label="Amplop Digital dan Hadiah Pernikahan">
       <div className="w-[min(100%-2.75rem,720px)] mx-auto">
         <header className="text-center mb-9">
-          <ScrollLinkedItem offsetY={36}>
+          <ScrollLinkedItem direction="down" offsetY={22}>
             <p className="typo-eyebrow text-[#C59B6D] mb-2">
               Wedding Gift
             </p>

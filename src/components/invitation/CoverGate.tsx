@@ -113,7 +113,7 @@ export function CoverGate({
 
     setTimeout(() => {
       setGone(true);
-    }, 1150);
+    }, 1500);
   };
 
   if (gone) return null;
@@ -154,9 +154,9 @@ export function CoverGate({
         }`}
         style={{
           willChange: "transform",
-          transitionDuration: "850ms",
+          transitionDuration: "1450ms",
           transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-          transitionDelay: isOpening ? "250ms" : "0ms",
+          transitionDelay: isOpening ? "150ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -172,9 +172,9 @@ export function CoverGate({
         }`}
         style={{
           willChange: "transform",
-          transitionDuration: "850ms",
+          transitionDuration: "1450ms",
           transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-          transitionDelay: isOpening ? "250ms" : "0ms",
+          transitionDelay: isOpening ? "150ms" : "0ms",
           backfaceVisibility: "hidden",
         }}
       >
@@ -184,67 +184,86 @@ export function CoverGate({
 
       {/* Four Corner Framing Ornaments on CoverGate */}
       <div
-        className={`absolute inset-0 z-15 pointer-events-none overflow-hidden select-none transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          mounted && !isOpening ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        className={`absolute inset-0 z-15 pointer-events-none overflow-hidden select-none transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpening ? "opacity-0" : "opacity-100"
         }`}
-        style={{ transitionDelay: mounted ? "150ms" : "0ms" }}
       >
         {/* Top Left */}
-        <div className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] origin-top-left animate-wind-sway-left">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/javanese/pojok-atas.webp"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-contain pointer-events-none select-none"
-            loading="eager"
-            draggable={false}
-          />
+        <div
+          className="absolute top-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down motion-safe:animate-asset-enter-down"
+          style={{ animationDelay: "200ms" }}
+        >
+          <div className="w-full h-full origin-top-left motion-safe:animate-wind-sway-left">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/javanese/pojok-atas.webp"
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-contain pointer-events-none select-none"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
         </div>
 
         {/* Top Right */}
-        <div className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] origin-top-right animate-wind-sway-right">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/javanese/pojok-atas.webp"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
-            loading="eager"
-            draggable={false}
-          />
+        <div
+          className="absolute top-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/3022] pointer-events-none animate-asset-enter-down motion-safe:animate-asset-enter-down"
+          style={{ animationDelay: "200ms" }}
+        >
+          <div className="w-full h-full origin-top-right motion-safe:animate-wind-sway-right">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/javanese/pojok-atas.webp"
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
         </div>
 
         {/* Bottom Left */}
-        <div className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] origin-bottom-left animate-wind-sway-bottom-left">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/javanese/pojok-bawah.webp"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
-            loading="eager"
-            draggable={false}
-          />
+        <div
+          className="absolute bottom-0 left-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up motion-safe:animate-asset-enter-up"
+          style={{ animationDelay: "350ms" }}
+        >
+          <div className="w-full h-full origin-bottom-left motion-safe:animate-wind-sway-bottom-left">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/javanese/pojok-bawah.webp"
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-contain pointer-events-none select-none scale-x-[-1]"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
         </div>
 
         {/* Bottom Right */}
-        <div className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] origin-bottom-right animate-wind-sway-bottom-right">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/javanese/pojok-bawah.webp"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-contain pointer-events-none select-none"
-            loading="eager"
-            draggable={false}
-          />
+        <div
+          className="absolute bottom-0 right-0 w-28 sm:w-36 md:w-44 aspect-[3375/4219] pointer-events-none animate-asset-enter-up motion-safe:animate-asset-enter-up"
+          style={{ animationDelay: "350ms" }}
+        >
+          <div className="w-full h-full origin-bottom-right motion-safe:animate-wind-sway-bottom-right">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/javanese/pojok-bawah.webp"
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-contain pointer-events-none select-none"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
         </div>
       </div>
 
       {/* Main Center Overlay Content */}
       <div
-        className={`relative z-20 w-full h-dvh min-h-dvh max-w-[440px] mx-auto flex flex-col justify-between items-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[opacity,transform] duration-[400ms] ${
+        className={`relative z-20 w-full h-dvh min-h-dvh max-w-[440px] mx-auto flex flex-col justify-between items-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[opacity,transform] duration-[650ms] ${
           isOpening
             ? "opacity-0 scale-[0.96] -translate-y-2 pointer-events-none"
             : "opacity-100 scale-100 translate-y-0"
@@ -262,7 +281,7 @@ export function CoverGate({
 
             {/* Step 4: Eyebrow & Crest (450ms) */}
             <div
-              className={`flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
               }`}
               style={{ transitionDelay: mounted ? "450ms" : "0ms" }}
@@ -277,14 +296,14 @@ export function CoverGate({
               </div>
             </div>
 
-            {/* Step 3: Arch Frame & Dua Pengantin Character (300ms) */}
+            {/* Step 3: Arch Frame & Dua Pengantin Character (550ms) */}
             <div
-              className={`w-[min(68vw,220px)] sm:w-[240px] aspect-[4/5] mx-auto rounded-t-full rounded-b-xl p-1 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-3"
               }`}
-              style={{ transitionDelay: mounted ? "300ms" : "0ms" }}
+              style={{ transitionDelay: mounted ? "550ms" : "0ms" }}
             >
-              <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] flex items-end justify-center">
+              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] flex items-end justify-center pt-6 pb-2 px-4">
                 {coupleVisualMode === "photo" && coverPhotoUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -299,7 +318,7 @@ export function CoverGate({
                   <img
                     src="/assets/javanese/dua-pengantin.webp"
                     alt="Dua Pengantin Fauzan dan Sinta"
-                    className="w-full h-[98%] object-contain object-bottom drop-shadow-sm select-none pointer-events-none"
+                    className="h-[82%] w-auto max-w-[82%] object-contain object-bottom drop-shadow-sm select-none pointer-events-none mx-auto"
                     loading="eager"
                     draggable={false}
                   />
@@ -307,12 +326,12 @@ export function CoverGate({
               </div>
             </div>
 
-            {/* Step 4: Couple Names & Date (450ms) */}
+            {/* Step 4: Couple Names & Date (780ms) */}
             <div
-              className={`relative z-10 transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
-              style={{ transitionDelay: mounted ? "450ms" : "0ms" }}
+              style={{ transitionDelay: mounted ? "780ms" : "0ms" }}
             >
               <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#6B1222]">
                 Fauzan <span className="font-script text-[#C59B6D] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
@@ -333,7 +352,7 @@ export function CoverGate({
           </div>
         </div>
 
-        {/* Golden Latch Medallion (F&S Seal) */}
+        {/* Golden Latch Medallion (F&S Seal) (900ms) */}
         <div
           role="button"
           tabIndex={0}
@@ -346,7 +365,7 @@ export function CoverGate({
           }}
           title="Buka Undangan"
           aria-label="Buka Undangan Pernikahan Fauzan dan Sinta"
-          className={`relative my-2 sm:my-3 cursor-pointer select-none transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`relative my-2 sm:my-3 cursor-pointer select-none transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             mounted ? "opacity-100 scale-100" : "opacity-0 scale-90"
           } ${
             isOpening
@@ -354,7 +373,7 @@ export function CoverGate({
               : "hover:scale-105 active:scale-95"
           }`}
           style={{
-            transitionDelay: mounted ? "700ms" : "0ms",
+            transitionDelay: mounted ? "900ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -364,13 +383,13 @@ export function CoverGate({
           )}
         </div>
 
-        {/* Step 5 & 6: Guest Card & Open Button (Bottom) */}
+        {/* Step 5 & 6: Guest Card & Open Button (Bottom) (980ms & 1180ms) */}
         <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center shrink-0">
           <div
-            className={`w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
-            style={{ transitionDelay: mounted ? "580ms" : "0ms" }}
+            style={{ transitionDelay: mounted ? "980ms" : "0ms" }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C59B6D]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
             <CardCornerOrnament />
@@ -386,10 +405,10 @@ export function CoverGate({
           </div>
 
           <div
-            className={`w-full flex flex-col items-center transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-full flex flex-col items-center transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
-            style={{ transitionDelay: mounted ? "700ms" : "0ms" }}
+            style={{ transitionDelay: mounted ? "1180ms" : "0ms" }}
           >
             <button
               type="button"

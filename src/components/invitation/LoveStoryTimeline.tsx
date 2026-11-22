@@ -52,7 +52,7 @@ export function LoveStoryTimeline({
     >
       <div className="w-full max-w-[920px] mx-auto px-4 sm:px-6 box-border">
         <header className="text-center mb-14">
-          <ScrollLinkedItem offsetY={36}>
+          <ScrollLinkedItem direction="down" offsetY={22}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FBF7F2]/90 border border-[#C59B6D]/40 typo-eyebrow text-[#C59B6D] shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-[#C59B6D]" />
               <span>Behind The Story</span>

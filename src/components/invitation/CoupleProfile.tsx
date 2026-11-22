@@ -62,7 +62,7 @@ export function CoupleProfile({
     <section id="mempelai" className="py-20 relative bg-transparent" aria-label="Profil Mempelai">
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
         <header className="text-center mb-12">
-          <ScrollLinkedItem offsetY={36}>
+          <ScrollLinkedItem direction="down" offsetY={22}>
             <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs mb-3">
               Bride &amp; Groom
             </span>
@@ -104,7 +104,7 @@ export function CoupleProfile({
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} stage={3} className="w-44 h-56 sm:w-52 sm:h-64 p-1.5 rounded-t-full rounded-b-2xl border border-[#6B1222]/25 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
-                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] p-1">
+                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] pt-6 pb-2 px-4">
                   {isSvgMode || !groomPhotoUrl ? (
                     <CoupleCharacterSvg
                       preset={svgCharacterPreset}
@@ -189,7 +189,7 @@ export function CoupleProfile({
               </ScrollLinkedItem>
 
               <ScrollLinkedItem offsetY={36} stage={3} className="w-44 h-56 sm:w-52 sm:h-64 p-1.5 rounded-t-full rounded-b-2xl border border-[#6B1222]/25 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
-                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] p-1">
+                <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/45 flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] pt-6 pb-2 px-4">
                   {isSvgMode || !bridePhotoUrl ? (
                     <CoupleCharacterSvg
                       preset={svgCharacterPreset}

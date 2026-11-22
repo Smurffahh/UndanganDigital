@@ -87,7 +87,9 @@ export function InvitationOrchestrator({
 
     setIsOpening(true);
     setIsOpened(true);
-    setIsHeroReady(true);
+    setTimeout(() => {
+      setIsHeroReady(true);
+    }, 450);
   };
 
   useEffect(() => {

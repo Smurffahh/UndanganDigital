@@ -153,9 +153,9 @@ export function CountdownHero({
                 }
               }}
               title="Klik untuk beralih antara foto dan ilustrasi karakter"
-              className="arch w-[min(76%,300px)] sm:w-[min(76%,320px)] aspect-[4/5] mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
+              className="arch w-48 h-60 sm:w-56 sm:h-70 mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
             >
-              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE]">
+              <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] pt-6 pb-2 px-4">
                 {activeMode === "svg" || !heroPhotoUrl ? (
                   <CoupleCharacterSvg
                     preset={svgCharacterPreset}

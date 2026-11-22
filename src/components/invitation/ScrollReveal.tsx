@@ -19,7 +19,7 @@ interface ScrollRevealProps {
     | "top"
     | "bottom"
     | "center-scale";
-  direction?: "bottom" | "top" | "left" | "right" | "center-scale";
+  direction?: "bottom" | "top" | "left" | "right" | "center-scale" | "up" | "down" | "none";
   className?: string;
   as?: ElementType;
   threshold?: number;
@@ -27,10 +27,10 @@ interface ScrollRevealProps {
 
 const STAGE_DELAYS: Record<number, number> = {
   1: 0,
-  2: 140,
-  3: 280,
-  4: 420,
-  5: 560,
+  2: 220,
+  3: 440,
+  4: 660,
+  5: 880,
 };
 
 export function ScrollReveal({
@@ -101,16 +101,20 @@ export function ScrollReveal({
     if (!isVisible) {
       switch (effectiveDir) {
         case "left":
-          return "opacity-0 -translate-x-7 scale-[0.96]";
+          return "opacity-0 -translate-x-[22px] scale-[0.97]";
         case "right":
-          return "opacity-0 translate-x-7 scale-[0.96]";
+          return "opacity-0 translate-x-[22px] scale-[0.97]";
+        case "down":
         case "top":
-          return "opacity-0 -translate-y-7 scale-[0.96]";
+          return "opacity-0 -translate-y-[22px] scale-[0.97]";
+        case "none":
+          return "opacity-0 translate-y-0 scale-100";
         case "center-scale":
           return "opacity-0 translate-y-0 scale-[0.90]";
+        case "up":
         case "bottom":
         default:
-          return "opacity-0 translate-y-7 scale-[0.96]";
+          return "opacity-0 translate-y-[22px] scale-[0.97]";
       }
     }
 
@@ -122,9 +126,9 @@ export function ScrollReveal({
       ref={elementRef}
       className={`transition-[opacity,transform] ${getVariantStyles()} ${className}`}
       style={{
-        transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
+        transitionDuration: isVisible ? "900ms" : "var(--motion-duration-exit)",
         transitionTimingFunction: "var(--motion-ease-royal)",
-        transitionDelay: isVisible ? `${delay}ms` : "0ms",
+        transitionDelay: isVisible ? `${effectiveDelay}ms` : "0ms",
         willChange: "transform, opacity",
       }}
     >

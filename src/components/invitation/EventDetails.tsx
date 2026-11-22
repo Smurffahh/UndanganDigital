@@ -66,7 +66,7 @@ export function EventDetails({
     <section id="acara" className="py-20 relative bg-transparent" aria-label="Detail Acara dan Lokasi">
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
-          <ScrollLinkedItem offsetY={36}>
+          <ScrollLinkedItem direction="down" offsetY={22}>
             <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
             </span>

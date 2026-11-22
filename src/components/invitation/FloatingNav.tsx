@@ -117,7 +117,7 @@ export function FloatingNav({
 
   return (
     <div
-      className={`fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-40 max-w-[96vw] pointer-events-none transition-opacity duration-300 ${
+      className={`fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-[60] max-w-[96vw] pointer-events-none transition-opacity duration-300 ${
         isOpened ? "pointer-events-auto opacity-100" : "opacity-0"
       }`}
     >
@@ -125,7 +125,7 @@ export function FloatingNav({
         aria-label="Navigasi cepat undangan"
         className="royal-seq-item pointer-events-auto"
         data-seq-dir="bottom"
-        style={{ "--seq-delay": "3300ms" } as React.CSSProperties}
+        style={{ "--seq-delay": "2000ms" } as React.CSSProperties}
       >
         <div className="bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 shadow-[0_14px_36px_-10px_rgba(67,10,20,0.22)] rounded-full p-1 sm:p-1.5 flex items-center gap-0.5 sm:gap-1">
           {effectiveItems.map((item) => {

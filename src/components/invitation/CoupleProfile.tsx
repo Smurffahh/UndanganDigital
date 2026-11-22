@@ -95,17 +95,15 @@ export function CoupleProfile({
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-6">
-          <ScrollReveal direction="left">
+          <ScrollReveal direction="left" stage={1}>
             <article className="text-center p-4 sm:p-6 flex flex-col items-center">
-              {/* Step 1: Badge (0ms) */}
-              <ScrollLinkedItem offsetY={36} className="mb-5">
+              <ScrollLinkedItem offsetY={36} stage={2} className="mb-5">
                 <span className="inline-block px-5 py-1.5 border border-[#C59B6D]/50 rounded-full bg-[#FBF7F2]/95 typo-eyebrow text-[#C59B6D] shadow-xs">
                   Mempelai Pria
                 </span>
               </ScrollLinkedItem>
 
-              {/* Step 2: Avatar / Character Visual (140ms) */}
-              <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
+              <ScrollLinkedItem offsetY={36} stage={3} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
                 <div className="w-full h-full rounded-[999px] overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
                   {isSvgMode || !groomPhotoUrl ? (
                     <CoupleCharacterSvg
@@ -125,8 +123,7 @@ export function CoupleProfile({
                 </div>
               </ScrollLinkedItem>
 
-              {/* Step 3: Name & Parents (280ms) */}
-              <ScrollLinkedItem offsetY={36} className="text-center">
+              <ScrollLinkedItem offsetY={36} stage={4} className="text-center">
                 <span className="font-script text-3xl sm:text-4xl text-[#6B1222] block mt-2 mb-0.5 leading-none">
                   Fauzan
                 </span>
@@ -146,8 +143,7 @@ export function CoupleProfile({
                 )}
               </ScrollLinkedItem>
 
-              {/* Step 4: Bio Card (380ms) */}
-              <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
+              <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
                 <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
                   <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
                     {groomBio}
@@ -159,24 +155,24 @@ export function CoupleProfile({
 
           {/* Center Divider Gunungan & Ampersand */}
           <div className="flex items-center justify-center gap-2 sm:gap-3.5 my-4 md:my-0">
-            <ScrollReveal direction="left">
-              <ScrollLinkedItem offsetY={24}>
+            <ScrollReveal direction="left" stage={2}>
+              <ScrollLinkedItem offsetY={24} stage={2}>
                 <div className="-rotate-12 w-10 sm:w-12 h-14 sm:h-16 flex items-center justify-center opacity-85">
                   <GununganWayang variant="royal-solid" tone="gold-harmony" />
                 </div>
               </ScrollLinkedItem>
             </ScrollReveal>
 
-            <ScrollReveal direction="center-scale">
-              <ScrollLinkedItem offsetY={36}>
+            <ScrollReveal direction="center-scale" stage={2}>
+              <ScrollLinkedItem offsetY={36} stage={2}>
                 <span className="font-script text-5xl sm:text-6xl text-[#C59B6D] drop-shadow-sm select-none leading-none animate-gold-sheen">
                   &amp;
                 </span>
               </ScrollLinkedItem>
             </ScrollReveal>
 
-            <ScrollReveal direction="right">
-              <ScrollLinkedItem offsetY={24}>
+            <ScrollReveal direction="right" stage={2}>
+              <ScrollLinkedItem offsetY={24} stage={2}>
                 <div className="rotate-12 w-10 sm:w-12 h-14 sm:h-16 flex items-center justify-center opacity-85">
                   <GununganWayang variant="royal-solid" tone="gold-harmony" flipHorizontal />
                 </div>
@@ -184,17 +180,15 @@ export function CoupleProfile({
             </ScrollReveal>
           </div>
 
-          <ScrollReveal direction="right">
+          <ScrollReveal direction="right" stage={1}>
             <article className="text-center p-4 sm:p-6 flex flex-col items-center">
-              {/* Step 1: Badge (0ms) */}
-              <ScrollLinkedItem offsetY={36} className="mb-5">
+              <ScrollLinkedItem offsetY={36} stage={2} className="mb-5">
                 <span className="inline-block px-5 py-1.5 border border-[#C59B6D]/50 rounded-full bg-[#FBF7F2]/95 typo-eyebrow text-[#C59B6D] shadow-xs">
                   Mempelai Wanita
                 </span>
               </ScrollLinkedItem>
 
-              {/* Step 2: Avatar / Character Visual (140ms) */}
-              <ScrollLinkedItem offsetY={36} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
+              <ScrollLinkedItem offsetY={36} stage={3} className="w-[min(72%,250px)] aspect-[3/4] p-2 rounded-[999px] border-2 border-[#6B1222]/50 outline outline-1 outline-offset-4 outline-[#C59B6D]/50 shadow-lg bg-[#FBF7F2]/95 relative z-10 mb-6">
                 <div className="w-full h-full rounded-[999px] overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] to-[#F1E7D6]">
                   {isSvgMode || !bridePhotoUrl ? (
                     <CoupleCharacterSvg
@@ -214,8 +208,7 @@ export function CoupleProfile({
                 </div>
               </ScrollLinkedItem>
 
-              {/* Step 3: Name & Parents (280ms) */}
-              <ScrollLinkedItem offsetY={36} className="text-center">
+              <ScrollLinkedItem offsetY={36} stage={4} className="text-center">
                 <span className="font-script text-3xl sm:text-4xl text-[#6B1222] block mt-2 mb-0.5 leading-none">
                   Sinta
                 </span>
@@ -235,8 +228,7 @@ export function CoupleProfile({
                 )}
               </ScrollLinkedItem>
 
-              {/* Step 4: Bio Card (380ms) */}
-              <ScrollLinkedItem offsetY={36} className="mt-4 w-full max-w-[340px]">
+              <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
                 <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
                   <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
                     {brideBio}

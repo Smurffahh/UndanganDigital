@@ -121,7 +121,7 @@ export function CoverGate({
     >
       {/* Daun Pintu Kiri (Kori Agung Left Door) */}
       <div
-        className={`gate-wing-left absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-b from-[#F1E7D6] via-[#E7D9C1] to-[#DBC8AA] border-r border-[#C5A059]/70 shadow-[18px_0_40px_-6px_rgba(74,50,34,0.32)] transition-transform ${
+        className={`gate-wing-left absolute inset-y-0 left-0 w-[calc(50%+1px)] z-10 bg-gradient-to-b from-[#F1E7D6]/85 via-[#E7D9C1]/80 to-[#DBC8AA]/85 backdrop-blur-[2px] border-r border-[#C5A059]/70 shadow-[18px_0_40px_-6px_rgba(74,50,34,0.32)] transition-transform ${
           isOpening ? "-translate-x-[102%]" : "translate-x-0"
         }`}
         style={{
@@ -140,7 +140,7 @@ export function CoverGate({
 
       {/* Daun Pintu Kanan (Kori Agung Right Door - Mirrored) */}
       <div
-        className={`gate-wing-right absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-b from-[#F1E7D6] via-[#E7D9C1] to-[#DBC8AA] border-l border-[#C5A059]/70 shadow-[-18px_0_40px_-6px_rgba(74,50,34,0.32)] transition-transform ${
+        className={`gate-wing-right absolute inset-y-0 right-0 w-[calc(50%+1px)] z-10 bg-gradient-to-b from-[#F1E7D6]/85 via-[#E7D9C1]/80 to-[#DBC8AA]/85 backdrop-blur-[2px] border-l border-[#C5A059]/70 shadow-[-18px_0_40px_-6px_rgba(74,50,34,0.32)] transition-transform ${
           isOpening ? "translate-x-[102%]" : "translate-x-0"
         }`}
         style={{

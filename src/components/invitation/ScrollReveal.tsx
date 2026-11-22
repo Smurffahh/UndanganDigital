@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, type ElementType, type ReactNode } from "r
 interface ScrollRevealProps {
   children: ReactNode;
   delay?: number;
+  stage?: 1 | 2 | 3 | 4 | 5;
+  trigger?: boolean;
   variant?:
     | "fade-up"
     | "fade"
@@ -23,9 +25,19 @@ interface ScrollRevealProps {
   threshold?: number;
 }
 
+const STAGE_DELAYS: Record<number, number> = {
+  1: 0,
+  2: 140,
+  3: 280,
+  4: 420,
+  5: 560,
+};
+
 export function ScrollReveal({
   children,
   delay = 0,
+  stage,
+  trigger,
   variant = "bottom-up",
   direction,
   className = "",
@@ -34,6 +46,9 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLElement | null>(null);
+  const isIntersectingRef = useRef(false);
+
+  const effectiveDelay = delay || (stage ? STAGE_DELAYS[stage] : 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,7 +64,10 @@ export function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        isIntersectingRef.current = entry.isIntersecting;
+        if (trigger === undefined || trigger === true) {
+          setIsVisible(entry.isIntersecting);
+        }
       },
       {
         threshold,
@@ -59,7 +77,13 @@ export function ScrollReveal({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, trigger]);
+
+  useEffect(() => {
+    if (trigger === true && isIntersectingRef.current && !isVisible) {
+      setIsVisible(true);
+    }
+  }, [trigger, isVisible]);
 
   const getVariantStyles = () => {
     const effectiveDir =

@@ -252,11 +252,11 @@ export function FloatingControls({
 
       {musicEnabled && (
         <div
-          className={`fixed top-5 right-5 z-40 flex items-center gap-2 royal-seq-item ${
+          className={`fixed top-5 right-5 z-[60] flex items-center gap-2 royal-seq-item ${
             isOpened ? "pointer-events-auto" : "pointer-events-none"
           }`}
           data-seq-dir="right"
-          style={{ "--seq-delay": "3300ms" } as React.CSSProperties}
+          style={{ "--seq-delay": "2000ms" } as React.CSSProperties}
         >
           {showTitleBadge && !showFeedbackBadge && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FBF7F2]/95 border border-[#C59B6D]/50 text-xs font-medium text-[#6B1222] shadow-md backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-300">

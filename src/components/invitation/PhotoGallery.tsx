@@ -84,6 +84,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               <ScrollLinkedItem
                 key={item.id}
                 offsetY={36}
+                stage={(((idx % 4) + 1) as 1 | 2 | 3 | 4)}
                 className="break-inside-avoid"
               >
                 <figure

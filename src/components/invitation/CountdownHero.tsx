@@ -74,7 +74,7 @@ export function CountdownHero({
     if (!isOpened) return;
     const timer = setTimeout(() => {
       setIsSequenceDone(true);
-    }, 3500);
+    }, 2800);
     return () => clearTimeout(timer);
   }, [isOpened]);
 
@@ -129,7 +129,7 @@ export function CountdownHero({
         <div
           className="w-full flex flex-col items-center mb-3 royal-seq-item"
           data-seq-dir="top"
-          style={getItemStyle("2000ms", "top")}
+          style={getItemStyle("550ms", "top")}
         >
           <p className="typo-eyebrow text-[#C59B6D] tracking-[0.25em]">
             THE WEDDING OF
@@ -139,7 +139,7 @@ export function CountdownHero({
         <div
           className="w-full flex justify-center mb-6 royal-seq-item"
           data-seq-dir="center-scale"
-          style={getItemStyle("2140ms", "center-scale")}
+          style={getItemStyle("700ms", "center-scale")}
         >
           <div className="relative flex justify-center items-center w-full">
             <div
@@ -182,7 +182,7 @@ export function CountdownHero({
         <div
           className="mt-2 text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2280ms", "bottom")}
+          style={getItemStyle("880ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#C59B6D]">
             WITH LOVE
@@ -195,7 +195,7 @@ export function CountdownHero({
         <div
           className="mt-5 w-full royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2420ms", "bottom")}
+          style={getItemStyle("1050ms", "bottom")}
         >
           <figure className="card-ornament bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-7 sm:p-8 text-center relative overflow-hidden">
             <p className="typo-arabic leading-[2] text-[#6B1222] relative z-10" dir="rtl" lang="ar">
@@ -213,7 +213,7 @@ export function CountdownHero({
         <div
           className="my-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2560ms", "bottom")}
+          style={getItemStyle("1220ms", "bottom")}
         >
           <Divider />
         </div>
@@ -221,7 +221,7 @@ export function CountdownHero({
         <div
           className="text-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2700ms", "bottom")}
+          style={getItemStyle("1380ms", "bottom")}
         >
           <p className="typo-eyebrow text-[#C59B6D] mb-2">
             SAVE THE DATE
@@ -237,7 +237,7 @@ export function CountdownHero({
         <div
           className="mt-8 w-full flex justify-center royal-seq-item"
           data-seq-dir="bottom"
-          style={getItemStyle("2840ms", "bottom")}
+          style={getItemStyle("1550ms", "bottom")}
         >
           {!timeLeft.isDone ? (
             <div

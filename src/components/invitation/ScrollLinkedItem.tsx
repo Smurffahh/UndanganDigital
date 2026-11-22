@@ -9,9 +9,18 @@ interface ScrollLinkedItemProps {
   style?: CSSProperties;
   offsetY?: number;
   delay?: number;
+  stage?: 1 | 2 | 3 | 4 | 5;
   direction?: "bottom" | "top" | "left" | "right" | "center-scale";
   trigger?: boolean;
 }
+
+const STAGE_DELAYS: Record<number, number> = {
+  1: 0,
+  2: 140,
+  3: 280,
+  4: 420,
+  5: 560,
+};
 
 export function ScrollLinkedItem({
   children,
@@ -20,12 +29,15 @@ export function ScrollLinkedItem({
   style,
   offsetY = 24,
   delay = 0,
+  stage,
   direction = "bottom",
   trigger,
 }: ScrollLinkedItemProps) {
   const containerRef = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const isIntersectingRef = useRef(false);
+
+  const effectiveDelay = delay || (stage ? STAGE_DELAYS[stage] : 0);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -87,7 +99,7 @@ export function ScrollLinkedItem({
     transitionProperty: "transform, opacity",
     transitionDuration: isVisible ? "var(--motion-duration-reveal)" : "var(--motion-duration-exit)",
     transitionTimingFunction: "var(--motion-ease-royal)",
-    transitionDelay: isVisible ? `${delay}ms` : "0ms",
+    transitionDelay: isVisible ? `${effectiveDelay}ms` : "0ms",
     willChange: "transform, opacity",
     backfaceVisibility: "hidden",
   };

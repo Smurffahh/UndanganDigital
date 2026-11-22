@@ -333,21 +333,51 @@ body {
   animation: goldSheen 3.2s ease-in-out infinite;
 }
 
-@keyframes ambientSwayLeft {
-  0% {
-    transform: rotate(-2deg);
+@keyframes windSwayLeft {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
   }
-  100% {
-    transform: rotate(2deg);
+  30% {
+    transform: rotate(2.8deg) translate3d(2px, 1px, 0);
+  }
+  65% {
+    transform: rotate(-1.5deg) translate3d(-1px, 0, 0);
   }
 }
 
-@keyframes ambientSwayRight {
-  0% {
-    transform: scaleX(-1) rotate(-2deg);
+@keyframes windSwayRight {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
   }
-  100% {
-    transform: scaleX(-1) rotate(2deg);
+  35% {
+    transform: rotate(-2.8deg) translate3d(-2px, 1px, 0);
+  }
+  70% {
+    transform: rotate(1.5deg) translate3d(1px, 0, 0);
+  }
+}
+
+@keyframes windSwayBottomLeft {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  40% {
+    transform: rotate(-1.4deg) translate3d(-1px, 0, 0);
+  }
+  75% {
+    transform: rotate(1.0deg) translate3d(1px, 0, 0);
+  }
+}
+
+@keyframes windSwayBottomRight {
+  0%, 100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  45% {
+    transform: rotate(1.4deg) translate3d(1px, 0, 0);
+  }
+  80% {
+    transform: rotate(-1.0deg) translate3d(-1px, 0, 0);
   }
 }
 
@@ -356,27 +386,44 @@ body {
     transform: translate3d(0, -10vh, 0) rotate(0deg);
     opacity: 0;
   }
-  10% {
-    opacity: 0.85;
+  12% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate3d(calc(var(--float-x, 24px) * 0.5), 50vh, 0) rotate(180deg);
   }
   85% {
-    opacity: 0.85;
+    opacity: 0.8;
   }
   100% {
-    transform: translate3d(var(--float-x, 24px), 110vh, 0) rotate(var(--float-rot, 210deg));
+    transform: translate3d(var(--float-x, 24px), 110vh, 0) rotate(360deg);
     opacity: 0;
   }
 }
 
+.animate-wind-sway-left,
 .animate-ambient-sway-left {
   transform-origin: top left;
-  animation: ambientSwayLeft 6s ease-in-out infinite alternate;
+  animation: windSwayLeft 5.5s ease-in-out infinite;
   will-change: transform;
 }
 
+.animate-wind-sway-right,
 .animate-ambient-sway-right {
   transform-origin: top right;
-  animation: ambientSwayRight 6s ease-in-out infinite alternate;
+  animation: windSwayRight 6.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-wind-sway-bottom-left {
+  transform-origin: bottom left;
+  animation: windSwayBottomLeft 6.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-wind-sway-bottom-right {
+  transform-origin: bottom right;
+  animation: windSwayBottomRight 7.6s ease-in-out infinite;
   will-change: transform;
 }
 

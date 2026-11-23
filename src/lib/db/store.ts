@@ -208,6 +208,15 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     brideChildOrder: strOrFallback(row.brideChildOrder, DEFAULT_WEDDING_SETTINGS.brideChildOrder),
     brideParents: strOrFallback(row.brideParents, DEFAULT_WEDDING_SETTINGS.brideParents),
     waMessageTemplate: strOrFallback(row.waMessageTemplate, DEFAULT_WEDDING_SETTINGS.waMessageTemplate),
+    showTasyakuran: boolOrFallback(row.showTasyakuran, DEFAULT_WEDDING_SETTINGS.showTasyakuran),
+    tasyakuranTitle: strOrFallback(row.tasyakuranTitle, DEFAULT_WEDDING_SETTINGS.tasyakuranTitle),
+    tasyakuranStartDate: strOrFallback(row.tasyakuranStartDate, DEFAULT_WEDDING_SETTINGS.tasyakuranStartDate),
+    tasyakuranEndDate: strOrFallback(row.tasyakuranEndDate, DEFAULT_WEDDING_SETTINGS.tasyakuranEndDate),
+    tasyakuranTime: strOrFallback(row.tasyakuranTime, DEFAULT_WEDDING_SETTINGS.tasyakuranTime),
+    tasyakuranSameLocation: boolOrFallback(row.tasyakuranSameLocation, DEFAULT_WEDDING_SETTINGS.tasyakuranSameLocation),
+    tasyakuranVenue: strOrFallback(row.tasyakuranVenue, DEFAULT_WEDDING_SETTINGS.tasyakuranVenue),
+    tasyakuranAddress: strOrFallback(row.tasyakuranAddress, DEFAULT_WEDDING_SETTINGS.tasyakuranAddress),
+    tasyakuranMapsUrl: strOrFallback(row.tasyakuranMapsUrl, DEFAULT_WEDDING_SETTINGS.tasyakuranMapsUrl),
   });
 }
 
@@ -379,6 +388,15 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS bride_child_order VARCHAR(100) DEFAULT 'Putri Pertama'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS groom_parents VARCHAR(255) DEFAULT 'Bapak H. Ma''ruf & Ibu Hj. Siti Aminah'`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS bride_parents VARCHAR(255) DEFAULT 'Bapak H. Utami & Ibu Hj. Maria'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS show_tasyakuran BOOLEAN DEFAULT true`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_title VARCHAR(100) DEFAULT 'Tasyakuran'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_start_date VARCHAR(50) DEFAULT '2027-01-01'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_end_date VARCHAR(50) DEFAULT '2027-01-02'`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_time VARCHAR(100) DEFAULT ''`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_same_location BOOLEAN DEFAULT true`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_venue VARCHAR(255) DEFAULT ''`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_address TEXT DEFAULT ''`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_maps_url TEXT DEFAULT ''`;
     hasEnsuredColumns = true;
   } catch (err) {
     console.warn("Could not ensure wedding_settings columns:", err);

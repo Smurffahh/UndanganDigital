@@ -55,6 +55,15 @@ const updateSettingsSchema = z.object({
   brideChildOrder: z.string().max(100).optional(),
   groomParents: z.string().max(255).optional(),
   brideParents: z.string().max(255).optional(),
+  showTasyakuran: z.boolean().optional(),
+  tasyakuranTitle: z.string().max(100).optional(),
+  tasyakuranStartDate: z.string().max(50).optional(),
+  tasyakuranEndDate: z.string().max(50).optional(),
+  tasyakuranTime: z.string().max(100).optional(),
+  tasyakuranSameLocation: z.boolean().optional(),
+  tasyakuranVenue: z.string().max(255).optional(),
+  tasyakuranAddress: z.string().max(1000).optional(),
+  tasyakuranMapsUrl: safeUrlOrPath,
 }).passthrough();
 
 export async function GET() {

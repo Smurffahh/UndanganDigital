@@ -319,6 +319,15 @@ export function InvitationOrchestrator({
           googleMapsEmbed={settings.googleMapsEmbed}
           weddingDateIso={settings.weddingDateIso}
           eventDateLabel={settings.eventDateLabel}
+          showTasyakuran={settings.showTasyakuran}
+          tasyakuranTitle={settings.tasyakuranTitle}
+          tasyakuranStartDate={settings.tasyakuranStartDate}
+          tasyakuranEndDate={settings.tasyakuranEndDate}
+          tasyakuranTime={settings.tasyakuranTime}
+          tasyakuranSameLocation={settings.tasyakuranSameLocation}
+          tasyakuranVenue={settings.tasyakuranVenue}
+          tasyakuranAddress={settings.tasyakuranAddress}
+          tasyakuranMapsUrl={settings.tasyakuranMapsUrl}
         />
 
         {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}

@@ -307,6 +307,15 @@ export const DEFAULT_WEDDING_SETTINGS = {
   groomParents: "Bapak H. Ma'ruf & Ibu Hj. Siti Aminah",
   brideChildOrder: "Putri Pertama",
   brideParents: "Bapak H. Utami & Ibu Hj. Maria",
+  showTasyakuran: true,
+  tasyakuranTitle: "Tasyakuran",
+  tasyakuranStartDate: "2027-01-01",
+  tasyakuranEndDate: "2027-01-02",
+  tasyakuranTime: "",
+  tasyakuranSameLocation: true,
+  tasyakuranVenue: "",
+  tasyakuranAddress: "",
+  tasyakuranMapsUrl: "",
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 

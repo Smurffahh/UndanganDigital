@@ -79,7 +79,7 @@ export function RsvpGuestbook({
 
       setWishes((prev) => [newWish, ...prev]);
       setPesan("");
-      toast.success("Terima kasih atas doa & konfirmasi kehadiran Anda! 🤍");
+      toast.success("Terima kasih atas doa dan konfirmasi kehadiran Anda.");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan sistem.");
     } finally {

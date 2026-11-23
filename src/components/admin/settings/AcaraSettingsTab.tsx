@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import NumberFlow from "@number-flow/react";
-import { Calendar, MapPin, Search, RefreshCw, ExternalLink } from "lucide-react";
+import { Calendar, MapPin, Search, RefreshCw, ExternalLink, Sparkles, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { formatEventDateRange } from "@/lib/dateFormat";
 
 interface AcaraSettingsTabProps {
   formData: any;
@@ -196,6 +199,167 @@ export function AcaraSettingsTab({
             </div>
           </div>
         </CardContent>
+      </Card>
+
+      <Card className="border-slate-200/80 shadow-xs">
+        <CardHeader className="pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#6B1222]" />
+              <div>
+                <CardTitle className="text-base font-bold text-slate-900">
+                  Acara Tasyakuran
+                </CardTitle>
+                <CardDescription className="mt-0.5">
+                  Atur jadwal dan lokasi tasyakuran pernikahan sebelum hari akad nikah.
+                </CardDescription>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="text-xs text-slate-600">
+                {formData.showTasyakuran !== false ? "Tasyakuran Aktif" : "Tasyakuran Nonaktif"}
+              </span>
+              <Switch
+                checked={formData.showTasyakuran !== false}
+                onCheckedChange={(checked) => onChange("showTasyakuran", checked)}
+                aria-label="Tampilkan jadwal Tasyakuran"
+              />
+            </div>
+          </div>
+        </CardHeader>
+
+        {formData.showTasyakuran !== false && (
+          <CardContent className="space-y-4 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="tasyakuranTitle">Judul acara</Label>
+                <Input
+                  id="tasyakuranTitle"
+                  value={formData.tasyakuranTitle || ""}
+                  onChange={(e) => onChange("tasyakuranTitle", e.target.value)}
+                  placeholder="Tasyakuran"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="tasyakuranTime">Waktu pelaksanaan (opsional)</Label>
+                <Input
+                  id="tasyakuranTime"
+                  value={formData.tasyakuranTime || ""}
+                  onChange={(e) => onChange("tasyakuranTime", e.target.value)}
+                  placeholder="Kosongkan jika hanya menampilkan hari dan tanggal"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Bila dikosongkan, kartu hanya menampilkan hari dan rentang tanggal.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="tasyakuranStartDate">Tanggal mulai</Label>
+                  <Input
+                    id="tasyakuranStartDate"
+                    type="date"
+                    value={formData.tasyakuranStartDate || "2027-01-01"}
+                    onChange={(e) => onChange("tasyakuranStartDate", e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="tasyakuranEndDate">Tanggal selesai</Label>
+                  <Input
+                    id="tasyakuranEndDate"
+                    type="date"
+                    value={formData.tasyakuranEndDate || "2027-01-02"}
+                    onChange={(e) => onChange("tasyakuranEndDate", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center gap-2 text-xs text-slate-700">
+                <Calendar className="h-3.5 w-3.5 text-[#6B1222] shrink-0" />
+                <span>
+                  Pratinjau tampilan tanggal:{" "}
+                  <strong className="font-semibold text-slate-900">
+                    {formatEventDateRange(
+                      formData.tasyakuranStartDate || "2027-01-01",
+                      formData.tasyakuranEndDate || "2027-01-02"
+                    )}
+                  </strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/90">
+                <div className="space-y-0.5">
+                  <span className="font-semibold text-xs sm:text-sm text-slate-900 block">
+                    Gunakan lokasi yang sama dengan acara utama
+                  </span>
+                  <span className="text-[11px] text-slate-500 block">
+                    Nama gedung, alamat lengkap, dan Google Maps mengikuti data lokasi utama.
+                  </span>
+                </div>
+                <Switch
+                  checked={formData.tasyakuranSameLocation !== false}
+                  onCheckedChange={(checked) => onChange("tasyakuranSameLocation", checked)}
+                  aria-label="Gunakan lokasi yang sama dengan acara utama"
+                />
+              </div>
+
+              {formData.tasyakuranSameLocation !== false ? (
+                <div className="p-3.5 rounded-xl bg-white border border-dashed border-slate-200 text-xs text-slate-600 space-y-1">
+                  <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+                    <Info className="h-3.5 w-3.5 text-[#6B1222]" />
+                    <span>Lokasi utama yang digunakan:</span>
+                  </div>
+                  <p className="font-medium text-slate-900">
+                    {formData.venueName || "Belum ada nama gedung"}
+                  </p>
+                  <p className="text-slate-500">
+                    {formData.venueAddress || "Belum ada alamat gedung"}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <Label htmlFor="tasyakuranVenue">Nama gedung / lokasi Tasyakuran</Label>
+                    <Input
+                      id="tasyakuranVenue"
+                      value={formData.tasyakuranVenue || ""}
+                      onChange={(e) => onChange("tasyakuranVenue", e.target.value)}
+                      placeholder="Kediaman Mempelai / Gedung Serbaguna"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tasyakuranAddress">Alamat lengkap Tasyakuran</Label>
+                    <Textarea
+                      id="tasyakuranAddress"
+                      value={formData.tasyakuranAddress || ""}
+                      onChange={(e) => onChange("tasyakuranAddress", e.target.value)}
+                      placeholder="Tuliskan nama jalan, RT/RW, kelurahan, dan kecamatan..."
+                      className="min-h-[70px]"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tasyakuranMapsUrl">Tautan Google Maps Tasyakuran (opsional)</Label>
+                    <Input
+                      id="tasyakuranMapsUrl"
+                      value={formData.tasyakuranMapsUrl || ""}
+                      onChange={(e) => onChange("tasyakuranMapsUrl", e.target.value)}
+                      placeholder="https://maps.app.goo.gl/..."
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        )}
       </Card>
 
       <Card className="border-slate-200/80 shadow-xs">

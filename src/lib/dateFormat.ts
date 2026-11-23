@@ -136,3 +136,139 @@ export function generateIcsContent(params: {
     "END:VCALENDAR",
   ].join("\r\n");
 }
+
+export function formatEventDateRange(startDateStr?: string, endDateStr?: string): string {
+  if (!startDateStr) return "";
+  const start = new Date(startDateStr);
+  if (isNaN(start.getTime())) return startDateStr;
+
+  const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const monthNames = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  if (!endDateStr || endDateStr === startDateStr) {
+    const dayName = dayNames[start.getDay()];
+    const date = start.getDate();
+    const month = monthNames[start.getMonth()];
+    const year = start.getFullYear();
+    return `${dayName}, ${date} ${month} ${year}`;
+  }
+
+  const end = new Date(endDateStr);
+  if (isNaN(end.getTime())) {
+    const dayName = dayNames[start.getDay()];
+    const date = start.getDate();
+    const month = monthNames[start.getMonth()];
+    const year = start.getFullYear();
+    return `${dayName}, ${date} ${month} ${year}`;
+  }
+
+  const startDayName = dayNames[start.getDay()];
+  const endDayName = dayNames[end.getDay()];
+  const startDate = start.getDate();
+  const endDate = end.getDate();
+  const startMonth = monthNames[start.getMonth()];
+  const endMonth = monthNames[end.getMonth()];
+  const startYear = start.getFullYear();
+  const endYear = end.getFullYear();
+
+  if (startYear === endYear && startMonth === endMonth) {
+    return `${startDayName} - ${endDayName}, ${startDate} - ${endDate} ${endMonth} ${endYear}`;
+  } else if (startYear === endYear) {
+    return `${startDayName} - ${endDayName}, ${startDate} ${startMonth} - ${endDate} ${endMonth} ${endYear}`;
+  } else {
+    return `${startDayName} - ${endDayName}, ${startDate} ${startMonth} ${startYear} - ${endDate} ${endMonth} ${endYear}`;
+  }
+}
+
+export function formatTasyakuranCalendarUrl(params: {
+  title?: string;
+  startDate?: string;
+  endDate?: string;
+  time?: string;
+  venueName: string;
+  venueAddress: string;
+  coupleNames?: string;
+}): string {
+  const eventTitle = `${params.title || "Tasyakuran"} Pernikahan ${params.coupleNames || "Fauzan & Sinta"}`;
+  const location = `${params.venueName}, ${params.venueAddress}`;
+  const timeDesc = params.time && params.time.trim() ? `Waktu: ${params.time.trim()}` : "Acara Tasyakuran Pernikahan";
+  const details = `${eventTitle}. ${timeDesc}. Lokasi: ${location}`;
+
+  const cleanStart = (params.startDate || "2027-01-01").replace(/-/g, "");
+  const cleanEnd = (params.endDate || "2027-01-02").replace(/-/g, "");
+
+  if (!params.time || !params.time.trim()) {
+    const endDateObj = new Date(params.endDate || "2027-01-02");
+    endDateObj.setDate(endDateObj.getDate() + 1);
+    const endYear = endDateObj.getFullYear();
+    const endMonth = String(endDateObj.getMonth() + 1).padStart(2, "0");
+    const endDay = String(endDateObj.getDate()).padStart(2, "0");
+    const nextDayStr = `${endYear}${endMonth}${endDay}`;
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle
+    )}&dates=${cleanStart}/${nextDayStr}&location=${encodeURIComponent(
+      location
+    )}&details=${encodeURIComponent(details)}`;
+  }
+
+  const dtStartUtc = `${cleanStart}T020000Z`;
+  const dtEndUtc = `${cleanEnd}T110000Z`;
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+    eventTitle
+  )}&dates=${dtStartUtc}/${dtEndUtc}&location=${encodeURIComponent(
+    location
+  )}&details=${encodeURIComponent(details)}`;
+}
+
+export function generateTasyakuranIcsContent(params: {
+  title?: string;
+  startDate?: string;
+  endDate?: string;
+  time?: string;
+  venueName: string;
+  venueAddress: string;
+  coupleNames?: string;
+}): string {
+  const eventTitle = `${params.title || "Tasyakuran"} Pernikahan ${params.coupleNames || "Fauzan & Sinta"}`;
+  const location = `${params.venueName}, ${params.venueAddress}`;
+  const description = `${eventTitle}. Lokasi: ${location}`;
+
+  const cleanStart = (params.startDate || "2027-01-01").replace(/-/g, "");
+  let dtStart = `VALUE=DATE:${cleanStart}`;
+  let dtEnd = `VALUE=DATE:${cleanStart}`;
+
+  if (!params.time || !params.time.trim()) {
+    const endDateObj = new Date(params.endDate || "2027-01-02");
+    endDateObj.setDate(endDateObj.getDate() + 1);
+    const endYear = endDateObj.getFullYear();
+    const endMonth = String(endDateObj.getMonth() + 1).padStart(2, "0");
+    const endDay = String(endDateObj.getDate()).padStart(2, "0");
+    dtEnd = `VALUE=DATE:${endYear}${endMonth}${endDay}`;
+  } else {
+    const cleanEnd = (params.endDate || "2027-01-02").replace(/-/g, "");
+    dtStart = `${cleanStart}T020000Z`;
+    dtEnd = `${cleanEnd}T110000Z`;
+  }
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Fauzan & Sinta//Wedding Invitation//ID",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `SUMMARY:${eventTitle}`,
+    `DESCRIPTION:${description}`,
+    `LOCATION:${location}`,
+    `DTSTART;${dtStart}`,
+    `DTEND;${dtEnd}`,
+    "STATUS:CONFIRMED",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+

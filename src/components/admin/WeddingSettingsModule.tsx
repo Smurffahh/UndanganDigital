@@ -237,6 +237,9 @@ export function WeddingSettingsModule({
     const normalizedMapsUrl = normalizeUrlOrPath(formData.googleMapsUrl, "maps");
     const normalizedBridePhoto = normalizeUrlOrPath(formData.bridePhotoUrl, "asset");
     const normalizedGroomPhoto = normalizeUrlOrPath(formData.groomPhotoUrl, "asset");
+    const normalizedTasyakuranMapsUrl = formData.tasyakuranMapsUrl
+      ? normalizeUrlOrPath(formData.tasyakuranMapsUrl, "maps")
+      : "";
 
     if (formData.musicUrl && !isValidUrlOrLocalPath(normalizedMusicUrl)) {
       toast.error("Format tautan audio tidak valid.");
@@ -244,6 +247,10 @@ export function WeddingSettingsModule({
     }
     if (formData.googleMapsUrl && !isValidUrlOrLocalPath(normalizedMapsUrl)) {
       toast.error("Format tautan Google Maps tidak valid.");
+      return;
+    }
+    if (formData.tasyakuranMapsUrl && !isValidUrlOrLocalPath(normalizedTasyakuranMapsUrl)) {
+      toast.error("Format tautan Google Maps Tasyakuran tidak valid.");
       return;
     }
     if (formData.bridePhotoUrl && !isValidUrlOrLocalPath(normalizedBridePhoto)) {
@@ -261,6 +268,7 @@ export function WeddingSettingsModule({
       googleMapsUrl: normalizedMapsUrl,
       bridePhotoUrl: normalizedBridePhoto,
       groomPhotoUrl: normalizedGroomPhoto,
+      tasyakuranMapsUrl: normalizedTasyakuranMapsUrl,
     };
 
     setIsSaving(true);

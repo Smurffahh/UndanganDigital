@@ -52,6 +52,15 @@ export const weddingSettings = pgTable("wedding_settings", {
   brideChildOrder: varchar("bride_child_order", { length: 100 }).default("Putri Pertama"),
   groomParents: varchar("groom_parents", { length: 255 }).default("Bapak H. Ma'ruf & Ibu Hj. Siti Aminah"),
   brideParents: varchar("bride_parents", { length: 255 }).default("Bapak H. Utami & Ibu Hj. Maria"),
+  showTasyakuran: boolean("show_tasyakuran").default(true),
+  tasyakuranTitle: varchar("tasyakuran_title", { length: 100 }).default("Tasyakuran"),
+  tasyakuranStartDate: varchar("tasyakuran_start_date", { length: 50 }).default("2027-01-01"),
+  tasyakuranEndDate: varchar("tasyakuran_end_date", { length: 50 }).default("2027-01-02"),
+  tasyakuranTime: varchar("tasyakuran_time", { length: 100 }).default(""),
+  tasyakuranSameLocation: boolean("tasyakuran_same_location").default(true),
+  tasyakuranVenue: varchar("tasyakuran_venue", { length: 255 }).default(""),
+  tasyakuranAddress: text("tasyakuran_address").default(""),
+  tasyakuranMapsUrl: text("tasyakuran_maps_url").default(""),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 

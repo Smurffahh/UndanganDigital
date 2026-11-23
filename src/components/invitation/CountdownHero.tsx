@@ -280,7 +280,7 @@ export function CountdownHero({
           ) : (
             <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-md border border-[#C59B6D]/30 max-w-md mx-auto text-center">
               <p className="typo-body italic text-center mx-auto text-[#6B1222]">
-                Alhamdulillah, rangkaian acara pernikahan Fauzan &amp; Sinta telah berlangsung 🤍
+                Alhamdulillah, rangkaian acara pernikahan Fauzan &amp; Sinta telah terlaksana dengan lancar.
               </p>
             </div>
           )}

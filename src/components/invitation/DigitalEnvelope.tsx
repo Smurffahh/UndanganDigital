@@ -77,7 +77,7 @@ export function DigitalEnvelope({
     try {
       await navigator.clipboard.writeText(text);
       setCopiedKey(key);
-      toast.success(`${label} berhasil disalin ke clipboard ✓`);
+      toast.success(`${label} berhasil disalin.`);
       setTimeout(() => {
         setCopiedKey((current) => (current === key ? null : current));
       }, 2500);

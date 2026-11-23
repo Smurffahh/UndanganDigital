@@ -133,23 +133,27 @@ export function CoupleProfile({
                 <p className="mt-2 text-xs sm:text-sm font-serif italic text-[#6E4A50]">
                   {groomOrderText}
                 </p>
-                <p className="text-xs sm:text-sm font-medium text-[#3B1A20] mt-0.5">
-                  {groomParents || "Bapak H. Ma'ruf & Ibu Hj. Siti Aminah"}
-                </p>
-                {groomBirth && (
+                {groomParents?.trim() ? (
+                  <p className="text-xs sm:text-sm font-medium text-[#3B1A20] mt-0.5">
+                    {groomParents}
+                  </p>
+                ) : null}
+                {groomBirth?.trim() ? (
                   <p className="mt-1.5 typo-eyebrow text-[#C59B6D] text-[10px] sm:text-xs">
                     {groomBirth}
                   </p>
-                )}
+                ) : null}
               </ScrollLinkedItem>
 
-              <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
-                <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
-                  <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
-                    {groomBio}
-                  </p>
-                </div>
-              </ScrollLinkedItem>
+              {groomBio?.trim() ? (
+                <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
+                  <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
+                    <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
+                      {groomBio}
+                    </p>
+                  </div>
+                </ScrollLinkedItem>
+              ) : null}
             </article>
           </ScrollReveal>
 
@@ -218,23 +222,27 @@ export function CoupleProfile({
                 <p className="mt-2 text-xs sm:text-sm font-serif italic text-[#6E4A50]">
                   {brideOrderText}
                 </p>
-                <p className="text-xs sm:text-sm font-medium text-[#3B1A20] mt-0.5">
-                  {brideParents || "Bapak H. Utami & Ibu Hj. Maria"}
-                </p>
-                {brideBirth && (
+                {brideParents?.trim() ? (
+                  <p className="text-xs sm:text-sm font-medium text-[#3B1A20] mt-0.5">
+                    {brideParents}
+                  </p>
+                ) : null}
+                {brideBirth?.trim() ? (
                   <p className="mt-1.5 typo-eyebrow text-[#C59B6D] text-[10px] sm:text-xs">
                     {brideBirth}
                   </p>
-                )}
+                ) : null}
               </ScrollLinkedItem>
 
-              <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
-                <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
-                  <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
-                    {brideBio}
-                  </p>
-                </div>
-              </ScrollLinkedItem>
+              {brideBio?.trim() ? (
+                <ScrollLinkedItem offsetY={36} stage={5} className="mt-4 w-full max-w-[340px]">
+                  <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-sm border border-[#6B1222]/16 shadow-xs relative overflow-hidden">
+                    <p className="typo-body text-center mx-auto text-[#3B1A20] relative z-10">
+                      {brideBio}
+                    </p>
+                  </div>
+                </ScrollLinkedItem>
+              ) : null}
             </article>
           </ScrollReveal>
         </div>

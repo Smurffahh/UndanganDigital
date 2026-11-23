@@ -92,53 +92,11 @@ export default async function InvitationPage({ searchParams }: PageProps) {
   ]);
 
   const settings: typeof DEFAULT_WEDDING_SETTINGS = {
-    brideName: rawSettings.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
-    brideBirth: rawSettings.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,
-    brideBio: rawSettings.brideBio || DEFAULT_WEDDING_SETTINGS.brideBio,
-    bridePhotoUrl: rawSettings.bridePhotoUrl || DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
-    groomName: rawSettings.groomName || DEFAULT_WEDDING_SETTINGS.groomName,
-    groomBirth: rawSettings.groomBirth || DEFAULT_WEDDING_SETTINGS.groomBirth,
-    groomBio: rawSettings.groomBio || DEFAULT_WEDDING_SETTINGS.groomBio,
-    groomPhotoUrl: rawSettings.groomPhotoUrl || DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
-    coverPhotoUrl: rawSettings.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
-    heroPhotoUrl: rawSettings.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
+    ...DEFAULT_WEDDING_SETTINGS,
+    ...rawSettings,
+    brideName: (rawSettings.brideName || DEFAULT_WEDDING_SETTINGS.brideName).trim() || DEFAULT_WEDDING_SETTINGS.brideName,
+    groomName: (rawSettings.groomName || DEFAULT_WEDDING_SETTINGS.groomName).trim() || DEFAULT_WEDDING_SETTINGS.groomName,
     weddingDateIso: rawSettings.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
-    eventDateLabel: rawSettings.eventDateLabel || DEFAULT_WEDDING_SETTINGS.eventDateLabel,
-    akadTime: rawSettings.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
-    resepsiTime: rawSettings.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
-    venueName: rawSettings.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
-    venueAddress: rawSettings.venueAddress || DEFAULT_WEDDING_SETTINGS.venueAddress,
-    venuePlusCode: rawSettings.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
-    googleMapsUrl: rawSettings.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
-    googleMapsEmbed: rawSettings.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
-    mapsLatitude: rawSettings.mapsLatitude || DEFAULT_WEDDING_SETTINGS.mapsLatitude,
-    mapsLongitude: rawSettings.mapsLongitude || DEFAULT_WEDDING_SETTINGS.mapsLongitude,
-    youtubeVideoId: rawSettings.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
-    musicEnabled: rawSettings.musicEnabled !== undefined ? rawSettings.musicEnabled : DEFAULT_WEDDING_SETTINGS.musicEnabled,
-    musicTitle: rawSettings.musicTitle || DEFAULT_WEDDING_SETTINGS.musicTitle,
-    musicSourceType: rawSettings.musicSourceType || DEFAULT_WEDDING_SETTINGS.musicSourceType,
-    musicUrl: rawSettings.musicUrl || DEFAULT_WEDDING_SETTINGS.musicUrl,
-    bankAccounts:
-      (rawSettings?.bankAccounts as typeof DEFAULT_WEDDING_SETTINGS.bankAccounts) ||
-      DEFAULT_WEDDING_SETTINGS.bankAccounts,
-    ewallets:
-      (rawSettings?.ewallets as typeof DEFAULT_WEDDING_SETTINGS.ewallets) ||
-      DEFAULT_WEDDING_SETTINGS.ewallets,
-    giftAddress:
-      (rawSettings?.giftAddress as typeof DEFAULT_WEDDING_SETTINGS.giftAddress) ||
-      DEFAULT_WEDDING_SETTINGS.giftAddress,
-    qrisImageUrl: rawSettings.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
-    loveStoryText: rawSettings.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
-    storyHashtag: rawSettings.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
-    coupleVisualMode: rawSettings.coupleVisualMode || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
-    svgCharacterPreset: rawSettings.svgCharacterPreset || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
-    isGalleryEnabled: rawSettings.isGalleryEnabled !== undefined ? rawSettings.isGalleryEnabled : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
-    isLoveStoryEnabled: rawSettings.isLoveStoryEnabled !== undefined ? rawSettings.isLoveStoryEnabled : DEFAULT_WEDDING_SETTINGS.isLoveStoryEnabled,
-    groomChildOrder: rawSettings.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
-    groomParents: rawSettings.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
-    brideChildOrder: rawSettings.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
-    brideParents: rawSettings.brideParents || DEFAULT_WEDDING_SETTINGS.brideParents,
-    waMessageTemplate: rawSettings.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
   };
 
   const galleryPhotos = rawGalleryPhotos.map((item) => ({

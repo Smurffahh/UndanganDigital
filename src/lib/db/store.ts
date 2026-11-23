@@ -156,48 +156,58 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     }
   }
 
+  const strOrFallback = (val: any, fallback: string): string => {
+    if (val === null || val === undefined) return fallback;
+    return String(val);
+  };
+
+  const boolOrFallback = (val: any, fallback: boolean): boolean => {
+    if (val === null || val === undefined) return fallback;
+    return Boolean(val);
+  };
+
   return sanitizeArabicOrthography({
-    brideName: row.brideName || DEFAULT_WEDDING_SETTINGS.brideName,
-    brideBirth: row.brideBirth || DEFAULT_WEDDING_SETTINGS.brideBirth,
-    brideBio: row.brideBio || DEFAULT_WEDDING_SETTINGS.brideBio,
-    bridePhotoUrl: row.bridePhotoUrl || DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
-    groomName: row.groomName || DEFAULT_WEDDING_SETTINGS.groomName,
-    groomBirth: row.groomBirth || DEFAULT_WEDDING_SETTINGS.groomBirth,
-    groomBio: row.groomBio || DEFAULT_WEDDING_SETTINGS.groomBio,
-    groomPhotoUrl: row.groomPhotoUrl || DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
-    coverPhotoUrl: row.coverPhotoUrl || DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
-    heroPhotoUrl: row.heroPhotoUrl || DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
-    weddingDateIso: row.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
-    eventDateLabel: row.eventDateLabel || DEFAULT_WEDDING_SETTINGS.eventDateLabel,
-    akadTime: row.akadTime || DEFAULT_WEDDING_SETTINGS.akadTime,
-    resepsiTime: row.resepsiTime || DEFAULT_WEDDING_SETTINGS.resepsiTime,
-    venueName: row.venueName || DEFAULT_WEDDING_SETTINGS.venueName,
-    venueAddress: row.venueAddress || DEFAULT_WEDDING_SETTINGS.venueAddress,
-    venuePlusCode: row.venuePlusCode || DEFAULT_WEDDING_SETTINGS.venuePlusCode,
-    googleMapsUrl: row.googleMapsUrl || DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
-    googleMapsEmbed: row.googleMapsEmbed || DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
-    mapsLatitude: row.mapsLatitude || DEFAULT_WEDDING_SETTINGS.mapsLatitude,
-    mapsLongitude: row.mapsLongitude || DEFAULT_WEDDING_SETTINGS.mapsLongitude,
-    youtubeVideoId: row.youtubeVideoId || DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
-    musicEnabled: row.musicEnabled !== undefined ? Boolean(row.musicEnabled) : DEFAULT_WEDDING_SETTINGS.musicEnabled,
-    musicTitle: row.musicTitle || DEFAULT_WEDDING_SETTINGS.musicTitle,
-    musicSourceType: row.musicSourceType || DEFAULT_WEDDING_SETTINGS.musicSourceType,
-    musicUrl: row.musicUrl || DEFAULT_WEDDING_SETTINGS.musicUrl,
+    brideName: (strOrFallback(row.brideName, DEFAULT_WEDDING_SETTINGS.brideName)).trim() || DEFAULT_WEDDING_SETTINGS.brideName,
+    brideBirth: strOrFallback(row.brideBirth, DEFAULT_WEDDING_SETTINGS.brideBirth),
+    brideBio: strOrFallback(row.brideBio, DEFAULT_WEDDING_SETTINGS.brideBio),
+    bridePhotoUrl: strOrFallback(row.bridePhotoUrl, DEFAULT_WEDDING_SETTINGS.bridePhotoUrl),
+    groomName: (strOrFallback(row.groomName, DEFAULT_WEDDING_SETTINGS.groomName)).trim() || DEFAULT_WEDDING_SETTINGS.groomName,
+    groomBirth: strOrFallback(row.groomBirth, DEFAULT_WEDDING_SETTINGS.groomBirth),
+    groomBio: strOrFallback(row.groomBio, DEFAULT_WEDDING_SETTINGS.groomBio),
+    groomPhotoUrl: strOrFallback(row.groomPhotoUrl, DEFAULT_WEDDING_SETTINGS.groomPhotoUrl),
+    coverPhotoUrl: strOrFallback(row.coverPhotoUrl, DEFAULT_WEDDING_SETTINGS.coverPhotoUrl),
+    heroPhotoUrl: strOrFallback(row.heroPhotoUrl, DEFAULT_WEDDING_SETTINGS.heroPhotoUrl),
+    weddingDateIso: (strOrFallback(row.weddingDateIso, DEFAULT_WEDDING_SETTINGS.weddingDateIso)).trim() || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+    eventDateLabel: strOrFallback(row.eventDateLabel, DEFAULT_WEDDING_SETTINGS.eventDateLabel),
+    akadTime: strOrFallback(row.akadTime, DEFAULT_WEDDING_SETTINGS.akadTime),
+    resepsiTime: strOrFallback(row.resepsiTime, DEFAULT_WEDDING_SETTINGS.resepsiTime),
+    venueName: strOrFallback(row.venueName, DEFAULT_WEDDING_SETTINGS.venueName),
+    venueAddress: strOrFallback(row.venueAddress, DEFAULT_WEDDING_SETTINGS.venueAddress),
+    venuePlusCode: strOrFallback(row.venuePlusCode, DEFAULT_WEDDING_SETTINGS.venuePlusCode),
+    googleMapsUrl: strOrFallback(row.googleMapsUrl, DEFAULT_WEDDING_SETTINGS.googleMapsUrl),
+    googleMapsEmbed: strOrFallback(row.googleMapsEmbed, DEFAULT_WEDDING_SETTINGS.googleMapsEmbed),
+    mapsLatitude: strOrFallback(row.mapsLatitude, DEFAULT_WEDDING_SETTINGS.mapsLatitude),
+    mapsLongitude: strOrFallback(row.mapsLongitude, DEFAULT_WEDDING_SETTINGS.mapsLongitude),
+    youtubeVideoId: strOrFallback(row.youtubeVideoId, DEFAULT_WEDDING_SETTINGS.youtubeVideoId),
+    musicEnabled: boolOrFallback(row.musicEnabled, DEFAULT_WEDDING_SETTINGS.musicEnabled),
+    musicTitle: strOrFallback(row.musicTitle, DEFAULT_WEDDING_SETTINGS.musicTitle),
+    musicSourceType: (row.musicSourceType ?? DEFAULT_WEDDING_SETTINGS.musicSourceType) as any,
+    musicUrl: strOrFallback(row.musicUrl, DEFAULT_WEDDING_SETTINGS.musicUrl),
     bankAccounts,
     ewallets,
     giftAddress,
-    qrisImageUrl: row.qrisImageUrl || DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
-    loveStoryText: row.loveStoryText || DEFAULT_WEDDING_SETTINGS.loveStoryText,
-    storyHashtag: row.storyHashtag || DEFAULT_WEDDING_SETTINGS.storyHashtag,
-    coupleVisualMode: (row.coupleVisualMode as typeof DEFAULT_WEDDING_SETTINGS.coupleVisualMode) || DEFAULT_WEDDING_SETTINGS.coupleVisualMode,
-    svgCharacterPreset: (row.svgCharacterPreset as typeof DEFAULT_WEDDING_SETTINGS.svgCharacterPreset) || DEFAULT_WEDDING_SETTINGS.svgCharacterPreset,
-    isGalleryEnabled: row.isGalleryEnabled !== undefined ? Boolean(row.isGalleryEnabled) : DEFAULT_WEDDING_SETTINGS.isGalleryEnabled,
-    isLoveStoryEnabled: row.isLoveStoryEnabled !== undefined ? Boolean(row.isLoveStoryEnabled) : DEFAULT_WEDDING_SETTINGS.isLoveStoryEnabled,
-    groomChildOrder: row.groomChildOrder || DEFAULT_WEDDING_SETTINGS.groomChildOrder,
-    groomParents: row.groomParents || DEFAULT_WEDDING_SETTINGS.groomParents,
-    brideChildOrder: row.brideChildOrder || DEFAULT_WEDDING_SETTINGS.brideChildOrder,
-    brideParents: row.brideParents || DEFAULT_WEDDING_SETTINGS.brideParents,
-    waMessageTemplate: row.waMessageTemplate || DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
+    qrisImageUrl: strOrFallback(row.qrisImageUrl, DEFAULT_WEDDING_SETTINGS.qrisImageUrl),
+    loveStoryText: strOrFallback(row.loveStoryText, DEFAULT_WEDDING_SETTINGS.loveStoryText),
+    storyHashtag: strOrFallback(row.storyHashtag, DEFAULT_WEDDING_SETTINGS.storyHashtag),
+    coupleVisualMode: (row.coupleVisualMode ?? DEFAULT_WEDDING_SETTINGS.coupleVisualMode) as any,
+    svgCharacterPreset: (row.svgCharacterPreset ?? DEFAULT_WEDDING_SETTINGS.svgCharacterPreset) as any,
+    isGalleryEnabled: boolOrFallback(row.isGalleryEnabled, DEFAULT_WEDDING_SETTINGS.isGalleryEnabled),
+    isLoveStoryEnabled: boolOrFallback(row.isLoveStoryEnabled, DEFAULT_WEDDING_SETTINGS.isLoveStoryEnabled),
+    groomChildOrder: strOrFallback(row.groomChildOrder, DEFAULT_WEDDING_SETTINGS.groomChildOrder),
+    groomParents: strOrFallback(row.groomParents, DEFAULT_WEDDING_SETTINGS.groomParents),
+    brideChildOrder: strOrFallback(row.brideChildOrder, DEFAULT_WEDDING_SETTINGS.brideChildOrder),
+    brideParents: strOrFallback(row.brideParents, DEFAULT_WEDDING_SETTINGS.brideParents),
+    waMessageTemplate: strOrFallback(row.waMessageTemplate, DEFAULT_WEDDING_SETTINGS.waMessageTemplate),
   });
 }
 
@@ -399,13 +409,13 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
 export async function updateWeddingSettings(updates: Partial<WeddingSettingsData>): Promise<WeddingSettingsData> {
   const dbUpdates: any = sanitizeArabicOrthography({ ...updates });
 
-  if (updates.bankAccounts) {
+  if (updates.bankAccounts !== undefined) {
     dbUpdates.bankAccounts = encryptField(JSON.stringify(updates.bankAccounts));
   }
-  if (updates.ewallets) {
+  if (updates.ewallets !== undefined) {
     dbUpdates.ewallets = encryptField(JSON.stringify(updates.ewallets));
   }
-  if (updates.giftAddress) {
+  if (updates.giftAddress !== undefined) {
     dbUpdates.giftAddress = encryptField(JSON.stringify(updates.giftAddress));
   }
 
@@ -414,13 +424,30 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
     try {
       await ensureSettingsColumns();
       const existing = await db.select().from(schema.weddingSettings).limit(1);
+      let updatedRow: any = null;
+
       if (existing.length > 0) {
-        await db
+        const rows = await db
           .update(schema.weddingSettings)
           .set({ ...dbUpdates, updatedAt: new Date() })
-          .where(eq(schema.weddingSettings.id, existing[0].id));
+          .where(eq(schema.weddingSettings.id, existing[0].id))
+          .returning();
+        if (rows.length > 0) {
+          updatedRow = rows[0];
+        }
       } else {
-        await db.insert(schema.weddingSettings).values(dbUpdates);
+        const rows = await db.insert(schema.weddingSettings).values(dbUpdates).returning();
+        if (rows.length > 0) {
+          updatedRow = rows[0];
+        }
+      }
+
+      const local = getLocalDb();
+      local.settings = { ...local.settings, ...dbUpdates };
+      saveLocalDb(local);
+
+      if (updatedRow) {
+        return decryptSettingsRecord(updatedRow);
       }
     } catch (e) {
       console.warn("DB update failed, updating local JSON:", e);

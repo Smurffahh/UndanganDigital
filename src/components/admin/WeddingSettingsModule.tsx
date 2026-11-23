@@ -469,7 +469,7 @@ export function WeddingSettingsModule({
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Gagal menyimpan pengaturan");
       }
-      toast.success("Pengaturan Countdown, Musik, dan Lokasi berhasil disimpan & disinkronkan ke halaman publik! ✓");
+      toast.success("Pengaturan undangan berhasil disimpan dan disinkronkan ke halaman publik.");
       if (data.data) {
         setFormData(data.data);
         if (onSettingsUpdate) {
@@ -1455,7 +1455,7 @@ export function WeddingSettingsModule({
               </label>
               <textarea
                 rows={3}
-                value={formData.brideBio || ""}
+                value={formData.brideBio ?? ""}
                 onChange={(e) => handleFieldChange("brideBio", e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
               />
@@ -1573,7 +1573,7 @@ export function WeddingSettingsModule({
               </label>
               <textarea
                 rows={3}
-                value={formData.groomBio || ""}
+                value={formData.groomBio ?? ""}
                 onChange={(e) => handleFieldChange("groomBio", e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500 resize-y"
               />

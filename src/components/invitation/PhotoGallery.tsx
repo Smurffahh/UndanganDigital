@@ -2,8 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { WayangDivider } from "./Ornaments";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface GalleryPhotoItem {
   id: number;
@@ -21,12 +27,10 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
 
   const handleOpen = (idx: number) => {
     setActiveIdx(idx);
-    document.body.style.overflow = "hidden";
   };
 
   const handleClose = useCallback(() => {
     setActiveIdx(null);
-    document.body.style.overflow = "";
   }, []);
 
   const handlePrev = useCallback(() => {
@@ -117,68 +121,60 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         </div>
       </div>
 
-      {activeIdx !== null && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Tampilan Foto Penuh"
-          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
-          onClick={handleClose}
+      <Dialog open={activeIdx !== null} onOpenChange={(open) => !open && handleClose()}>
+        <DialogContent
+          className="fixed left-[50%] top-[50%] z-50 w-[min(100vw-1.5rem,880px)] max-h-[92dvh] translate-x-[-50%] translate-y-[-50%] p-2.5 sm:p-4 bg-black/95 border border-[#C59B6D]/35 rounded-2xl shadow-2xl flex flex-col items-center justify-center text-white overflow-hidden"
         >
+          <DialogTitle className="sr-only">Pratinjau Foto Galeri</DialogTitle>
+          
           <button
             type="button"
-            onClick={handleClose}
-            className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
-            aria-label="Tutup foto penuh"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrev();
-            }}
-            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
+            onClick={handlePrev}
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-50 min-h-11 min-w-11 rounded-full bg-black/60 hover:bg-black/85 border border-white/20 text-white grid place-items-center cursor-pointer active:scale-[0.96] transition-transform"
             aria-label="Foto sebelumnya"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 stroke-[2]" />
           </button>
 
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
-            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white cursor-pointer active:scale-[0.96] transition-transform duration-150"
+            onClick={handleNext}
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 min-h-11 min-w-11 rounded-full bg-black/60 hover:bg-black/85 border border-white/20 text-white grid place-items-center cursor-pointer active:scale-[0.96] transition-transform"
             aria-label="Foto selanjutnya"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5 stroke-[2]" />
           </button>
 
-          <div
-            className="max-w-4xl max-h-[85vh] flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photos[activeIdx].imageUrl}
-              alt={photos[activeIdx].caption || `Foto momen Fauzan dan Sinta #${activeIdx + 1}`}
-              className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl border border-gold-500/40"
-            />
-            {photos[activeIdx].caption && (
-              <p className="mt-3 text-center text-white/90 font-sans text-xs sm:text-sm tracking-wide bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-xs">
-                {photos[activeIdx].caption}
-              </p>
+          <div className="w-full flex flex-col items-center justify-center">
+            {activeIdx !== null && photos[activeIdx] && (
+              <>
+                <div className="w-full flex justify-center items-center overflow-hidden rounded-xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photos[activeIdx].imageUrl}
+                    alt={photos[activeIdx].caption || `Foto momen Fauzan dan Sinta #${activeIdx + 1}`}
+                    className="max-w-full max-h-[75dvh] object-contain rounded-xl outline outline-1 -outline-offset-1 outline-white/10 shadow-2xl"
+                  />
+                </div>
+
+                {photos[activeIdx].caption ? (
+                  <DialogDescription className="mt-2 text-center text-white/95 font-sans text-xs sm:text-sm tracking-wide bg-white/10 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-xs">
+                    {photos[activeIdx].caption}
+                  </DialogDescription>
+                ) : (
+                  <DialogDescription className="sr-only">
+                    Foto momen pernikahan Fauzan dan Sinta
+                  </DialogDescription>
+                )}
+
+                <span className="mt-1 text-white/70 font-sans text-xs tabular-nums font-medium">
+                  {activeIdx + 1} / {photos.length}
+                </span>
+              </>
             )}
-            <span className="mt-2 text-white/60 font-sans text-xs tabular-nums">
-              {activeIdx + 1} / {photos.length}
-            </span>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

@@ -153,7 +153,7 @@ export function RsvpGuestbook({
         <ScrollLinkedItem offsetY={36}>
           <form
             onSubmit={handleSubmit}
-            className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-6 sm:p-7 space-y-4"
+            className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-xs p-6 sm:p-7 space-y-4"
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
@@ -254,7 +254,7 @@ export function RsvpGuestbook({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="typo-button w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_14px_30px_-10px_rgba(107,18,34,0.45)] transition-transform duration-150 active:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="typo-button w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-xs transition-transform duration-150 active:not-disabled:scale-[0.96] hover:brightness-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>

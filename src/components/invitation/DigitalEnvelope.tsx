@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { WayangDivider, ChipMetallic } from "./Ornaments";
-import { Copy, Check, QrCode, X, MapPin, Download } from "lucide-react";
+import { Copy, Check, QrCode, MapPin, Download } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface AccountItem {
   brand: string;
@@ -47,31 +54,7 @@ export function DigitalEnvelope({
 }: DigitalEnvelopeProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [showQrisModal, setShowQrisModal] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [qrisImgError, setQrisImgError] = useState(false);
-
-  const openQrisModal = () => {
-    setShowQrisModal(true);
-    requestAnimationFrame(() => {
-      setIsModalVisible(true);
-    });
-  };
-
-  const closeQrisModal = () => {
-    setIsModalVisible(false);
-    setTimeout(() => {
-      setShowQrisModal(false);
-    }, 300);
-  };
-
-  useEffect(() => {
-    if (!showQrisModal) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeQrisModal();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showQrisModal]);
 
   const handleCopy = async (text: string, key: string, label: string) => {
     try {
@@ -112,8 +95,8 @@ export function DigitalEnvelope({
         <ScrollLinkedItem direction="center-scale" className="flex justify-center mb-8">
           <button
             type="button"
-            onClick={openQrisModal}
-            className="typo-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#FBF7F2] border border-[#C59B6D]/60 text-[#6B1222] uppercase shadow-sm transition-transform duration-150 active:scale-[0.96] hover:bg-[#6B1222]/10 cursor-pointer min-h-11"
+            onClick={() => setShowQrisModal(true)}
+            className="typo-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#FBF7F2] border border-[#C59B6D]/60 text-[#6B1222] uppercase shadow-xs transition-colors duration-150 active:scale-[0.96] hover:bg-[#6B1222]/10 cursor-pointer min-h-11"
           >
             <QrCode className="w-4 h-4 stroke-[2] text-[#C59B6D]" />
             <span>Lihat Kode QRIS (Semua Bank / E-Wallet)</span>
@@ -164,20 +147,20 @@ export function DigitalEnvelope({
                   <button
                     type="button"
                     onClick={() => handleCopy(acc.number, copyKey, `Nomor ${acc.brand}`)}
-                    className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
+                    className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 ps-3.5 pe-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                       isCopied
-                        ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
+                        ? "bg-emerald-700 text-white border-emerald-700 shadow-xs"
                         : "bg-[#FBF7F2] border-[#C59B6D]/50 text-[#6B1222] hover:bg-[#6B1222] hover:text-[#FBF7F2] hover:border-[#6B1222]"
                     }`}
                   >
                     <span className="relative w-4 h-4 grid place-items-center">
                       <Check
-                        className={`w-4 h-4 text-white stroke-[2.5] absolute transition-[transform,opacity,filter] duration-200 ${
+                        className={`w-4 h-4 text-white stroke-[2] absolute transition-[transform,opacity,filter] duration-200 ease-[cubic-bezier(0.2,0,0,1)] ${
                           isCopied ? "scale-100 opacity-100 blur-none" : "scale-50 opacity-0 blur-[2px] pointer-events-none"
                         }`}
                       />
                       <Copy
-                        className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ${
+                        className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ease-[cubic-bezier(0.2,0,0,1)] ${
                           isCopied ? "scale-50 opacity-0 blur-[2px] pointer-events-none" : "scale-100 opacity-100 blur-none"
                         }`}
                       />
@@ -216,22 +199,22 @@ export function DigitalEnvelope({
             <button
               type="button"
               onClick={() => handleCopy(giftAddress.address, "addr-copy", "Alamat")}
-              className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
+              className={`typo-button w-full inline-flex items-center justify-center gap-2 py-2.5 ps-3.5 pe-4 rounded-full border uppercase transition-colors duration-200 active:scale-[0.96] cursor-pointer min-h-11 ${
                 copiedKey === "addr-copy"
-                  ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
+                  ? "bg-emerald-700 text-white border-emerald-700 shadow-xs"
                   : "bg-[#FBF7F2] border-[#C59B6D]/50 text-[#6B1222] hover:bg-[#6B1222] hover:text-[#FBF7F2] hover:border-[#6B1222]"
               }`}
             >
               <span className="relative w-4 h-4 grid place-items-center">
                 <Check
-                  className={`w-4 h-4 text-white stroke-[2.5] absolute transition-[transform,opacity,filter] duration-200 ${
+                  className={`w-4 h-4 text-white stroke-[2] absolute transition-[transform,opacity,filter] duration-200 ease-[cubic-bezier(0.2,0,0,1)] ${
                     copiedKey === "addr-copy"
                       ? "scale-100 opacity-100 blur-none"
                       : "scale-50 opacity-0 blur-[2px] pointer-events-none"
                   }`}
                 />
                 <Copy
-                  className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ${
+                  className={`w-4 h-4 stroke-[1.8] absolute transition-[transform,opacity,filter] duration-200 ease-[cubic-bezier(0.2,0,0,1)] ${
                     copiedKey === "addr-copy"
                       ? "scale-50 opacity-0 blur-[2px] pointer-events-none"
                       : "scale-100 opacity-100 blur-none"
@@ -244,75 +227,52 @@ export function DigitalEnvelope({
         </ScrollLinkedItem>
       </div>
 
-      {showQrisModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Modal Kode QRIS Pernikahan"
-          className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 ${
-            isModalVisible ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={closeQrisModal}
-        >
-          <div
-            className={`w-full max-w-sm bg-gradient-to-b from-[#FBF7F2] to-[#F1E0CE] rounded-3xl border border-[#C59B6D]/60 shadow-2xl p-6 text-center relative overflow-hidden transition-[transform,opacity] duration-300 ${
-              isModalVisible ? "scale-100 translate-y-0 opacity-100" : "scale-95 translate-y-4 opacity-0"
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={closeQrisModal}
-              aria-label="Tutup modal QRIS"
-              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-[#6B1222]/10 text-[#6B1222] grid place-items-center hover:bg-[#6B1222]/20 active:scale-[0.96] transition-transform duration-150 cursor-pointer"
-            >
-              <X className="w-5 h-5 stroke-[2]" />
-            </button>
-
-            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#6B1222] inline-block px-4 py-1 rounded-full bg-[#6B1222]/10 mb-3">
+      <Dialog open={showQrisModal} onOpenChange={setShowQrisModal}>
+        <DialogContent className="w-[min(100%-2rem,400px)] bg-gradient-to-b from-[#FBF7F2] via-[#FAF3EA] to-[#F1E0CE] rounded-3xl border border-[#C59B6D]/60 shadow-[0_24px_50px_-12px_rgba(67,10,20,0.22)] p-6 text-center overflow-hidden">
+          <DialogHeader className="items-center text-center space-y-1.5">
+            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#6B1222] inline-block px-4 py-1 rounded-full bg-[#6B1222]/10 mb-1">
               QRIS Statis
             </span>
-
-            <h3 className="typo-card-title text-xl sm:text-2xl mb-1 text-[#6B1222]">
+            <DialogTitle className="typo-card-title text-xl sm:text-2xl text-[#6B1222] text-center">
               Pindai QRIS
-            </h3>
-            <p className="typo-body text-xs sm:text-sm mb-4 mx-auto text-center text-[#6E4A50]">
+            </DialogTitle>
+            <DialogDescription className="typo-body text-xs sm:text-sm text-[#6E4A50] text-center max-w-[280px] mx-auto leading-relaxed">
               Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh m-Banking.
-            </p>
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-[#C59B6D]/40 shadow-inner grid place-items-center relative">
-              {qrisImageUrl && !qrisImgError ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={qrisImageUrl}
-                  alt="Kode QRIS Fauzan Ma'ruf & Sinta Maria Utami"
-                  className="w-full h-full object-contain rounded-lg"
-                  onError={() => setQrisImgError(true)}
-                />
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center">
-                  <AestheticGoldQRCode />
-                </div>
-              )}
-            </div>
-
-            <p className="font-sans text-sm font-semibold text-[#6B1222] mt-3.5">
-              a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
-            </p>
-
-            <a
-              href={qrisImageUrl || "#"}
-              download="qris-fauzan-sinta.png"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="typo-button mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#6B1222] hover:bg-[#520D1A] text-[#FBF7F2] uppercase shadow-sm transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
-            >
-              <Download className="w-4 h-4 stroke-[2]" />
-              <span>Simpan Gambar QR</span>
-            </a>
+          <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-[#C59B6D]/40 shadow-inner grid place-items-center relative my-2">
+            {qrisImageUrl && !qrisImgError ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={qrisImageUrl}
+                alt="Kode QRIS Fauzan Ma'ruf & Sinta Maria Utami"
+                className="w-full h-full object-contain rounded-xl outline outline-1 -outline-offset-1 outline-black/10"
+                onError={() => setQrisImgError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center">
+                <AestheticGoldQRCode />
+              </div>
+            )}
           </div>
-        </div>
-      )}
+
+          <p className="font-sans text-sm font-semibold text-[#6B1222] mt-1">
+            a.n. Fauzan Ma&apos;ruf / Sinta Maria Utami
+          </p>
+
+          <a
+            href={qrisImageUrl || "#"}
+            download="qris-fauzan-sinta.png"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="typo-button mt-4 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#6B1222] hover:bg-[#520D1A] text-[#FBF7F2] uppercase shadow-xs transition-colors duration-150 active:scale-[0.96] min-h-11 cursor-pointer"
+          >
+            <Download className="w-4 h-4 stroke-[2]" />
+            <span>Simpan Gambar QR</span>
+          </a>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

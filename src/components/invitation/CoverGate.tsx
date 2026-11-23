@@ -231,7 +231,7 @@ export function CoverGate({
 
             {/* Step 4: Eyebrow & Crest (450ms) */}
             <div
-              className={`flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
               }`}
               style={{ transitionDelay: mounted ? "450ms" : "0ms" }}
@@ -248,7 +248,7 @@ export function CoverGate({
 
             {/* Step 3: Arch Frame & Dua Pengantin Character (550ms) */}
             <div
-              className={`w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-3"
               }`}
               style={{ transitionDelay: mounted ? "550ms" : "0ms" }}
@@ -278,7 +278,7 @@ export function CoverGate({
 
             {/* Step 4: Couple Names & Date (780ms) */}
             <div
-              className={`relative z-10 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: mounted ? "780ms" : "0ms" }}
@@ -315,7 +315,7 @@ export function CoverGate({
           }}
           title="Buka Undangan"
           aria-label="Buka Undangan Pernikahan Fauzan dan Sinta"
-          className={`relative my-2 sm:my-3 cursor-pointer select-none transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`relative my-2 sm:my-3 cursor-pointer select-none transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             mounted ? "opacity-100 scale-100" : "opacity-0 scale-90"
           } ${
             isOpening
@@ -336,7 +336,7 @@ export function CoverGate({
         {/* Step 5 & 6: Guest Card & Open Button (Bottom) (980ms & 1180ms) */}
         <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center shrink-0">
           <div
-            className={`w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
             style={{ transitionDelay: mounted ? "980ms" : "0ms" }}
@@ -355,7 +355,7 @@ export function CoverGate({
           </div>
 
           <div
-            className={`w-full flex flex-col items-center transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-full flex flex-col items-center transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
             style={{ transitionDelay: mounted ? "1180ms" : "0ms" }}

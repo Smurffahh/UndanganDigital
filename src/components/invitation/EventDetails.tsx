@@ -186,7 +186,7 @@ export function EventDetails({
               stage={1}
               className="md:col-span-2 max-w-[560px] mx-auto w-full"
             >
-              <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(67,10,20,0.22)] transition-[box-shadow] duration-300">
+              <article className="rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-sm p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-md transition-[box-shadow] duration-300">
                 <div className="w-14 h-14 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 text-[#6B1222] mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
                   <Sparkles className="w-6 h-6 stroke-[1.6]" />
                 </div>
@@ -260,7 +260,7 @@ export function EventDetails({
             stage={1}
             className={isTasyakuranActive ? "md:col-span-1" : "md:col-span-1"}
           >
-            <article className="h-full rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(67,10,20,0.22)] transition-[box-shadow] duration-300 flex flex-col justify-between">
+            <article className="h-full rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-sm p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-md transition-[box-shadow] duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-14 h-14 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 text-[#6B1222] mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
                   <Calendar className="w-6 h-6 stroke-[1.6]" />
@@ -343,7 +343,7 @@ export function EventDetails({
             stage={2}
             className={isTasyakuranActive ? "md:col-span-1" : "md:col-span-1"}
           >
-            <article className="h-full rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-lg p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-[0_28px_56px_-16px_rgba(67,10,20,0.22)] transition-[box-shadow] duration-300 flex flex-col justify-between">
+            <article className="h-full rounded-t-[999px] rounded-b-[120px] border-2 border-[#C59B6D]/65 bg-[#FBF7F2]/92 backdrop-blur-sm shadow-sm p-7 sm:p-10 text-center relative overflow-hidden group hover:shadow-md transition-[box-shadow] duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-14 h-14 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 text-[#6B1222] mx-auto mt-4 mb-3 grid place-items-center shadow-xs">
                   <Calendar className="w-6 h-6 stroke-[1.6]" />
@@ -446,7 +446,7 @@ export function EventDetails({
 
         {/* MAPS EMBED */}
         <ScrollLinkedItem offsetY={36} stage={3}>
-          <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-5 sm:p-6 text-center">
+          <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-xs p-5 sm:p-6 text-center">
             <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[#C59B6D]/30 mb-4 shadow-inner">
               <iframe
                 src={googleMapsEmbed}

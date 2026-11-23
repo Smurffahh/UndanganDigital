@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import NumberFlow from "@number-flow/react";
+import NumberFlow, { NumberFlowGroup } from "@number-flow/react";
 import { Divider } from "./Ornaments";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
@@ -36,7 +36,12 @@ export function CountdownHero({
   });
   const [isSequenceDone, setIsSequenceDone] = useState(false);
   const [isInView, setIsInView] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     setActiveMode(coupleVisualMode);
@@ -197,7 +202,7 @@ export function CountdownHero({
           data-seq-dir="bottom"
           style={getItemStyle("900ms", "bottom")}
         >
-          <figure className="card-ornament bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 rounded-2xl shadow-[0_24px_50px_-18px_rgba(67,10,20,0.18)] p-7 sm:p-8 text-center relative overflow-hidden">
+          <figure className="card-ornament bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/16 rounded-2xl shadow-xs p-7 sm:p-8 text-center relative overflow-hidden">
             <p className="typo-arabic leading-[2] text-[#6B1222] relative z-10" dir="rtl" lang="ar">
               وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً
             </p>
@@ -240,43 +245,46 @@ export function CountdownHero({
           style={getItemStyle("1350ms", "bottom")}
         >
           {!timeLeft.isDone ? (
-            <div
-              className="grid grid-cols-4 gap-2 sm:gap-3.5 w-full max-w-[480px] mx-auto px-1"
-              aria-label="Hitung mundur pernikahan"
-            >
-              {[
-                { label: "Hari", value: timeLeft.days, maxTick: 30 },
-                { label: "Jam", value: timeLeft.hours, maxTick: 24 },
-                { label: "Menit", value: timeLeft.minutes, maxTick: 60 },
-                { label: "Detik", value: timeLeft.seconds, maxTick: 60 },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="relative py-3 sm:py-4 px-1.5 sm:px-2 bg-[#FBF7F2]/95 backdrop-blur-md border border-[#C59B6D]/45 rounded-xl sm:rounded-2xl shadow-[0_16px_30px_-16px_rgba(67,10,20,0.15)] flex flex-col items-center justify-center overflow-hidden min-w-0"
-                >
-                  <div className="w-full flex justify-between px-2 sm:px-3 mb-1 opacity-50" aria-hidden="true">
-                    <span className="w-px h-1.5 bg-[#C59B6D]" />
-                    <span className="w-px h-1 bg-[#C59B6D]/60" />
-                    <span className="w-px h-1 bg-[#C59B6D]/60" />
-                    <span className="w-px h-1 bg-[#C59B6D]/60" />
-                    <span className="w-px h-1.5 bg-[#C59B6D]" />
+            <NumberFlowGroup>
+              <div
+                className="grid grid-cols-4 gap-2 sm:gap-3.5 w-full max-w-[480px] mx-auto px-1"
+                aria-label="Hitung mundur pernikahan"
+              >
+                {[
+                  { label: "Hari", value: timeLeft.days },
+                  { label: "Jam", value: timeLeft.hours },
+                  { label: "Menit", value: timeLeft.minutes },
+                  { label: "Detik", value: timeLeft.seconds },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="relative py-3 sm:py-4 px-1.5 sm:px-2 bg-[#FBF7F2]/95 backdrop-blur-md border border-[#C59B6D]/45 rounded-xl sm:rounded-2xl shadow-xs flex flex-col items-center justify-center overflow-hidden min-w-0"
+                  >
+                    <div className="w-full flex justify-between px-2 sm:px-3 mb-1 opacity-50" aria-hidden="true">
+                      <span className="w-px h-1.5 bg-[#C59B6D]" />
+                      <span className="w-px h-1 bg-[#C59B6D]/60" />
+                      <span className="w-px h-1 bg-[#C59B6D]/60" />
+                      <span className="w-px h-1 bg-[#C59B6D]/60" />
+                      <span className="w-px h-1.5 bg-[#C59B6D]" />
+                    </div>
+
+                    <NumberFlow
+                      value={item.value}
+                      format={{ minimumIntegerDigits: 2 }}
+                      animated={hasMounted}
+                      className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#6B1222] leading-none tracking-tight"
+                      style={{ color: "#6B1222" }}
+                    />
+                    
+                    <span className="font-sans text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#6E4A50] mt-1.5">
+                      {item.label}
+                    </span>
+
+                    <div className="w-6 h-px bg-[#C59B6D]/40 mt-1.5" aria-hidden="true" />
                   </div>
-
-                  <NumberFlow
-                    value={item.value}
-                    format={{ minimumIntegerDigits: 2 }}
-                    className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#6B1222] leading-none tracking-tight"
-                    style={{ color: "#6B1222" }}
-                  />
-                  
-                  <span className="font-sans text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#6E4A50] mt-1.5">
-                    {item.label}
-                  </span>
-
-                  <div className="w-6 h-px bg-[#C59B6D]/40 mt-1.5" aria-hidden="true" />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </NumberFlowGroup>
           ) : (
             <div className="p-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-md border border-[#C59B6D]/30 max-w-md mx-auto text-center">
               <p className="typo-body italic text-center mx-auto text-[#6B1222]">

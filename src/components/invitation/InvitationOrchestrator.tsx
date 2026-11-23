@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PetalsCanvas } from "./PetalsCanvas";
 import { FloatingFlowers } from "./FloatingFlowers";
 import { CoverGate } from "./CoverGate";
 import { CountdownHero } from "./CountdownHero";
@@ -251,7 +250,6 @@ export function InvitationOrchestrator({
         showCornerAssets={revealPhase === "assets-entering" || revealPhase === "content-ready"}
       />
 
-      <PetalsCanvas active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
       <FloatingFlowers active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
 
       <CoverGate

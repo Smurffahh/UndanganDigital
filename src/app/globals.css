@@ -793,3 +793,44 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+.admin-theme {
+  --admin-bg: #f8fafc;
+  --admin-surface: #ffffff;
+  --admin-surface-muted: #f1f5f9;
+  --admin-surface-hover: #f8fafc;
+  --admin-border: #e2e8f0;
+  --admin-border-subtle: #edf2f7;
+  --admin-ink-primary: #0f172a;
+  --admin-ink-secondary: #475569;
+  --admin-ink-muted: #64748b;
+  --admin-primary: #6B1222;
+  --admin-primary-hover: #520D1A;
+  --admin-primary-light: #fdf2f4;
+  --admin-primary-ring: rgba(107, 18, 34, 0.15);
+  --admin-success: #166534;
+  --admin-success-bg: #f0fdf4;
+  --admin-success-border: #bbf7d0;
+  --admin-warning: #854d0e;
+  --admin-warning-bg: #fefce8;
+  --admin-warning-border: #fef08a;
+  --admin-destructive: #991b1b;
+  --admin-destructive-bg: #fef2f2;
+  --admin-destructive-border: #fecaca;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  color: var(--admin-ink-primary);
+  background-color: var(--admin-bg);
+  background-image: none !important;
+}
+
+.admin-theme input,
+.admin-theme textarea,
+.admin-theme select {
+  font-family: inherit;
+}
+
+.admin-theme .tabular-numbers,
+.admin-tabular {
+  font-variant-numeric: tabular-nums;
+}
+

@@ -13,6 +13,22 @@ import {
   Loader2,
 } from "lucide-react";
 import type { GalleryPhotoData, WeddingSettingsData } from "@/lib/db/store";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface MediaManagementModuleProps {
   settings: WeddingSettingsData;
@@ -42,30 +58,31 @@ export function MediaManagementModule({
   const [newGalleryAspect, setNewGalleryAspect] = useState("3/4");
   const [isSubmittingGallery, setIsSubmittingGallery] = useState(false);
   const [isTogglingGallery, setIsTogglingGallery] = useState(false);
+  const [photoToDelete, setPhotoToDelete] = useState<GalleryPhotoData | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isGalleryEnabled = settings.isGalleryEnabled !== false;
 
-  const handleToggleGallery = async () => {
+  const handleToggleGallery = async (checked: boolean) => {
     setIsTogglingGallery(true);
-    const newStatus = !isGalleryEnabled;
     try {
       const res = await fetch("/api/admin/media", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isGalleryEnabled: newStatus }),
+        body: JSON.stringify({ isGalleryEnabled: checked }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Gagal mengubah status visibilitas galeri");
+        throw new Error(data.error || "Gagal mengubah status galeri.");
       }
-      onSettingsChange({ ...settings, isGalleryEnabled: newStatus });
+      onSettingsChange({ ...settings, isGalleryEnabled: checked });
       toast.success(
-        newStatus
-          ? "Halaman Galeri Foto sekarang AKTIF dan ditampilkan pada undangan publik! ✓"
-          : "Halaman Galeri Foto sekarang DISEMBUNYIKAN dari undangan publik! ✓"
+        checked
+          ? "Galeri foto diaktifkan pada undangan publik."
+          : "Galeri foto disembunyikan dari undangan publik."
       );
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Gagal mengubah status");
+      toast.error(err instanceof Error ? err.message : "Gagal mengubah status galeri.");
     } finally {
       setIsTogglingGallery(false);
     }
@@ -79,12 +96,12 @@ export function MediaManagementModule({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("File harus berupa gambar (JPG, PNG, atau WebP)");
+      toast.error("File harus berupa gambar (JPG, PNG, atau WebP).");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Ukuran file maksimal 5MB");
+      toast.error("Ukuran file maksimal 5 MB.");
       return;
     }
 
@@ -95,7 +112,7 @@ export function MediaManagementModule({
         setNewGalleryUrl(result);
       } else {
         setMainPhotos((prev) => ({ ...prev, [field]: result }));
-        toast.info("Gambar berhasil dimuat, jangan lupa klik 'Simpan Foto Utama'");
+        toast.info("Gambar dimuat. Klik 'Simpan foto utama' untuk menyimpan.");
       }
     };
     reader.readAsDataURL(file);
@@ -111,13 +128,13 @@ export function MediaManagementModule({
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Gagal menyimpan foto utama");
+        throw new Error(data.error || "Gagal menyimpan foto utama.");
       }
 
       onSettingsChange({ ...settings, ...mainPhotos });
-      toast.success("Foto utama berhasil diperbarui dan disinkronkan ke halaman publik! ✓");
+      toast.success("Foto utama berhasil disimpan.");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menyimpan";
+      const msg = err instanceof Error ? err.message : "Gagal menyimpan foto utama.";
       toast.error(msg);
     } finally {
       setIsSavingMain(false);
@@ -127,7 +144,7 @@ export function MediaManagementModule({
   const handleAddGalleryPhoto = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newGalleryUrl.trim()) {
-      toast.error("URL gambar atau file foto wajib diisi");
+      toast.error("URL atau file foto wajib diisi.");
       return;
     }
 
@@ -146,39 +163,43 @@ export function MediaManagementModule({
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Gagal menambahkan foto galeri");
+        throw new Error(data.error || "Gagal menambahkan foto ke galeri.");
       }
 
       onGalleryChange([...gallery, data.data]);
       setNewGalleryUrl("");
       setNewGalleryCaption("");
       setIsAddingGallery(false);
-      toast.success("Foto galeri baru berhasil ditambahkan! ✓");
+      toast.success("Foto baru berhasil ditambahkan ke galeri.");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menambahkan foto";
+      const msg = err instanceof Error ? err.message : "Gagal menambahkan foto.";
       toast.error(msg);
     } finally {
       setIsSubmittingGallery(false);
     }
   };
 
-  const handleDeleteGallery = async (id: number) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus foto ini dari galeri?")) return;
+  const confirmDeleteGallery = async () => {
+    if (!photoToDelete) return;
 
+    setIsDeleting(true);
     try {
-      const res = await fetch(`/api/admin/media?id=${id}`, {
+      const res = await fetch(`/api/admin/media?id=${photoToDelete.id}`, {
         method: "DELETE",
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Gagal menghapus foto");
+        throw new Error(data.error || "Gagal menghapus foto.");
       }
 
-      onGalleryChange(gallery.filter((g) => g.id !== id));
-      toast.success("Foto galeri berhasil dihapus ✓");
+      onGalleryChange(gallery.filter((g) => g.id !== photoToDelete.id));
+      toast.success("Foto berhasil dihapus dari galeri.");
+      setPhotoToDelete(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      const msg = err instanceof Error ? err.message : "Gagal menghapus foto.";
       toast.error(msg);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -192,482 +213,446 @@ export function MediaManagementModule({
     copy[targetIndex] = temp;
 
     onGalleryChange(copy);
-    toast.info("Urutan foto diperbarui");
+    toast.info("Urutan foto diperbarui.");
   };
 
   return (
-    <div className="space-y-10">
-      <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h2 className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-gold-600" />
-              Foto Utama &amp; Profil Mempelai
-            </h2>
-            <p className="text-xs text-muted mt-0.5">
-              Atur foto sampul, foto mihrab, potret kedua mempelai, dan kode QRIS. Perubahan langsung tampil di halaman publik.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleSaveMainPhotos}
-            disabled={isSavingMain}
-            className="w-full sm:w-auto min-h-11 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#5d3a41] hover:bg-[#4b3a3e] text-white text-xs font-bold tracking-[0.16em] uppercase shadow-sm transition-transform active:scale-[0.96] cursor-pointer disabled:opacity-50 shrink-0"
-          >
-            {isSavingMain ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Menyimpan...</span>
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4 stroke-[2]" />
-                <span>Simpan Foto Utama</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
+    <div className="space-y-6">
+      <Card className="border-slate-200/80 shadow-xs">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi Sampul
-              </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
-                Foto Sampul Utama
-              </h3>
-              <p className="text-[11px] text-[#8d757c] mb-3">
-                Tampil pada latar sampul saat tamu pertama kali menerima undangan.
-              </p>
-
-              <div className="aspect-[4/3] rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={mainPhotos.coverPhotoUrl}
-                  alt="Sampul"
-                  className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
-                />
-              </div>
-
-              <label className="block text-[11px] font-medium text-muted mb-1">
-                URL Gambar:
-              </label>
-              <input
-                type="text"
-                value={mainPhotos.coverPhotoUrl}
-                onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, coverPhotoUrl: e.target.value }))
-                }
-                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
-              />
+              <CardTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-[#6B1222]" />
+                Foto Utama &amp; Profil Mempelai
+              </CardTitle>
+              <CardDescription className="mt-0.5">
+                Atur foto sampul, foto kedua mempelai, dan kode QRIS tanda kasih.
+              </CardDescription>
             </div>
 
-            <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Unggah File Gambar</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, "coverPhotoUrl")}
-                className="hidden"
-              />
-            </label>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi Pembuka
-              </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
-                Foto Utama / Arch (WITH LOVE)
-              </h3>
-              <p className="text-[11px] text-[#8d757c] mb-3">
-                Tampil pada bingkai lengkung (arch) di seksi pembuka atas bersama kaligrafi dan ayat suci.
-              </p>
-
-              <div className="aspect-[4/5] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={mainPhotos.heroPhotoUrl}
-                  alt="Foto Utama Arch"
-                  className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
-                />
-              </div>
-
-              <label className="block text-[11px] font-medium text-muted mb-1">
-                URL Gambar:
-              </label>
-              <input
-                type="text"
-                value={mainPhotos.heroPhotoUrl}
-                onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, heroPhotoUrl: e.target.value }))
-                }
-                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
-              />
-            </div>
-
-            <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Unggah File Gambar</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, "heroPhotoUrl")}
-                className="hidden"
-              />
-            </label>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi Mempelai Pria
-              </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
-                Foto Mempelai Pria (Fauzan Ma&apos;ruf)
-              </h3>
-              <p className="text-[11px] text-[#8d757c] mb-3">
-                Tampil pada bingkai oval seksi Mempelai Pria.
-              </p>
-
-              <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={mainPhotos.groomPhotoUrl}
-                  alt="Fauzan"
-                  className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
-                />
-              </div>
-
-              <label className="block text-[11px] font-medium text-muted mb-1">
-                URL Gambar:
-              </label>
-              <input
-                type="text"
-                value={mainPhotos.groomPhotoUrl}
-                onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, groomPhotoUrl: e.target.value }))
-                }
-                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
-              />
-            </div>
-
-            <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Unggah File Gambar</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, "groomPhotoUrl")}
-                className="hidden"
-              />
-            </label>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi Mempelai Wanita
-              </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
-                Foto Mempelai Wanita (Sinta Maria Utami)
-              </h3>
-              <p className="text-[11px] text-[#8d757c] mb-3">
-                Tampil pada bingkai oval seksi Mempelai Wanita.
-              </p>
-
-              <div className="aspect-[3/4] max-w-[180px] mx-auto rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-3 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={mainPhotos.bridePhotoUrl}
-                  alt="Sinta"
-                  className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
-                />
-              </div>
-
-              <label className="block text-[11px] font-medium text-muted mb-1">
-                URL Gambar:
-              </label>
-              <input
-                type="text"
-                value={mainPhotos.bridePhotoUrl}
-                onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, bridePhotoUrl: e.target.value }))
-                }
-                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
-              />
-            </div>
-
-            <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Unggah File Gambar</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, "bridePhotoUrl")}
-                className="hidden"
-              />
-            </label>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/40 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-600 block mb-1">
-                Seksi Amplop Digital
-              </span>
-              <h3 className="font-serif font-semibold text-base text-rose-900 mb-1">
-                Kode QRIS Amplop Digital
-              </h3>
-              <p className="text-[11px] text-[#8d757c] mb-3">
-                Tampil langsung pada pop-up modal QRIS di halaman utama saat tamu ingin mengirim tanda kasih.
-              </p>
-
-              <div className="aspect-square max-w-[180px] mx-auto rounded-xl overflow-hidden bg-white p-2 border border-gold-500/30 mb-3 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={mainPhotos.qrisImageUrl}
-                  alt="QRIS"
-                  className="w-full h-full object-contain outline outline-1 -outline-offset-1 outline-black/10"
-                />
-              </div>
-
-              <label className="block text-[11px] font-medium text-muted mb-1">
-                URL Gambar:
-              </label>
-              <input
-                type="text"
-                value={mainPhotos.qrisImageUrl}
-                onChange={(e) =>
-                  setMainPhotos((p) => ({ ...p, qrisImageUrl: e.target.value }))
-                }
-                className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-xs text-ink focus:outline-none focus:border-rose-500 mb-2"
-              />
-            </div>
-
-            <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer transition-colors">
-              <Upload className="w-3.5 h-3.5" />
-              <span>Unggah File QRIS</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, "qrisImageUrl")}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </div>
-      </section>
-
-      <section className="p-5 sm:p-7 rounded-3xl bg-surface-white border border-gold-500/30 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h2 className="font-serif font-bold text-xl text-rose-900 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-gold-600" />
-              Koleksi Galeri Pre-Wedding ({gallery.length} Foto)
-            </h2>
-            <p className="text-xs text-muted mt-0.5">
-              Tampil pada grid seksi Galeri Kebahagiaan di halaman publik.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsAddingGallery(!isAddingGallery)}
-            className="w-full sm:w-auto min-h-11 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-rose-700 text-white text-xs font-semibold tracking-wider transition-transform active:scale-[0.96] hover:bg-rose-800 cursor-pointer shrink-0"
-          >
-            <Plus className="w-4 h-4 stroke-[2]" />
-            <span>Tambah Foto Galeri</span>
-          </button>
-        </div>
-
-        <div className="mb-6 p-4 rounded-2xl bg-cream/35 border border-gold-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h4 className="font-semibold text-sm text-ink font-serif">
-                Tampilkan Halaman Galeri Foto pada Undangan
-              </h4>
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                  isGalleryEnabled
-                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                    : "bg-rose-100 text-rose-800 border border-rose-300"
-                }`}
-              >
-                {isGalleryEnabled ? "Aktif (ON)" : "Disembunyikan (OFF)"}
-              </span>
-            </div>
-            <p className="text-xs text-muted max-w-[560px] leading-relaxed">
-              {isGalleryEnabled
-                ? "Halaman galeri foto dan menu navigasi Galeri ditampilkan pada undangan publik."
-                : "Halaman galeri foto dan tombol menu Galeri disembunyikan dari undangan publik (foto yang sudah diunggah tetap tersimpan aman di sistem)."}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            role="switch"
-            aria-checked={isGalleryEnabled}
-            aria-label="Tampilkan Halaman Galeri Foto pada Undangan"
-            disabled={isTogglingGallery}
-            onClick={handleToggleGallery}
-            className={`min-w-[52px] w-[52px] h-[30px] rounded-full p-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-rose-700 shrink-0 cursor-pointer disabled:opacity-50 ${
-              isGalleryEnabled ? "bg-emerald-600" : "bg-stone-300"
-            }`}
-          >
-            <div
-              className={`w-[22px] h-[22px] rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                isGalleryEnabled ? "translate-x-[22px]" : "translate-x-0"
-              }`}
-            />
-          </button>
-        </div>
-
-        {isAddingGallery && (
-          <form
-            onSubmit={handleAddGalleryPhoto}
-            className="p-5 mb-7 rounded-2xl border border-gold-500/40 bg-cream/60 space-y-4 animate-in fade-in duration-200"
-          >
-            <h3 className="font-serif font-bold text-base text-rose-900">
-              Unggah / Tambah Foto Galeri Baru
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
-                  URL Gambar:
-                </label>
-                <input
-                  type="text"
-                  placeholder="https://..."
-                  value={newGalleryUrl}
-                  onChange={(e) => setNewGalleryUrl(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
-                />
-                <div className="mt-2">
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold-500/40 bg-surface-white text-xs font-medium text-gold-600 hover:bg-rose-100 cursor-pointer">
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>Atau Pilih File Komputer</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileUpload(e, "gallery")}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mb-1">
-                  Caption / Keterangan Foto:
-                </label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Fauzan &amp; Sinta berbaring di padang rumput"
-                  value={newGalleryCaption}
-                  onChange={(e) => setNewGalleryCaption(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
-                />
-
-                <label className="block text-[11px] font-semibold tracking-wider uppercase text-gold-600 mt-3 mb-1">
-                  Rasio Aspek:
-                </label>
-                <select
-                  value={newGalleryAspect}
-                  onChange={(e) => setNewGalleryAspect(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gold-500/35 bg-surface-white text-base sm:text-sm text-ink focus:outline-none focus:border-rose-500"
-                >
-                  <option value="3/4">Portrait (3:4)</option>
-                  <option value="1/1">Square (1:1)</option>
-                  <option value="4/5">Portrait Lebar (4:5)</option>
-                  <option value="16/9">Landscape (16:9)</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setIsAddingGallery(false)}
-                className="px-4 py-2 rounded-full border border-gold-500/30 text-muted text-xs hover:bg-rose-100 cursor-pointer"
-              >
-                Batal
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmittingGallery}
-                className="px-5 py-2 rounded-full bg-rose-700 text-white text-xs font-bold tracking-wider hover:bg-rose-800 cursor-pointer disabled:opacity-50"
-              >
-                {isSubmittingGallery ? "Menambahkan..." : "Tambahkan ke Galeri"}
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {gallery.map((item, idx) => (
-            <div
-              key={item.id}
-              className="p-2.5 rounded-2xl border border-gold-500/25 bg-gradient-to-b from-[#fffcf9] to-cream/30 flex flex-col justify-between group shadow-xs"
+            <Button
+              type="button"
+              onClick={handleSaveMainPhotos}
+              isLoading={isSavingMain}
+              size="sm"
+              className="font-semibold self-start sm:self-auto"
             >
+              <Save className="h-4 w-4" />
+              <span>Simpan foto utama</span>
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
               <div>
-                <div className="aspect-[3/4] rounded-xl overflow-hidden bg-rose-100 border border-gold-500/30 mb-2 relative">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                  Sampul Depan
+                </span>
+                <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  Foto Sampul Utama
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Ditampilkan pada latar awal saat tamu pertama kali menerima undangan.
+                </p>
+
+                <div className="aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border border-slate-200 mb-3 relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={item.imageUrl}
-                    alt={item.caption || ""}
+                    src={mainPhotos.coverPhotoUrl}
+                    alt="Foto Sampul"
                     className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
-                    loading="lazy"
                   />
-                  <span className="absolute top-1 left-1 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-md">
-                    #{idx + 1}
-                  </span>
                 </div>
 
-                <p className="text-[10px] text-muted line-clamp-2 mb-2 italic" title={item.caption || ""}>
-                  {item.caption || "(Tanpa keterangan)"}
-                </p>
+                <Label htmlFor="coverPhotoUrl" className="text-[11px] text-slate-600 mb-1 block">
+                  URL gambar
+                </Label>
+                <Input
+                  id="coverPhotoUrl"
+                  type="text"
+                  value={mainPhotos.coverPhotoUrl}
+                  onChange={(e) =>
+                    setMainPhotos((p) => ({ ...p, coverPhotoUrl: e.target.value }))
+                  }
+                  className="mb-2 h-9 text-xs"
+                />
               </div>
 
-              <div className="flex items-center justify-between border-t border-gold-500/20 pt-2 mt-auto">
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => handleMove(idx, "up")}
-                    disabled={idx === 0}
-                    aria-label="Pindahkan ke atas"
-                    className="p-1 rounded-md text-gold-600 hover:bg-rose-100 disabled:opacity-30 cursor-pointer"
-                  >
-                    <ArrowUp className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleMove(idx, "down")}
-                    disabled={idx === gallery.length - 1}
-                    aria-label="Pindahkan ke bawah"
-                    className="p-1 rounded-md text-gold-600 hover:bg-rose-100 disabled:opacity-30 cursor-pointer"
-                  >
-                    <ArrowDown className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleDeleteGallery(item.id)}
-                  aria-label="Hapus foto dari galeri"
-                  className="p-1 rounded-md text-rose-600 hover:bg-rose-100 hover:text-rose-800 cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-300 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors">
+                <Upload className="h-3.5 w-3.5 text-slate-400" />
+                <span>Pilih file gambar</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, "coverPhotoUrl")}
+                  className="hidden"
+                />
+              </label>
             </div>
-          ))}
-        </div>
-      </section>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                  Mempelai Pria
+                </span>
+                <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  Foto Fauzan Ma&apos;ruf
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Ditampilkan pada profil mempelai pria.
+                </p>
+
+                <div className="aspect-[3/4] max-w-[160px] mx-auto rounded-xl overflow-hidden bg-slate-100 border border-slate-200 mb-3 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={mainPhotos.groomPhotoUrl}
+                    alt="Fauzan"
+                    className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
+                  />
+                </div>
+
+                <Label htmlFor="groomPhotoUrl" className="text-[11px] text-slate-600 mb-1 block">
+                  URL gambar
+                </Label>
+                <Input
+                  id="groomPhotoUrl"
+                  type="text"
+                  value={mainPhotos.groomPhotoUrl}
+                  onChange={(e) =>
+                    setMainPhotos((p) => ({ ...p, groomPhotoUrl: e.target.value }))
+                  }
+                  className="mb-2 h-9 text-xs"
+                />
+              </div>
+
+              <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-300 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors">
+                <Upload className="h-3.5 w-3.5 text-slate-400" />
+                <span>Pilih file gambar</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, "groomPhotoUrl")}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                  Mempelai Wanita
+                </span>
+                <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  Foto Sinta Maria Utami
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Ditampilkan pada profil mempelai wanita.
+                </p>
+
+                <div className="aspect-[3/4] max-w-[160px] mx-auto rounded-xl overflow-hidden bg-slate-100 border border-slate-200 mb-3 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={mainPhotos.bridePhotoUrl}
+                    alt="Sinta"
+                    className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
+                  />
+                </div>
+
+                <Label htmlFor="bridePhotoUrl" className="text-[11px] text-slate-600 mb-1 block">
+                  URL gambar
+                </Label>
+                <Input
+                  id="bridePhotoUrl"
+                  type="text"
+                  value={mainPhotos.bridePhotoUrl}
+                  onChange={(e) =>
+                    setMainPhotos((p) => ({ ...p, bridePhotoUrl: e.target.value }))
+                  }
+                  className="mb-2 h-9 text-xs"
+                />
+              </div>
+
+              <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-300 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors">
+                <Upload className="h-3.5 w-3.5 text-slate-400" />
+                <span>Pilih file gambar</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, "bridePhotoUrl")}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                  Tanda Kasih
+                </span>
+                <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  Kode QRIS
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  Ditampilkan pada modal QRIS amplop digital saat tamu memberi tanda kasih.
+                </p>
+
+                <div className="aspect-square max-w-[160px] mx-auto rounded-xl overflow-hidden bg-white p-2 border border-slate-200 mb-3 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={mainPhotos.qrisImageUrl}
+                    alt="QRIS"
+                    className="w-full h-full object-contain outline outline-1 -outline-offset-1 outline-black/10"
+                  />
+                </div>
+
+                <Label htmlFor="qrisImageUrl" className="text-[11px] text-slate-600 mb-1 block">
+                  URL gambar
+                </Label>
+                <Input
+                  id="qrisImageUrl"
+                  type="text"
+                  value={mainPhotos.qrisImageUrl}
+                  onChange={(e) =>
+                    setMainPhotos((p) => ({ ...p, qrisImageUrl: e.target.value }))
+                  }
+                  className="mb-2 h-9 text-xs"
+                />
+              </div>
+
+              <label className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-300 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors">
+                <Upload className="h-3.5 w-3.5 text-slate-400" />
+                <span>Pilih file QRIS</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, "qrisImageUrl")}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-slate-200/80 shadow-xs">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <CardTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-[#6B1222]" />
+                Koleksi Galeri Foto ({gallery.length} Foto)
+              </CardTitle>
+              <CardDescription className="mt-0.5">
+                Koleksi momen bahagia pada seksi Galeri di undangan publik.
+              </CardDescription>
+            </div>
+
+            <Button
+              type="button"
+              onClick={() => setIsAddingGallery(!isAddingGallery)}
+              size="sm"
+              variant="outline"
+              className="self-start sm:self-auto"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Tambah foto galeri</span>
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-5">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2.5">
+                <h4 className="font-semibold text-xs sm:text-sm text-slate-900">
+                  Tampilkan seksi Galeri pada undangan publik
+                </h4>
+                <Badge variant={isGalleryEnabled ? "success" : "outline"} size="sm">
+                  {isGalleryEnabled ? "Aktif" : "Nonaktif"}
+                </Badge>
+              </div>
+              <p className="text-xs text-slate-500 max-w-[560px] leading-relaxed">
+                {isGalleryEnabled
+                  ? "Seksi galeri foto dan tombol navigasi Galeri ditampilkan pada halaman publik."
+                  : "Seksi galeri foto disembunyikan dari halaman publik (foto yang sudah diunggah tetap tersimpan aman)."}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <Switch
+                checked={isGalleryEnabled}
+                onCheckedChange={handleToggleGallery}
+                disabled={isTogglingGallery}
+                aria-label="Tampilkan seksi Galeri"
+              />
+            </div>
+          </div>
+
+          {isAddingGallery && (
+            <form
+              onSubmit={handleAddGalleryPhoto}
+              className="p-4 rounded-xl border border-slate-300 bg-white space-y-4"
+            >
+              <h3 className="text-sm font-bold text-slate-900">
+                Tambah Foto Galeri Baru
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="galleryUrl">URL gambar</Label>
+                  <Input
+                    id="galleryUrl"
+                    type="text"
+                    placeholder="https://..."
+                    value={newGalleryUrl}
+                    onChange={(e) => setNewGalleryUrl(e.target.value)}
+                    className="mb-2"
+                  />
+                  <div>
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-medium text-slate-700 hover:bg-slate-100 cursor-pointer">
+                      <Upload className="h-3.5 w-3.5 text-slate-400" />
+                      <span>Pilih file komputer</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileUpload(e, "gallery")}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="galleryCaption">Keterangan foto</Label>
+                  <Input
+                    id="galleryCaption"
+                    type="text"
+                    placeholder="Contoh: Momen pre-wedding di studio"
+                    value={newGalleryCaption}
+                    onChange={(e) => setNewGalleryCaption(e.target.value)}
+                    className="mb-3"
+                  />
+
+                  <Label htmlFor="galleryAspect">Rasio aspek</Label>
+                  <select
+                    id="galleryAspect"
+                    value={newGalleryAspect}
+                    onChange={(e) => setNewGalleryAspect(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-base md:text-sm text-slate-900 focus:outline-none focus:border-[#6B1222] focus:ring-2 focus:ring-[#6B1222]/15"
+                  >
+                    <option value="3/4">Portrait (3:4)</option>
+                    <option value="1/1">Persegi (1:1)</option>
+                    <option value="4/5">Portrait Lebar (4:5)</option>
+                    <option value="16/9">Landscape (16:9)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAddingGallery(false)}
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  isLoading={isSubmittingGallery}
+                >
+                  {isSubmittingGallery ? "Menambahkan..." : "Tambahkan ke galeri"}
+                </Button>
+              </div>
+            </form>
+          )}
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
+            {gallery.map((item, idx) => (
+              <div
+                key={item.id}
+                className="p-2 rounded-xl border border-slate-200 bg-white flex flex-col justify-between group shadow-2xs hover:border-slate-300 transition-colors"
+              >
+                <div>
+                  <div className="aspect-[3/4] rounded-lg overflow-hidden bg-slate-100 border border-slate-200/80 mb-2 relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.imageUrl}
+                      alt={item.caption || ""}
+                      className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
+                      loading="lazy"
+                    />
+                    <span className="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-md">
+                      #{idx + 1}
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-slate-600 line-clamp-2 mb-2" title={item.caption || ""}>
+                    {item.caption || "(Tanpa keterangan)"}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-slate-100 pt-1.5 mt-auto">
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => handleMove(idx, "up")}
+                      disabled={idx === 0}
+                      aria-label="Pindahkan ke atas"
+                      className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 disabled:opacity-20 cursor-pointer"
+                    >
+                      <ArrowUp className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleMove(idx, "down")}
+                      disabled={idx === gallery.length - 1}
+                      aria-label="Pindahkan ke bawah"
+                      className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 disabled:opacity-20 cursor-pointer"
+                    >
+                      <ArrowDown className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setPhotoToDelete(item)}
+                    aria-label="Hapus foto dari galeri"
+                    className="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <AlertDialog open={Boolean(photoToDelete)} onOpenChange={(open) => !open && setPhotoToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus foto dari galeri?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Foto ini akan dihapus dari koleksi galeri dan tidak akan lagi ditampilkan pada halaman undangan publik.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteGallery}
+              disabled={isDeleting}
+              className="bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              {isDeleting ? "Menghapus..." : "Hapus foto"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

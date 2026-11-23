@@ -10,6 +10,7 @@ import {
   CreditCard,
   Music2,
   RefreshCw,
+  Shield,
 } from "lucide-react";
 import type { WeddingSettingsData } from "@/lib/db/store";
 import {
@@ -25,9 +26,11 @@ import { AcaraSettingsTab } from "./settings/AcaraSettingsTab";
 import { FiturSettingsTab } from "./settings/FiturSettingsTab";
 import { AmplopSettingsTab } from "./settings/AmplopSettingsTab";
 import { MusikSettingsTab } from "./settings/MusikSettingsTab";
+import { AksesAkunTab } from "./settings/AksesAkunTab";
 
 interface WeddingSettingsModuleProps {
   initialSettings: WeddingSettingsData | any;
+  initialUsers?: any[];
   onSettingsUpdate?: (newSettings: WeddingSettingsData) => void;
 }
 
@@ -43,6 +46,7 @@ function extractYouTubeVideoId(input?: string): string {
 
 export function WeddingSettingsModule({
   initialSettings,
+  initialUsers,
   onSettingsUpdate,
 }: WeddingSettingsModuleProps) {
   const [formData, setFormData] = useState<WeddingSettingsData | any>(initialSettings);
@@ -313,7 +317,7 @@ export function WeddingSettingsModule({
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-          <TabsList className="w-full sm:w-auto grid grid-cols-5 p-1 bg-slate-100 rounded-xl">
+          <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:grid-cols-6 p-1 bg-slate-100 rounded-xl">
             <TabsTrigger value="mempelai" className="gap-1.5 text-xs py-2">
               <Users className="h-3.5 w-3.5 shrink-0" />
               <span className="hidden sm:inline">Mempelai</span>
@@ -334,16 +338,22 @@ export function WeddingSettingsModule({
               <Music2 className="h-3.5 w-3.5 shrink-0" />
               <span className="hidden sm:inline">Musik Latar</span>
             </TabsTrigger>
+            <TabsTrigger value="users" className="gap-1.5 text-xs py-2">
+              <Shield className="h-3.5 w-3.5 shrink-0" />
+              <span className="hidden sm:inline">Akses Akun</span>
+            </TabsTrigger>
           </TabsList>
 
-          <Button
-            type="submit"
-            isLoading={isSaving}
-            className="font-semibold self-end sm:self-auto shrink-0"
-          >
-            <Save className="h-4 w-4" />
-            <span>Simpan semua perubahan</span>
-          </Button>
+          {activeTab !== "users" && (
+            <Button
+              type="submit"
+              isLoading={isSaving}
+              className="font-semibold self-end sm:self-auto shrink-0 bg-[#6B1222] hover:bg-[#520D1A] text-white"
+            >
+              <Save className="h-4 w-4" />
+              <span>Simpan semua perubahan</span>
+            </Button>
+          )}
         </div>
 
         <TabsContent value="mempelai" className="mt-4">
@@ -378,6 +388,10 @@ export function WeddingSettingsModule({
             activePreviewTrackUrl={activePreviewTrackUrl}
             onAudioUpload={handleAudioUpload}
           />
+        </TabsContent>
+
+        <TabsContent value="users" className="mt-4">
+          <AksesAkunTab initialUsers={initialUsers} />
         </TabsContent>
       </Tabs>
     </form>

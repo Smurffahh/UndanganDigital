@@ -17,6 +17,11 @@ import {
   Upload,
   Plus,
   Filter,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Save,
+  Shield,
 } from "lucide-react";
 import type { GuestData, WeddingSettingsData } from "@/lib/db/store";
 import { validateGuestImport, type GuestValidationResult } from "@/lib/guestValidator";
@@ -26,12 +31,15 @@ import {
   downloadCsvTemplate,
   exportGuestsToExcel,
   exportGuestsToCsv,
+  DEFAULT_PARENT_WA_TEMPLATE,
+  getDefaultWaTemplate,
 } from "@/lib/guestTemplate";
 import { formatWaEventDate } from "@/lib/dateFormat";
 import {
   generateEncryptedGuestToken,
   generateBulkEncryptedGuestTokens,
 } from "@/app/actions/guest-encryption";
+import { Textarea } from "@/components/ui/textarea";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -121,7 +129,14 @@ interface GuestManagementModuleProps {
   guests: GuestData[];
   settings: WeddingSettingsData;
   onGuestsChange: (updated: GuestData[]) => void;
-  onSettingsChange: (updated: WeddingSettingsData) => void;
+  onSettingsChange?: (updated: WeddingSettingsData) => void;
+  currentUser?: {
+    username: string;
+    role: "admin" | "parent";
+    displayName: string;
+    guestScope: string;
+    waTemplate?: string;
+  };
 }
 
 export function GuestManagementModule({
@@ -129,8 +144,25 @@ export function GuestManagementModule({
   settings,
   onGuestsChange,
   onSettingsChange,
+  currentUser,
 }: GuestManagementModuleProps) {
-  const [template, setTemplate] = useState(settings.waMessageTemplate);
+  const isParent = currentUser?.role === "parent";
+
+  const [template, setTemplate] = useState<string>(() => {
+    if (isParent) {
+      return currentUser?.waTemplate || DEFAULT_PARENT_WA_TEMPLATE;
+    }
+    return settings.waMessageTemplate || getDefaultWaTemplate("couple");
+  });
+
+  const [isTemplateCardOpen, setIsTemplateCardOpen] = useState(false);
+  const [isSavingTemplate, setIsSavingTemplate] = useState(false);
+
+  const [scopeFilter, setScopeFilter] = useState<"all" | "couple" | "parent">("all");
+  const [newOwnerScope, setNewOwnerScope] = useState<"couple" | "parent">(
+    isParent ? "parent" : "couple"
+  );
+
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newCategory, setNewCategory] = useState("Reguler");
@@ -205,6 +237,10 @@ export function GuestManagementModule({
 
   const filteredGuests = useMemo(() => {
     return guests.filter((g) => {
+      if (!isParent && scopeFilter !== "all") {
+        if ((g.ownerScope || "couple") !== scopeFilter) return false;
+      }
+
       if (statusFilter === "unsent" && (g.waSentStatus || !g.whatsappNumber)) return false;
       if (statusFilter === "sent" && !g.waSentStatus) return false;
       if (statusFilter === "no_phone" && g.whatsappNumber) return false;
@@ -220,7 +256,45 @@ export function GuestManagementModule({
 
       return true;
     });
-  }, [guests, statusFilter, categoryFilter, debouncedSearch]);
+  }, [guests, statusFilter, categoryFilter, debouncedSearch, scopeFilter, isParent]);
+
+  const handleSaveTemplate = async () => {
+    setIsSavingTemplate(true);
+    try {
+      if (isParent) {
+        const res = await fetch("/api/admin/profile/wa-template", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ waTemplate: template }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.error || "Gagal menyimpan template");
+        toast.success("Template pesan WhatsApp Orang Tua berhasil disimpan.");
+      } else {
+        const res = await fetch("/api/admin/settings", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ waMessageTemplate: template }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.error || "Gagal menyimpan template");
+        if (onSettingsChange) {
+          onSettingsChange({ ...settings, waMessageTemplate: template });
+        }
+        toast.success("Template pesan WhatsApp berhasil disimpan.");
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Gagal menyimpan template.");
+    } finally {
+      setIsSavingTemplate(false);
+    }
+  };
+
+  const handleResetTemplate = () => {
+    const defaultTpl = getDefaultWaTemplate(currentUser?.role, settings.waMessageTemplate);
+    setTemplate(defaultTpl);
+    toast.success("Template dikembalikan ke format standar.");
+  };
 
   const baseUrl =
     typeof window !== "undefined"
@@ -269,6 +343,7 @@ export function GuestManagementModule({
           name: cleanName,
           whatsappNumber: formattedPhone,
           category: newCategory.trim() || "Reguler",
+          ownerScope: isParent ? "parent" : newOwnerScope,
         }),
       });
 
@@ -645,7 +720,11 @@ export function GuestManagementModule({
         throw new Error(data.error || "Gagal mengimpor data tamu.");
       }
 
-      onGuestsChange(data.data);
+      const guestsRes = await fetch("/api/admin/guests");
+      const guestsData = await guestsRes.json();
+      if (guestsData.success) {
+        onGuestsChange(guestsData.data);
+      }
       setIsStagingModalOpen(false);
       setValidationResult(null);
       toast.success(`${validationResult.validGuests.length} tamu berhasil diimpor.`);
@@ -673,7 +752,10 @@ export function GuestManagementModule({
     const res = await fetch("/api/admin/guests/import", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ guests: payloadGuests }),
+      body: JSON.stringify({
+        guests: payloadGuests,
+        ownerScope: isParent ? "parent" : newOwnerScope,
+      }),
     });
 
     const data = await res.json();
@@ -681,21 +763,184 @@ export function GuestManagementModule({
       throw new Error(data.error || "Gagal menambahkan tamu.");
     }
 
-    onGuestsChange(data.data);
+    const guestsRes = await fetch("/api/admin/guests");
+    const guestsData = await guestsRes.json();
+    if (guestsData.success) {
+      onGuestsChange(guestsData.data);
+    }
     toast.success(`${payloadGuests.length} tamu berhasil ditambahkan.`);
   };
 
   return (
     <div className="space-y-6">
+      {/* WhatsApp Message Template Card */}
+      <Card className="border-slate-200/80 shadow-xs overflow-hidden">
+        <div
+          className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-slate-50/70 transition-colors"
+          onClick={() => setIsTemplateCardOpen(!isTemplateCardOpen)}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 shrink-0">
+              <MessageSquare className="h-4 w-4" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                  Template Pesan WhatsApp
+                </h3>
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] ${
+                    isParent
+                      ? "bg-amber-50 text-amber-800 border-amber-300"
+                      : "bg-slate-50 text-slate-700 border-slate-200"
+                  }`}
+                >
+                  {isParent ? "Format Khusus Orang Tua" : "Format Mempelai"}
+                </Badge>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5 truncate">
+                {isTemplateCardOpen
+                  ? "Sesuaikan susunan kata dan tautan personal sebelum dikirim ke tamu"
+                  : "Klik untuk melihat atau menyesuaikan teks pesan undangan WhatsApp"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 text-slate-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsTemplateCardOpen(!isTemplateCardOpen);
+              }}
+            >
+              {isTemplateCardOpen ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {isTemplateCardOpen && (
+          <div className="border-t border-slate-200/80 p-4 sm:p-5 bg-slate-50/50 space-y-3.5 animate-in fade-in duration-150">
+            <div>
+              <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                <Label htmlFor="templateText" className="text-xs font-semibold text-slate-700">
+                  Isi Pesan WhatsApp
+                </Label>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-500 flex-wrap">
+                  <span>Variabel:</span>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{nama_tamu}"}
+                  </code>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{link_undangan}"}
+                  </code>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{nama_mempelai}"}
+                  </code>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{tanggal_acara}"}
+                  </code>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{lokasi_acara}"}
+                  </code>
+                </div>
+              </div>
+
+              <Textarea
+                id="templateText"
+                rows={9}
+                value={template}
+                onChange={(e) => setTemplate(e.target.value)}
+                className="font-mono text-xs leading-relaxed bg-white border-slate-200 text-slate-800"
+                placeholder="Tuliskan format pesan undangan WhatsApp..."
+              />
+            </div>
+
+            <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleResetTemplate}
+                className="text-xs h-8 text-slate-600"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>Format Standar</span>
+              </Button>
+
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleSaveTemplate}
+                disabled={isSavingTemplate}
+                className="bg-[#6B1222] hover:bg-[#520D1A] text-white font-semibold text-xs h-8"
+              >
+                <Save className="h-3.5 w-3.5" />
+                <span>{isSavingTemplate ? "Menyimpan..." : "Simpan Template"}</span>
+              </Button>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Scope Filter for Admin */}
+      {!isParent && (
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl w-fit flex-wrap">
+          <button
+            type="button"
+            onClick={() => setScopeFilter("all")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              scopeFilter === "all"
+                ? "bg-white text-slate-900 shadow-2xs font-semibold"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Semua Tamu ({guests.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setScopeFilter("couple")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              scopeFilter === "couple"
+                ? "bg-white text-[#6B1222] shadow-2xs font-semibold"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Tamu Mempelai ({guests.filter((g) => (g.ownerScope || "couple") === "couple").length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setScopeFilter("parent")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              scopeFilter === "parent"
+                ? "bg-white text-amber-800 shadow-2xs font-semibold"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Tamu Orang Tua ({guests.filter((g) => g.ownerScope === "parent").length})
+          </button>
+        </div>
+      )}
+
       <Card className="border-slate-200/80 shadow-xs">
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base sm:text-lg font-bold text-slate-900">
-                Daftar Tamu Undangan ({guests.length} Tamu)
+                {isParent ? "Daftar Tamu Keluarga Saya" : "Daftar Tamu Undangan"} ({filteredGuests.length} Tamu)
               </CardTitle>
               <CardDescription className="mt-0.5">
-                Kelola kontak penerima, status pengiriman pesan, dan tautan undangan personal.
+                {isParent
+                  ? "Kelola kontak tamu keluarga, kirim undangan personal WhatsApp, dan pantau status pengiriman."
+                  : "Kelola kontak penerima, status pengiriman pesan, dan tautan undangan personal."}
               </CardDescription>
             </div>
 
@@ -742,7 +987,7 @@ export function GuestManagementModule({
                 type="button"
                 size="sm"
                 variant="outline"
-                onClick={() => exportGuestsToExcel(guests, baseUrl)}
+                onClick={() => exportGuestsToExcel(filteredGuests, baseUrl)}
                 title="Unduh seluruh daftar tamu ke file Excel"
               >
                 <Download className="h-4 w-4" />
@@ -753,7 +998,7 @@ export function GuestManagementModule({
                 type="button"
                 size="sm"
                 onClick={handleStartQueueUnsent}
-                className="bg-[#6B1222] hover:bg-[#520D1A] font-semibold"
+                className="bg-[#6B1222] hover:bg-[#520D1A] font-semibold text-white"
                 title="Mulai antrean pengiriman WhatsApp untuk tamu yang belum terkirim"
               >
                 <Send className="h-4 w-4" />
@@ -782,7 +1027,7 @@ export function GuestManagementModule({
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className={`grid grid-cols-1 ${!isParent ? "sm:grid-cols-4" : "sm:grid-cols-3"} gap-3`}>
                 <div>
                   <Label htmlFor="singleName">Nama tamu *</Label>
                   <Input
@@ -813,6 +1058,21 @@ export function GuestManagementModule({
                     placeholder="Keluarga / Rekan / VIP"
                   />
                 </div>
+
+                {!isParent && (
+                  <div>
+                    <Label htmlFor="singleOwnerScope">Lingkup Tamu</Label>
+                    <select
+                      id="singleOwnerScope"
+                      value={newOwnerScope}
+                      onChange={(e) => setNewOwnerScope(e.target.value as "couple" | "parent")}
+                      className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-[#6B1222]"
+                    >
+                      <option value="couple">Tamu Mempelai</option>
+                      <option value="parent">Tamu Orang Tua</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end gap-2 pt-1">
@@ -828,7 +1088,7 @@ export function GuestManagementModule({
                   type="submit"
                   size="sm"
                   isLoading={isSavingGuest}
-                  className="bg-[#6B1222] hover:bg-[#520D1A]"
+                  className="bg-[#6B1222] hover:bg-[#520D1A] text-white"
                 >
                   Simpan tamu
                 </Button>
@@ -907,6 +1167,7 @@ export function GuestManagementModule({
                 onDeleteGuest={(g) => setGuestToDelete(g)}
                 copiedId={copiedId}
                 baseUrl={baseUrl}
+                showOwnerBadge={!isParent}
               />
 
               <GuestCardMobile
@@ -919,6 +1180,7 @@ export function GuestManagementModule({
                 onDeleteGuest={(g) => setGuestToDelete(g)}
                 copiedId={copiedId}
                 baseUrl={baseUrl}
+                showOwnerBadge={!isParent}
               />
             </>
           )}

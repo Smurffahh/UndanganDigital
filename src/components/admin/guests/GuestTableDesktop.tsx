@@ -18,6 +18,7 @@ interface GuestTableDesktopProps {
   onDeleteGuest: (guest: GuestData) => void;
   copiedId: number | null;
   baseUrl: string;
+  showOwnerBadge?: boolean;
 }
 
 export function GuestTableDesktop({
@@ -31,6 +32,7 @@ export function GuestTableDesktop({
   onDeleteGuest,
   copiedId,
   baseUrl,
+  showOwnerBadge = false,
 }: GuestTableDesktopProps) {
   const isAllSelected = guests.length > 0 && guests.every((g) => selectedIds.has(g.id));
   const isSomeSelected = guests.some((g) => selectedIds.has(g.id)) && !isAllSelected;
@@ -74,7 +76,21 @@ export function GuestTableDesktop({
                   />
                 </td>
                 <td className="p-3.5 font-semibold text-slate-900">
-                  {guest.name}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span>{guest.name}</span>
+                    {showOwnerBadge && (
+                      <Badge
+                        variant="outline"
+                        className={`text-[9px] px-1.5 py-0 rounded-md font-medium ${
+                          guest.ownerScope === "parent"
+                            ? "bg-amber-50 text-amber-800 border-amber-300"
+                            : "bg-slate-100 text-slate-700 border-slate-200"
+                        }`}
+                      >
+                        {guest.ownerScope === "parent" ? "Orang Tua" : "Mempelai"}
+                      </Badge>
+                    )}
+                  </div>
                 </td>
                 <td className="p-3.5">
                   <Badge variant="outline" size="sm" className="bg-slate-50">

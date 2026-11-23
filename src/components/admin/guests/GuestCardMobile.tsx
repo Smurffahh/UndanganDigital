@@ -17,6 +17,7 @@ interface GuestCardMobileProps {
   onDeleteGuest: (guest: GuestData) => void;
   copiedId: number | null;
   baseUrl: string;
+  showOwnerBadge?: boolean;
 }
 
 export function GuestCardMobile({
@@ -29,6 +30,7 @@ export function GuestCardMobile({
   onDeleteGuest,
   copiedId,
   baseUrl,
+  showOwnerBadge = false,
 }: GuestCardMobileProps) {
   return (
     <div className="md:hidden space-y-3">
@@ -56,6 +58,18 @@ export function GuestCardMobile({
                     {guest.name}
                   </h4>
                   <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                    {showOwnerBadge && (
+                      <Badge
+                        variant="outline"
+                        className={`text-[9px] px-1.5 py-0 rounded-md font-medium ${
+                          guest.ownerScope === "parent"
+                            ? "bg-amber-50 text-amber-800 border-amber-300"
+                            : "bg-slate-100 text-slate-700 border-slate-200"
+                        }`}
+                      >
+                        {guest.ownerScope === "parent" ? "Orang Tua" : "Mempelai"}
+                      </Badge>
+                    )}
                     <Badge variant="outline" size="sm" className="bg-slate-50">
                       {guest.category || "Reguler"}
                     </Badge>

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "./index";
 import * as schema from "./schema";
 import {
@@ -38,6 +38,8 @@ export type GuestData = {
   waBindex?: string | null;
   waSentStatus: boolean | null;
   waSentAt: Date | string | null;
+  ownerScope?: string;
+  createdBy?: string | null;
   createdAt: Date | string;
 };
 
@@ -51,6 +53,7 @@ interface LocalDatabase {
   wishes: any[];
   guests: any[];
   musicTracks?: schema.MusicTrack[];
+  users?: any[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -80,6 +83,8 @@ function decryptGuestRecord(r: any): GuestData {
     waBindex: r.waBindex || (r.whatsappNumber ? createPhoneBlindIndex(decryptField(r.whatsappNumber)) : null),
     waSentStatus: Boolean(r.waSentStatus),
     waSentAt: r.waSentAt || null,
+    ownerScope: r.ownerScope || "couple",
+    createdBy: r.createdBy || null,
     createdAt: r.createdAt || new Date(),
   };
 }
@@ -397,6 +402,25 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_venue VARCHAR(255) DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_address TEXT DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_maps_url TEXT DEFAULT ''`;
+    await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS owner_scope VARCHAR(50) NOT NULL DEFAULT 'couple'`;
+    await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS created_by VARCHAR(50)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_guests_owner_scope ON guests(owner_scope)`;
+    await sql`
+      CREATE TABLE IF NOT EXISTS dashboard_users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        role VARCHAR(20) NOT NULL DEFAULT 'parent',
+        display_name VARCHAR(100) NOT NULL,
+        guest_scope VARCHAR(50) NOT NULL DEFAULT 'parent',
+        wa_template TEXT DEFAULT '',
+        is_active BOOLEAN NOT NULL DEFAULT true,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_dashboard_users_username ON dashboard_users(username)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_dashboard_users_role ON dashboard_users(role)`;
     hasEnsuredColumns = true;
   } catch (err) {
     console.warn("Could not ensure wedding_settings columns:", err);
@@ -646,14 +670,31 @@ export async function deleteRsvpWish(id: number): Promise<boolean> {
   return true;
 }
 
-export async function getGuests(): Promise<GuestData[]> {
+export async function getGuests(scope?: string): Promise<GuestData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      let rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
-      if (rows.length === 0) {
-        await seedDatabase();
+      let rows;
+      if (scope && scope !== "all") {
+        rows = await db
+          .select()
+          .from(schema.guests)
+          .where(eq(schema.guests.ownerScope, scope))
+          .orderBy(desc(schema.guests.createdAt));
+      } else {
         rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
+      }
+      if (rows.length === 0 && (!scope || scope === "all" || scope === "couple")) {
+        await seedDatabase();
+        if (scope && scope !== "all") {
+          rows = await db
+            .select()
+            .from(schema.guests)
+            .where(eq(schema.guests.ownerScope, scope))
+            .orderBy(desc(schema.guests.createdAt));
+        } else {
+          rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
+        }
       }
       return rows.map(decryptGuestRecord);
     } catch (e) {
@@ -662,19 +703,27 @@ export async function getGuests(): Promise<GuestData[]> {
   }
 
   const local = getLocalDb();
-  return local.guests.map(decryptGuestRecord);
+  let list = local.guests.map(decryptGuestRecord);
+  if (scope && scope !== "all") {
+    list = list.filter((g) => (g.ownerScope || "couple") === scope);
+  }
+  return list;
 }
 
 export async function createGuest(data: {
   name: string;
   whatsappNumber?: string | null;
   category?: string;
+  ownerScope?: string;
+  createdBy?: string | null;
 }): Promise<GuestData> {
   const cleanName = data.name.trim();
   const slugQuery = generateShortCode(cleanName);
   createShortGuestToken(cleanName).catch(() => {});
   const cleanPhone = data.whatsappNumber?.trim() || null;
   const category = data.category?.trim() || "Reguler";
+  const ownerScope = data.ownerScope?.trim() || "couple";
+  const createdBy = data.createdBy?.trim() || null;
 
   const encName = encryptField(cleanName);
   const encPhone = cleanPhone ? encryptField(cleanPhone) : null;
@@ -685,17 +734,17 @@ export async function createGuest(data: {
   const db = getPostgresDb();
   if (db) {
     try {
-      // HMAC-SHA256 blind index enables deduplication without decrypting every row in database
+      // HMAC-SHA256 blind index enables deduplication within the same scope
       if (waBindex) {
         const existing = await db
           .select()
           .from(schema.guests)
-          .where(eq(schema.guests.waBindex, waBindex))
+          .where(and(eq(schema.guests.waBindex, waBindex), eq(schema.guests.ownerScope, ownerScope)))
           .limit(1);
         if (existing.length > 0) {
           const [updated] = await db
             .update(schema.guests)
-            .set({ name: encName, category: encCategory })
+            .set({ name: encName, category: encCategory, createdBy })
             .where(eq(schema.guests.id, existing[0].id))
             .returning();
           return decryptGuestRecord(updated);
@@ -705,7 +754,7 @@ export async function createGuest(data: {
         const existing = await db
           .select()
           .from(schema.guests)
-          .where(eq(schema.guests.nameBindex, nameBindex))
+          .where(and(eq(schema.guests.nameBindex, nameBindex), eq(schema.guests.ownerScope, ownerScope)))
           .limit(1);
         if (existing.length > 0) {
           const updates: any = {};
@@ -715,6 +764,9 @@ export async function createGuest(data: {
           }
           if (category) {
             updates.category = encCategory;
+          }
+          if (createdBy) {
+            updates.createdBy = createdBy;
           }
           if (Object.keys(updates).length > 0) {
             const [updated] = await db
@@ -739,6 +791,8 @@ export async function createGuest(data: {
           waBindex,
           waSentStatus: false,
           waSentAt: null,
+          ownerScope,
+          createdBy,
         })
         .returning();
       return decryptGuestRecord(inserted);
@@ -750,19 +804,24 @@ export async function createGuest(data: {
   const local = getLocalDb();
 
   if (waBindex) {
-    const existingIdx = local.guests.findIndex((g) => g.waBindex === waBindex);
+    const existingIdx = local.guests.findIndex(
+      (g) => g.waBindex === waBindex && (g.ownerScope || "couple") === ownerScope
+    );
     if (existingIdx !== -1) {
       local.guests[existingIdx] = {
         ...local.guests[existingIdx],
         name: encName,
         category: encCategory,
+        createdBy,
       };
       saveLocalDb(local);
       return decryptGuestRecord(local.guests[existingIdx]);
     }
   }
   if (nameBindex) {
-    const existingIdx = local.guests.findIndex((g) => g.nameBindex === nameBindex);
+    const existingIdx = local.guests.findIndex(
+      (g) => g.nameBindex === nameBindex && (g.ownerScope || "couple") === ownerScope
+    );
     if (existingIdx !== -1) {
       if (cleanPhone) {
         local.guests[existingIdx].whatsappNumber = encPhone;
@@ -770,6 +829,9 @@ export async function createGuest(data: {
       }
       if (category) {
         local.guests[existingIdx].category = encCategory;
+      }
+      if (createdBy) {
+        local.guests[existingIdx].createdBy = createdBy;
       }
       saveLocalDb(local);
       return decryptGuestRecord(local.guests[existingIdx]);
@@ -787,6 +849,8 @@ export async function createGuest(data: {
     waBindex,
     waSentStatus: false,
     waSentAt: null,
+    ownerScope,
+    createdBy,
     createdAt: new Date().toISOString(),
   };
   local.guests.unshift(newRawGuest);
@@ -796,7 +860,8 @@ export async function createGuest(data: {
 
 export async function updateGuest(
   id: number,
-  updates: Partial<Omit<GuestData, "id" | "createdAt">>
+  updates: Partial<Omit<GuestData, "id" | "createdAt">>,
+  expectedScope?: string
 ): Promise<GuestData | null> {
   const dbUpdates: any = { ...updates };
 
@@ -819,11 +884,16 @@ export async function updateGuest(
   const db = getPostgresDb();
   if (db) {
     try {
+      const condition = expectedScope
+        ? and(eq(schema.guests.id, id), eq(schema.guests.ownerScope, expectedScope))
+        : eq(schema.guests.id, id);
+
       const [updated] = await db
         .update(schema.guests)
         .set(dbUpdates)
-        .where(eq(schema.guests.id, id))
+        .where(condition)
         .returning();
+      if (!updated) return null;
       return decryptGuestRecord(updated);
     } catch (e) {
       console.warn("DB update guest failed, using local JSON fallback:", e);
@@ -831,7 +901,11 @@ export async function updateGuest(
   }
 
   const local = getLocalDb();
-  const idx = local.guests.findIndex((g) => g.id === id);
+  const idx = local.guests.findIndex((g) => {
+    if (g.id !== id) return false;
+    if (expectedScope && (g.ownerScope || "couple") !== expectedScope) return false;
+    return true;
+  });
   if (idx === -1) return null;
 
   local.guests[idx] = {
@@ -848,27 +922,36 @@ export async function updateGuest(
   return decryptGuestRecord(local.guests[idx]);
 }
 
-export async function deleteGuest(id: number): Promise<boolean> {
+export async function deleteGuest(id: number, expectedScope?: string): Promise<boolean> {
   const db = getPostgresDb();
   if (db) {
     try {
-      await db.delete(schema.guests).where(eq(schema.guests.id, id));
-      return true;
+      const condition = expectedScope
+        ? and(eq(schema.guests.id, id), eq(schema.guests.ownerScope, expectedScope))
+        : eq(schema.guests.id, id);
+      const res = await db.delete(schema.guests).where(condition).returning();
+      return res.length > 0;
     } catch (e) {
       console.warn("DB delete guest failed, using local JSON fallback:", e);
     }
   }
 
   const local = getLocalDb();
-  local.guests = local.guests.filter((g) => g.id !== id);
+  const initialLength = local.guests.length;
+  local.guests = local.guests.filter((g) => {
+    if (g.id !== id) return true;
+    if (expectedScope && (g.ownerScope || "couple") !== expectedScope) return true;
+    return false;
+  });
   saveLocalDb(local);
-  return true;
+  return local.guests.length < initialLength;
 }
 
 export async function bulkUpdateGuestStatus(
   ids: number[],
   waSentStatus: boolean,
-  waSentAt?: string | null
+  waSentAt?: string | null,
+  expectedScope?: string
 ): Promise<number> {
   if (!ids || ids.length === 0) return 0;
 
@@ -884,13 +967,17 @@ export async function bulkUpdateGuestStatus(
   const db = getPostgresDb();
   if (db) {
     try {
+      const condition = expectedScope
+        ? and(inArray(schema.guests.id, ids), eq(schema.guests.ownerScope, expectedScope))
+        : inArray(schema.guests.id, ids);
+
       const updated = await db
         .update(schema.guests)
         .set({
           waSentStatus,
           waSentAt: sentAtVal,
         })
-        .where(inArray(schema.guests.id, ids))
+        .where(condition)
         .returning();
       return updated.length;
     } catch (e) {
@@ -903,12 +990,14 @@ export async function bulkUpdateGuestStatus(
   let updatedCount = 0;
   local.guests = local.guests.map((g) => {
     if (idSet.has(g.id)) {
-      updatedCount++;
-      return {
-        ...g,
-        waSentStatus,
-        waSentAt: sentAtVal ? sentAtVal.toISOString() : null,
-      };
+      if (!expectedScope || (g.ownerScope || "couple") === expectedScope) {
+        updatedCount++;
+        return {
+          ...g,
+          waSentStatus,
+          waSentAt: sentAtVal ? sentAtVal.toISOString() : null,
+        };
+      }
     }
     return g;
   });
@@ -916,14 +1005,17 @@ export async function bulkUpdateGuestStatus(
   return updatedCount;
 }
 
-export async function bulkDeleteGuests(ids: number[]): Promise<number> {
+export async function bulkDeleteGuests(ids: number[], expectedScope?: string): Promise<number> {
   if (!ids || ids.length === 0) return 0;
 
   const db = getPostgresDb();
   if (db) {
     try {
-      await db.delete(schema.guests).where(inArray(schema.guests.id, ids));
-      return ids.length;
+      const condition = expectedScope
+        ? and(inArray(schema.guests.id, ids), eq(schema.guests.ownerScope, expectedScope))
+        : inArray(schema.guests.id, ids);
+      const res = await db.delete(schema.guests).where(condition).returning();
+      return res.length;
     } catch (e) {
       console.warn("DB bulk delete guests failed, using local JSON fallback:", e);
     }
@@ -932,22 +1024,228 @@ export async function bulkDeleteGuests(ids: number[]): Promise<number> {
   const local = getLocalDb();
   const idSet = new Set(ids);
   const initialLength = local.guests.length;
-  local.guests = local.guests.filter((g) => !idSet.has(g.id));
+  local.guests = local.guests.filter((g) => {
+    if (!idSet.has(g.id)) return true;
+    if (expectedScope && (g.ownerScope || "couple") !== expectedScope) return true;
+    return false;
+  });
   saveLocalDb(local);
   return initialLength - local.guests.length;
 }
 
 export async function importGuests(
-  guestList: Array<{ name: string; whatsappNumber?: string | null; category?: string }>
+  guestList: Array<{ name: string; whatsappNumber?: string | null; category?: string }>,
+  ownerScope?: string,
+  createdBy?: string | null
 ): Promise<number> {
   let count = 0;
   for (const item of guestList) {
     if (item.name && item.name.trim()) {
-      await createGuest(item);
+      await createGuest({
+        ...item,
+        ownerScope: ownerScope || "couple",
+        createdBy: createdBy || null,
+      });
       count++;
     }
   }
   return count;
+}
+
+export async function getDashboardUserByUsername(
+  username: string
+): Promise<schema.DashboardUser | null> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select()
+        .from(schema.dashboardUsers)
+        .where(eq(schema.dashboardUsers.username, username.trim().toLowerCase()))
+        .limit(1);
+      if (rows.length > 0) return rows[0];
+    } catch (e) {
+      console.warn("DB getDashboardUserByUsername failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  const found = (local.users || []).find(
+    (u) => u.username.toLowerCase() === username.trim().toLowerCase()
+  );
+  return found || null;
+}
+
+export async function getDashboardUsers(): Promise<
+  Array<Omit<schema.DashboardUser, "passwordHash">>
+> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select({
+          id: schema.dashboardUsers.id,
+          username: schema.dashboardUsers.username,
+          role: schema.dashboardUsers.role,
+          displayName: schema.dashboardUsers.displayName,
+          guestScope: schema.dashboardUsers.guestScope,
+          waTemplate: schema.dashboardUsers.waTemplate,
+          isActive: schema.dashboardUsers.isActive,
+          createdAt: schema.dashboardUsers.createdAt,
+          updatedAt: schema.dashboardUsers.updatedAt,
+        })
+        .from(schema.dashboardUsers)
+        .orderBy(schema.dashboardUsers.id);
+      return rows;
+    } catch (e) {
+      console.warn("DB getDashboardUsers failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  return (local.users || []).map(({ passwordHash, ...rest }) => rest);
+}
+
+export async function createDashboardUser(data: {
+  username: string;
+  passwordHash: string;
+  role?: string;
+  displayName: string;
+  guestScope?: string;
+  waTemplate?: string;
+}): Promise<Omit<schema.DashboardUser, "passwordHash">> {
+  const cleanUsername = data.username.trim().toLowerCase();
+  const role = data.role?.trim() || "parent";
+  const guestScope = data.guestScope?.trim() || "parent";
+
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const [inserted] = await db
+        .insert(schema.dashboardUsers)
+        .values({
+          username: cleanUsername,
+          passwordHash: data.passwordHash,
+          role,
+          displayName: data.displayName.trim(),
+          guestScope,
+          waTemplate: data.waTemplate || "",
+          isActive: true,
+        })
+        .returning();
+      const { passwordHash, ...safeUser } = inserted;
+      return safeUser;
+    } catch (e) {
+      console.warn("DB createDashboardUser failed:", e);
+      throw e;
+    }
+  }
+
+  const local = getLocalDb();
+  if (!local.users) local.users = [];
+  const nextId = local.users.reduce((max, u) => Math.max(max, u.id), 0) + 1;
+  const newUser = {
+    id: nextId,
+    username: cleanUsername,
+    passwordHash: data.passwordHash,
+    role,
+    displayName: data.displayName.trim(),
+    guestScope,
+    waTemplate: data.waTemplate || "",
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  local.users.push(newUser);
+  saveLocalDb(local);
+  const { passwordHash, ...safeUser } = newUser;
+  return safeUser;
+}
+
+export async function updateDashboardUser(
+  id: number,
+  updates: Partial<{
+    passwordHash: string;
+    displayName: string;
+    role: string;
+    guestScope: string;
+    waTemplate: string;
+    isActive: boolean;
+  }>
+): Promise<Omit<schema.DashboardUser, "passwordHash"> | null> {
+  const dbUpdates: any = { ...updates, updatedAt: new Date() };
+
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const [updated] = await db
+        .update(schema.dashboardUsers)
+        .set(dbUpdates)
+        .where(eq(schema.dashboardUsers.id, id))
+        .returning();
+      if (!updated) return null;
+      const { passwordHash, ...safeUser } = updated;
+      return safeUser;
+    } catch (e) {
+      console.warn("DB updateDashboardUser failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  if (!local.users) local.users = [];
+  const idx = local.users.findIndex((u) => u.id === id);
+  if (idx === -1) return null;
+  local.users[idx] = { ...local.users[idx], ...dbUpdates };
+  saveLocalDb(local);
+  const { passwordHash, ...safeUser } = local.users[idx];
+  return safeUser;
+}
+
+export async function deleteDashboardUser(id: number): Promise<boolean> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const res = await db
+        .delete(schema.dashboardUsers)
+        .where(eq(schema.dashboardUsers.id, id))
+        .returning();
+      return res.length > 0;
+    } catch (e) {
+      console.warn("DB deleteDashboardUser failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  if (!local.users) return false;
+  const initialLength = local.users.length;
+  local.users = local.users.filter((u) => u.id !== id);
+  saveLocalDb(local);
+  return local.users.length < initialLength;
+}
+
+export async function updateUserWaTemplate(username: string, waTemplate: string): Promise<boolean> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const [updated] = await db
+        .update(schema.dashboardUsers)
+        .set({ waTemplate, updatedAt: new Date() })
+        .where(eq(schema.dashboardUsers.username, username.trim().toLowerCase()))
+        .returning();
+      return Boolean(updated);
+    } catch (e) {
+      console.warn("DB updateUserWaTemplate failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  if (!local.users) return false;
+  const idx = local.users.findIndex((u) => u.username.toLowerCase() === username.trim().toLowerCase());
+  if (idx === -1) return false;
+  local.users[idx].waTemplate = waTemplate;
+  local.users[idx].updatedAt = new Date();
+  saveLocalDb(local);
+  return true;
 }
 
 export async function getMusicTracks(): Promise<schema.MusicTrack[]> {

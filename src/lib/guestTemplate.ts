@@ -9,6 +9,39 @@ export interface TemplateGuestSample {
   Kategori: string;
 }
 
+export const DEFAULT_PARENT_WA_TEMPLATE = `Assalamu'alaikum Wr. Wb. / Salam Sejahtera,
+
+Kepada Yth. Bapak/Ibu/Saudara/i
+*{nama_tamu}*
+
+Dengan memohon rahmat dan ridho Allah SWT, perkenankan kami atas nama orang tua mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada pernikahan putra-putri kami:
+
+*{nama_mempelai}*
+
+Rangkaian Acara:
+- Tasyakuran: 1–2 Januari 2027
+- Akad Nikah & Resepsi: {tanggal_acara}
+- Lokasi: {lokasi_acara}
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
+
+Detail undangan digital:
+{link_undangan}
+
+Wassalamu'alaikum Wr. Wb.
+Kami yang berbahagia,
+Keluarga Besar Orang Tua Mempelai`;
+
+export function getDefaultWaTemplate(role?: string, coupleDefaultTemplate?: string): string {
+  if (role === "parent") {
+    return DEFAULT_PARENT_WA_TEMPLATE;
+  }
+  return (
+    coupleDefaultTemplate ||
+    `Kepada Yth. Bapak/Ibu/Saudara/i\n*{nama_tamu}*\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri hari bahagia kami:\n\n*{nama_mempelai}*\n\nTanggal: {tanggal_acara}\nLokasi: {lokasi_acara}\n\nDetail undangan dapat diakses pada tautan berikut:\n{link_undangan}\n\nMerupakan suatu kehormatan bagi kami atas kehadiran dan doa restunya.\n\nTerima kasih.`
+  );
+}
+
 export const SAMPLE_GUEST_DATA: TemplateGuestSample[] = [
   {
     Nama_Tamu: "Bpk. H. Budi Santoso & Keluarga",

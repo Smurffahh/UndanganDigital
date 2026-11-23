@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { isAuthenticated } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { importGuests } from "@/lib/db/store";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
 
 export async function POST(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -41,7 +42,10 @@ export async function POST(request: Request) {
       })
       .filter((item: unknown): item is { name: string; whatsappNumber: string | null; category: string } => item !== null);
 
-    const count = await importGuests(cleanedGuests);
+    const ownerScope = session.role === "parent" ? session.guestScope : (body.ownerScope || "couple");
+    const createdBy = session.username;
+
+    const count = await importGuests(cleanedGuests, ownerScope, createdBy);
     return NextResponse.json({
       success: true,
       message: `${count} tamu berhasil diproses (${withPhoneCount} dengan nomor WA, ${noPhoneCount} tanpa nomor WA)`,

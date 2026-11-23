@@ -85,12 +85,15 @@ export const guests = pgTable(
     waBindex: varchar("wa_bindex", { length: 64 }),
     waSentStatus: boolean("wa_sent_status").default(false),
     waSentAt: timestamp("wa_sent_at", { withTimezone: true }),
+    ownerScope: varchar("owner_scope", { length: 50 }).default("couple").notNull(),
+    createdBy: varchar("created_by", { length: 50 }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },
   (table) => [
     index("idx_guests_slug_query").on(table.slugQuery),
     index("idx_guests_wa_bindex").on(table.waBindex),
     index("idx_guests_name_bindex").on(table.nameBindex),
+    index("idx_guests_owner_scope").on(table.ownerScope),
   ]
 );
 
@@ -134,6 +137,26 @@ export const musicTracks = pgTable(
   ]
 );
 
+export const dashboardUsers = pgTable(
+  "dashboard_users",
+  {
+    id: serial("id").primaryKey(),
+    username: varchar("username", { length: 50 }).notNull().unique(),
+    passwordHash: text("password_hash").notNull(),
+    role: varchar("role", { length: 20 }).notNull().default("parent"),
+    displayName: varchar("display_name", { length: 100 }).notNull(),
+    guestScope: varchar("guest_scope", { length: 50 }).notNull().default("parent"),
+    waTemplate: text("wa_template").default(""),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("idx_dashboard_users_username").on(table.username),
+    index("idx_dashboard_users_role").on(table.role),
+  ]
+);
+
 export type WeddingSettings = typeof weddingSettings.$inferSelect;
 export type NewWeddingSettings = typeof weddingSettings.$inferInsert;
 
@@ -151,3 +174,6 @@ export type NewGuestToken = typeof guestTokens.$inferInsert;
 
 export type MusicTrack = typeof musicTracks.$inferSelect;
 export type NewMusicTrack = typeof musicTracks.$inferInsert;
+
+export type DashboardUser = typeof dashboardUsers.$inferSelect;
+export type NewDashboardUser = typeof dashboardUsers.$inferInsert;

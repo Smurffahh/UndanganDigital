@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { isAuthenticated } from "@/lib/auth";
+import { requireSession, requireAdmin } from "@/lib/auth";
 import { getWeddingSettings, updateWeddingSettings } from "@/lib/db/store";
 import { normalizeUrlOrPath, isValidUrlOrLocalPath } from "@/lib/urlUtils";
 
@@ -67,7 +67,8 @@ const updateSettingsSchema = z.object({
 }).passthrough();
 
 export async function GET() {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
   const settings = await getWeddingSettings();
@@ -75,8 +76,20 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      {
+        success: false,
+        code: "FORBIDDEN",
+        error: "Akses ditolak. Fitur ini hanya tersedia untuk admin.",
+      },
+      { status: 403 }
+    );
   }
 
   try {

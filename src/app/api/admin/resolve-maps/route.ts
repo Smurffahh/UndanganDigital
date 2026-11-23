@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
-import { isAuthenticated } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 
 export async function GET(request: Request) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   const { searchParams } = new URL(request.url);
@@ -20,8 +24,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   try {

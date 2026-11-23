@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { isAuthenticated } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { getRsvpWishes, deleteRsvpWish } from "@/lib/db/store";
 
 export async function GET() {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   const wishes = await getRsvpWishes();
@@ -13,8 +17,12 @@ export async function GET() {
 }
 
 export async function DELETE(request: Request) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   try {

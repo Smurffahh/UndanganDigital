@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { put, del } from "@vercel/blob";
-import { isAuthenticated } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import {
   getGalleryPhotos,
   createGalleryPhoto,
@@ -123,8 +123,16 @@ function isValidBlobUrl(urlString: string): boolean {
 }
 
 export async function GET(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   const [gallery, settings] = await Promise.all([getGalleryPhotos(), getWeddingSettings()]);
@@ -147,8 +155,16 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   const clientIp = request.headers.get("x-forwarded-for") || "local";
@@ -284,8 +300,16 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   try {
@@ -354,8 +378,16 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  if (!(await isAuthenticated())) {
+  const session = await requireSession();
+  if (!session) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
+      { status: 403 }
+    );
   }
 
   const clientIp = request.headers.get("x-forwarded-for") || "local";

@@ -759,12 +759,78 @@ body {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+@keyframes splashIndeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(30%);
+  }
+  100% {
+    transform: translateX(110%);
+  }
+}
+
+@keyframes splashLineExpand {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes splashFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes splashGlowPulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-splash-indeterminate {
+  animation: splashIndeterminate 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-splash-line {
+  animation: splashLineExpand 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: center;
+}
+
+.animate-splash-fade-up {
+  animation: splashFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-splash-glow {
+  animation: splashGlowPulse 2.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .royal-seq-item {
     transition: none !important;
     transform: none !important;
     opacity: 1 !important;
   }
+  .animate-splash-indeterminate,
+  .animate-splash-line,
+  .animate-splash-fade-up,
+  .animate-splash-glow,
   .leaf-sway-top-left,
   .leaf-sway-top-right,
   .leaf-sway-bottom-left,

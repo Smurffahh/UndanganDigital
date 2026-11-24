@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -34,6 +34,12 @@ import { MediaManagementModule } from "./MediaManagementModule";
 import { GuestManagementModule } from "./GuestManagementModule";
 import { WeddingSettingsModule } from "./WeddingSettingsModule";
 import { formatEventCardDate } from "@/lib/dateFormat";
+import { DashboardSplashScreen } from "./DashboardSplashScreen";
+import {
+  getSplashTransition,
+  clearSplashTransition,
+  type SplashTransitionData,
+} from "@/lib/splashTransition";
 
 type AdminTab = "rsvp" | "media" | "guests" | "settings";
 
@@ -71,6 +77,35 @@ export function DashboardWorkspace({
   const [gallery, setGallery] = useState<GalleryPhotoData[]>(initialGallery);
   const [guests, setGuests] = useState<GuestData[]>(initialGuests);
   const [wishes, setWishes] = useState<RsvpWishData[]>(initialWishes);
+
+  const groomFirstName = settings.groomName?.trim().split(/\s+/)[0] || "Fauzan";
+  const brideFirstName = settings.brideName?.trim().split(/\s+/)[0] || "Sinta";
+
+  const [welcomeTransition, setWelcomeTransition] = useState<SplashTransitionData | null>(null);
+  const [isTransitionExiting, setIsTransitionExiting] = useState(false);
+
+  useEffect(() => {
+    const transition = getSplashTransition();
+    if (!transition) return;
+
+    setWelcomeTransition(transition);
+
+    const elapsed = Date.now() - transition.startedAt;
+    const MIN_DISPLAY_MS = 900;
+    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
+
+    const exitTimer = setTimeout(() => {
+      setIsTransitionExiting(true);
+      const cleanupTimer = setTimeout(() => {
+        setWelcomeTransition(null);
+        clearSplashTransition();
+      }, 300);
+
+      return () => clearTimeout(cleanupTimer);
+    }, remaining);
+
+    return () => clearTimeout(exitTimer);
+  }, []);
 
   const kpis = useMemo(() => {
     const totalGuests = guests.length;
@@ -148,6 +183,16 @@ export function DashboardWorkspace({
 
   return (
     <div className="admin-theme min-h-screen bg-slate-50 flex flex-col lg:flex-row text-slate-800 antialiased">
+      {welcomeTransition && (
+        <DashboardSplashScreen
+          variant="welcome"
+          groomFirstName={groomFirstName}
+          brideFirstName={brideFirstName}
+          displayName={welcomeTransition.displayName || currentUser?.displayName}
+          role={welcomeTransition.role || currentUser?.role}
+          isExiting={isTransitionExiting}
+        />
+      )}
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200/80 shrink-0 sticky top-0 h-screen overflow-y-auto">
         <div className="p-5 border-b border-slate-200/80">

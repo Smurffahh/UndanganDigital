@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DashboardSplashScreen } from "@/components/admin/DashboardSplashScreen";
+import { saveSplashTransition } from "@/lib/splashTransition";
 
 export default function DashboardLoginPage() {
   const router = useRouter();
@@ -17,6 +19,7 @@ export default function DashboardLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [transitionUser, setTransitionUser] = useState<{ displayName?: string; role?: string } | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +46,16 @@ export default function DashboardLoginPage() {
         throw new Error(data.error || "Nama pengguna atau kata sandi tidak cocok. Periksa kembali.");
       }
 
+      const user = data.user || {};
+      saveSplashTransition({
+        displayName: user.displayName,
+        role: user.role,
+      });
+      setTransitionUser({
+        displayName: user.displayName,
+        role: user.role,
+      });
+
       toast.success("Login berhasil. Mengalihkan ke dashboard...");
       router.push("/dashboard");
       router.refresh();
@@ -50,14 +63,19 @@ export default function DashboardLoginPage() {
       const msg = err instanceof Error ? err.message : "Gagal memverifikasi akun. Coba beberapa saat lagi.";
       setErrorMessage(msg);
       toast.error(msg);
-    } finally {
       setIsLoading(false);
     }
   };
 
-
   return (
     <div className="admin-theme min-h-screen grid place-items-center p-4 bg-slate-50">
+      {transitionUser && (
+        <DashboardSplashScreen
+          variant="welcome"
+          displayName={transitionUser.displayName}
+          role={transitionUser.role}
+        />
+      )}
       <Card className="w-full max-w-md border-slate-200/90 shadow-xs">
         <CardHeader className="text-center pb-5">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#6B1222]/10 text-[#6B1222]">

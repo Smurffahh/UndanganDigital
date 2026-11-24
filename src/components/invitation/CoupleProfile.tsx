@@ -9,11 +9,9 @@ import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 
 interface CoupleProfileProps {
   brideName: string;
-  brideBirth: string;
   brideBio: string;
   bridePhotoUrl: string;
   groomName: string;
-  groomBirth: string;
   groomBio: string;
   groomPhotoUrl: string;
   coupleVisualMode?: CoupleVisualMode;
@@ -28,11 +26,9 @@ interface CoupleProfileProps {
 
 export function CoupleProfile({
   brideName,
-  brideBirth,
   brideBio,
   bridePhotoUrl,
   groomName,
-  groomBirth,
   groomBio,
   groomPhotoUrl,
   coupleVisualMode = "svg",
@@ -138,11 +134,6 @@ export function CoupleProfile({
                     {groomParents}
                   </p>
                 ) : null}
-                {groomBirth?.trim() ? (
-                  <p className="mt-1.5 typo-eyebrow text-[#C59B6D] text-[10px] sm:text-xs">
-                    {groomBirth}
-                  </p>
-                ) : null}
               </ScrollLinkedItem>
 
               {groomBio?.trim() ? (
@@ -225,11 +216,6 @@ export function CoupleProfile({
                 {brideParents?.trim() ? (
                   <p className="text-xs sm:text-sm font-medium text-[#3B1A20] mt-0.5">
                     {brideParents}
-                  </p>
-                ) : null}
-                {brideBirth?.trim() ? (
-                  <p className="mt-1.5 typo-eyebrow text-[#C59B6D] text-[10px] sm:text-xs">
-                    {brideBirth}
                   </p>
                 ) : null}
               </ScrollLinkedItem>

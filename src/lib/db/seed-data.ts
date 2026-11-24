@@ -229,13 +229,11 @@ export const AVAILABLE_WEDDING_TRACKS: MusicPreset[] = WEDDING_MUSIC_PRESETS;
 
 export const DEFAULT_WEDDING_SETTINGS = {
   brideName: "Sinta Maria Utami",
-  brideBirth: "Pekanbaru, 10 September 2005",
   brideBio:
     "Gadis berhati hangat dan penuh kelembutan yang tumbuh bersama doa, melangkah dengan keyakinan menyambut takdir indah bersama sang belahan jiwa.",
   bridePhotoUrl:
     "https://i.pinimg.com/1200x/6e/44/49/6e444942c44381802cfd324cf65b27aa.jpg",
   groomName: "Fauzan Ma'ruf",
-  groomBirth: "3 Mei 1997",
   groomBio:
     "Pria berhati tenang dan tegas yang percaya bahwa jodoh adalah ketetapan terbaik dari ikhtiar tulus yang diiringi restu kedua orang tua.",
   groomPhotoUrl:

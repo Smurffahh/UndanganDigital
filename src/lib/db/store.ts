@@ -173,11 +173,9 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
 
   return sanitizeArabicOrthography({
     brideName: (strOrFallback(row.brideName, DEFAULT_WEDDING_SETTINGS.brideName)).trim() || DEFAULT_WEDDING_SETTINGS.brideName,
-    brideBirth: strOrFallback(row.brideBirth, DEFAULT_WEDDING_SETTINGS.brideBirth),
     brideBio: strOrFallback(row.brideBio, DEFAULT_WEDDING_SETTINGS.brideBio),
     bridePhotoUrl: strOrFallback(row.bridePhotoUrl, DEFAULT_WEDDING_SETTINGS.bridePhotoUrl),
     groomName: (strOrFallback(row.groomName, DEFAULT_WEDDING_SETTINGS.groomName)).trim() || DEFAULT_WEDDING_SETTINGS.groomName,
-    groomBirth: strOrFallback(row.groomBirth, DEFAULT_WEDDING_SETTINGS.groomBirth),
     groomBio: strOrFallback(row.groomBio, DEFAULT_WEDDING_SETTINGS.groomBio),
     groomPhotoUrl: strOrFallback(row.groomPhotoUrl, DEFAULT_WEDDING_SETTINGS.groomPhotoUrl),
     coverPhotoUrl: strOrFallback(row.coverPhotoUrl, DEFAULT_WEDDING_SETTINGS.coverPhotoUrl),

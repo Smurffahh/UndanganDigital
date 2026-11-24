@@ -12,11 +12,9 @@ import {
 export const weddingSettings = pgTable("wedding_settings", {
   id: serial("id").primaryKey(),
   brideName: varchar("bride_name", { length: 100 }).notNull(),
-  brideBirth: varchar("bride_birth", { length: 150 }),
   brideBio: text("bride_bio"),
   bridePhotoUrl: text("bride_photo_url"),
   groomName: varchar("groom_name", { length: 100 }).notNull(),
-  groomBirth: varchar("groom_birth", { length: 150 }),
   groomBio: text("groom_bio"),
   groomPhotoUrl: text("groom_photo_url"),
   coverPhotoUrl: text("cover_photo_url"),

@@ -283,11 +283,9 @@ export function InvitationOrchestrator({
 
         <CoupleProfile
           brideName={settings.brideName}
-          brideBirth={settings.brideBirth}
           brideBio={settings.brideBio}
           bridePhotoUrl={settings.bridePhotoUrl}
           groomName={settings.groomName}
-          groomBirth={settings.groomBirth}
           groomBio={settings.groomBio}
           groomPhotoUrl={settings.groomPhotoUrl}
           coupleVisualMode={settings.coupleVisualMode}

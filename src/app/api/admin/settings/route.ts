@@ -13,11 +13,9 @@ const safeUrlOrPath = z
 
 const updateSettingsSchema = z.object({
   brideName: z.string().max(100).optional(),
-  brideBirth: z.string().max(150).optional(),
   brideBio: z.string().max(1000).optional(),
   bridePhotoUrl: safeUrlOrPath,
   groomName: z.string().max(100).optional(),
-  groomBirth: z.string().max(150).optional(),
   groomBio: z.string().max(1000).optional(),
   groomPhotoUrl: safeUrlOrPath,
   coverPhotoUrl: safeUrlOrPath,

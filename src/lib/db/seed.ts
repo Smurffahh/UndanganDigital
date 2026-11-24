@@ -40,11 +40,9 @@ export async function seedDatabase(): Promise<{
       console.log("[DB Seed] Mengisi data default wedding_settings (Fauzan & Sinta)...");
       await db.insert(schema.weddingSettings).values({
         brideName: DEFAULT_WEDDING_SETTINGS.brideName,
-        brideBirth: DEFAULT_WEDDING_SETTINGS.brideBirth,
         brideBio: DEFAULT_WEDDING_SETTINGS.brideBio,
         bridePhotoUrl: DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
         groomName: DEFAULT_WEDDING_SETTINGS.groomName,
-        groomBirth: DEFAULT_WEDDING_SETTINGS.groomBirth,
         groomBio: DEFAULT_WEDDING_SETTINGS.groomBio,
         groomPhotoUrl: DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
         coverPhotoUrl: DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,

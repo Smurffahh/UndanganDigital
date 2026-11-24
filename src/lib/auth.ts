@@ -9,7 +9,7 @@ import {
   verifySessionToken,
   verifyPassword,
 } from "./session";
-import { getDashboardUserByUsername } from "./db/store";
+import { getDashboardUserByUsername, getDashboardUserById } from "./db/store";
 
 export {
   SESSION_COOKIE_NAME,
@@ -19,8 +19,8 @@ export {
 };
 export type { SessionUser, SessionPayload };
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "fauzan-sinta-2027";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME?.trim().toLowerCase() || "admin";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 
 function safeCompare(a: string, b: string): boolean {
@@ -64,7 +64,7 @@ export function resetLoginAttempts(identifier: string): void {
 }
 
 export function checkCredentials(user: string, pass: string): boolean {
-  const trimmedUser = user.trim();
+  const trimmedUser = user.trim().toLowerCase();
   const trimmedPass = pass.trim();
 
   if (trimmedUser !== ADMIN_USERNAME) {
@@ -78,11 +78,11 @@ export function checkCredentials(user: string, pass: string): boolean {
     }
   }
 
-  return (
-    trimmedPass === ADMIN_PASSWORD ||
-    trimmedPass === "fauzan-sinta-2027" ||
-    trimmedPass === "dian-iqbal-2027"
-  );
+  if (ADMIN_PASSWORD && safeCompare(trimmedPass, ADMIN_PASSWORD)) {
+    return true;
+  }
+
+  return false;
 }
 
 export async function authenticateUser(
@@ -103,6 +103,7 @@ export async function authenticateUser(
           role: dbUser.role as "admin" | "parent",
           displayName: dbUser.displayName,
           guestScope: dbUser.guestScope,
+          tokenVersion: dbUser.tokenVersion || 1,
           waTemplate: dbUser.waTemplate || undefined,
         };
       }
@@ -118,6 +119,7 @@ export async function authenticateUser(
       role: "admin",
       displayName: "Mempelai (Admin)",
       guestScope: "couple",
+      tokenVersion: 1,
     };
   }
 
@@ -143,6 +145,7 @@ export async function setAdminSession() {
     role: "admin",
     displayName: "Mempelai (Admin)",
     guestScope: "couple",
+    tokenVersion: 1,
   });
 }
 
@@ -164,7 +167,19 @@ export async function clearAdminSession() {
 export async function getServerSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  return verifySessionToken(sessionCookie);
+  const session = verifySessionToken(sessionCookie);
+  if (!session) return null;
+
+  try {
+    const dbUser = await getDashboardUserById(session.userId);
+    if (!dbUser) return null;
+    if (!dbUser.isActive) return null;
+    if (dbUser.tokenVersion !== session.tokenVersion) return null;
+  } catch (err) {
+    console.warn("DB user session validation error, fallback to verified token:", err);
+  }
+
+  return session;
 }
 
 export async function requireSession(): Promise<SessionPayload | null> {

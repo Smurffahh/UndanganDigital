@@ -18,7 +18,7 @@ const createUserSchema = z
       .min(3, "Username minimal 3 karakter")
       .max(50, "Username maksimal 50 karakter")
       .regex(/^[a-zA-Z0-9_-]+$/, "Username hanya boleh huruf, angka, strip, dan garis bawah"),
-    password: z.string().trim().min(6, "Kata sandi minimal 6 karakter"),
+    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter"),
     displayName: z.string().trim().min(2, "Nama tampilan minimal 2 karakter").max(100),
     role: z.enum(["admin", "parent"]).default("parent"),
     guestScope: z.enum(["couple", "parent"]).default("parent"),
@@ -29,7 +29,7 @@ const createUserSchema = z
 const updateUserSchema = z
   .object({
     id: z.coerce.number().int().positive("ID pengguna tidak valid"),
-    password: z.string().trim().min(6, "Kata sandi minimal 6 karakter").optional(),
+    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter").optional(),
     displayName: z.string().trim().min(2).max(100).optional(),
     role: z.enum(["admin", "parent"]).optional(),
     guestScope: z.enum(["couple", "parent"]).optional(),
@@ -121,6 +121,29 @@ export async function PATCH(request: Request) {
 
     const { id, password, displayName, role, guestScope, waTemplate, isActive } = parsed.data;
 
+    const users = await getDashboardUsers();
+    const target = users.find((u) => u.id === id);
+    if (!target) {
+      return NextResponse.json({ success: false, error: "Pengguna tidak ditemukan" }, { status: 404 });
+    }
+
+    if (target.username === "admin" && isActive === false) {
+      return NextResponse.json(
+        { success: false, error: "Akun admin utama tidak dapat dinonaktifkan." },
+        { status: 400 }
+      );
+    }
+
+    if (target.role === "admin" && isActive === false) {
+      const activeAdmins = users.filter((u) => u.role === "admin" && u.isActive);
+      if (activeAdmins.length <= 1) {
+        return NextResponse.json(
+          { success: false, error: "Tidak dapat menonaktifkan akun admin aktif terakhir." },
+          { status: 400 }
+        );
+      }
+    }
+
     const updates: Parameters<typeof updateDashboardUser>[1] = {};
     if (password) {
       updates.passwordHash = hashPassword(password);
@@ -130,6 +153,11 @@ export async function PATCH(request: Request) {
     if (guestScope !== undefined) updates.guestScope = guestScope;
     if (waTemplate !== undefined) updates.waTemplate = waTemplate;
     if (isActive !== undefined) updates.isActive = isActive;
+
+    const currentTokenVersion = (target as any).tokenVersion || 1;
+    if (password || isActive === false) {
+      updates.tokenVersion = currentTokenVersion + 1;
+    }
 
     const updated = await updateDashboardUser(id, updates);
     if (!updated) {

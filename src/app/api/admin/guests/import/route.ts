@@ -15,9 +15,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Format data tamu harus berupa array" }, { status: 400 });
     }
 
-    if (body.guests.length > 1000) {
+    if (body.guests.length > 2000) {
       return NextResponse.json(
-        { success: false, error: "Jumlah tamu yang diimpor melebihi batas maksimal 1000 baris per batch" },
+        { success: false, error: "Jumlah tamu yang diimpor melebihi batas maksimal 2000 baris per batch" },
         { status: 400 }
       );
     }
@@ -25,19 +25,29 @@ export async function POST(request: Request) {
     let withPhoneCount = 0;
     let noPhoneCount = 0;
 
+    const sanitizeField = (val: unknown, maxLen = 80): string => {
+      if (!val) return "";
+      const str = String(val).replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+      // Neutralize spreadsheet formula injection characters
+      const neutralized = str.replace(/^[=\+\-@\t\r]+/, "");
+      return neutralized.slice(0, maxLen).trim();
+    };
+
     const cleanedGuests = body.guests
-      .map((item: { name?: string; whatsappNumber?: unknown; category?: string }) => {
-        if (!item.name || !String(item.name).trim()) return null;
+      .map((item: { name?: unknown; whatsappNumber?: unknown; category?: unknown }) => {
+        const cleanName = sanitizeField(item.name, 80);
+        if (!cleanName) return null;
         const normPhone = normalizePhoneNumber(item.whatsappNumber) || null;
         if (normPhone) {
           withPhoneCount++;
         } else {
           noPhoneCount++;
         }
+        const cleanCategory = sanitizeField(item.category, 40) || "Reguler";
         return {
-          name: String(item.name).trim(),
+          name: cleanName,
           whatsappNumber: normPhone,
-          category: item.category ? String(item.category).trim() : "Reguler",
+          category: cleanCategory,
         };
       })
       .filter((item: unknown): item is { name: string; whatsappNumber: string | null; category: string } => item !== null);

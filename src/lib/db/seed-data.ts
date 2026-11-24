@@ -295,7 +295,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   qrisImageUrl:
     "https://images.unsplash.com/photo-1595079672139-cdc4b0b44714?auto=format&fit=crop&w=600&q=80",
   loveStoryText:
-    "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.",
+    "Berawal dari jalan dan doa masing-masing, hingga waktu mempertemukan kami perlahan. Sejak itu kami percaya, pertemuan ini adalah jawaban yang telah lama dituliskan-Nya.",
   storyHashtag: "#SINgkatceritaFAUZAN",
   coupleVisualMode: "svg" as CoupleVisualMode,
   svgCharacterPreset: "javanese-royal" as SvgCharacterPreset,

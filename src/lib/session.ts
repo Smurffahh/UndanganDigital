@@ -9,6 +9,7 @@ export interface SessionUser {
   role: "admin" | "parent";
   displayName: string;
   guestScope: string;
+  tokenVersion: number;
   waTemplate?: string;
 }
 
@@ -38,6 +39,7 @@ export function verifyPassword(password: string, storedHash: string): boolean {
 export function createSessionToken(user: SessionUser): string {
   const payload: SessionPayload = {
     ...user,
+    tokenVersion: typeof user.tokenVersion === "number" ? user.tokenVersion : 1,
     exp: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
   };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
@@ -50,18 +52,6 @@ export function createSessionToken(user: SessionUser): string {
 
 export function verifySessionToken(token: string | null | undefined): SessionPayload | null {
   if (!token) return null;
-
-  // Backward compatibility fallback for legacy session secret
-  if (token === SESSION_SECRET_TOKEN) {
-    return {
-      userId: 1,
-      username: "admin",
-      role: "admin",
-      displayName: "Mempelai (Admin)",
-      guestScope: "couple",
-      exp: Date.now() + 1000 * 60 * 60 * 24 * 7,
-    };
-  }
 
   const parts = token.split(".");
   if (parts.length !== 2) return null;
@@ -86,6 +76,10 @@ export function verifySessionToken(token: string | null | undefined): SessionPay
     }
 
     if (!payload.role || !["admin", "parent"].includes(payload.role)) {
+      return null;
+    }
+
+    if (typeof payload.tokenVersion !== "number" || payload.tokenVersion < 1) {
       return null;
     }
 

@@ -106,37 +106,6 @@ export function formatGoogleCalendarUrl(params: {
   )}&details=${encodeURIComponent(details)}`;
 }
 
-export function generateIcsContent(params: {
-  weddingDateIso?: string;
-  venueName: string;
-  venueAddress: string;
-  akadTime: string;
-  resepsiTime: string;
-  coupleNames?: string;
-}): string {
-  const { dtStartUtc, dtEndUtc } = getEventUtcTimestamps(params.weddingDateIso);
-  const title = `Pernikahan ${params.coupleNames || "Fauzan & Sinta"}`;
-  const location = `${params.venueName}, ${params.venueAddress}`;
-  const description = `Akad Nikah: ${params.akadTime} — Resepsi: ${params.resepsiTime}. Lokasi: ${location}`;
-
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Fauzan & Sinta//Wedding Invitation//ID",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${description}`,
-    `LOCATION:${location}`,
-    `DTSTART:${dtStartUtc}`,
-    `DTEND:${dtEndUtc}`,
-    "STATUS:CONFIRMED",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-}
-
 export function formatEventDateRange(startDateStr?: string, endDateStr?: string): string {
   if (!startDateStr) return "";
   const start = new Date(startDateStr);
@@ -222,53 +191,5 @@ export function formatTasyakuranCalendarUrl(params: {
   )}&dates=${dtStartUtc}/${dtEndUtc}&location=${encodeURIComponent(
     location
   )}&details=${encodeURIComponent(details)}`;
-}
-
-export function generateTasyakuranIcsContent(params: {
-  title?: string;
-  startDate?: string;
-  endDate?: string;
-  time?: string;
-  venueName: string;
-  venueAddress: string;
-  coupleNames?: string;
-}): string {
-  const eventTitle = `${params.title || "Tasyakuran"} Pernikahan ${params.coupleNames || "Fauzan & Sinta"}`;
-  const location = `${params.venueName}, ${params.venueAddress}`;
-  const description = `${eventTitle}. Lokasi: ${location}`;
-
-  const cleanStart = (params.startDate || "2027-01-01").replace(/-/g, "");
-  let dtStart = `VALUE=DATE:${cleanStart}`;
-  let dtEnd = `VALUE=DATE:${cleanStart}`;
-
-  if (!params.time || !params.time.trim()) {
-    const endDateObj = new Date(params.endDate || "2027-01-02");
-    endDateObj.setDate(endDateObj.getDate() + 1);
-    const endYear = endDateObj.getFullYear();
-    const endMonth = String(endDateObj.getMonth() + 1).padStart(2, "0");
-    const endDay = String(endDateObj.getDate()).padStart(2, "0");
-    dtEnd = `VALUE=DATE:${endYear}${endMonth}${endDay}`;
-  } else {
-    const cleanEnd = (params.endDate || "2027-01-02").replace(/-/g, "");
-    dtStart = `${cleanStart}T020000Z`;
-    dtEnd = `${cleanEnd}T110000Z`;
-  }
-
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Fauzan & Sinta//Wedding Invitation//ID",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    `SUMMARY:${eventTitle}`,
-    `DESCRIPTION:${description}`,
-    `LOCATION:${location}`,
-    `DTSTART;${dtStart}`,
-    `DTEND;${dtEnd}`,
-    "STATUS:CONFIRMED",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
 }
 

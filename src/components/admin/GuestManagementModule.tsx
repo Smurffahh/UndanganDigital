@@ -35,10 +35,7 @@ import {
   getDefaultWaTemplate,
 } from "@/lib/guestTemplate";
 import { formatWaEventDate } from "@/lib/dateFormat";
-import {
-  generateEncryptedGuestToken,
-  generateBulkEncryptedGuestTokens,
-} from "@/app/actions/guest-encryption";
+import { formatGuestSlug } from "@/lib/guestUtils";
 import { Textarea } from "@/components/ui/textarea";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -63,9 +60,6 @@ import { GuestBulkActionBar } from "./guests/GuestBulkActionBar";
 import { GuestQueueModal } from "./guests/GuestQueueModal";
 import { GuestImportModal } from "./guests/GuestImportModal";
 import { GuestBulkTextModal } from "./guests/GuestBulkTextModal";
-
-const SHORT_CODE_REGEX = /^[2-9A-HJ-NP-Za-km-z]{6}$/;
-const isValidGuestToken = (t?: string | null) => Boolean(t && (SHORT_CODE_REGEX.test(t) || t.startsWith("v1.")));
 
 function parseBulkGuestLines(
   rawText: string
@@ -200,24 +194,6 @@ export function GuestManagementModule({
     }, 250);
     return () => clearTimeout(handler);
   }, [searchQuery]);
-
-  useEffect(() => {
-    const unencrypted = guests.filter((g) => !isValidGuestToken(g.slugQuery));
-    if (unencrypted.length === 0) return;
-
-    generateBulkEncryptedGuestTokens(unencrypted.map((g) => g.name))
-      .then((map) => {
-        onGuestsChange(
-          guests.map((g) => {
-            if (!isValidGuestToken(g.slugQuery) && map[g.name]) {
-              return { ...g, slugQuery: map[g.name] };
-            }
-            return g;
-          })
-        );
-      })
-      .catch(() => {});
-  }, [guests, onGuestsChange]);
 
   useEffect(() => {
     if (cooldownRemaining <= 0) return;
@@ -374,11 +350,8 @@ export function GuestManagementModule({
     const phone = normalizePhoneNumber(guest.whatsappNumber) || guest.whatsappNumber;
 
     try {
-      let token = guest.slugQuery;
-      if (!isValidGuestToken(token)) {
-        token = await generateEncryptedGuestToken(guest.name);
-      }
-      const message = renderMessageForGuest(guest.name, token);
+      const slug = guest.slugQuery || formatGuestSlug(guest.name);
+      const message = renderMessageForGuest(guest.name, slug);
       const isMobile =
         typeof navigator !== "undefined" &&
         /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -401,7 +374,7 @@ export function GuestManagementModule({
       if (res.ok) {
         onGuestsChange(
           guests.map((g) =>
-            g.id === guest.id ? { ...g, slugQuery: token, waSentStatus: true, waSentAt: nowIso } : g
+            g.id === guest.id ? { ...g, slugQuery: slug, waSentStatus: true, waSentAt: nowIso } : g
           )
         );
         toast.success(`Pesan WhatsApp untuk ${guest.name} dibuka.`);
@@ -412,15 +385,8 @@ export function GuestManagementModule({
   };
 
   const handleCopyLink = async (guest: GuestData) => {
-    let token = guest.slugQuery;
-    if (!isValidGuestToken(token)) {
-      try {
-        token = await generateEncryptedGuestToken(guest.name);
-      } catch {
-        token = guest.slugQuery;
-      }
-    }
-    const link = token ? `${baseUrl}/?kpd=${token}` : baseUrl;
+    const slug = guest.slugQuery || formatGuestSlug(guest.name);
+    const link = slug ? `${baseUrl}/?kpd=${slug}` : baseUrl;
 
     try {
       await navigator.clipboard.writeText(link);
@@ -542,16 +508,8 @@ export function GuestManagementModule({
 
     setIsQueueSending(true);
     try {
-      let token = currentGuest.slugQuery;
-      if (!isValidGuestToken(token)) {
-        try {
-          token = await generateEncryptedGuestToken(currentGuest.name);
-        } catch {
-          token = currentGuest.slugQuery;
-        }
-      }
-
-      const message = renderMessageForGuest(currentGuest.name, token);
+      const slug = currentGuest.slugQuery || formatGuestSlug(currentGuest.name);
+      const message = renderMessageForGuest(currentGuest.name, slug);
       const phone = normalizePhoneNumber(currentGuest.whatsappNumber) || currentGuest.whatsappNumber;
       const isMobile =
         typeof navigator !== "undefined" &&
@@ -575,7 +533,7 @@ export function GuestManagementModule({
 
       onGuestsChange(
         guests.map((g) =>
-          g.id === currentGuest.id ? { ...g, slugQuery: token, waSentStatus: true, waSentAt: nowIso } : g
+          g.id === currentGuest.id ? { ...g, slugQuery: slug, waSentStatus: true, waSentAt: nowIso } : g
         )
       );
 

@@ -9,12 +9,33 @@ import {
   getWeddingSettings,
   updateWeddingSettings,
 } from "@/lib/db/store";
+import {
+  validateFileMagicBytes,
+  scanFileForMaliciousPayload,
+  sanitizeUploadFileName,
+} from "@/lib/fileSecurity";
 
-const ALLOWED_IMAGE_MIMES = ["image/webp", "image/jpeg", "image/png"];
-const ALLOWED_AUDIO_MIMES = ["audio/mpeg", "audio/wav", "audio/mp4"];
-const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024; // 4 MB
-const MAX_AUDIO_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_AUDIO_SIZE_BYTES = 15 * 1024 * 1024; // 15 MB
 const ALLOWED_PREFIXES = ["gallery", "couple", "audio"] as const;
+
+const BLOCKED_EXTENSIONS = new Set([
+  "svg",
+  "html",
+  "htm",
+  "js",
+  "mjs",
+  "php",
+  "exe",
+  "sh",
+  "bat",
+  "cmd",
+  "vbs",
+  "jsp",
+  "asp",
+  "aspx",
+  "cgi",
+]);
 
 // In-memory rate limiter: max 60 requests per 60s per client IP
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -31,83 +52,6 @@ function checkRateLimit(clientId: string): boolean {
   }
   entry.count++;
   return true;
-}
-
-function detectMimeFromBuffer(buffer: Buffer): string | null {
-  if (buffer.length < 12) return null;
-
-  // JPEG: FF D8 FF
-  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
-    return "image/jpeg";
-  }
-
-  // PNG: 89 50 4E 47 0D 0A 1A 0A
-  if (
-    buffer[0] === 0x89 &&
-    buffer[1] === 0x50 &&
-    buffer[2] === 0x4e &&
-    buffer[3] === 0x47 &&
-    buffer[4] === 0x0d &&
-    buffer[5] === 0x0a &&
-    buffer[6] === 0x1a &&
-    buffer[7] === 0x0a
-  ) {
-    return "image/png";
-  }
-
-  // WebP: RIFF (bytes 0-3) + WEBP (bytes 8-11)
-  if (
-    buffer[0] === 0x52 &&
-    buffer[1] === 0x49 &&
-    buffer[2] === 0x46 &&
-    buffer[3] === 0x46 &&
-    buffer[8] === 0x57 &&
-    buffer[9] === 0x45 &&
-    buffer[10] === 0x42 &&
-    buffer[11] === 0x50
-  ) {
-    return "image/webp";
-  }
-
-  // MP3: ID3 header or frame sync 0xFF 0xFB/F3/F2
-  if (
-    (buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33) ||
-    (buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0)
-  ) {
-    return "audio/mpeg";
-  }
-
-  // WAV: RIFF (bytes 0-3) + WAVE (bytes 8-11)
-  if (
-    buffer[0] === 0x52 &&
-    buffer[1] === 0x49 &&
-    buffer[2] === 0x46 &&
-    buffer[3] === 0x46 &&
-    buffer[8] === 0x57 &&
-    buffer[9] === 0x41 &&
-    buffer[10] === 0x56 &&
-    buffer[11] === 0x45
-  ) {
-    return "audio/wav";
-  }
-
-  // MP4 / M4A: ftyp at offset 4
-  if (
-    buffer[4] === 0x66 &&
-    buffer[5] === 0x74 &&
-    buffer[6] === 0x79 &&
-    buffer[7] === 0x70
-  ) {
-    return "audio/mp4";
-  }
-
-  return null;
-}
-
-function sanitizeFilename(filename: string): string {
-  const basename = filename.replace(/^.*[\\/]/, "");
-  const clean = basename.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return clean.replace(/^\.+/, "") || "upload";
 }
 
 function isValidBlobUrl(urlString: string): boolean {
@@ -197,27 +141,37 @@ export async function POST(request: Request) {
       const rawPrefix = (formData.get("prefix") as string) || "gallery";
       const prefix = ALLOWED_PREFIXES.includes(rawPrefix as any) ? rawPrefix : "gallery";
 
+      const ext = file.name.includes(".") ? file.name.split(".").pop()?.toLowerCase() || "" : "";
+      if (BLOCKED_EXTENSIONS.has(ext)) {
+        return NextResponse.json(
+          { success: false, error: `Ekstensi file ".${ext}" dilarang demi keamanan sistem.` },
+          { status: 400 }
+        );
+      }
+
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      const detectedMime = detectMimeFromBuffer(buffer);
-      if (!detectedMime) {
+      // 1. Magic bytes verification
+      const category = prefix === "audio" ? "audio" : "image";
+      const magicResult = validateFileMagicBytes(buffer, category);
+      if (!magicResult.valid || !magicResult.detectedType) {
         return NextResponse.json(
-          { success: false, error: "Format file tidak dikenali atau tidak didukung" },
-          { status: 415 }
+          { success: false, error: magicResult.error || "Format biner file tidak valid." },
+          { status: 400 }
         );
       }
 
-      const isImage = ALLOWED_IMAGE_MIMES.includes(detectedMime);
-      const isAudio = ALLOWED_AUDIO_MIMES.includes(detectedMime);
-
-      if (!isImage && !isAudio) {
+      // 2. Malicious payload / polyglot scan
+      const scanResult = scanFileForMaliciousPayload(buffer);
+      if (!scanResult.safe) {
         return NextResponse.json(
-          { success: false, error: `Tipe file "${detectedMime}" tidak diizinkan` },
-          { status: 422 }
+          { success: false, error: scanResult.reason || "File ditolak karena memuat konten mencurigakan." },
+          { status: 400 }
         );
       }
 
+      const isImage = category === "image";
       const maxSize = isImage ? MAX_IMAGE_SIZE_BYTES : MAX_AUDIO_SIZE_BYTES;
       if (buffer.length > maxSize) {
         return NextResponse.json(
@@ -226,13 +180,13 @@ export async function POST(request: Request) {
         );
       }
 
-      const safeName = sanitizeFilename(file.name);
+      const safeName = sanitizeUploadFileName(file.name);
       const pathname = `${prefix}/${safeName}`;
 
       const blob = await put(pathname, buffer, {
         access: "public",
         addRandomSuffix: true,
-        contentType: detectedMime,
+        contentType: magicResult.detectedType,
         token,
       });
 
@@ -266,17 +220,17 @@ export async function POST(request: Request) {
     if (finalImageUrl.startsWith("data:") && process.env.BLOB_READ_WRITE_TOKEN) {
       const match = finalImageUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
       if (match) {
-        const declaredMime = match[1].toLowerCase();
         const base64Data = match[2];
         const buffer = Buffer.from(base64Data, "base64");
-        const detectedMime = detectMimeFromBuffer(buffer) || declaredMime;
+        const magic = validateFileMagicBytes(buffer, "image");
+        const scan = scanFileForMaliciousPayload(buffer);
 
-        if (ALLOWED_IMAGE_MIMES.includes(detectedMime) && buffer.length <= MAX_IMAGE_SIZE_BYTES) {
-          const ext = detectedMime === "image/png" ? "png" : detectedMime === "image/webp" ? "webp" : "jpg";
+        if (magic.valid && magic.detectedType && scan.safe && buffer.length <= MAX_IMAGE_SIZE_BYTES) {
+          const ext = magic.detectedType === "image/png" ? "png" : magic.detectedType === "image/webp" ? "webp" : "jpg";
           const blob = await put(`gallery/photo.${ext}`, buffer, {
             access: "public",
             addRandomSuffix: true,
-            contentType: detectedMime,
+            contentType: magic.detectedType,
             token: process.env.BLOB_READ_WRITE_TOKEN,
           });
           finalImageUrl = blob.url;
@@ -324,17 +278,17 @@ export async function PUT(request: Request) {
           if (finalVal.startsWith("data:") && process.env.BLOB_READ_WRITE_TOKEN) {
             const match = finalVal.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
             if (match) {
-              const declaredMime = match[1].toLowerCase();
               const base64Data = match[2];
               const buffer = Buffer.from(base64Data, "base64");
-              const detectedMime = detectMimeFromBuffer(buffer) || declaredMime;
+              const magic = validateFileMagicBytes(buffer, "image");
+              const scan = scanFileForMaliciousPayload(buffer);
 
-              if (ALLOWED_IMAGE_MIMES.includes(detectedMime) && buffer.length <= MAX_IMAGE_SIZE_BYTES) {
-                const ext = detectedMime === "image/png" ? "png" : detectedMime === "image/webp" ? "webp" : "jpg";
+              if (magic.valid && magic.detectedType && scan.safe && buffer.length <= MAX_IMAGE_SIZE_BYTES) {
+                const ext = magic.detectedType === "image/png" ? "png" : magic.detectedType === "image/webp" ? "webp" : "jpg";
                 const blob = await put(`couple/${key}.${ext}`, buffer, {
                   access: "public",
                   addRandomSuffix: true,
-                  contentType: detectedMime,
+                  contentType: magic.detectedType,
                   token: process.env.BLOB_READ_WRITE_TOKEN,
                 });
                 finalVal = blob.url;

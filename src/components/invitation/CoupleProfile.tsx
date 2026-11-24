@@ -76,8 +76,8 @@ export function CoupleProfile({
 
           <ScrollLinkedItem offsetY={36}>
             <div className="mt-5 max-w-[540px] mx-auto px-5 py-4 rounded-2xl bg-[#FBF7F2]/90 backdrop-blur-md border border-[#6B1222]/16 shadow-[0_12px_24px_-10px_rgba(67,10,20,0.12)]">
-              <p className="typo-body italic text-center mx-auto text-[#3B1A20]">
-                &ldquo;{loveStoryText || "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan."}&rdquo;
+              <p className="typo-body italic text-center mx-auto text-[#3B1A20] text-balance">
+                &ldquo;{loveStoryText || "Berawal dari jalan dan doa masing-masing, hingga waktu mempertemukan kami perlahan. Sejak itu kami percaya, pertemuan ini adalah jawaban yang telah lama dituliskan-Nya."}&rdquo;
               </p>
               <div className="mt-2.5 flex items-center justify-center gap-2">
                 <span className="w-6 h-px bg-[#C59B6D]/50" />

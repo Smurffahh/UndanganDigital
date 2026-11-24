@@ -101,7 +101,7 @@ export function createPhoneBlindIndex(phone: string | null | undefined): string 
     .digest("hex");
 }
 
-import { encryptGuestName } from "./guest-crypto";
+import { formatGuestSlug } from "./guestUtils";
 
 export interface PlainGuestInput {
   name: string;
@@ -113,7 +113,7 @@ export interface PlainGuestInput {
 
 export function encryptGuestRecord(input: PlainGuestInput) {
   const cleanName = input.name.trim();
-  const slugQuery = encryptGuestName(cleanName);
+  const slugQuery = formatGuestSlug(cleanName);
   const cleanPhone = input.whatsappNumber?.trim() || null;
   const category = input.category?.trim() || "Reguler";
 

@@ -14,7 +14,7 @@ import {
   createBlindIndex,
   createPhoneBlindIndex,
 } from "../crypto";
-import { generateShortCode, createShortGuestToken, SHORT_CODE_REGEX } from "../guest-crypto";
+import { formatGuestSlug } from "../guestUtils";
 import { seedDatabase } from "./seed";
 
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
@@ -61,17 +61,7 @@ const DB_FILE_PATH = path.join(DATA_DIR, "wedding-db.json");
 
 function decryptGuestRecord(r: any): GuestData {
   const decryptedName = decryptField(r.name);
-  let slug = r.slugQuery;
-  const isShortCode = slug && SHORT_CODE_REGEX.test(slug);
-  const isV1Token = slug && slug.startsWith("v1.");
-  if (!isShortCode && !isV1Token) {
-    try {
-      slug = generateShortCode(decryptedName);
-      createShortGuestToken(decryptedName).catch(() => {});
-    } catch {
-      slug = r.slugQuery;
-    }
-  }
+  const slug = r.slugQuery || formatGuestSlug(decryptedName);
 
   return {
     id: r.id,
@@ -716,8 +706,7 @@ export async function createGuest(data: {
   createdBy?: string | null;
 }): Promise<GuestData> {
   const cleanName = data.name.trim();
-  const slugQuery = generateShortCode(cleanName);
-  createShortGuestToken(cleanName).catch(() => {});
+  const slugQuery = formatGuestSlug(cleanName);
   const cleanPhone = data.whatsappNumber?.trim() || null;
   const category = data.category?.trim() || "Reguler";
   const ownerScope = data.ownerScope?.trim() || "couple";
@@ -866,8 +855,7 @@ export async function updateGuest(
   if (updates.name !== undefined) {
     const cleanName = updates.name.trim();
     dbUpdates.name = encryptField(cleanName);
-    dbUpdates.slugQuery = generateShortCode(cleanName);
-    createShortGuestToken(cleanName).catch(() => {});
+    dbUpdates.slugQuery = formatGuestSlug(cleanName);
     dbUpdates.nameBindex = createBlindIndex(cleanName);
   }
   if (updates.whatsappNumber !== undefined) {
@@ -1074,6 +1062,28 @@ export async function getDashboardUserByUsername(
   return found || null;
 }
 
+export async function getDashboardUserById(
+  id: number
+): Promise<schema.DashboardUser | null> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select()
+        .from(schema.dashboardUsers)
+        .where(eq(schema.dashboardUsers.id, id))
+        .limit(1);
+      if (rows.length > 0) return rows[0];
+    } catch (e) {
+      console.warn("DB getDashboardUserById failed:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  const found = (local.users || []).find((u) => u.id === id);
+  return found || null;
+}
+
 export async function getDashboardUsers(): Promise<
   Array<Omit<schema.DashboardUser, "passwordHash">>
 > {
@@ -1089,6 +1099,7 @@ export async function getDashboardUsers(): Promise<
           guestScope: schema.dashboardUsers.guestScope,
           waTemplate: schema.dashboardUsers.waTemplate,
           isActive: schema.dashboardUsers.isActive,
+          tokenVersion: schema.dashboardUsers.tokenVersion,
           createdAt: schema.dashboardUsers.createdAt,
           updatedAt: schema.dashboardUsers.updatedAt,
         })
@@ -1101,7 +1112,10 @@ export async function getDashboardUsers(): Promise<
   }
 
   const local = getLocalDb();
-  return (local.users || []).map(({ passwordHash, ...rest }) => rest);
+  return (local.users || []).map(({ passwordHash, ...rest }) => ({
+    tokenVersion: rest.tokenVersion || 1,
+    ...rest,
+  }));
 }
 
 export async function createDashboardUser(data: {
@@ -1151,6 +1165,7 @@ export async function createDashboardUser(data: {
     guestScope,
     waTemplate: data.waTemplate || "",
     isActive: true,
+    tokenVersion: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -1169,6 +1184,7 @@ export async function updateDashboardUser(
     guestScope: string;
     waTemplate: string;
     isActive: boolean;
+    tokenVersion: number;
   }>
 ): Promise<Omit<schema.DashboardUser, "passwordHash"> | null> {
   const dbUpdates: any = { ...updates, updatedAt: new Date() };

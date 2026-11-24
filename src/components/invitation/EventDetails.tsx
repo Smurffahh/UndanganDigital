@@ -1,15 +1,13 @@
 "use client";
 
-import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Download, Sparkles } from "lucide-react";
+import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Sparkles } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { FloralCornerAccent, WayangDivider, SongketRibbon } from "./Ornaments";
 import {
   formatGoogleCalendarUrl,
-  generateIcsContent,
   parseEventDate,
   formatEventDateRange,
   formatTasyakuranCalendarUrl,
-  generateTasyakuranIcsContent,
 } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 
@@ -116,49 +114,6 @@ export function EventDetails({
     venueAddress: effectiveTasyakuranAddress,
     coupleNames: "Fauzan & Sinta",
   });
-
-  const handleDownloadIcs = () => {
-    const icsContent = generateIcsContent({
-      weddingDateIso,
-      venueName,
-      venueAddress,
-      akadTime,
-      resepsiTime,
-      coupleNames: "Fauzan & Sinta",
-    });
-
-    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "pernikahan-fauzan-sinta.ics");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  const handleDownloadTasyakuranIcs = () => {
-    const icsContent = generateTasyakuranIcsContent({
-      title: tasyakuranTitle,
-      startDate: tasyakuranStartDate,
-      endDate: tasyakuranEndDate,
-      time: tasyakuranTime,
-      venueName: effectiveTasyakuranVenue,
-      venueAddress: effectiveTasyakuranAddress,
-      coupleNames: "Fauzan & Sinta",
-    });
-
-    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "tasyakuran-fauzan-sinta.ics");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   return (
     <section id="acara" className="py-20 relative bg-transparent" aria-label="Detail Acara dan Lokasi">
@@ -420,29 +375,6 @@ export function EventDetails({
             </article>
           </ScrollLinkedItem>
         </div>
-
-        {/* UNDUH ICS BUTTON */}
-        <ScrollLinkedItem offsetY={36} className="flex flex-wrap items-center justify-center gap-3 mb-8">
-          {isTasyakuranActive && (
-            <button
-              type="button"
-              onClick={handleDownloadTasyakuranIcs}
-              className="typo-button inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 text-[#6B1222] hover:bg-[#6B1222]/10 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
-            >
-              <Download className="w-3.5 h-3.5 text-[#C59B6D]" />
-              <span>Kalender Tasyakuran (.ics)</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={handleDownloadIcs}
-            className="typo-button inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 text-[#6B1222] hover:bg-[#6B1222]/10 active:scale-[0.96] transition-transform duration-150 shadow-xs cursor-pointer text-xs"
-          >
-            <Download className="w-3.5 h-3.5 text-[#C59B6D]" />
-            <span>Kalender Pernikahan (.ics)</span>
-          </button>
-        </ScrollLinkedItem>
 
         {/* MAPS EMBED */}
         <ScrollLinkedItem offsetY={36} stage={3}>

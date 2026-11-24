@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/store";
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
-import { resolveGuestToken } from "@/lib/guest-crypto";
+import { sanitizeGuestKpdParam } from "@/lib/guestUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,24 +13,14 @@ interface PageProps {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedParams = await searchParams;
-  const rawParam =
-    resolvedParams.to ||
-    resolvedParams.kpd ||
-    resolvedParams.guest ||
-    resolvedParams.code ||
-    resolvedParams.inv ||
-    resolvedParams.tamu ||
-    resolvedParams.name ||
-    "";
-  const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
-
-  const { guestName: verifiedName } = await resolveGuestToken(paramStr);
+  const rawParam = resolvedParams.kpd;
+  const guestName = rawParam ? sanitizeGuestKpdParam(rawParam) : "";
+  const hasGuest = Boolean(guestName && guestName !== "Tamu Undangan");
 
   const baseTitle = "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)";
   const description =
     "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.";
-  const title = verifiedName ? `${baseTitle} — Kepada Yth. ${verifiedName}` : baseTitle;
-  const hasGuestParam = Boolean(paramStr && paramStr.trim().length > 0);
+  const title = hasGuest ? `${baseTitle} — Kepada Yth. ${guestName}` : baseTitle;
 
   return {
     title,
@@ -38,7 +28,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     alternates: {
       canonical: "/",
     },
-    robots: hasGuestParam
+    robots: hasGuest
       ? { index: false, follow: false, nocache: true }
       : { index: true, follow: true },
     openGraph: {
@@ -70,20 +60,9 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 
 export default async function InvitationPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-
-  const rawParam =
-    resolvedParams.to ||
-    resolvedParams.kpd ||
-    resolvedParams.guest ||
-    resolvedParams.code ||
-    resolvedParams.inv ||
-    resolvedParams.tamu ||
-    resolvedParams.name ||
-    "";
-  const paramStr = Array.isArray(rawParam) ? rawParam[0] : rawParam;
-
-  const { guestName: decryptedName, isVerified, validToken } = await resolveGuestToken(paramStr);
-  const guestName = decryptedName || "Tamu Undangan";
+  const rawParam = resolvedParams.kpd;
+  const guestName = sanitizeGuestKpdParam(rawParam);
+  const isCustomGuest = Boolean(rawParam && guestName !== "Tamu Undangan");
 
   const [rawSettings, rawGalleryPhotos, rawWishes] = await Promise.all([
     getWeddingSettings(),
@@ -158,8 +137,8 @@ export default async function InvitationPage({ searchParams }: PageProps) {
         galleryPhotos={galleryPhotos}
         wishes={wishes}
         guestName={guestName}
-        isVerifiedGuest={isVerified}
-        guestToken={validToken}
+        isVerifiedGuest={isCustomGuest}
+        guestToken={null}
       />
     </>
   );

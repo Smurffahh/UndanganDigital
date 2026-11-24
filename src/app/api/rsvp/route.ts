@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getRsvpWishes, createRsvpWish } from "@/lib/db/store";
-import { resolveGuestToken } from "@/lib/guest-crypto";
 
 const rsvpInputSchema = z
   .object({
@@ -19,6 +18,22 @@ const rsvpInputSchema = z
       .max(500, "Maksimal 500 karakter"),
   })
   .strict();
+
+const rsvpRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function checkRsvpRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rsvpRateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rsvpRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
+    return true;
+  }
+  if (entry.count >= 10) {
+    return false;
+  }
+  entry.count += 1;
+  return true;
+}
 
 function sanitizeString(str: string): string {
   return str
@@ -41,6 +56,15 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "unknown-ip";
+    if (!checkRsvpRateLimit(ip)) {
+      return NextResponse.json(
+        { success: false, error: "Terlalu banyak permintaan ucapan. Silakan coba lagi nanti." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const parsed = rsvpInputSchema.safeParse(body);
 
@@ -49,14 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
 
-    let finalGuestName = parsed.data.guestName || parsed.data.name || "";
-    if (parsed.data.guestToken) {
-      const decrypted = await resolveGuestToken(parsed.data.guestToken);
-      if (decrypted.isVerified && decrypted.guestName) {
-        finalGuestName = decrypted.guestName;
-      }
-    }
-
+    const finalGuestName = parsed.data.guestName || parsed.data.name || "";
     if (!finalGuestName || finalGuestName.trim().length === 0) {
       return NextResponse.json({ success: false, error: "Nama tamu wajib diisi" }, { status: 400 });
     }

@@ -146,6 +146,7 @@ export const dashboardUsers = pgTable(
     guestScope: varchar("guest_scope", { length: 50 }).notNull().default("parent"),
     waTemplate: text("wa_template").default(""),
     isActive: boolean("is_active").default(true).notNull(),
+    tokenVersion: integer("token_version").default(1).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },

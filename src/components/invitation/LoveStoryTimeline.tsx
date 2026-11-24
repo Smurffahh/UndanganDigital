@@ -10,7 +10,7 @@ interface LoveStoryTimelineProps {
 }
 
 export function LoveStoryTimeline({
-  loveStoryText = "Berawal dari pertemuan singkat, tanpa rencana panjang yang rumit—satset langsung lamaran, dan kini insya Allah bersatu dalam ikatan suci pernikahan.",
+  loveStoryText = "Berawal dari jalan dan doa masing-masing, hingga waktu mempertemukan kami perlahan. Sejak itu kami percaya, pertemuan ini adalah jawaban yang telah lama dituliskan-Nya.",
   storyHashtag = "#SINgkatceritaFAUZAN",
 }: LoveStoryTimelineProps) {
   const chapters = [
@@ -67,7 +67,7 @@ export function LoveStoryTimeline({
           </ScrollLinkedItem>
 
           <ScrollLinkedItem offsetY={36}>
-            <p className="mt-3.5 typo-body text-center max-w-[580px] mx-auto leading-relaxed text-[#3B1A20]">
+            <p className="mt-3.5 typo-body text-center max-w-[580px] mx-auto leading-relaxed text-[#3B1A20] text-balance">
               &ldquo;{loveStoryText}&rdquo;
             </p>
             <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold tracking-wide normal-case text-[#6B1222]">

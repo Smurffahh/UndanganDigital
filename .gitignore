@@ -37,10 +37,11 @@ test-*.png
 debug-*.png
 *.log
 
-# Local DB Fallback & Env Secrets
+# Local DB Fallback & Env Secrets (STRICT - ALL ENV BLOCKED)
 .env
 .env.*
-!.env.example
+*.env
+.env*.local
 /data/*.json
 *.sqlite
 *.db

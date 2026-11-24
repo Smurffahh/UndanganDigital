@@ -156,23 +156,16 @@ UndanganDigital/
    ```
 
 3. **Konfigurasi Environment Variable**:
-   Salin berkas contoh konfigurasi:
-   ```bash
-   cp .env.example .env
-   ```
-   Buka berkas `.env` dan lengkapi nilai variabel berikut:
+   Buat berkas `.env.local` pada direktori root proyek (seluruh berkas `.env*` diblokir penuh oleh `.gitignore` dan pengaman hook Git) dan isi variabel berikut:
 
-   | Variabel | Fungsi | Contoh Nilai |
+   | Variabel | Fungsi | Format / Contoh Nilai |
    | :--- | :--- | :--- |
-   | `DATABASE_URL` | URL koneksi PostgreSQL ber-pooler | `postgresql://user:pass@ep-sample-pooler.neon.tech/neondb?sslmode=require` |
-   | `DATABASE_URL_UNPOOLED` | URL koneksi PostgreSQL langsung | `postgresql://user:pass@ep-sample.neon.tech/neondb?sslmode=require` |
-   | `ENCRYPTION_KEY` | Kunci enkripsi AES-256-GCM data sensitif | String rahasia minimal 32 karakter |
-   | `BLIND_INDEX_SECRET` | Kunci salt HMAC-SHA256 untuk blind index | String rahasia salt acak |
-   | `INVITATION_SECRET_KEY` | Kunci 32-byte (64 karakter hex) untuk link tamu | `e4f9b2d88c0147983ea1c5d90396489a...` (64 hex) |
-   | `INVITATION_ADMIN_PIN` | PIN rahasia pengelola link tamu | `20270103` |
+   | `DATABASE_URL` | URL koneksi PostgreSQL ber-pooler (Neon Serverless) | URL PostgreSQL pooler dengan `sslmode=require` |
+   | `DATABASE_URL_UNPOOLED` | URL koneksi PostgreSQL langsung | URL PostgreSQL direct dengan `sslmode=require` |
+   | `BLOB_READ_WRITE_TOKEN` | Token Read/Write Vercel Blob Storage | Token Vercel Blob dari Dashboard Vercel |
    | `ADMIN_USERNAME` | Username login Dashboard Admin | `admin` |
-   | `ADMIN_PASSWORD` | Password login Dashboard Admin | `password_rahasia_admin` |
-   | `SESSION_SECRET` | Kunci rahasia token sesi admin | String rahasia sesi acak |
+   | `ADMIN_PASSWORD` | Password login Dashboard Admin | Password kuat acak |
+   | `SESSION_SECRET` | Kunci rahasia sesi cookie bertanda tangan | String rahasia minimal 32 karakter |
    | `NODE_ENV` | Mode lingkungan kerja | `development` atau `production` |
 
 4. **Sinkronisasi Skema Database**:

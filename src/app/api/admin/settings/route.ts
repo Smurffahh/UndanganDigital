@@ -12,6 +12,7 @@ const safeUrlOrPath = z
   .optional();
 
 const updateSettingsSchema = z.object({
+  id: z.coerce.number().int().positive().optional(),
   brideName: z.string().max(100).optional(),
   brideBio: z.string().max(1000).optional(),
   bridePhotoUrl: safeUrlOrPath,
@@ -63,7 +64,9 @@ const updateSettingsSchema = z.object({
   tasyakuranAddress: z.string().max(1000).optional(),
   tasyakuranMapsUrl: safeUrlOrPath,
   showPublicPreviewWishes: z.boolean().optional(),
-}).passthrough();
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
+}).strict();
 
 export async function GET() {
   const session = await requireSession();

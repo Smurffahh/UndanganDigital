@@ -172,11 +172,30 @@ export async function getServerSession(): Promise<SessionPayload | null> {
 
   try {
     const dbUser = await getDashboardUserById(session.userId);
-    if (!dbUser) return null;
+    if (!dbUser) {
+      if (
+        session.userId === 1 &&
+        session.role === "admin" &&
+        Boolean(ADMIN_USERNAME) &&
+        session.username.toLowerCase() === ADMIN_USERNAME
+      ) {
+        return session;
+      }
+      return null;
+    }
     if (!dbUser.isActive) return null;
     if (dbUser.tokenVersion !== session.tokenVersion) return null;
   } catch (err) {
-    console.warn("DB user session validation error, fallback to verified token:", err);
+    console.warn("DB user session validation error:", err);
+    if (
+      session.userId === 1 &&
+      session.role === "admin" &&
+      Boolean(ADMIN_USERNAME) &&
+      session.username.toLowerCase() === ADMIN_USERNAME
+    ) {
+      return session;
+    }
+    return null;
   }
 
   return session;

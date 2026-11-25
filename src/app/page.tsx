@@ -66,9 +66,9 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 }
 
 export default async function InvitationPage({ searchParams }: PageProps) {
-  preload("/images/bg-truntum-damask.svg", {
+  preload("/assets/javanese/dua-pengantin.webp", {
     as: "image",
-    type: "image/svg+xml",
+    type: "image/webp",
     fetchPriority: "high",
   });
   preload("/assets/javanese/background.webp", {

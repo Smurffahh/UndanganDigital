@@ -1,20 +1,44 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FloatingFlowers } from "./FloatingFlowers";
+import dynamic from "next/dynamic";
 import { CoverGate } from "./CoverGate";
-import { CountdownHero } from "./CountdownHero";
-import { CoupleProfile } from "./CoupleProfile";
-import { LoveStoryTimeline } from "./LoveStoryTimeline";
-import { EventDetails } from "./EventDetails";
-import { PhotoGallery } from "./PhotoGallery";
-import { RsvpGuestbook } from "./RsvpGuestbook";
-import { DigitalEnvelope } from "./DigitalEnvelope";
-import { ClosingFooter } from "./ClosingFooter";
-import { FloatingControls } from "./FloatingControls";
-import { FloatingNav } from "./FloatingNav";
 import { FixedInvitationBackground } from "./FixedInvitationBackground";
 import type { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
+
+const FloatingFlowers = dynamic(() => import("./FloatingFlowers").then((m) => m.FloatingFlowers), {
+  ssr: false,
+});
+const CountdownHero = dynamic(() => import("./CountdownHero").then((m) => m.CountdownHero), {
+  ssr: false,
+});
+const CoupleProfile = dynamic(() => import("./CoupleProfile").then((m) => m.CoupleProfile), {
+  ssr: false,
+});
+const LoveStoryTimeline = dynamic(() => import("./LoveStoryTimeline").then((m) => m.LoveStoryTimeline), {
+  ssr: false,
+});
+const EventDetails = dynamic(() => import("./EventDetails").then((m) => m.EventDetails), {
+  ssr: false,
+});
+const PhotoGallery = dynamic(() => import("./PhotoGallery").then((m) => m.PhotoGallery), {
+  ssr: false,
+});
+const RsvpGuestbook = dynamic(() => import("./RsvpGuestbook").then((m) => m.RsvpGuestbook), {
+  ssr: false,
+});
+const DigitalEnvelope = dynamic(() => import("./DigitalEnvelope").then((m) => m.DigitalEnvelope), {
+  ssr: false,
+});
+const ClosingFooter = dynamic(() => import("./ClosingFooter").then((m) => m.ClosingFooter), {
+  ssr: false,
+});
+const FloatingControls = dynamic(() => import("./FloatingControls").then((m) => m.FloatingControls), {
+  ssr: false,
+});
+const FloatingNav = dynamic(() => import("./FloatingNav").then((m) => m.FloatingNav), {
+  ssr: false,
+});
 
 interface GalleryItem {
   id: number;
@@ -56,15 +80,41 @@ export function InvitationOrchestrator({
   showWishesInPreview = true,
 }: InvitationOrchestratorProps) {
   const [revealPhase, setRevealPhase] = useState<RevealPhase>("cover");
+  const [shouldMountContent, setShouldMountContent] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const hasUserPausedRef = useRef(false);
   const hasEverPlayedRef = useRef(false);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const idleHandler =
+      "requestIdleCallback" in window
+        ? (
+            window as unknown as {
+              requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+            }
+          ).requestIdleCallback(() => setShouldMountContent(true), { timeout: 2000 })
+        : setTimeout(() => setShouldMountContent(true), 1500);
+
+    return () => {
+      if ("cancelIdleCallback" in window && typeof idleHandler === "number") {
+        (
+          window as unknown as {
+            cancelIdleCallback: (id: number) => void;
+          }
+        ).cancelIdleCallback(idleHandler);
+      } else {
+        clearTimeout(idleHandler as unknown as NodeJS.Timeout);
+      }
+    };
+  }, []);
+
   const effectiveAudioUrl = settings.musicUrl || "/audio/raim-laode-komang.mp3";
   const isYouTube = settings.musicSourceType === "youtube";
 
   const handleStartOpening = () => {
+    setShouldMountContent(true);
     if (audioRef.current && settings.musicEnabled && !isYouTube) {
       audioRef.current.volume = 0.15;
       const playPromise = audioRef.current.play();
@@ -249,13 +299,7 @@ export function InvitationOrchestrator({
         />
       )}
 
-      <FixedInvitationBackground
-        heroPhotoUrl={settings.heroPhotoUrl}
-        showCornerAssets={revealPhase === "assets-entering" || revealPhase === "content-ready"}
-      />
-
-      <FloatingFlowers active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
-
+      {/* CoverGate is mounted immediately for instant FCP/LCP */}
       <CoverGate
         guestName={guestName}
         onStartOpening={handleStartOpening}
@@ -267,116 +311,128 @@ export function InvitationOrchestrator({
         svgCharacterPreset={settings.svgCharacterPreset}
       />
 
-      <div
-        className={`relative z-10 transition-opacity duration-[700ms] ${
-          revealPhase === "content-ready"
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <CountdownHero
-          weddingDateIso={settings.weddingDateIso}
-          heroPhotoUrl={settings.heroPhotoUrl}
-          isOpening={revealPhase === "opening"}
-          isOpened={revealPhase === "content-ready"}
-          isHeroReady={revealPhase === "content-ready"}
-          eventDateLabel={settings.eventDateLabel}
-          coupleVisualMode={settings.coupleVisualMode}
-          svgCharacterPreset={settings.svgCharacterPreset}
-        />
-
-        <CoupleProfile
-          brideName={settings.brideName}
-          brideBio={settings.brideBio}
-          bridePhotoUrl={settings.bridePhotoUrl}
-          groomName={settings.groomName}
-          groomBio={settings.groomBio}
-          groomPhotoUrl={settings.groomPhotoUrl}
-          coupleVisualMode={settings.coupleVisualMode}
-          svgCharacterPreset={settings.svgCharacterPreset}
-          groomChildOrder={settings.groomChildOrder}
-          groomParents={settings.groomParents}
-          brideChildOrder={settings.brideChildOrder}
-          brideParents={settings.brideParents}
-          loveStoryText={settings.loveStoryText}
-          storyHashtag={settings.storyHashtag}
-        />
-
-        {settings.isLoveStoryEnabled && (
-          <LoveStoryTimeline
-            loveStoryText={settings.loveStoryText}
-            storyHashtag={settings.storyHashtag}
+      {/* Deferred below-the-fold content: pre-warmed on idle or mounted on opening */}
+      {(shouldMountContent || revealPhase !== "cover") && (
+        <>
+          <FixedInvitationBackground
+            heroPhotoUrl={settings.heroPhotoUrl}
+            showCornerAssets={revealPhase === "assets-entering" || revealPhase === "content-ready"}
           />
-        )}
 
-        <EventDetails
-          isVerifiedGuest={isVerifiedGuest}
-          akadTime={settings.akadTime}
-          resepsiTime={settings.resepsiTime}
-          venueName={settings.venueName}
-          venueAddress={settings.venueAddress}
-          venuePlusCode={settings.venuePlusCode}
-          googleMapsUrl={settings.googleMapsUrl}
-          googleMapsEmbed={settings.googleMapsEmbed}
-          weddingDateIso={settings.weddingDateIso}
-          eventDateLabel={settings.eventDateLabel}
-          showTasyakuran={settings.showTasyakuran}
-          tasyakuranTitle={settings.tasyakuranTitle}
-          tasyakuranStartDate={settings.tasyakuranStartDate}
-          tasyakuranEndDate={settings.tasyakuranEndDate}
-          tasyakuranTime={settings.tasyakuranTime}
-          tasyakuranSameLocation={settings.tasyakuranSameLocation}
-          tasyakuranVenue={settings.tasyakuranVenue}
-          tasyakuranAddress={settings.tasyakuranAddress}
-          tasyakuranMapsUrl={settings.tasyakuranMapsUrl}
-        />
+          <FloatingFlowers active={revealPhase === "assets-entering" || revealPhase === "content-ready"} />
 
-        {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
+          <div
+            className={`relative z-10 transition-opacity duration-[700ms] ${
+              revealPhase === "content-ready"
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <CountdownHero
+              weddingDateIso={settings.weddingDateIso}
+              heroPhotoUrl={settings.heroPhotoUrl}
+              isOpening={revealPhase === "opening"}
+              isOpened={revealPhase === "content-ready"}
+              isHeroReady={revealPhase === "content-ready"}
+              eventDateLabel={settings.eventDateLabel}
+              coupleVisualMode={settings.coupleVisualMode}
+              svgCharacterPreset={settings.svgCharacterPreset}
+            />
 
-        {isVerifiedGuest && (
-          <DigitalEnvelope
-            bankAccounts={settings.bankAccounts}
-            ewallets={settings.ewallets}
-            giftAddress={settings.giftAddress}
-            qrisImageUrl={settings.qrisImageUrl}
+            <CoupleProfile
+              brideName={settings.brideName}
+              brideBio={settings.brideBio}
+              bridePhotoUrl={settings.bridePhotoUrl}
+              groomName={settings.groomName}
+              groomBio={settings.groomBio}
+              groomPhotoUrl={settings.groomPhotoUrl}
+              coupleVisualMode={settings.coupleVisualMode}
+              svgCharacterPreset={settings.svgCharacterPreset}
+              groomChildOrder={settings.groomChildOrder}
+              groomParents={settings.groomParents}
+              brideChildOrder={settings.brideChildOrder}
+              brideParents={settings.brideParents}
+              loveStoryText={settings.loveStoryText}
+              storyHashtag={settings.storyHashtag}
+            />
+
+            {settings.isLoveStoryEnabled && (
+              <LoveStoryTimeline
+                loveStoryText={settings.loveStoryText}
+                storyHashtag={settings.storyHashtag}
+              />
+            )}
+
+            <EventDetails
+              isVerifiedGuest={isVerifiedGuest}
+              akadTime={settings.akadTime}
+              resepsiTime={settings.resepsiTime}
+              venueName={settings.venueName}
+              venueAddress={settings.venueAddress}
+              venuePlusCode={settings.venuePlusCode}
+              googleMapsUrl={settings.googleMapsUrl}
+              googleMapsEmbed={settings.googleMapsEmbed}
+              weddingDateIso={settings.weddingDateIso}
+              eventDateLabel={settings.eventDateLabel}
+              showTasyakuran={settings.showTasyakuran}
+              tasyakuranTitle={settings.tasyakuranTitle}
+              tasyakuranStartDate={settings.tasyakuranStartDate}
+              tasyakuranEndDate={settings.tasyakuranEndDate}
+              tasyakuranTime={settings.tasyakuranTime}
+              tasyakuranSameLocation={settings.tasyakuranSameLocation}
+              tasyakuranVenue={settings.tasyakuranVenue}
+              tasyakuranAddress={settings.tasyakuranAddress}
+              tasyakuranMapsUrl={settings.tasyakuranMapsUrl}
+            />
+
+            {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
+
+            {isVerifiedGuest && (
+              <DigitalEnvelope
+                bankAccounts={settings.bankAccounts}
+                ewallets={settings.ewallets}
+                giftAddress={settings.giftAddress}
+                qrisImageUrl={settings.qrisImageUrl}
+              />
+            )}
+
+            <RsvpGuestbook
+              initialWishes={wishes}
+              defaultGuestName={isVerifiedGuest ? guestName : ""}
+              verifiedGuestName={isVerifiedGuest ? guestName : null}
+              guestToken={guestToken}
+              rsvpTicket={rsvpTicket}
+              isVerifiedGuest={isVerifiedGuest}
+              showWishesInPreview={showWishesInPreview}
+            />
+
+            <ClosingFooter
+              weddingDateIso={settings.weddingDateIso}
+              coupleVisualMode={settings.coupleVisualMode}
+              svgCharacterPreset={settings.svgCharacterPreset}
+            />
+          </div>
+
+          <FloatingNav
+            isOpened={revealPhase === "content-ready"}
+            isGalleryEnabled={settings.isGalleryEnabled}
+            isLoveStoryEnabled={settings.isLoveStoryEnabled}
+            isDigitalEnvelopeEnabled={isVerifiedGuest}
           />
-        )}
 
-        <RsvpGuestbook
-          initialWishes={wishes}
-          defaultGuestName={isVerifiedGuest ? guestName : ""}
-          verifiedGuestName={isVerifiedGuest ? guestName : null}
-          guestToken={guestToken}
-          rsvpTicket={rsvpTicket}
-          isVerifiedGuest={isVerifiedGuest}
-          showWishesInPreview={showWishesInPreview}
-        />
-
-        <ClosingFooter
-          weddingDateIso={settings.weddingDateIso}
-          coupleVisualMode={settings.coupleVisualMode}
-          svgCharacterPreset={settings.svgCharacterPreset}
-        />
-      </div>
-
-      <FloatingNav
-        isOpened={revealPhase === "content-ready"}
-        isGalleryEnabled={settings.isGalleryEnabled}
-        isLoveStoryEnabled={settings.isLoveStoryEnabled}
-        isDigitalEnvelopeEnabled={isVerifiedGuest}
-      />
-
-      <FloatingControls
-        isOpened={revealPhase === "content-ready"}
-        isPlaying={isPlayingAudio}
-        onTogglePlay={toggleAudioPlayback}
-        onToggleMusic={toggleAudioPlayback}
-        musicEnabled={settings.musicEnabled}
-        musicTitle={settings.musicTitle}
-        musicSourceType={settings.musicSourceType}
-        musicUrl={effectiveAudioUrl}
-        youtubeVideoId={settings.youtubeVideoId}
-      />
+          <FloatingControls
+            isOpened={revealPhase === "content-ready"}
+            isPlaying={isPlayingAudio}
+            onTogglePlay={toggleAudioPlayback}
+            onToggleMusic={toggleAudioPlayback}
+            musicEnabled={settings.musicEnabled}
+            musicTitle={settings.musicTitle}
+            musicSourceType={settings.musicSourceType}
+            musicUrl={effectiveAudioUrl}
+            youtubeVideoId={settings.youtubeVideoId}
+          />
+        </>
+      )}
     </main>
   );
 }

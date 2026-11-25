@@ -76,19 +76,17 @@ export function CoverGate({
       }`}
       aria-label="Sampul Undangan Fauzan Ma'ruf & Sinta Maria Utami"
     >
+      <h1 className="sr-only">The Wedding of Fauzan &amp; Sinta (#SINgkatceritaFAUZAN)</h1>
+
       {/* Background Forest Silhouette Layer */}
-      <div
-        className={`absolute inset-0 z-0 pointer-events-none transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          mounted ? "opacity-100" : "opacity-0"
-        }`}
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/assets/javanese/background.webp"
           alt=""
           aria-hidden="true"
-          width={1600}
-          height={2844}
+          width={1000}
+          height={1778}
           className="w-full h-full object-cover object-center pointer-events-none"
           loading="eager"
           fetchPriority="high"
@@ -231,13 +229,8 @@ export function CoverGate({
           <div className="w-full rounded-t-full rounded-b-[10px] border border-[#C59B6D]/35 px-5 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6 flex flex-col items-center text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/images/bg-truntum-damask.svg')] bg-repeat bg-[length:72px_72px] opacity-[0.04] pointer-events-none" />
 
-            {/* Step 4: Eyebrow & Crest (450ms) */}
-            <div
-              className={`flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
-              }`}
-              style={{ transitionDelay: mounted ? "450ms" : "0ms" }}
-            >
+            {/* Eyebrow & Crest */}
+            <div className="flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 opacity-100 translate-y-0">
               <MonogramCrest className="size-10 sm:size-11" />
               <div className="mt-2.5 flex items-center justify-center gap-2.5">
                 <span className="h-px w-5 bg-[#C59B6D]/45" aria-hidden="true" />
@@ -248,13 +241,8 @@ export function CoverGate({
               </div>
             </div>
 
-            {/* Step 3: Arch Frame & Dua Pengantin Character (550ms) */}
-            <div
-              className={`w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                mounted ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-3"
-              }`}
-              style={{ transitionDelay: mounted ? "550ms" : "0ms" }}
-            >
+            {/* Arch Frame & Dua Pengantin Character */}
+            <div className="w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 opacity-100 scale-100 translate-y-0">
               <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] flex items-end justify-center pt-6 pb-2 px-4">
                 {coupleVisualMode === "photo" && coverPhotoUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
@@ -269,24 +257,20 @@ export function CoverGate({
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src="/assets/javanese/dua-pengantin.webp"
-                    width={1100}
-                    height={1400}
+                    width={700}
+                    height={891}
                     alt="Dua Pengantin Fauzan dan Sinta"
                     className="h-[82%] w-auto max-w-[82%] object-contain object-bottom drop-shadow-sm select-none pointer-events-none mx-auto"
                     loading="eager"
+                    fetchPriority="high"
                     draggable={false}
                   />
                 )}
               </div>
             </div>
 
-            {/* Step 4: Couple Names & Date (780ms) */}
-            <div
-              className={`relative z-10 transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-              }`}
-              style={{ transitionDelay: mounted ? "780ms" : "0ms" }}
-            >
+            {/* Couple Names & Date */}
+            <div className="relative z-10 opacity-100 translate-y-0">
               <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#6B1222]">
                 Fauzan <span className="font-script text-[#C59B6D] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
               </h2>
@@ -306,7 +290,7 @@ export function CoverGate({
           </div>
         </div>
 
-        {/* Golden Latch Medallion (F&S Seal) (900ms) */}
+        {/* Golden Latch Medallion (F&S Seal) */}
         <div
           role="button"
           tabIndex={0}
@@ -319,15 +303,12 @@ export function CoverGate({
           }}
           title="Buka Undangan"
           aria-label="Buka Undangan Pernikahan Fauzan dan Sinta"
-          className={`relative my-2 sm:my-3 cursor-pointer select-none transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            mounted ? "opacity-100 scale-100" : "opacity-0 scale-90"
-          } ${
+          className={`relative my-2 sm:my-3 cursor-pointer select-none opacity-100 scale-100 transition-[transform,opacity] duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isOpening
               ? "scale-[1.14] rotate-45 opacity-0"
               : "hover:scale-105 active:scale-95"
           }`}
           style={{
-            transitionDelay: mounted ? "900ms" : "0ms",
             willChange: "transform, opacity",
           }}
         >
@@ -337,14 +318,9 @@ export function CoverGate({
           )}
         </div>
 
-        {/* Step 5 & 6: Guest Card & Open Button (Bottom) (980ms & 1180ms) */}
+        {/* Guest Card & Open Button (Bottom) */}
         <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center shrink-0">
-          <div
-            className={`w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-            style={{ transitionDelay: mounted ? "980ms" : "0ms" }}
-          >
+          <div className="w-full bg-[#FBF7F2]/92 backdrop-blur-md border border-[#6B1222]/18 rounded-2xl p-3 sm:p-4 shadow-[0_10px_24px_-8px_rgba(67,10,20,0.12)] relative overflow-hidden group text-center opacity-100 translate-y-0">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C59B6D]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
             <CardCornerOrnament />
             <p className="typo-eyebrow text-[#C59B6D] tracking-[0.2em] text-[10px]">
@@ -358,12 +334,7 @@ export function CoverGate({
             </p>
           </div>
 
-          <div
-            className={`w-full flex flex-col items-center transition-[transform,opacity] duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-            style={{ transitionDelay: mounted ? "1180ms" : "0ms" }}
-          >
+          <div className="w-full flex flex-col items-center opacity-100 translate-y-0">
             <button
               type="button"
               data-testid="btn-buka-undangan"

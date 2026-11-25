@@ -314,6 +314,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   tasyakuranVenue: "",
   tasyakuranAddress: "",
   tasyakuranMapsUrl: "",
+  showPublicPreviewWishes: true,
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 

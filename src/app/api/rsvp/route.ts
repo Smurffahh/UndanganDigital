@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getRsvpWishes, createRsvpWish } from "@/lib/db/store";
+import {
+  getRsvpWishes,
+  createRsvpWish,
+  getWeddingSettings,
+  getGuestById,
+} from "@/lib/db/store";
+import { verifyRsvpTicket } from "@/lib/rsvpTicket";
+import { getServerSession } from "@/lib/auth";
 
 const rsvpInputSchema = z
   .object({
-    name: z.string().trim().min(1).max(60).optional(),
-    guestName: z.string().trim().min(1).max(60).optional(),
+    rsvpTicket: z.string().trim().optional(),
+    name: z.string().trim().max(60).optional(),
+    guestName: z.string().trim().max(60).optional(),
     guestToken: z.string().trim().optional(),
     attend: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
     attendanceStatus: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
@@ -45,8 +53,22 @@ function sanitizeString(str: string): string {
     .replace(/\//g, "&#x2F;");
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const settings = await getWeddingSettings();
+    const isPublicPreviewWishesEnabled = settings.showPublicPreviewWishes !== false;
+
+    if (!isPublicPreviewWishesEnabled) {
+      const ticket = request.headers.get("x-rsvp-ticket");
+      const hasValidTicket = Boolean(verifyRsvpTicket(ticket));
+      const session = await getServerSession();
+      const isAdmin = Boolean(session && session.role === "admin");
+
+      if (!hasValidTicket && !isAdmin) {
+        return NextResponse.json({ success: true, data: [], restricted: true });
+      }
+    }
+
     const wishes = await getRsvpWishes();
     return NextResponse.json({ success: true, data: wishes });
   } catch {
@@ -73,15 +95,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
 
-    const finalGuestName = parsed.data.guestName || parsed.data.name || "";
-    if (!finalGuestName || finalGuestName.trim().length === 0) {
-      return NextResponse.json({ success: false, error: "Nama tamu wajib diisi" }, { status: 400 });
+    const rawTicket = parsed.data.rsvpTicket || request.headers.get("x-rsvp-ticket");
+    const ticketData = rawTicket ? verifyRsvpTicket(rawTicket) : null;
+    if (!ticketData) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Konfirmasi kehadiran dan ucapan hanya dapat dikirim melalui tautan undangan pribadi yang valid.",
+        },
+        { status: 403 }
+      );
+    }
+
+    const dbGuest = await getGuestById(ticketData.guestId);
+    if (!dbGuest) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Konfirmasi kehadiran dan ucapan hanya dapat dikirim melalui tautan undangan pribadi yang valid.",
+        },
+        { status: 403 }
+      );
     }
 
     const attendanceStatus = parsed.data.attendanceStatus || parsed.data.attend || "Hadir";
-    const paxCount = parsed.data.paxCount !== undefined ? parsed.data.paxCount : (parsed.data.guests !== undefined ? parsed.data.guests : 1);
+    const paxCount =
+      parsed.data.paxCount !== undefined
+        ? parsed.data.paxCount
+        : parsed.data.guests !== undefined
+        ? parsed.data.guests
+        : 1;
 
-    const sanitizedName = sanitizeString(finalGuestName);
+    const sanitizedName = sanitizeString(dbGuest.name);
     const sanitizedMessage = sanitizeString(parsed.data.message);
 
     const newWish = await createRsvpWish({

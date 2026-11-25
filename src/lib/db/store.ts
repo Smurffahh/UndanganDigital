@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "./index";
 import * as schema from "./schema";
 import {
@@ -210,6 +210,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     tasyakuranVenue: strOrFallback(row.tasyakuranVenue, DEFAULT_WEDDING_SETTINGS.tasyakuranVenue),
     tasyakuranAddress: strOrFallback(row.tasyakuranAddress, DEFAULT_WEDDING_SETTINGS.tasyakuranAddress),
     tasyakuranMapsUrl: strOrFallback(row.tasyakuranMapsUrl, DEFAULT_WEDDING_SETTINGS.tasyakuranMapsUrl),
+    showPublicPreviewWishes: boolOrFallback(row.showPublicPreviewWishes, DEFAULT_WEDDING_SETTINGS.showPublicPreviewWishes),
   });
 }
 
@@ -368,6 +369,7 @@ function getPostgresDb() {
 let hasEnsuredColumns = false;
 async function ensureSettingsColumns() {
   if (hasEnsuredColumns) return;
+  hasEnsuredColumns = true;
   const rawUrl = process.env.DATABASE_URL;
   if (!rawUrl) return;
   try {
@@ -390,6 +392,7 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_venue VARCHAR(255) DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_address TEXT DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_maps_url TEXT DEFAULT ''`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS show_public_preview_wishes BOOLEAN NOT NULL DEFAULT true`;
     await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS owner_scope VARCHAR(50) NOT NULL DEFAULT 'couple'`;
     await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS created_by VARCHAR(50)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_guests_owner_scope ON guests(owner_scope)`;
@@ -409,9 +412,10 @@ async function ensureSettingsColumns() {
     `;
     await sql`CREATE INDEX IF NOT EXISTS idx_dashboard_users_username ON dashboard_users(username)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_dashboard_users_role ON dashboard_users(role)`;
-    hasEnsuredColumns = true;
-  } catch (err) {
-    console.warn("Could not ensure wedding_settings columns:", err);
+  } catch (err: any) {
+    if (err?.code !== "42501") {
+      console.warn("Could not ensure wedding_settings columns:", err?.message || err);
+    }
   }
 }
 
@@ -696,6 +700,122 @@ export async function getGuests(scope?: string): Promise<GuestData[]> {
     list = list.filter((g) => (g.ownerScope || "couple") === scope);
   }
   return list;
+}
+
+export async function findVerifiedGuestByKpd(
+  rawKpd: unknown
+): Promise<{ id: number; name: string; slugQuery: string } | null> {
+  if (!rawKpd) return null;
+  const rawStr = Array.isArray(rawKpd) ? rawKpd[0] : String(rawKpd);
+  if (!rawStr) return null;
+
+  let decoded = rawStr;
+  try {
+    decoded = decodeURIComponent(rawStr.replace(/\+/g, " "));
+  } catch {
+    decoded = rawStr.replace(/\+/g, " ");
+  }
+
+  const normalized = decoded
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 100);
+
+  if (!normalized || normalized.toLowerCase() === "tamu undangan") {
+    return null;
+  }
+
+  const normalizedLower = normalized.toLowerCase();
+  const slugVariant1 = formatGuestSlug(normalized).toLowerCase();
+  const slugVariant2 = encodeURIComponent(normalized).toLowerCase();
+  const rawCleanLower = rawStr.trim().toLowerCase();
+  const nameBindex = createBlindIndex(normalized);
+
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select({
+          id: schema.guests.id,
+          name: schema.guests.name,
+          slugQuery: schema.guests.slugQuery,
+          nameBindex: schema.guests.nameBindex,
+        })
+        .from(schema.guests)
+        .where(
+          or(
+            nameBindex ? eq(schema.guests.nameBindex, nameBindex) : undefined,
+            sql`LOWER(${schema.guests.slugQuery}) IN (${normalizedLower}, ${slugVariant1}, ${slugVariant2}, ${rawCleanLower})`,
+            sql`LOWER(TRIM(${schema.guests.name})) = ${normalizedLower}`
+          )
+        )
+        .limit(1);
+
+      if (rows.length > 0) {
+        const row = rows[0];
+        const decryptedName = decryptField(row.name);
+        return {
+          id: row.id,
+          name: decryptedName,
+          slugQuery: row.slugQuery,
+        };
+      }
+    } catch (e) {
+      console.warn("DB findVerifiedGuestByKpd query failed, falling back to local JSON:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  if (local.guests && Array.isArray(local.guests)) {
+    const found = local.guests.find((g) => {
+      if (nameBindex && g.nameBindex === nameBindex) return true;
+      const gSlug = (g.slugQuery || "").toLowerCase();
+      if (
+        gSlug === normalizedLower ||
+        gSlug === slugVariant1 ||
+        gSlug === slugVariant2 ||
+        gSlug === rawCleanLower
+      ) {
+        return true;
+      }
+      const gNameDecrypted = decryptField(g.name).toLowerCase();
+      if (gNameDecrypted === normalizedLower) return true;
+      return false;
+    });
+
+    if (found) {
+      return {
+        id: found.id,
+        name: decryptField(found.name),
+        slugQuery: found.slugQuery,
+      };
+    }
+  }
+
+  return null;
+}
+
+export async function getGuestById(id: number): Promise<GuestData | null> {
+  const db = getPostgresDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select()
+        .from(schema.guests)
+        .where(eq(schema.guests.id, id))
+        .limit(1);
+      if (rows.length > 0) {
+        return decryptGuestRecord(rows[0]);
+      }
+    } catch (e) {
+      console.warn("DB getGuestById query failed, falling back to local JSON:", e);
+    }
+  }
+
+  const local = getLocalDb();
+  const found = local.guests.find((g) => g.id === id);
+  return found ? decryptGuestRecord(found) : null;
 }
 
 export async function createGuest(data: {

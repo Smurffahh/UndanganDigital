@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Sparkles } from "lucide-react";
+import { Calendar, Clock, MapPin, CalendarPlus, ExternalLink, Sparkles, Lock } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { FloralCornerAccent, WayangDivider, SongketRibbon } from "./Ornaments";
 import {
@@ -30,6 +30,7 @@ interface EventDetailsProps {
   tasyakuranVenue?: string;
   tasyakuranAddress?: string;
   tasyakuranMapsUrl?: string;
+  isVerifiedGuest?: boolean;
 }
 
 const INDONESIAN_DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -57,6 +58,7 @@ export function EventDetails({
   tasyakuranVenue = "",
   tasyakuranAddress = "",
   tasyakuranMapsUrl = "",
+  isVerifiedGuest = false,
 }: EventDetailsProps) {
   const dateObj = parseEventDate(weddingDateIso);
   const dayNumber = dateObj.getDate();
@@ -176,20 +178,34 @@ export function EventDetails({
                 <p className="font-sans text-base font-semibold text-[#3B1A20]">
                   {effectiveTasyakuranVenue}
                 </p>
-                <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[340px]">
-                  {effectiveTasyakuranAddress}
-                </p>
+                {isVerifiedGuest && effectiveTasyakuranAddress ? (
+                  <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[340px]">
+                    {effectiveTasyakuranAddress}
+                  </p>
+                ) : !isVerifiedGuest ? (
+                  <div className="mt-3 p-3.5 rounded-xl border border-[#6B1222]/15 bg-[#FBF7F2]/80 flex items-start gap-2.5 text-left max-w-[340px] mx-auto shadow-xs">
+                    <MapPin className="w-4 h-4 text-[#6B1222] shrink-0 mt-0.5 stroke-[1.75]" />
+                    <div className="space-y-0.5">
+                      <p className="font-sans text-xs font-semibold text-[#6B1222]">Lokasi bersifat privat</p>
+                      <p className="font-sans text-[11px] text-[#6E4A50] leading-relaxed">
+                        Alamat lengkap dan petunjuk arah hanya ditampilkan melalui tautan undangan pribadi.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
-                  <a
-                    href={effectiveTasyakuranMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
-                  >
-                    <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
-                    <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
-                  </a>
+                  {isVerifiedGuest && effectiveTasyakuranMapsUrl && (
+                    <a
+                      href={effectiveTasyakuranMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
+                      <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
+                    </a>
+                  )}
 
                   <a
                     href={tasyakuranCalendarUrl}
@@ -251,28 +267,42 @@ export function EventDetails({
                 <p className="font-sans text-base font-semibold text-[#3B1A20]">
                   {venueName}
                 </p>
-                <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
-                  {venueAddress}
-                  {venuePlusCode && (
-                    <>
-                      <br />
-                      <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
-                    </>
-                  )}
-                </p>
+                {isVerifiedGuest && venueAddress ? (
+                  <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
+                    {venueAddress}
+                    {venuePlusCode && (
+                      <>
+                        <br />
+                        <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
+                      </>
+                    )}
+                  </p>
+                ) : !isVerifiedGuest ? (
+                  <div className="mt-3 p-3.5 rounded-xl border border-[#6B1222]/15 bg-[#FBF7F2]/80 flex items-start gap-2.5 text-left max-w-[320px] mx-auto shadow-xs">
+                    <MapPin className="w-4 h-4 text-[#6B1222] shrink-0 mt-0.5 stroke-[1.75]" />
+                    <div className="space-y-0.5">
+                      <p className="font-sans text-xs font-semibold text-[#6B1222]">Lokasi bersifat privat</p>
+                      <p className="font-sans text-[11px] text-[#6E4A50] leading-relaxed">
+                        Alamat lengkap dan petunjuk arah hanya ditampilkan melalui tautan undangan pribadi.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
-                  >
-                    <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
-                    <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
-                  </a>
+                  {isVerifiedGuest && googleMapsUrl && (
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
+                      <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
+                    </a>
+                  )}
 
                   <a
                     href={googleCalendarUrl}
@@ -334,28 +364,42 @@ export function EventDetails({
                 <p className="font-sans text-base font-semibold text-[#3B1A20]">
                   {venueName}
                 </p>
-                <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
-                  {venueAddress}
-                  {venuePlusCode && (
-                    <>
-                      <br />
-                      <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
-                    </>
-                  )}
-                </p>
+                {isVerifiedGuest && venueAddress ? (
+                  <p className="mt-1 typo-body text-center mx-auto text-[#3B1A20] max-w-[320px]">
+                    {venueAddress}
+                    {venuePlusCode && (
+                      <>
+                        <br />
+                        <span className="text-xs text-[#6E4A50]">{venuePlusCode}</span>
+                      </>
+                    )}
+                  </p>
+                ) : !isVerifiedGuest ? (
+                  <div className="mt-3 p-3.5 rounded-xl border border-[#6B1222]/15 bg-[#FBF7F2]/80 flex items-start gap-2.5 text-left max-w-[320px] mx-auto shadow-xs">
+                    <MapPin className="w-4 h-4 text-[#6B1222] shrink-0 mt-0.5 stroke-[1.75]" />
+                    <div className="space-y-0.5">
+                      <p className="font-sans text-xs font-semibold text-[#6B1222]">Lokasi bersifat privat</p>
+                      <p className="font-sans text-[11px] text-[#6E4A50] leading-relaxed">
+                        Alamat lengkap dan petunjuk arah hanya ditampilkan melalui tautan undangan pribadi.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
-                  >
-                    <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
-                    <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
-                  </a>
+                  {isVerifiedGuest && googleMapsUrl && (
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
+                      <span className="text-xs tracking-wider uppercase font-semibold">Petunjuk Arah</span>
+                    </a>
+                  )}
 
                   <a
                     href={googleCalendarUrl}
@@ -377,30 +421,32 @@ export function EventDetails({
         </div>
 
         {/* MAPS EMBED */}
-        <ScrollLinkedItem offsetY={36} stage={3}>
-          <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-xs p-5 sm:p-6 text-center">
-            <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[#C59B6D]/30 mb-4 shadow-inner">
-              <iframe
-                src={googleMapsEmbed}
-                title={`Peta Lokasi Pernikahan Fauzan dan Sinta di ${venueName}`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full border-0"
-              />
-            </div>
+        {isVerifiedGuest && googleMapsEmbed && (
+          <ScrollLinkedItem offsetY={36} stage={3}>
+            <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-xs p-5 sm:p-6 text-center">
+              <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[#C59B6D]/30 mb-4 shadow-inner">
+                <iframe
+                  src={googleMapsEmbed}
+                  title={`Peta Lokasi Pernikahan Fauzan dan Sinta di ${venueName}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full border-0"
+                />
+              </div>
 
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_12px_24px_-8px_rgba(107,18,34,0.4)] active:scale-[0.96] transition-transform duration-150 cursor-pointer"
-            >
-              <MapPin className="w-4 h-4" />
-              <span>Buka Google Maps</span>
-              <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-            </a>
-          </div>
-        </ScrollLinkedItem>
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_12px_24px_-8px_rgba(107,18,34,0.4)] active:scale-[0.96] transition-transform duration-150 cursor-pointer"
+              >
+                <MapPin className="w-4 h-4" />
+                <span>Buka Google Maps</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+              </a>
+            </div>
+          </ScrollLinkedItem>
+        )}
       </div>
     </section>
   );

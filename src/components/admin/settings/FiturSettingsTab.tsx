@@ -15,9 +15,49 @@ interface FiturSettingsTabProps {
 
 export function FiturSettingsTab({ formData, onChange }: FiturSettingsTabProps) {
   const isLoveStoryEnabled = formData.isLoveStoryEnabled !== false;
+  const showPublicPreviewWishes = formData.showPublicPreviewWishes !== false;
 
   return (
     <div className="space-y-6">
+      <Card className="border-slate-200/80 shadow-xs">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4 text-[#6B1222]" />
+            <CardTitle className="text-base font-bold text-slate-900">
+              Visibilitas Buku Tamu &amp; Ucapan Publik
+            </CardTitle>
+          </div>
+          <CardDescription>
+            Atur apakah pengunjung umum tanpa tautan undangan pribadi dapat membaca doa dan ucapan.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-xs sm:text-sm text-slate-900">
+                  Tampilkan daftar ucapan di Mode Pratinjau Publik
+                </span>
+                <Badge variant={showPublicPreviewWishes ? "success" : "outline"} size="sm">
+                  {showPublicPreviewWishes ? "Aktif" : "Nonaktif"}
+                </Badge>
+              </div>
+              <p className="text-xs text-slate-500 max-w-[560px]">
+                {showPublicPreviewWishes
+                  ? "Jika aktif, pengunjung tanpa tautan undangan pribadi tetap dapat membaca daftar doa dan ucapan (hanya baca). Jika nonaktif, daftar ucapan ikut disembunyikan dan tidak dikirim ke browser."
+                  : "Daftar ucapan disembunyikan total dari pengunjung umum dan tidak dikirim ke browser."}
+              </p>
+            </div>
+
+            <Switch
+              checked={showPublicPreviewWishes}
+              onCheckedChange={(checked) => onChange("showPublicPreviewWishes", checked)}
+              aria-label="Tampilkan daftar ucapan di Mode Pratinjau Publik"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="border-slate-200/80 shadow-xs">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">

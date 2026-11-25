@@ -15,6 +15,7 @@ interface FloatingNavProps {
   isOpened: boolean;
   isGalleryEnabled?: boolean;
   isLoveStoryEnabled?: boolean;
+  isDigitalEnvelopeEnabled?: boolean;
 }
 
 const NAV_ITEMS = [
@@ -31,6 +32,7 @@ export function FloatingNav({
   isOpened,
   isGalleryEnabled = true,
   isLoveStoryEnabled = true,
+  isDigitalEnvelopeEnabled = true,
 }: FloatingNavProps) {
   const [activeSection, setActiveSection] = useState<string>("beranda");
   const isClickingRef = useRef(false);
@@ -39,6 +41,7 @@ export function FloatingNav({
   const effectiveItems = NAV_ITEMS.filter((item) => {
     if (item.id === "galeri" && isGalleryEnabled === false) return false;
     if (item.id === "cerita" && isLoveStoryEnabled === false) return false;
+    if (item.id === "amplop" && isDigitalEnvelopeEnabled === false) return false;
     return true;
   });
 

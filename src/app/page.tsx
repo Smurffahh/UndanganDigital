@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import { getWeddingSettings, getGalleryPhotos, getRsvpWishes } from "@/lib/db/store";
+import {
+  getWeddingSettings,
+  getGalleryPhotos,
+  getRsvpWishes,
+  findVerifiedGuestByKpd,
+} from "@/lib/db/store";
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
-import { sanitizeGuestKpdParam } from "@/lib/guestUtils";
+import { createRsvpTicket } from "@/lib/rsvpTicket";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,8 +19,9 @@ interface PageProps {
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedParams = await searchParams;
   const rawParam = resolvedParams.kpd;
-  const guestName = rawParam ? sanitizeGuestKpdParam(rawParam) : "";
-  const hasGuest = Boolean(guestName && guestName !== "Tamu Undangan");
+  const verifiedGuest = rawParam ? await findVerifiedGuestByKpd(rawParam) : null;
+  const hasGuest = Boolean(verifiedGuest);
+  const guestName = verifiedGuest ? verifiedGuest.name : "";
 
   const baseTitle = "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)";
   const description =
@@ -61,8 +67,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function InvitationPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const rawParam = resolvedParams.kpd;
-  const guestName = sanitizeGuestKpdParam(rawParam);
-  const isCustomGuest = Boolean(rawParam && guestName !== "Tamu Undangan");
+  const verifiedGuest = rawParam ? await findVerifiedGuestByKpd(rawParam) : null;
+  const isVerifiedGuest = verifiedGuest !== null;
+  const displayGuestName = isVerifiedGuest ? verifiedGuest.name : "Tamu Undangan";
+  const rsvpTicket = isVerifiedGuest
+    ? createRsvpTicket({ guestId: verifiedGuest.id, guestName: verifiedGuest.name })
+    : null;
 
   const [rawSettings, rawGalleryPhotos, rawWishes] = await Promise.all([
     getWeddingSettings(),
@@ -76,7 +86,29 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     brideName: (rawSettings.brideName || DEFAULT_WEDDING_SETTINGS.brideName).trim() || DEFAULT_WEDDING_SETTINGS.brideName,
     groomName: (rawSettings.groomName || DEFAULT_WEDDING_SETTINGS.groomName).trim() || DEFAULT_WEDDING_SETTINGS.groomName,
     weddingDateIso: rawSettings.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+    showPublicPreviewWishes: rawSettings.showPublicPreviewWishes !== false,
   };
+
+  const showWishesInPreview = settings.showPublicPreviewWishes !== false;
+  const canViewWishes = isVerifiedGuest || showWishesInPreview;
+
+  const safeSettings: typeof DEFAULT_WEDDING_SETTINGS = isVerifiedGuest
+    ? settings
+    : {
+        ...settings,
+        bankAccounts: [],
+        ewallets: [],
+        giftAddress: { receiver: "", phone: "", address: "" },
+        qrisImageUrl: "",
+        venueAddress: "",
+        venuePlusCode: "",
+        googleMapsUrl: "",
+        googleMapsEmbed: "",
+        mapsLatitude: "",
+        mapsLongitude: "",
+        tasyakuranAddress: "",
+        tasyakuranMapsUrl: "",
+      };
 
   const galleryPhotos = rawGalleryPhotos.map((item) => ({
     id: item.id,
@@ -85,14 +117,16 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     aspectRatio: item.aspectRatio || "3/4",
   }));
 
-  const wishes = rawWishes.map((item) => ({
-    id: item.id,
-    guestName: item.guestName,
-    attendanceStatus: item.attendanceStatus,
-    paxCount: item.paxCount ?? 1,
-    message: item.message,
-    createdAt: item.createdAt || new Date(),
-  }));
+  const wishes = canViewWishes
+    ? rawWishes.map((item) => ({
+        id: item.id,
+        guestName: item.guestName,
+        attendanceStatus: item.attendanceStatus,
+        paxCount: item.paxCount ?? 1,
+        message: item.message,
+        createdAt: item.createdAt || new Date(),
+      }))
+    : [];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -105,17 +139,21 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
       "@type": "Place",
-      name: settings.venueName,
+      name: isVerifiedGuest ? settings.venueName : "Purbalingga, Jawa Tengah",
       address: {
         "@type": "PostalAddress",
-        streetAddress: settings.venueAddress,
+        streetAddress: isVerifiedGuest ? settings.venueAddress : "Purbalingga, Jawa Tengah",
         addressCountry: "ID",
       },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: settings.mapsLatitude,
-        longitude: settings.mapsLongitude,
-      },
+      ...(isVerifiedGuest && settings.mapsLatitude && settings.mapsLongitude
+        ? {
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: settings.mapsLatitude,
+              longitude: settings.mapsLongitude,
+            },
+          }
+        : {}),
     },
     image: [settings.coverPhotoUrl, settings.heroPhotoUrl],
     performer: [
@@ -133,12 +171,14 @@ export default async function InvitationPage({ searchParams }: PageProps) {
         }}
       />
       <InvitationOrchestrator
-        settings={settings}
+        settings={safeSettings}
         galleryPhotos={galleryPhotos}
         wishes={wishes}
-        guestName={guestName}
-        isVerifiedGuest={isCustomGuest}
+        guestName={displayGuestName}
+        isVerifiedGuest={isVerifiedGuest}
         guestToken={null}
+        rsvpTicket={rsvpTicket}
+        showWishesInPreview={showWishesInPreview}
       />
     </>
   );

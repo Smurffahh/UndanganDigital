@@ -39,6 +39,8 @@ interface InvitationOrchestratorProps {
   guestName: string;
   isVerifiedGuest?: boolean;
   guestToken?: string | null;
+  rsvpTicket?: string | null;
+  showWishesInPreview?: boolean;
 }
 
 type RevealPhase = "cover" | "opening" | "assets-entering" | "content-ready";
@@ -50,6 +52,8 @@ export function InvitationOrchestrator({
   guestName,
   isVerifiedGuest = false,
   guestToken = null,
+  rsvpTicket = null,
+  showWishesInPreview = true,
 }: InvitationOrchestratorProps) {
   const [revealPhase, setRevealPhase] = useState<RevealPhase>("cover");
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -306,6 +310,7 @@ export function InvitationOrchestrator({
         )}
 
         <EventDetails
+          isVerifiedGuest={isVerifiedGuest}
           akadTime={settings.akadTime}
           resepsiTime={settings.resepsiTime}
           venueName={settings.venueName}
@@ -328,18 +333,23 @@ export function InvitationOrchestrator({
 
         {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
 
-        <DigitalEnvelope
-          bankAccounts={settings.bankAccounts}
-          ewallets={settings.ewallets}
-          giftAddress={settings.giftAddress}
-          qrisImageUrl={settings.qrisImageUrl}
-        />
+        {isVerifiedGuest && (
+          <DigitalEnvelope
+            bankAccounts={settings.bankAccounts}
+            ewallets={settings.ewallets}
+            giftAddress={settings.giftAddress}
+            qrisImageUrl={settings.qrisImageUrl}
+          />
+        )}
 
         <RsvpGuestbook
           initialWishes={wishes}
           defaultGuestName={isVerifiedGuest ? guestName : ""}
           verifiedGuestName={isVerifiedGuest ? guestName : null}
           guestToken={guestToken}
+          rsvpTicket={rsvpTicket}
+          isVerifiedGuest={isVerifiedGuest}
+          showWishesInPreview={showWishesInPreview}
         />
 
         <ClosingFooter
@@ -353,6 +363,7 @@ export function InvitationOrchestrator({
         isOpened={revealPhase === "content-ready"}
         isGalleryEnabled={settings.isGalleryEnabled}
         isLoveStoryEnabled={settings.isLoveStoryEnabled}
+        isDigitalEnvelopeEnabled={isVerifiedGuest}
       />
 
       <FloatingControls

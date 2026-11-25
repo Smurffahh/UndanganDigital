@@ -62,6 +62,7 @@ const updateSettingsSchema = z.object({
   tasyakuranVenue: z.string().max(255).optional(),
   tasyakuranAddress: z.string().max(1000).optional(),
   tasyakuranMapsUrl: safeUrlOrPath,
+  showPublicPreviewWishes: z.boolean().optional(),
 }).passthrough();
 
 export async function GET() {

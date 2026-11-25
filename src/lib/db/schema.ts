@@ -59,6 +59,7 @@ export const weddingSettings = pgTable("wedding_settings", {
   tasyakuranVenue: varchar("tasyakuran_venue", { length: 255 }).default(""),
   tasyakuranAddress: text("tasyakuran_address").default(""),
   tasyakuranMapsUrl: text("tasyakuran_maps_url").default(""),
+  showPublicPreviewWishes: boolean("show_public_preview_wishes").notNull().default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 

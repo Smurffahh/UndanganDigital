@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { preload } from "react-dom";
 import {
   getWeddingSettings,
   getGalleryPhotos,
@@ -65,6 +66,17 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 }
 
 export default async function InvitationPage({ searchParams }: PageProps) {
+  preload("/images/bg-truntum-damask.svg", {
+    as: "image",
+    type: "image/svg+xml",
+    fetchPriority: "high",
+  });
+  preload("/assets/javanese/background.webp", {
+    as: "image",
+    type: "image/webp",
+    fetchPriority: "high",
+  });
+
   const resolvedParams = await searchParams;
   const rawParam = resolvedParams.kpd;
   const verifiedGuest = rawParam ? await findVerifiedGuestByKpd(rawParam) : null;

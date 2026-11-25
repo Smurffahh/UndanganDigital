@@ -89,22 +89,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://i.pinimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />
-        <link
-          rel="preload"
-          href="/images/bg-truntum-damask.svg"
-          as="image"
-          type="image/svg+xml"
-          // @ts-expect-error Next.js supports fetchPriority on link
-          fetchpriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/javanese/background.webp"
-          as="image"
-          type="image/webp"
-          // @ts-expect-error Next.js supports fetchPriority on link
-          fetchpriority="high"
-        />
       </head>
       <body className="font-sans antialiased bg-cream text-ink min-h-screen">
         {children}

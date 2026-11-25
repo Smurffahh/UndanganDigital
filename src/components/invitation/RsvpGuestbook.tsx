@@ -308,6 +308,8 @@ export function RsvpGuestbook({
                   <Search className="w-4 h-4 text-[#6E4A50] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="text"
+                    id="search-wishes"
+                    name="search_wishes"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Cari doa pengirim..."

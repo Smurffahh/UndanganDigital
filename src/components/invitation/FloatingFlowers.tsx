@@ -60,7 +60,10 @@ export function FloatingFlowers({ active = false }: FloatingFlowersProps) {
           <img
             src="/assets/javanese/bunga-melayang.webp"
             alt=""
-            className="w-full h-full object-contain pointer-events-none select-none"
+            aria-hidden="true"
+            width={flower.size}
+            height={flower.size}
+            className="w-full h-full aspect-square object-contain pointer-events-none select-none"
             loading="lazy"
             draggable={false}
           />

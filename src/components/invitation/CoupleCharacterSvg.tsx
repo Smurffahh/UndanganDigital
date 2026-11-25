@@ -29,6 +29,8 @@ export function CoupleCharacterSvg({
           <img
             src="/assets/javanese/dua-pengantin.webp"
             alt="Ilustrasi Dua Pengantin Fauzan dan Sinta"
+            width={1100}
+            height={1400}
             className="h-[84%] w-auto max-w-[84%] object-contain object-bottom drop-shadow-xs pointer-events-none select-none mx-auto"
             loading="eager"
             draggable={false}
@@ -55,6 +57,8 @@ export function CoupleCharacterSvg({
         <img
           src={webpSrc}
           alt={altText}
+          width={800}
+          height={1422}
           className="h-[84%] w-auto max-w-[84%] object-contain object-bottom drop-shadow-xs pointer-events-none select-none mx-auto"
           loading="lazy"
           draggable={false}

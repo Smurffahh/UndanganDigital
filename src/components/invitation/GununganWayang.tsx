@@ -58,8 +58,9 @@ export function GununganWayang({
         priority={priority}
         decoding="async"
         draggable={false}
-        className="w-full h-full max-h-full max-w-full object-contain select-none"
+        className="w-full h-full max-h-full max-w-full aspect-[1200/2014] object-contain select-none"
         style={{
+          aspectRatio: "1200 / 2014",
           filter: filterStyle,
           transform: transformStyle,
         }}

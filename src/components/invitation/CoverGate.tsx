@@ -87,6 +87,8 @@ export function CoverGate({
           src="/assets/javanese/background.webp"
           alt=""
           aria-hidden="true"
+          width={1600}
+          height={2844}
           className="w-full h-full object-cover object-center pointer-events-none"
           loading="eager"
           fetchPriority="high"
@@ -267,6 +269,8 @@ export function CoverGate({
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src="/assets/javanese/dua-pengantin.webp"
+                    width={1100}
+                    height={1400}
                     alt="Dua Pengantin Fauzan dan Sinta"
                     className="h-[82%] w-auto max-w-[82%] object-contain object-bottom drop-shadow-sm select-none pointer-events-none mx-auto"
                     loading="eager"

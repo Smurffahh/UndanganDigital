@@ -59,7 +59,9 @@ export function ClosingFooter({
               src="/assets/javanese/gunungan-kosong.webp"
               alt=""
               aria-hidden="true"
-              className="w-full h-auto object-contain pointer-events-none select-none"
+              width={800}
+              height={1013}
+              className="w-full h-auto aspect-[800/1013] object-contain pointer-events-none select-none"
               loading="lazy"
               draggable={false}
             />

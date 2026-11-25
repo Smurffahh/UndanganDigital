@@ -6,7 +6,7 @@ import "./globals.css";
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-serif",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -20,20 +20,20 @@ const greatVibes = Great_Vibes({
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 const amiri = Amiri({
   subsets: ["arabic", "latin"],
   variable: "--font-arabic",
-  weight: ["400", "700"],
+  weight: ["400"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://undangan-digital-fauzan-sinta.vercel.app"
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.fauzansinta.my.id"
   ),
   title: "The Wedding of Fauzan & Sinta (#SINgkatceritaFAUZAN)",
   description:
@@ -89,6 +89,22 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://i.pinimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />
+        <link
+          rel="preload"
+          href="/images/bg-truntum-damask.svg"
+          as="image"
+          type="image/svg+xml"
+          // @ts-expect-error Next.js supports fetchPriority on link
+          fetchpriority="high"
+        />
+        <link
+          rel="preload"
+          href="/assets/javanese/background.webp"
+          as="image"
+          type="image/webp"
+          // @ts-expect-error Next.js supports fetchPriority on link
+          fetchpriority="high"
+        />
       </head>
       <body className="font-sans antialiased bg-cream text-ink min-h-screen">
         {children}

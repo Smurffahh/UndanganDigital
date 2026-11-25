@@ -1,24 +1,31 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireSession } from "@/lib/auth";
 import { importGuests } from "@/lib/db/store";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
 
+export const dynamic = "force-dynamic";
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+};
+
 export async function POST(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
   try {
     const body = await request.json();
     if (!Array.isArray(body.guests)) {
-      return NextResponse.json({ success: false, error: "Format data tamu harus berupa array" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Format data tamu harus berupa array" }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
     if (body.guests.length > 2000) {
       return NextResponse.json(
         { success: false, error: "Jumlah tamu yang diimpor melebihi batas maksimal 2000 baris per batch" },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -56,15 +63,19 @@ export async function POST(request: Request) {
     const createdBy = session.username;
 
     const count = await importGuests(cleanedGuests, ownerScope, createdBy);
+
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+
     return NextResponse.json({
       success: true,
       message: `${count} tamu berhasil diproses (${withPhoneCount} dengan nomor WA, ${noPhoneCount} tanpa nomor WA)`,
       count,
       withPhone: withPhoneCount,
       noPhone: noPhoneCount,
-    });
+    }, { headers: NO_CACHE_HEADERS });
   } catch (err) {
     console.error("Bulk import failed:", err);
-    return NextResponse.json({ success: false, error: "Gagal mengimpor daftar tamu" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal mengimpor daftar tamu" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

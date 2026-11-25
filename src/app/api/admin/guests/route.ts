@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireSession } from "@/lib/auth";
 import {
   getGuests,
@@ -10,6 +11,12 @@ import {
 } from "@/lib/db/store";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
 import { z } from "zod";
+
+export const dynamic = "force-dynamic";
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+};
 
 const guestSchema = z
   .object({
@@ -54,13 +61,13 @@ export async function GET(request: Request) {
       : requestedScope || "all";
 
   const guests = await getGuests(effectiveScope);
-  return NextResponse.json({ success: true, data: guests });
+  return NextResponse.json({ success: true, data: guests }, { headers: NO_CACHE_HEADERS });
 }
 
 export async function POST(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
   try {
@@ -69,7 +76,7 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       return NextResponse.json(
         { success: false, error: parsed.error.issues[0]?.message || "Format data tidak valid" },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -87,16 +94,19 @@ export async function POST(request: Request) {
       createdBy: session.username,
     });
 
-    return NextResponse.json({ success: true, data: newGuest }, { status: 201 });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+
+    return NextResponse.json({ success: true, data: newGuest }, { status: 201, headers: NO_CACHE_HEADERS });
   } catch {
-    return NextResponse.json({ success: false, error: "Gagal menambahkan tamu" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal menambahkan tamu" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PATCH(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
   try {
@@ -107,7 +117,7 @@ export async function PATCH(request: Request) {
       if (!parsedBulk.success) {
         return NextResponse.json(
           { success: false, error: parsedBulk.error.issues[0]?.message || "Format data massal tidak valid" },
-          { status: 400 }
+          { status: 400, headers: NO_CACHE_HEADERS }
         );
       }
 
@@ -126,18 +136,20 @@ export async function PATCH(request: Request) {
             code: "FORBIDDEN",
             error: "Akses ditolak. Anda tidak memiliki izin untuk mengubah data tamu yang dipilih.",
           },
-          { status: 403 }
+          { status: 403, headers: NO_CACHE_HEADERS }
         );
       }
 
-      return NextResponse.json({ success: true, count });
+      revalidatePath("/");
+      revalidatePath("/dashboard");
+      return NextResponse.json({ success: true, count }, { headers: NO_CACHE_HEADERS });
     }
 
     const parsed = updateGuestSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
         { success: false, error: parsed.error.issues[0]?.message || "Format data tidak valid" },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -165,22 +177,24 @@ export async function PATCH(request: Request) {
             code: "FORBIDDEN",
             error: "Akses ditolak. Anda tidak memiliki izin untuk mengubah data tamu ini.",
           },
-          { status: 403 }
+          { status: 403, headers: NO_CACHE_HEADERS }
         );
       }
-      return NextResponse.json({ success: false, error: "Tamu tidak ditemukan" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "Tamu tidak ditemukan" }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
-    return NextResponse.json({ success: true, data: updated });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return NextResponse.json({ success: true, data: updated }, { headers: NO_CACHE_HEADERS });
   } catch {
-    return NextResponse.json({ success: false, error: "Gagal memperbarui status tamu" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal memperbarui status tamu" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function DELETE(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
   try {
@@ -195,7 +209,7 @@ export async function DELETE(request: Request) {
         .map((s) => parseInt(s.trim(), 10))
         .filter((n) => !isNaN(n) && n > 0);
       if (idList.length === 0) {
-        return NextResponse.json({ success: false, error: "Daftar ID tamu tidak valid" }, { status: 400 });
+        return NextResponse.json({ success: false, error: "Daftar ID tamu tidak valid" }, { status: 400, headers: NO_CACHE_HEADERS });
       }
       const count = await bulkDeleteGuests(idList, expectedScope);
       if (session.role === "parent" && count !== idList.length) {
@@ -205,10 +219,12 @@ export async function DELETE(request: Request) {
             code: "FORBIDDEN",
             error: "Akses ditolak. Anda tidak memiliki izin untuk menghapus data tamu ini.",
           },
-          { status: 403 }
+          { status: 403, headers: NO_CACHE_HEADERS }
         );
       }
-      return NextResponse.json({ success: true, message: `${count} tamu berhasil dihapus`, count });
+      revalidatePath("/");
+      revalidatePath("/dashboard");
+      return NextResponse.json({ success: true, message: `${count} tamu berhasil dihapus`, count }, { headers: NO_CACHE_HEADERS });
     }
 
     let bodyIds: number[] | null = null;
@@ -228,14 +244,16 @@ export async function DELETE(request: Request) {
             code: "FORBIDDEN",
             error: "Akses ditolak. Anda tidak memiliki izin untuk menghapus data tamu ini.",
           },
-          { status: 403 }
+          { status: 403, headers: NO_CACHE_HEADERS }
         );
       }
-      return NextResponse.json({ success: true, message: `${count} tamu berhasil dihapus`, count });
+      revalidatePath("/");
+      revalidatePath("/dashboard");
+      return NextResponse.json({ success: true, message: `${count} tamu berhasil dihapus`, count }, { headers: NO_CACHE_HEADERS });
     }
 
     if (!idParam) {
-      return NextResponse.json({ success: false, error: "ID tamu diperlukan" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "ID tamu diperlukan" }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
     const idNum = parseInt(idParam, 10);
@@ -248,14 +266,16 @@ export async function DELETE(request: Request) {
             code: "FORBIDDEN",
             error: "Akses ditolak. Anda tidak memiliki izin untuk menghapus data tamu ini.",
           },
-          { status: 403 }
+          { status: 403, headers: NO_CACHE_HEADERS }
         );
       }
-      return NextResponse.json({ success: false, error: "Tamu tidak ditemukan" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "Tamu tidak ditemukan" }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
-    return NextResponse.json({ success: true, message: "Tamu berhasil dihapus" });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return NextResponse.json({ success: true, message: "Tamu berhasil dihapus" }, { headers: NO_CACHE_HEADERS });
   } catch {
-    return NextResponse.json({ success: false, error: "Gagal menghapus tamu" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal menghapus tamu" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

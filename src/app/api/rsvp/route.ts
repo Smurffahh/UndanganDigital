@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import {
   getRsvpWishes,
@@ -8,6 +9,12 @@ import {
 } from "@/lib/db/store";
 import { verifyRsvpTicket } from "@/lib/rsvpTicket";
 import { getServerSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+};
 
 const rsvpInputSchema = z
   .object({
@@ -65,14 +72,14 @@ export async function GET(request: Request) {
       const isAdmin = Boolean(session && session.role === "admin");
 
       if (!hasValidTicket && !isAdmin) {
-        return NextResponse.json({ success: true, data: [], restricted: true });
+        return NextResponse.json({ success: true, data: [], restricted: true }, { headers: NO_CACHE_HEADERS });
       }
     }
 
     const wishes = await getRsvpWishes();
-    return NextResponse.json({ success: true, data: wishes });
+    return NextResponse.json({ success: true, data: wishes }, { headers: NO_CACHE_HEADERS });
   } catch {
-    return NextResponse.json({ success: false, error: "Gagal mengambil data ucapan" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal mengambil data ucapan" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -136,8 +143,11 @@ export async function POST(request: Request) {
       message: sanitizedMessage,
     });
 
-    return NextResponse.json({ success: true, data: newWish }, { status: 201 });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+
+    return NextResponse.json({ success: true, data: newWish }, { status: 201, headers: NO_CACHE_HEADERS });
   } catch {
-    return NextResponse.json({ success: false, error: "Terjadi kesalahan pada server" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Terjadi kesalahan pada server" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

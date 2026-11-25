@@ -304,93 +304,111 @@ export function RsvpGuestbook({
                   Doa &amp; Harapan <span className="text-[#C59B6D] italic text-base">({wishes.length})</span>
                 </h3>
 
-                <div className="relative w-full sm:w-56">
-                  <Search className="w-4 h-4 text-[#6E4A50] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    type="text"
-                    id="search-wishes"
-                    name="search_wishes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari doa pengirim..."
-                    aria-label="Cari doa pengirim ucapan"
-                    className="w-full pl-9 pr-3 py-1.5 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2] font-sans text-base sm:text-xs text-[#3B1A20] placeholder:text-[#6E4A50]/60 focus:outline-none focus:border-[#6B1222]"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {(["Semua", "Hadir", "Berhalangan", "Masih Ragu"] as const).map((st) => (
-                  <button
-                    key={st}
-                    type="button"
-                    onClick={() => setFilterStatus(st)}
-                    className={`px-3 py-1.5 rounded-full font-sans text-xs font-semibold tracking-wide transition-colors cursor-pointer ${
-                      filterStatus === st
-                        ? "bg-[#6B1222] text-[#FBF7F2] shadow-xs"
-                        : "bg-[#FBF7F2] text-[#6E4A50] border border-[#C59B6D]/35 hover:bg-[#6B1222]/10"
-                    }`}
-                  >
-                    {st} <span className="tabular-nums text-xs ml-1 opacity-90">({counts[st]})</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="max-h-[380px] overflow-y-auto space-y-3 pr-1 scrollbar-thin">
-                {filteredWishes.length === 0 ? (
-                  <div className="text-center py-8 bg-[#FBF7F2] rounded-2xl border border-[#6B1222]/16 text-[#6E4A50] font-sans text-xs">
-                    Belum ada ucapan yang sesuai filter pencarian.
+                {wishes.length > 0 && (
+                  <div className="relative w-full sm:w-56">
+                    <Search className="w-4 h-4 text-[#6E4A50] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      id="search-wishes"
+                      name="search_wishes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Cari doa pengirim..."
+                      aria-label="Cari doa pengirim ucapan"
+                      className="w-full pl-9 pr-3 py-1.5 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2] font-sans text-base sm:text-xs text-[#3B1A20] placeholder:text-[#6E4A50]/60 focus:outline-none focus:border-[#6B1222]"
+                    />
                   </div>
-                ) : (
-                  filteredWishes.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-start gap-3 bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl p-4 shadow-xs"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6B1222] to-[#C59B6D] text-[#FBF7F2] font-serif font-bold text-base grid place-items-center shrink-0 shadow-xs">
-                        {(item.guestName || "?").trim().charAt(0).toUpperCase()}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center justify-between gap-1.5">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-sans text-[15px] font-semibold text-[#6B1222] break-words">
-                              {item.guestName}
-                            </span>
-                            <span
-                              className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${getBadgeStyle(
-                                item.attendanceStatus
-                              )}`}
-                            >
-                              {getStatusIcon(item.attendanceStatus)}
-                              {item.attendanceStatus}
-                            </span>
-                          </div>
-
-                          <span className="font-sans text-xs text-[#6E4A50] tabular-nums">
-                            {new Date(item.createdAt).toLocaleDateString("id-ID", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-
-                        {item.paxCount && item.paxCount > 0 && (
-                          <p className="font-sans text-xs text-[#6E4A50] flex items-center gap-1 mt-0.5">
-                            <Users className="w-3.5 h-3.5 text-[#C59B6D]" />
-                            {item.paxCount} Tamu
-                          </p>
-                        )}
-
-                        <p className="mt-2 typo-body leading-relaxed break-words font-normal text-[#3B1A20]">
-                          {item.message}
-                        </p>
-                      </div>
-                    </div>
-                  ))
                 )}
               </div>
+
+              {wishes.length === 0 ? (
+                <div className="text-center py-10 px-5 bg-[#FBF7F2]/90 rounded-2xl border border-[#6B1222]/16 shadow-xs">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#6B1222]/10 border border-[#C59B6D]/40 grid place-items-center text-[#6B1222]">
+                    <MessageSquare className="w-6 h-6 text-[#6B1222]" />
+                  </div>
+                  <h4 className="font-serif text-base font-semibold text-[#6B1222] mb-1">
+                    Belum Ada Doa &amp; Ucapan
+                  </h4>
+                  <p className="font-sans text-xs text-[#6E4A50] max-w-sm mx-auto leading-relaxed">
+                    Jadilah yang pertama memberikan doa restu untuk Fauzan &amp; Sinta melalui formulir konfirmasi di atas.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {(["Semua", "Hadir", "Berhalangan", "Masih Ragu"] as const).map((st) => (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => setFilterStatus(st)}
+                        className={`px-3 py-1.5 rounded-full font-sans text-xs font-semibold tracking-wide transition-colors cursor-pointer ${
+                          filterStatus === st
+                            ? "bg-[#6B1222] text-[#FBF7F2] shadow-xs"
+                            : "bg-[#FBF7F2] text-[#6E4A50] border border-[#C59B6D]/35 hover:bg-[#6B1222]/10"
+                        }`}
+                      >
+                        {st} <span className="tabular-nums text-xs ml-1 opacity-90">({counts[st]})</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="max-h-[380px] overflow-y-auto space-y-3 pr-1 scrollbar-thin">
+                    {filteredWishes.length === 0 ? (
+                      <div className="text-center py-8 bg-[#FBF7F2] rounded-2xl border border-[#6B1222]/16 text-[#6E4A50] font-sans text-xs">
+                        Belum ada ucapan yang sesuai filter pencarian.
+                      </div>
+                    ) : (
+                      filteredWishes.map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex items-start gap-3 bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl p-4 shadow-xs"
+                        >
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6B1222] to-[#C59B6D] text-[#FBF7F2] font-serif font-bold text-base grid place-items-center shrink-0 shadow-xs">
+                            {(item.guestName || "?").trim().charAt(0).toUpperCase()}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center justify-between gap-1.5">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-sans text-[15px] font-semibold text-[#6B1222] break-words">
+                                  {item.guestName}
+                                </span>
+                                <span
+                                  className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${getBadgeStyle(
+                                    item.attendanceStatus
+                                  )}`}
+                                >
+                                  {getStatusIcon(item.attendanceStatus)}
+                                  {item.attendanceStatus}
+                                </span>
+                              </div>
+
+                              <span className="font-sans text-xs text-[#6E4A50] tabular-nums">
+                                {new Date(item.createdAt).toLocaleDateString("id-ID", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                              </span>
+                            </div>
+
+                            {item.paxCount && item.paxCount > 0 && (
+                              <p className="font-sans text-xs text-[#6E4A50] flex items-center gap-1 mt-0.5">
+                                <Users className="w-3.5 h-3.5 text-[#C59B6D]" />
+                                {item.paxCount} Tamu
+                              </p>
+                            )}
+
+                            <p className="mt-2 typo-body leading-relaxed break-words font-normal text-[#3B1A20]">
+                              {item.message}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </ScrollLinkedItem>
         )}

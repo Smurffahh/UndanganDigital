@@ -15,7 +15,6 @@ import {
   createPhoneBlindIndex,
 } from "../crypto";
 import { formatGuestSlug } from "../guestUtils";
-import { seedDatabase } from "./seed";
 
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
 export type GalleryPhotoData = typeof DEFAULT_GALLERY_PHOTOS[number];
@@ -428,10 +427,47 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
       if (rows.length > 0) {
         return decryptSettingsRecord(rows[0]);
       }
-      await seedDatabase();
-      const seeded = await db.select().from(schema.weddingSettings).limit(1);
-      if (seeded.length > 0) {
-        return decryptSettingsRecord(seeded[0]);
+      // Insert default settings only if table is empty (never auto-seed wishes or guests)
+      const [inserted] = await db.insert(schema.weddingSettings).values({
+        brideName: DEFAULT_WEDDING_SETTINGS.brideName,
+        brideBio: DEFAULT_WEDDING_SETTINGS.brideBio,
+        bridePhotoUrl: DEFAULT_WEDDING_SETTINGS.bridePhotoUrl,
+        groomName: DEFAULT_WEDDING_SETTINGS.groomName,
+        groomBio: DEFAULT_WEDDING_SETTINGS.groomBio,
+        groomPhotoUrl: DEFAULT_WEDDING_SETTINGS.groomPhotoUrl,
+        coverPhotoUrl: DEFAULT_WEDDING_SETTINGS.coverPhotoUrl,
+        heroPhotoUrl: DEFAULT_WEDDING_SETTINGS.heroPhotoUrl,
+        weddingDateIso: DEFAULT_WEDDING_SETTINGS.weddingDateIso,
+        eventDateLabel: DEFAULT_WEDDING_SETTINGS.eventDateLabel,
+        akadTime: DEFAULT_WEDDING_SETTINGS.akadTime,
+        resepsiTime: DEFAULT_WEDDING_SETTINGS.resepsiTime,
+        venueName: DEFAULT_WEDDING_SETTINGS.venueName,
+        venueAddress: DEFAULT_WEDDING_SETTINGS.venueAddress,
+        venuePlusCode: DEFAULT_WEDDING_SETTINGS.venuePlusCode,
+        googleMapsUrl: DEFAULT_WEDDING_SETTINGS.googleMapsUrl,
+        googleMapsEmbed: DEFAULT_WEDDING_SETTINGS.googleMapsEmbed,
+        mapsLatitude: DEFAULT_WEDDING_SETTINGS.mapsLatitude,
+        mapsLongitude: DEFAULT_WEDDING_SETTINGS.mapsLongitude,
+        youtubeVideoId: DEFAULT_WEDDING_SETTINGS.youtubeVideoId,
+        musicEnabled: DEFAULT_WEDDING_SETTINGS.musicEnabled,
+        musicTitle: DEFAULT_WEDDING_SETTINGS.musicTitle,
+        musicSourceType: DEFAULT_WEDDING_SETTINGS.musicSourceType,
+        musicUrl: DEFAULT_WEDDING_SETTINGS.musicUrl,
+        bankAccounts: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.bankAccounts)),
+        ewallets: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.ewallets)),
+        giftAddress: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.giftAddress)),
+        qrisImageUrl: DEFAULT_WEDDING_SETTINGS.qrisImageUrl,
+        loveStoryText: DEFAULT_WEDDING_SETTINGS.loveStoryText,
+        storyHashtag: DEFAULT_WEDDING_SETTINGS.storyHashtag,
+        groomChildOrder: DEFAULT_WEDDING_SETTINGS.groomChildOrder,
+        groomParents: DEFAULT_WEDDING_SETTINGS.groomParents,
+        brideChildOrder: DEFAULT_WEDDING_SETTINGS.brideChildOrder,
+        brideParents: DEFAULT_WEDDING_SETTINGS.brideParents,
+        waMessageTemplate: DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
+        showPublicPreviewWishes: DEFAULT_WEDDING_SETTINGS.showPublicPreviewWishes,
+      }).returning();
+      if (inserted) {
+        return decryptSettingsRecord(inserted);
       }
     } catch (e) {
       console.warn("DB query failed, using local JSON fallback:", e);
@@ -498,26 +534,17 @@ export async function getGalleryPhotos(): Promise<GalleryPhotoData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      let rows = await db
+      const rows = await db
         .select()
         .from(schema.galleryPhotos)
         .orderBy(schema.galleryPhotos.sortOrder);
-      if (rows.length === 0) {
-        await seedDatabase();
-        rows = await db
-          .select()
-          .from(schema.galleryPhotos)
-          .orderBy(schema.galleryPhotos.sortOrder);
-      }
-      if (rows.length > 0) {
-        return rows.map((r) => ({
-          id: r.id,
-          imageUrl: r.imageUrl,
-          caption: r.caption || "",
-          aspectRatio: r.aspectRatio || "3/4",
-          sortOrder: r.sortOrder ?? 0,
-        }));
-      }
+      return rows.map((r) => ({
+        id: r.id,
+        imageUrl: r.imageUrl,
+        caption: r.caption || "",
+        aspectRatio: r.aspectRatio || "3/4",
+        sortOrder: r.sortOrder ?? 0,
+      }));
     } catch (e) {
       console.warn("DB gallery query failed, using local JSON fallback:", e);
     }
@@ -579,17 +606,10 @@ export async function getRsvpWishes(): Promise<RsvpWishData[]> {
   const db = getPostgresDb();
   if (db) {
     try {
-      let rows = await db
+      const rows = await db
         .select()
         .from(schema.rsvpWishes)
         .orderBy(desc(schema.rsvpWishes.createdAt));
-      if (rows.length === 0) {
-        await seedDatabase();
-        rows = await db
-          .select()
-          .from(schema.rsvpWishes)
-          .orderBy(desc(schema.rsvpWishes.createdAt));
-      }
       return rows.map(decryptWishRecord);
     } catch (e) {
       console.warn("DB wishes query failed, using local JSON fallback:", e);
@@ -597,7 +617,7 @@ export async function getRsvpWishes(): Promise<RsvpWishData[]> {
   }
 
   const local = getLocalDb();
-  return local.wishes
+  return (local.wishes || [])
     .map(decryptWishRecord)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
@@ -676,18 +696,6 @@ export async function getGuests(scope?: string): Promise<GuestData[]> {
       } else {
         rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
       }
-      if (rows.length === 0 && (!scope || scope === "all" || scope === "couple")) {
-        await seedDatabase();
-        if (scope && scope !== "all") {
-          rows = await db
-            .select()
-            .from(schema.guests)
-            .where(eq(schema.guests.ownerScope, scope))
-            .orderBy(desc(schema.guests.createdAt));
-        } else {
-          rows = await db.select().from(schema.guests).orderBy(desc(schema.guests.createdAt));
-        }
-      }
       return rows.map(decryptGuestRecord);
     } catch (e) {
       console.warn("DB guests query failed, using local JSON fallback:", e);
@@ -695,7 +703,7 @@ export async function getGuests(scope?: string): Promise<GuestData[]> {
   }
 
   const local = getLocalDb();
-  let list = local.guests.map(decryptGuestRecord);
+  let list = (local.guests || []).map(decryptGuestRecord);
   if (scope && scope !== "all") {
     list = list.filter((g) => (g.ownerScope || "couple") === scope);
   }

@@ -492,6 +492,10 @@ export function GuestManagementModule({
   };
 
   const handleStartQueueUnsent = () => {
+    if (guests.length === 0) {
+      toast.error("Daftar tamu masih kosong. Tambahkan tamu terlebih dahulu.");
+      return;
+    }
     const unsent = guests.filter((g) => !g.waSentStatus && g.whatsappNumber);
     if (unsent.length === 0) {
       toast.error("Semua tamu yang memiliki nomor WhatsApp sudah terkirim.");
@@ -1113,8 +1117,12 @@ export function GuestManagementModule({
             </div>
           </div>
 
-          {filteredGuests.length === 0 ? (
-            <div className="text-center py-12 text-slate-500 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-200">
+          {guests.length === 0 ? (
+            <div className="text-center py-12 px-4 text-slate-500 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              Belum ada data tamu undangan yang tersimpan. Klik tombol &apos;Tambah tamu&apos; di atas untuk mulai memasukkan nama tamu.
+            </div>
+          ) : filteredGuests.length === 0 ? (
+            <div className="text-center py-12 px-4 text-slate-500 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-200">
               Tidak ada data tamu yang cocok dengan filter atau pencarian.
             </div>
           ) : (

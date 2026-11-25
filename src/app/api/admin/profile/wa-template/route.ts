@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth";
 import { updateUserWaTemplate, getDashboardUserByUsername } from "@/lib/db/store";
-import { DEFAULT_PARENT_WA_TEMPLATE } from "@/lib/guestTemplate";
+import { DEFAULT_COUPLE_WA_TEMPLATE, DEFAULT_PARENT_WA_TEMPLATE } from "@/lib/guestTemplate";
 
 const templateSchema = z
   .object({
@@ -18,7 +18,7 @@ export async function GET() {
 
   const user = await getDashboardUserByUsername(session.username);
   const waTemplate =
-    user?.waTemplate || (session.role === "parent" ? DEFAULT_PARENT_WA_TEMPLATE : "");
+    user?.waTemplate || (session.role === "parent" ? DEFAULT_PARENT_WA_TEMPLATE : DEFAULT_COUPLE_WA_TEMPLATE);
 
   return NextResponse.json({
     success: true,

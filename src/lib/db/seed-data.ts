@@ -318,22 +318,25 @@ export const DEFAULT_WEDDING_SETTINGS = {
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 
-_Assalamu’alaikum Warahmatullahi Wabarakatuh_
+_Assalamu'alaikum Warahmatullahi Wabarakatuh_
 
-Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i *{nama_tamu}* untuk menghadiri acara pernikahan kami:
 
 *Fauzan & Sinta*
 
-Informasi lengkap mengenai waktu, lokasi acara, dan konfirmasi kehadiran dapat diakses melalui tautan undangan resmi berikut:
+Untuk informasi lengkap mengenai waktu dan lokasi acara, silakan kunjungi tautan berikut:
 {link_undangan}
 
-Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
 
-_Wassalamu’alaikum Warahmatullahi Wabarakatuh_
+Mohon maaf apabila undangan hanya dapat dibagikan melalui pesan ini.
+
+Terima kasih banyak atas perhatian dan doanya.
+
+_Wassalamu'alaikum Warahmatullahi Wabarakatuh_
 
 Kami yang berbahagia,
-*Fauzan & Sinta*
-#SINgkatceritaFAUZAN`,
+*Fauzan & Sinta*`,
 };
 
 export const DEFAULT_GALLERY_PHOTOS = [

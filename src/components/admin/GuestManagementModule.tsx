@@ -31,8 +31,10 @@ import {
   downloadCsvTemplate,
   exportGuestsToExcel,
   exportGuestsToCsv,
+  DEFAULT_COUPLE_WA_TEMPLATE,
   DEFAULT_PARENT_WA_TEMPLATE,
   getDefaultWaTemplate,
+  renderWaMessage,
 } from "@/lib/guestTemplate";
 import { formatWaEventDate } from "@/lib/dateFormat";
 import { formatGuestSlug } from "@/lib/guestUtils";
@@ -146,7 +148,7 @@ export function GuestManagementModule({
     if (isParent) {
       return currentUser?.waTemplate || DEFAULT_PARENT_WA_TEMPLATE;
     }
-    return settings.waMessageTemplate || getDefaultWaTemplate("couple");
+    return currentUser?.waTemplate || settings.waMessageTemplate || DEFAULT_COUPLE_WA_TEMPLATE;
   });
 
   const [isTemplateCardOpen, setIsTemplateCardOpen] = useState(false);
@@ -267,7 +269,7 @@ export function GuestManagementModule({
   };
 
   const handleResetTemplate = () => {
-    const defaultTpl = getDefaultWaTemplate(currentUser?.role, settings.waMessageTemplate);
+    const defaultTpl = isParent ? DEFAULT_PARENT_WA_TEMPLATE : DEFAULT_COUPLE_WA_TEMPLATE;
     setTemplate(defaultTpl);
     toast.success("Template dikembalikan ke format standar.");
   };
@@ -278,19 +280,19 @@ export function GuestManagementModule({
       : "https://www.fauzansinta.my.id";
 
   const renderMessageForGuest = (guestName: string, guestToken?: string | null) => {
-    const token = guestToken || "";
-    const link = token ? `${baseUrl}/?kpd=${token}` : baseUrl;
-    const mempelai = `${settings.brideName.split(" ")[0]} & ${settings.groomName.split(" ")[0]}`;
-
-    return template
-      .replace(/{nama_tamu}/g, guestName)
-      .replace(/{nama}/g, guestName)
-      .replace(/{link_undangan}/g, link)
-      .replace(/{link}/g, link)
-      .replace(/{nama_mempelai}/g, mempelai)
-      .replace(/{mempelai}/g, mempelai)
-      .replace(/{tanggal_acara}/g, formatWaEventDate(settings.weddingDateIso))
-      .replace(/{lokasi_acara}/g, `${settings.venueName}, ${settings.venueAddress}`);
+    return renderWaMessage({
+      template,
+      guestName,
+      guestToken,
+      baseUrl,
+      groomName: settings.groomName,
+      brideName: settings.brideName,
+      weddingDateIso: settings.weddingDateIso,
+      venueName: settings.venueName,
+      venueAddress: settings.venueAddress,
+      displayName: currentUser?.displayName,
+      role: currentUser?.role,
+    });
   };
 
   const handleCreateGuest = async (e: React.FormEvent) => {
@@ -808,6 +810,9 @@ export function GuestManagementModule({
                   </code>
                   <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
                     {"{lokasi_acara}"}
+                  </code>
+                  <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-700 font-mono text-[10px]">
+                    {"{pengirim}"}
                   </code>
                 </div>
               </div>

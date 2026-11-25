@@ -9,6 +9,7 @@ import {
   updateDashboardUser,
   deleteDashboardUser,
 } from "@/lib/db/store";
+import { DEFAULT_COUPLE_WA_TEMPLATE, DEFAULT_PARENT_WA_TEMPLATE } from "@/lib/guestTemplate";
 
 const createUserSchema = z
   .object({
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
       role,
       displayName,
       guestScope,
-      waTemplate: waTemplate || "",
+      waTemplate: waTemplate || (role === "parent" ? DEFAULT_PARENT_WA_TEMPLATE : DEFAULT_COUPLE_WA_TEMPLATE),
     });
 
     return NextResponse.json({ success: true, data: newUser }, { status: 201 });

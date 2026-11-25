@@ -150,7 +150,9 @@ export function FiturSettingsTab({ formData, onChange }: FiturSettingsTabProps) 
             <ul className="list-disc pl-4 space-y-0.5 text-[11px]">
               <li><code className="bg-slate-200/70 px-1 py-0.5 rounded text-slate-800">{"{nama_tamu}"}</code>: Nama lengkap tamu penerima</li>
               <li><code className="bg-slate-200/70 px-1 py-0.5 rounded text-slate-800">{"{link_undangan}"}</code>: Tautan personal dengan parameter <code className="text-slate-800">?kpd=...</code></li>
+              <li><code className="bg-slate-200/70 px-1 py-0.5 rounded text-slate-800">{"{nama_mempelai}"}</code>: Nama mempelai (Fauzan &amp; Sinta)</li>
               <li><code className="bg-slate-200/70 px-1 py-0.5 rounded text-slate-800">{"{tanggal_acara}"}</code>: Tanggal pernikahan resmi</li>
+              <li><code className="bg-slate-200/70 px-1 py-0.5 rounded text-slate-800">{"{pengirim}"}</code>: Nama pengirim/keluarga akun pengirim</li>
             </ul>
           </div>
         </CardContent>

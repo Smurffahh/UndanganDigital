@@ -2,6 +2,7 @@ import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import type { GuestData } from "./db/store";
 import { sanitizeCellForSpreadsheet } from "./phoneUtils";
+import { formatWaEventDate } from "./dateFormat";
 
 export interface TemplateGuestSample {
   Nama_Tamu: string;
@@ -9,37 +10,111 @@ export interface TemplateGuestSample {
   Kategori: string;
 }
 
-export const DEFAULT_PARENT_WA_TEMPLATE = `Assalamu'alaikum Wr. Wb. / Salam Sejahtera,
-
-Kepada Yth. Bapak/Ibu/Saudara/i
+export const DEFAULT_COUPLE_WA_TEMPLATE = `Kepada Yth.
 *{nama_tamu}*
 
-Dengan memohon rahmat dan ridho Allah SWT, perkenankan kami atas nama orang tua mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada pernikahan putra-putri kami:
+_Assalamu'alaikum Warahmatullahi Wabarakatuh_
 
-*{nama_mempelai}*
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i *{nama_tamu}* untuk menghadiri acara pernikahan kami:
 
-Rangkaian Acara:
-- Tasyakuran: 1–2 Januari 2027
-- Akad Nikah & Resepsi: {tanggal_acara}
-- Lokasi: {lokasi_acara}
+*Fauzan & Sinta*
 
-Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
-
-Detail undangan digital:
+Untuk informasi lengkap mengenai waktu dan lokasi acara, silakan kunjungi tautan berikut:
 {link_undangan}
 
-Wassalamu'alaikum Wr. Wb.
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
+Mohon maaf apabila undangan hanya dapat dibagikan melalui pesan ini.
+
+Terima kasih banyak atas perhatian dan doanya.
+
+_Wassalamu'alaikum Warahmatullahi Wabarakatuh_
+
 Kami yang berbahagia,
-Keluarga Besar Orang Tua Mempelai`;
+*Fauzan & Sinta*`;
+
+export const DEFAULT_PARENT_WA_TEMPLATE = `Kepada Yth.
+*{nama_tamu}*
+
+_Assalamu'alaikum Warahmatullahi Wabarakatuh_
+
+Tanpa mengurangi rasa hormat, perkenankan kami sekeluarga mengundang Bapak/Ibu/Saudara/i *{nama_tamu}* untuk menghadiri acara pernikahan putra-putri kami:
+
+*Fauzan & Sinta*
+
+Untuk informasi lengkap mengenai waktu dan lokasi acara, silakan kunjungi tautan berikut:
+{link_undangan}
+
+Merupakan suatu kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
+Mohon maaf apabila undangan hanya dapat dibagikan melalui pesan ini.
+
+Terima kasih banyak atas perhatian dan doanya.
+
+_Wassalamu'alaikum Warahmatullahi Wabarakatuh_
+
+Kami yang berbahagia,
+*{pengirim}*`;
 
 export function getDefaultWaTemplate(role?: string, coupleDefaultTemplate?: string): string {
   if (role === "parent") {
     return DEFAULT_PARENT_WA_TEMPLATE;
   }
-  return (
-    coupleDefaultTemplate ||
-    `Kepada Yth. Bapak/Ibu/Saudara/i\n*{nama_tamu}*\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri hari bahagia kami:\n\n*{nama_mempelai}*\n\nTanggal: {tanggal_acara}\nLokasi: {lokasi_acara}\n\nDetail undangan dapat diakses pada tautan berikut:\n{link_undangan}\n\nMerupakan suatu kehormatan bagi kami atas kehadiran dan doa restunya.\n\nTerima kasih.`
-  );
+  return coupleDefaultTemplate || DEFAULT_COUPLE_WA_TEMPLATE;
+}
+
+export interface RenderWaMessageOptions {
+  template: string;
+  guestName: string;
+  guestToken?: string | null;
+  baseUrl?: string;
+  groomName?: string;
+  brideName?: string;
+  weddingDateIso?: string;
+  venueName?: string;
+  venueAddress?: string;
+  displayName?: string;
+  role?: string;
+}
+
+export function renderWaMessage(options: RenderWaMessageOptions): string {
+  const {
+    template,
+    guestName,
+    guestToken,
+    baseUrl = "https://www.fauzansinta.my.id",
+    groomName = "Fauzan",
+    brideName = "Sinta",
+    weddingDateIso,
+    venueName = "",
+    venueAddress = "",
+    displayName,
+    role,
+  } = options;
+
+  const token = guestToken || "";
+  const link = token ? `${baseUrl}/?kpd=${token}` : baseUrl;
+  const groomShort = groomName.trim().split(" ")[0] || "Fauzan";
+  const brideShort = brideName.trim().split(" ")[0] || "Sinta";
+  const mempelai = `${groomShort} & ${brideShort}`;
+  const isParent = role === "parent";
+  const defaultSender = isParent
+    ? displayName?.trim() || "Keluarga Besar Orang Tua Mempelai"
+    : mempelai;
+
+  const eventDate = weddingDateIso ? formatWaEventDate(weddingDateIso) : "";
+  const eventVenue = [venueName, venueAddress].filter(Boolean).join(", ");
+
+  return template
+    .replace(/{nama_tamu}/g, guestName)
+    .replace(/{nama}/g, guestName)
+    .replace(/{link_undangan}/g, link)
+    .replace(/{link}/g, link)
+    .replace(/{nama_mempelai}/g, mempelai)
+    .replace(/{mempelai}/g, mempelai)
+    .replace(/{tanggal_acara}/g, eventDate)
+    .replace(/{lokasi_acara}/g, eventVenue)
+    .replace(/{pengirim}/g, defaultSender);
 }
 
 export const SAMPLE_GUEST_DATA: TemplateGuestSample[] = [

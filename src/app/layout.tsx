@@ -48,10 +48,10 @@ export const metadata: Metadata = {
       "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.",
     images: [
       {
-        url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
+        url: "https://www.fauzansinta.my.id/images/og-wedding-preview.jpg",
         width: 1200,
         height: 630,
-        alt: "The Wedding of Fauzan & Sinta",
+        alt: "Undangan Pernikahan Fauzan & Sinta",
         type: "image/jpeg",
       },
     ],
@@ -62,11 +62,12 @@ export const metadata: Metadata = {
     description:
       "Minggu, 3 Januari 2027 — Undangan Pernikahan Fauzan Ma'ruf & Sinta Maria Utami. Buka untuk melihat waktu, lokasi acara, dan konfirmasi kehadiran.",
     images: [
-      "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
+      "https://www.fauzansinta.my.id/images/og-wedding-preview.jpg",
     ],
   },
   icons: {
     icon: "/images/favicon.svg",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -86,10 +87,6 @@ export default function RootLayout({
       lang="id"
       className={`${cormorant.variable} ${greatVibes.variable} ${plusJakarta.variable} ${amiri.variable}`}
     >
-      <head>
-        <link rel="preconnect" href="https://i.pinimg.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://i.pinimg.com" />
-      </head>
       <body className="font-sans antialiased bg-cream text-ink min-h-screen">
         {children}
         <Toaster position="top-center" richColors />

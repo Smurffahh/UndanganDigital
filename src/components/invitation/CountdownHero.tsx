@@ -23,10 +23,9 @@ export function CountdownHero({
   isOpening,
   isOpened,
   isHeroReady,
-  coupleVisualMode = "photo",
+  coupleVisualMode = "svg",
   svgCharacterPreset = "javanese-royal",
 }: CountdownHeroProps) {
-  const [activeMode, setActiveMode] = useState<CoupleVisualMode>(coupleVisualMode);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -42,14 +41,6 @@ export function CountdownHero({
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  useEffect(() => {
-    setActiveMode(coupleVisualMode);
-  }, [coupleVisualMode]);
-
-  const toggleVisualMode = () => {
-    setActiveMode((prev) => (prev === "photo" ? "svg" : "photo"));
-  };
 
   useEffect(() => {
     const target = new Date(weddingDateIso).getTime();
@@ -148,20 +139,10 @@ export function CountdownHero({
         >
           <div className="relative flex justify-center items-center w-full">
             <div
-              onClick={toggleVisualMode}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  toggleVisualMode();
-                }
-              }}
-              title="Klik untuk beralih antara foto dan ilustrasi karakter"
-              className="arch w-48 h-60 sm:w-56 sm:h-70 mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center cursor-pointer group active:scale-[0.98] transition-[transform,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B6D]"
+              className="arch w-48 h-60 sm:w-56 sm:h-70 mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center select-none"
             >
               <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] pt-6 pb-2 px-4">
-                {activeMode === "svg" || !heroPhotoUrl ? (
+                {coupleVisualMode === "svg" || !heroPhotoUrl ? (
                   <CoupleCharacterSvg
                     preset={svgCharacterPreset}
                     variant="couple"
@@ -172,13 +153,10 @@ export function CountdownHero({
                   <img
                     src={heroPhotoUrl}
                     alt="Fauzan dan Sinta"
-                    className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-500"
                     loading="eager"
                   />
                 )}
-                <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-[#6B1222]/85 backdrop-blur-md text-[#FBF7F2] text-[10px] font-sans font-medium tracking-wide flex items-center gap-1 shadow-sm opacity-85 group-hover:opacity-100 transition-opacity">
-                  <span>{activeMode === "photo" ? "Ilustrasi ⇄" : "Foto ⇄"}</span>
-                </div>
               </div>
             </div>
           </div>

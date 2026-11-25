@@ -46,10 +46,10 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
       description,
       images: [
         {
-          url: "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
+          url: "https://www.fauzansinta.my.id/images/og-wedding-preview.jpg",
           width: 1200,
           height: 630,
-          alt: "The Wedding of Fauzan & Sinta",
+          alt: "Undangan Pernikahan Fauzan & Sinta",
           type: "image/jpeg",
         },
       ],
@@ -59,7 +59,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
       title,
       description,
       images: [
-        "https://i.pinimg.com/1200x/33/68/5c/33685c889963395977ed9789f4147b67.jpg?v=20270103",
+        "https://www.fauzansinta.my.id/images/og-wedding-preview.jpg",
       ],
     },
   };
@@ -172,7 +172,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
           }
         : {}),
     },
-    image: [settings.coverPhotoUrl, settings.heroPhotoUrl],
+    image: ["https://www.fauzansinta.my.id/images/og-wedding-preview.jpg"],
     performer: [
       { "@type": "Person", name: settings.groomName },
       { "@type": "Person", name: settings.brideName },

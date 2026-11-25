@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 130" width="1200" height="130" role="img" aria-labelledby="footer-title">
+  <title id="footer-title">Footer Undangan Digital Fauzan dan Sinta</title>
+
+  <defs>
+    <linearGradient id="footerMaroon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#360711" />
+      <stop offset="50%" stop-color="#5C0F1E" />
+      <stop offset="100%" stop-color="#360711" />
+    </linearGradient>
+
+    <linearGradient id="archGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B08448" stop-opacity="0.55" />
+      <stop offset="50%" stop-color="#FFE8A3" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#B08448" stop-opacity="0.55" />
+    </linearGradient>
+
+    <pattern id="footerTruntum" width="76" height="76" patternUnits="userSpaceOnUse">
+      <g opacity="0.08" stroke="#D4AF37" fill="none">
+        <path d="M 38,28 L 40,36 L 48,38 L 40,40 L 38,48 L 36,40 L 28,38 L 36,36 Z" fill="#D4AF37" fill-opacity="0.2" stroke-width="0.5" />
+        <ellipse cx="38" cy="24" rx="4" ry="8" stroke-width="0.45" />
+        <ellipse cx="38" cy="52" rx="4" ry="8" stroke-width="0.45" />
+        <ellipse cx="24" cy="38" rx="8" ry="4" stroke-width="0.45" />
+        <ellipse cx="52" cy="38" rx="8" ry="4" stroke-width="0.45" />
+      </g>
+    </pattern>
+
+    <clipPath id="footerClip">
+      <path d="M 0 26 Q 600 -6 1200 26 L 1200 112 Q 1200 126 1184 126 L 16 126 Q 0 126 0 112 Z" />
+    </clipPath>
+
+    <style><![CDATA[
+      @keyframes starGlow {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.1); }
+      }
+      .footer-ornament { transform-box: view-box; transform-origin: 600px 14px; animation: starGlow 4.2s ease-in-out infinite; }
+      @media (prefers-reduced-motion: reduce) {
+        .footer-ornament { animation: none !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <g clip-path="url(#footerClip)">
+    <rect x="0" y="0" width="1200" height="130" fill="url(#footerMaroon)" />
+    <rect x="0" y="0" width="1200" height="130" fill="url(#footerTruntum)" />
+  </g>
+
+  <!-- Curved Outer & Inner Gold Trim -->
+  <path d="M 2 26 Q 600 -4 1198 26 L 1198 112 Q 1198 124 1184 124 L 16 124 Q 2 124 2 112 Z"
+        fill="none" stroke="url(#archGold)" stroke-width="1.35" />
+  <path d="M 10 32 Q 600 4 1190 32" fill="none" stroke="#C59B6D" stroke-width="0.7" stroke-dasharray="5 4" opacity="0.55" />
+
+  <!-- Center Crown Jewel Accent -->
+  <g class="footer-ornament">
+    <polygon points="600,6 607,13 600,20 593,13" fill="#5C0F1E" stroke="#FFE8A3" stroke-width="1" />
+    <circle cx="600" cy="13" r="2" fill="#FFE8A3" />
+  </g>
+
+  <!-- Subtle Flanking Corner Twigs -->
+  <g stroke="#C59B6D" fill="none" stroke-width="0.9" opacity="0.65">
+    <path d="M 38 98 Q 62 94 82 78" />
+    <circle cx="85" cy="76" r="1.8" fill="#D4AF37" />
+    <path d="M 1162 98 Q 1138 94 1118 78" />
+    <circle cx="1115" cy="76" r="1.8" fill="#D4AF37" />
+  </g>
+
+  <!-- Closing Copy -->
+  <text x="600" y="62" text-anchor="middle" fill="#FBF7F2" font-family="Georgia, 'Times New Roman', serif" font-size="18.5" font-weight="500" letter-spacing="0.4">
+    Dibangun dengan penuh ketelitian untuk Fauzan Ma&apos;ruf &amp; Sinta Maria Utami
+  </text>
+  <text x="600" y="93" text-anchor="middle" fill="#E6C894" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="500" letter-spacing="1.2">
+    &#169; 2026 Danang Satria (@Smurffahh)  &#8226;  Purbalingga, Jawa Tengah
+  </text>
+</svg>

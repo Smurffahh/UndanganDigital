@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">Undangan Digital Pernikahan Adat Jawa — Fauzan &amp; Sinta</title>
+  <desc id="hero-desc">Banner bertema Jawa Royal Maroon dengan ornamen batik Truntum, Gunungan Wayang emas, dan status produksi live Next.js 16 dan Neon PostgreSQL.</desc>
+
+  <defs>
+    <linearGradient id="maroonBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#360711" />
+      <stop offset="35%" stop-color="#5C0F1E" />
+      <stop offset="65%" stop-color="#6B1222" />
+      <stop offset="100%" stop-color="#360711" />
+    </linearGradient>
+
+    <radialGradient id="centerGlow" cx="50%" cy="46%" r="54%">
+      <stop offset="0%" stop-color="#9A2439" stop-opacity="0.45" />
+      <stop offset="60%" stop-color="#5C0F1E" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#29040C" stop-opacity="0.4" />
+    </radialGradient>
+
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B08448" />
+      <stop offset="25%" stop-color="#E6C894" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="75%" stop-color="#E6C894" />
+      <stop offset="100%" stop-color="#B08448" />
+    </linearGradient>
+
+    <linearGradient id="goldShimmerGrad" x1="-100%" y1="0%" x2="200%" y2="0%">
+      <stop offset="0%" stop-color="#FBF7F2" stop-opacity="0" />
+      <stop offset="42%" stop-color="#FBF7F2" stop-opacity="0" />
+      <stop offset="50%" stop-color="#FFE8A3" stop-opacity="0.95" />
+      <stop offset="58%" stop-color="#FBF7F2" stop-opacity="0" />
+      <stop offset="100%" stop-color="#FBF7F2" stop-opacity="0" />
+      <animate attributeName="x1" values="-100%;100%;100%" keyTimes="0;0.55;1" dur="5.5s" repeatCount="indefinite" />
+      <animate attributeName="x2" values="0%;200%;200%" keyTimes="0;0.55;1" dur="5.5s" repeatCount="indefinite" />
+    </linearGradient>
+
+    <linearGradient id="leafGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6C894" stop-opacity="0.82" />
+      <stop offset="100%" stop-color="#9C7338" stop-opacity="0.55" />
+    </linearGradient>
+
+    <clipPath id="cardClip">
+      <rect x="0" y="0" width="1200" height="340" rx="18" />
+    </clipPath>
+
+    <pattern id="truntumPattern" width="84" height="84" patternUnits="userSpaceOnUse">
+      <g opacity="0.11" stroke="#D4AF37" fill="none">
+        <line x1="0" y1="0" x2="84" y2="84" stroke-width="0.45" stroke-dasharray="2 3" />
+        <line x1="84" y1="0" x2="0" y2="84" stroke-width="0.45" stroke-dasharray="2 3" />
+        <g transform="translate(42,42)">
+          <ellipse cx="0" cy="-13" rx="5.5" ry="10" stroke-width="0.6" />
+          <ellipse cx="0" cy="13" rx="5.5" ry="10" stroke-width="0.6" />
+          <ellipse cx="-13" cy="0" rx="10" ry="5.5" stroke-width="0.6" />
+          <ellipse cx="13" cy="0" rx="10" ry="5.5" stroke-width="0.6" />
+          <path d="M 0,-10 L 2,-3 L 10,0 L 2,3 L 0,10 L -2,3 L -10,0 L -2,-3 Z" fill="#D4AF37" fill-opacity="0.22" stroke-width="0.55" />
+          <circle cx="0" cy="0" r="2" fill="#D4AF37" />
+        </g>
+        <g transform="translate(0,0)">
+          <path d="M 0,-10 L 2,-3 L 10,0 L 2,3 L 0,10 L -2,3 L -10,0 L -2,-3 Z" fill="#D4AF37" fill-opacity="0.18" stroke-width="0.5" />
+        </g>
+        <g transform="translate(84,0)">
+          <path d="M 0,-10 L 2,-3 L 10,0 L 2,3 L 0,10 L -2,3 L -10,0 L -2,-3 Z" fill="#D4AF37" fill-opacity="0.18" stroke-width="0.5" />
+        </g>
+        <g transform="translate(0,84)">
+          <path d="M 0,-10 L 2,-3 L 10,0 L 2,3 L 0,10 L -2,3 L -10,0 L -2,-3 Z" fill="#D4AF37" fill-opacity="0.18" stroke-width="0.5" />
+        </g>
+        <g transform="translate(84,84)">
+          <path d="M 0,-10 L 2,-3 L 10,0 L 2,3 L 0,10 L -2,3 L -10,0 L -2,-3 Z" fill="#D4AF37" fill-opacity="0.18" stroke-width="0.5" />
+        </g>
+      </g>
+    </pattern>
+
+    <style><![CDATA[
+      @keyframes ambientDrift {
+        0% { transform: translate(0px, 0px); }
+        50% { transform: translate(-24px, -16px); }
+        100% { transform: translate(0px, 0px); }
+      }
+      @keyframes gununganPulse {
+        0%, 100% { opacity: 0.72; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.03); }
+      }
+      @keyframes swayLeft {
+        0%, 100% { transform: rotate(-1.6deg); }
+        50% { transform: rotate(2.2deg); }
+      }
+      @keyframes swayRight {
+        0%, 100% { transform: rotate(1.6deg); }
+        50% { transform: rotate(-2.2deg); }
+      }
+      @keyframes swayTopLeft {
+        0%, 100% { transform: rotate(1.4deg); }
+        50% { transform: rotate(-1.8deg); }
+      }
+      @keyframes swayTopRight {
+        0%, 100% { transform: rotate(-1.4deg); }
+        50% { transform: rotate(1.8deg); }
+      }
+      @keyframes liveDotPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.65; transform: scale(0.92); }
+      }
+      @keyframes liveRingExpand {
+        0% { opacity: 0.85; transform: scale(1); }
+        100% { opacity: 0; transform: scale(2.4); }
+      }
+      .bg-drift { animation: ambientDrift 24s ease-in-out infinite; }
+      .gunungan-glow { transform-box: view-box; transform-origin: 600px 64px; animation: gununganPulse 4.5s ease-in-out infinite; }
+      .leaf-bl { transform-box: view-box; transform-origin: 28px 312px; animation: swayLeft 6.5s ease-in-out infinite; }
+      .leaf-br { transform-box: view-box; transform-origin: 1172px 312px; animation: swayRight 6.5s ease-in-out infinite; }
+      .leaf-tl { transform-box: view-box; transform-origin: 28px 28px; animation: swayTopLeft 7.2s ease-in-out infinite; }
+      .leaf-tr { transform-box: view-box; transform-origin: 1172px 28px; animation: swayTopRight 7.2s ease-in-out infinite; }
+      .live-dot { transform-box: view-box; transform-origin: 336px 282px; animation: liveDotPulse 2.2s ease-in-out infinite; }
+      .live-ring { transform-box: view-box; transform-origin: 336px 282px; animation: liveRingExpand 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-drift, .gunungan-glow, .leaf-bl, .leaf-br, .leaf-tl, .leaf-tr, .live-dot, .live-ring {
+          animation: none !important;
+        }
+      }
+    ]]></style>
+  </defs>
+
+  <g clip-path="url(#cardClip)">
+    <rect x="0" y="0" width="1200" height="340" fill="url(#maroonBg)" />
+    <rect x="-40" y="-40" width="1320" height="440" fill="url(#truntumPattern)" class="bg-drift" />
+    <rect x="0" y="0" width="1200" height="340" fill="url(#centerGlow)" />
+
+    <!-- Framing Gold Borders -->
+    <rect x="12" y="12" width="1176" height="316" rx="14" fill="none" stroke="url(#goldStroke)" stroke-width="1.5" opacity="0.72" />
+    <rect x="20" y="20" width="1160" height="300" rx="10" fill="none" stroke="#C59B6D" stroke-width="0.7" stroke-dasharray="6 4" opacity="0.45" />
+
+    <!-- Corner L-Brackets -->
+    <g stroke="#D4AF37" stroke-width="1.4" fill="none" opacity="0.85">
+      <path d="M 28 52 V 28 H 52" />
+      <circle cx="28" cy="28" r="2.2" fill="#D4AF37" />
+      <path d="M 1148 28 H 1172 V 52" />
+      <circle cx="1172" cy="28" r="2.2" fill="#D4AF37" />
+      <path d="M 28 288 V 312 H 52" />
+      <circle cx="28" cy="312" r="2.2" fill="#D4AF37" />
+      <path d="M 1148 312 H 1172 V 288" />
+      <circle cx="1172" cy="312" r="2.2" fill="#D4AF37" />
+    </g>
+
+    <!-- Corner Foliage Ornaments (Lung Jawa) -->
+    <g class="leaf-tl" fill="url(#leafGoldGrad)" stroke="#E6C894" stroke-width="0.7">
+      <path d="M 28 28 C 56 26 94 40 116 68 C 86 68 50 54 28 28 Z" opacity="0.78" />
+      <path d="M 28 28 C 34 62 46 92 64 118 C 38 96 28 62 28 28 Z" opacity="0.68" />
+      <path d="M 28 28 C 72 16 116 18 152 34 C 110 42 66 38 28 28 Z" opacity="0.58" />
+      <circle cx="120" cy="70" r="2.2" fill="#FFE8A3" />
+    </g>
+
+    <g class="leaf-tr" fill="url(#leafGoldGrad)" stroke="#E6C894" stroke-width="0.7">
+      <path d="M 1172 28 C 1144 26 1106 40 1084 68 C 1114 68 1150 54 1172 28 Z" opacity="0.78" />
+      <path d="M 1172 28 C 1166 62 1154 92 1136 118 C 1162 96 1172 62 1172 28 Z" opacity="0.68" />
+      <path d="M 1172 28 C 1128 16 1084 18 1048 34 C 1090 42 1134 38 1172 28 Z" opacity="0.58" />
+      <circle cx="1080" cy="70" r="2.2" fill="#FFE8A3" />
+    </g>
+
+    <g class="leaf-bl" fill="url(#leafGoldGrad)" stroke="#E6C894" stroke-width="0.7">
+      <path d="M 28 312 C 54 276 86 248 124 234 C 102 272 68 298 28 312 Z" opacity="0.82" />
+      <path d="M 28 312 C 74 294 118 288 158 294 C 114 312 68 316 28 312 Z" opacity="0.66" />
+      <path d="M 28 312 C 30 268 38 228 56 196 C 64 240 52 282 28 312 Z" opacity="0.62" />
+      <circle cx="128" cy="232" r="2.2" fill="#FFE8A3" />
+    </g>
+
+    <g class="leaf-br" fill="url(#leafGoldGrad)" stroke="#E6C894" stroke-width="0.7">
+      <path d="M 1172 312 C 1146 276 1114 248 1076 234 C 1098 272 1132 298 1172 312 Z" opacity="0.82" />
+      <path d="M 1172 312 C 1126 294 1082 288 1042 294 C 1086 312 1132 316 1172 312 Z" opacity="0.66" />
+      <path d="M 1172 312 C 1170 268 1162 228 1144 196 C 1136 240 1148 282 1172 312 Z" opacity="0.62" />
+      <circle cx="1072" cy="232" r="2.2" fill="#FFE8A3" />
+    </g>
+
+    <!-- Gunungan Wayang Top Center Crest -->
+    <g class="gunungan-glow">
+      <path d="M 600 32 C 607 45 616 55 621 67 C 625 76 623 85 618 90 L 623 93 H 577 L 582 90 C 577 85 575 76 579 67 C 584 55 593 45 600 32 Z"
+            fill="#D4AF37" fill-opacity="0.16" stroke="#E6C894" stroke-width="1.25" stroke-linejoin="round" />
+      <path d="M 600 41 C 604 51 611 60 614 69 C 617 77 615 84 610 88 H 590 C 585 84 583 77 586 69 C 589 60 596 51 600 41 Z"
+            fill="none" stroke="#C59B6D" stroke-width="0.7" opacity="0.8" />
+      <line x1="600" y1="44" x2="600" y2="87" stroke="#FFE8A3" stroke-width="0.9" opacity="0.9" />
+      <path d="M 600 66 L 609 61 M 600 72 L 591 67 M 600 78 L 609 73 M 600 83 L 592 79" stroke="#E6C894" stroke-width="0.7" stroke-linecap="round" />
+      <circle cx="600" cy="30" r="2" fill="#FFE8A3" />
+    </g>
+
+    <!-- Eyebrow with Flanking Gold Hairlines -->
+    <line x1="340" y1="115" x2="402" y2="115" stroke="url(#goldStroke)" stroke-width="1" opacity="0.82" />
+    <text x="600" y="119" text-anchor="middle" fill="#E6C894" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600" letter-spacing="3.2">
+      UNDANGAN DIGITAL PERNIKAHAN ADAT JAWA
+    </text>
+    <line x1="798" y1="115" x2="860" y2="115" stroke="url(#goldStroke)" stroke-width="1" opacity="0.82" />
+
+    <!-- Main Serif Title with Gold Shimmer Overlay -->
+    <text x="600" y="185" text-anchor="middle" fill="#FBF7F2" font-family="Georgia, 'Times New Roman', serif" font-size="62" font-weight="700" letter-spacing="1.2">
+      Fauzan <tspan fill="#D4AF37" font-style="italic" font-weight="400" font-size="56">&amp;</tspan> Sinta
+    </text>
+    <text x="600" y="185" text-anchor="middle" fill="url(#goldShimmerGrad)" font-family="Georgia, 'Times New Roman', serif" font-size="62" font-weight="700" letter-spacing="1.2" opacity="0.85">
+      Fauzan <tspan font-style="italic" font-weight="400" font-size="56">&amp;</tspan> Sinta
+    </text>
+
+    <!-- Hashtag & Production Domain -->
+    <text x="600" y="226" text-anchor="middle" fill="#E6C894" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="15.5" font-weight="500" letter-spacing="1.5">
+      #SINgkatceritaFAUZAN  &#8226;  fauzansinta.my.id
+    </text>
+
+    <!-- Bottom Live Status Pill (Optically Centered Dot + Text) -->
+    <rect x="312" y="264" width="576" height="36" rx="18" fill="#29040C" fill-opacity="0.86" stroke="#C59B6D" stroke-width="1" stroke-opacity="0.68" />
+    <circle cx="336" cy="282" r="4.5" fill="#34D399" opacity="0.35" class="live-ring" />
+    <circle cx="336" cy="282" r="4.5" fill="#34D399" class="live-dot" />
+    <text x="612" y="286" text-anchor="middle" fill="#FBF7F2" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.8">
+      PRODUCTION LIVE  &#8226;  NEXT.JS 16  &#8226;  NEON POSTGRESQL  &#8226;  OWASP HARDENED
+    </text>
+  </g>
+</svg>

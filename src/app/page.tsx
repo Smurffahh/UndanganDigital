@@ -76,6 +76,11 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     type: "image/webp",
     fetchPriority: "high",
   });
+  preload("/images/ornament-golden-seal.svg", {
+    as: "image",
+    type: "image/svg+xml",
+    fetchPriority: "high",
+  });
 
   const resolvedParams = await searchParams;
   const rawParam = resolvedParams.kpd;

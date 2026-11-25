@@ -120,7 +120,9 @@ export function GoldenEmblemSeal({ className = "w-20 h-20" }: { className?: stri
         src="/images/ornament-golden-seal.svg"
         alt="Segel Lambang Keraton F&S"
         className="w-full h-full drop-shadow-[0_8px_20px_rgba(169,130,58,0.55)] object-contain select-none pointer-events-none"
-        loading="lazy"
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
         draggable={false}
       />
     </div>

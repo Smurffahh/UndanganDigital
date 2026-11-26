@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { requireSession, requireAdmin } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { getWeddingSettings, updateWeddingSettings } from "@/lib/db/store";
 import { normalizeUrlOrPath, isValidUrlOrLocalPath } from "@/lib/urlUtils";
+import { FONT_THEME_VALUES } from "@/lib/fontThemes";
+
+export const dynamic = "force-dynamic";
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
+};
 
 const safeUrlOrPath = z
   .string()
@@ -64,6 +71,7 @@ const updateSettingsSchema = z.object({
   tasyakuranAddress: z.string().max(1000).optional(),
   tasyakuranMapsUrl: safeUrlOrPath,
   showPublicPreviewWishes: z.boolean().optional(),
+  fontTheme: z.enum(FONT_THEME_VALUES).optional(),
   createdAt: z.any().optional(),
   updatedAt: z.any().optional(),
 }).strict();
@@ -71,16 +79,16 @@ const updateSettingsSchema = z.object({
 export async function GET() {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
   const settings = await getWeddingSettings();
-  return NextResponse.json({ success: true, data: settings });
+  return NextResponse.json({ success: true, data: settings }, { headers: NO_CACHE_HEADERS });
 }
 
 export async function PUT(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
   if (session.role !== "admin") {
@@ -90,7 +98,7 @@ export async function PUT(request: Request) {
         code: "FORBIDDEN",
         error: "Akses ditolak. Fitur ini hanya tersedia untuk admin.",
       },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
@@ -104,7 +112,7 @@ export async function PUT(request: Request) {
           error: "Validasi data gagal",
           details: parseResult.error.flatten(),
         },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -113,9 +121,9 @@ export async function PUT(request: Request) {
     revalidatePath("/", "layout");
     revalidatePath("/dashboard");
     revalidatePath("/api/admin/settings");
-    return NextResponse.json({ success: true, data: updated });
+    return NextResponse.json({ success: true, data: updated }, { headers: NO_CACHE_HEADERS });
   } catch (err) {
     console.error("Failed to update settings:", err);
-    return NextResponse.json({ success: false, error: "Gagal memperbarui pengaturan" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Gagal memperbarui pengaturan" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

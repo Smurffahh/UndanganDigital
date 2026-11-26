@@ -1,24 +1,160 @@
 "use client";
 
-import { Heart, MessageSquare, Hash } from "lucide-react";
+import { Heart, MessageSquare, Hash, Type, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { FONT_THEME_OPTIONS, normalizeFontTheme, type FontTheme } from "@/lib/fontThemes";
 
 interface FiturSettingsTabProps {
   formData: any;
   onChange: (field: string, value: any) => void;
 }
 
+function getPreviewStyles(themeId: FontTheme) {
+  if (themeId === "javanese") {
+    return {
+      display: { fontFamily: 'var(--font-philosopher), Georgia, serif', fontWeight: 700 as const },
+      subtitle: { fontFamily: 'var(--font-lora), Georgia, serif', fontWeight: 400 as const },
+    };
+  }
+  if (themeId === "latin") {
+    return {
+      display: {
+        fontFamily: 'var(--font-script), "Great Vibes", cursive',
+        fontWeight: 400 as const,
+        lineHeight: 1.35,
+        paddingBlock: "0.08em",
+        letterSpacing: "0.01em",
+      },
+      subtitle: { fontFamily: 'var(--font-playfair), Georgia, serif', fontWeight: 500 as const },
+    };
+  }
+  return {
+    display: { fontFamily: 'var(--font-serif), Georgia, serif', fontWeight: 700 as const },
+    subtitle: { fontFamily: 'var(--font-sans), sans-serif', fontWeight: 400 as const },
+  };
+}
+
 export function FiturSettingsTab({ formData, onChange }: FiturSettingsTabProps) {
   const isLoveStoryEnabled = formData.isLoveStoryEnabled !== false;
   const showPublicPreviewWishes = formData.showPublicPreviewWishes !== false;
+  const selectedFontTheme = normalizeFontTheme(formData.fontTheme);
 
   return (
     <div className="space-y-6">
+      <Card className="border-slate-200/80 shadow-xs">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <Type className="h-4 w-4 text-[#6B1222]" />
+            <CardTitle className="text-base font-bold text-slate-900">
+              Tema Font Undangan
+            </CardTitle>
+          </div>
+          <CardDescription>
+            Pilih gaya huruf untuk halaman undangan publik. Pengaturan ini tidak mengubah huruf dashboard admin.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div
+            role="radiogroup"
+            aria-label="Pilih tema font undangan"
+            className="grid grid-cols-1 md:grid-cols-3 gap-3.5"
+          >
+            {FONT_THEME_OPTIONS.map((option, idx) => {
+              const isSelected = selectedFontTheme === option.id;
+              const previewStyles = getPreviewStyles(option.id);
+
+              const handleRadioKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+                if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                  e.preventDefault();
+                  const next = FONT_THEME_OPTIONS[(idx + 1) % FONT_THEME_OPTIONS.length];
+                  onChange("fontTheme", next.id);
+                } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                  e.preventDefault();
+                  const prev = FONT_THEME_OPTIONS[(idx - 1 + FONT_THEME_OPTIONS.length) % FONT_THEME_OPTIONS.length];
+                  onChange("fontTheme", prev.id);
+                }
+              };
+
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  data-testid={`font-theme-option-${option.id}`}
+                  onClick={() => onChange("fontTheme", option.id)}
+                  onKeyDown={handleRadioKeyDown}
+                  className={`text-left w-full min-h-11 rounded-2xl p-2.5 border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out active:scale-[0.98] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6B1222] flex flex-col justify-between gap-2.5 ${
+                    isSelected
+                      ? "border-[#6B1222] ring-2 ring-[#6B1222]/20 bg-[#FDF7F3]"
+                      : "border-slate-200 bg-white hover:border-[#C59B6D]/70 hover:bg-slate-50/70"
+                  }`}
+                >
+                  <div className="w-full space-y-2.5">
+                    <div className="flex items-center justify-between gap-2 px-1 pt-0.5">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-900">
+                        {option.label}
+                      </span>
+                      {isSelected ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#6B1222] text-[#FBF7F2] shrink-0">
+                          <CheckCircle2 className="w-3 h-3 stroke-[2]" />
+                          Aktif
+                        </span>
+                      ) : (
+                        <Badge variant="outline" size="sm" className="shrink-0 text-[11px]">
+                          {option.badge}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="rounded-md border border-[#C59B6D]/35 bg-[#FBF7F2] px-3 py-3 text-center flex flex-col items-center justify-center min-h-[86px]">
+                      {option.previewJavanese && (
+                        <p
+                          lang="jv"
+                          aria-hidden="true"
+                          className="text-sm text-[#7A4E1D] leading-[1.85] py-0.5"
+                          style={{ fontFamily: 'var(--font-javanese), "Noto Sans Javanese", serif' }}
+                        >
+                          {option.previewJavanese}
+                        </p>
+                      )}
+                      <p
+                        className={`${
+                          option.id === "latin" ? "text-2xl sm:text-[26px]" : "text-lg sm:text-xl"
+                        } text-[#6B1222] leading-snug`}
+                        style={previewStyles.display}
+                      >
+                        {option.previewDisplay}
+                      </p>
+                      <p
+                        className="text-[11px] text-[#6E4A50] mt-1 tabular-nums"
+                        style={previewStyles.subtitle}
+                      >
+                        {option.previewSubtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="px-1 pb-0.5 space-y-1">
+                    <p className="text-[11px] font-medium text-[#6B1222]/85">
+                      {option.fontSummary}
+                    </p>
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                      {option.description}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="border-slate-200/80 shadow-xs">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">

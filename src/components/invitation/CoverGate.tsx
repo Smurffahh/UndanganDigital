@@ -10,6 +10,8 @@ import { Mail } from "lucide-react";
 import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface CoverGateProps {
   guestName: string;
@@ -21,6 +23,7 @@ interface CoverGateProps {
   eventDateLabel?: string;
   coupleVisualMode?: CoupleVisualMode;
   svgCharacterPreset?: SvgCharacterPreset;
+  fontTheme?: FontTheme;
 }
 
 export function CoverGate({
@@ -33,6 +36,7 @@ export function CoverGate({
   eventDateLabel,
   coupleVisualMode = "svg",
   svgCharacterPreset: _svgCharacterPreset = "javanese-royal",
+  fontTheme = "classic",
 }: CoverGateProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
@@ -71,6 +75,7 @@ export function CoverGate({
   return (
     <section
       id="cover-gate"
+      data-font-theme={fontTheme}
       className={`fixed inset-0 z-50 overflow-hidden select-none bg-transparent ${
         isOpening ? "pointer-events-none" : ""
       }`}
@@ -232,6 +237,11 @@ export function CoverGate({
             {/* Eyebrow & Crest */}
             <div className="flex flex-col items-center justify-center mb-3 sm:mb-3.5 relative z-10 opacity-100 translate-y-0">
               <MonogramCrest className="size-10 sm:size-11" />
+              <JavaneseScriptAccent
+                section="cover"
+                fontTheme={fontTheme}
+                className="mt-1.5 -mb-1 text-sm sm:text-base"
+              />
               <div className="mt-2.5 flex items-center justify-center gap-2.5">
                 <span className="h-px w-5 bg-[#C59B6D]/45" aria-hidden="true" />
                 <p className="font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C59B6D]">
@@ -271,7 +281,7 @@ export function CoverGate({
 
             {/* Couple Names & Date */}
             <div className="relative z-10 opacity-100 translate-y-0">
-              <h2 className="text-2xl sm:text-3xl font-serif tracking-tight drop-shadow-xs font-bold text-[#6B1222]">
+              <h2 className="cover-couple-title text-2xl sm:text-3xl font-invitation-display tracking-tight drop-shadow-xs font-bold text-[#6B1222]">
                 Fauzan <span className="font-script text-[#C59B6D] text-[0.88em] px-0.5 font-normal">&amp;</span> Sinta
               </h2>
 

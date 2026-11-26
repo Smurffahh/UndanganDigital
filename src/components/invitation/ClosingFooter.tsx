@@ -6,17 +6,21 @@ import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface ClosingFooterProps {
   weddingDateIso?: string;
   coupleVisualMode?: CoupleVisualMode;
   svgCharacterPreset?: SvgCharacterPreset;
+  fontTheme?: FontTheme;
 }
 
 export function ClosingFooter({
   weddingDateIso,
   coupleVisualMode = "svg",
   svgCharacterPreset = "javanese-royal",
+  fontTheme = "classic",
 }: ClosingFooterProps) {
   const signatureDate = formatFooterSignatureDate(weddingDateIso);
 
@@ -28,6 +32,7 @@ export function ClosingFooter({
       <div className="relative w-[min(100%-2.75rem,560px)] mx-auto px-4 z-10">
         <ScrollReveal direction="bottom">
           <div className="flex flex-col items-center justify-center mb-6">
+            <JavaneseScriptAccent section="closing" fontTheme={fontTheme} className="mb-1.5 text-base sm:text-lg" />
             <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs">
               Doa &amp; Restu
             </span>

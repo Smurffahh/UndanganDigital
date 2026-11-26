@@ -6,6 +6,8 @@ import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { ScrollReveal } from "./ScrollReveal";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface CoupleProfileProps {
   brideName: string;
@@ -22,6 +24,7 @@ interface CoupleProfileProps {
   brideParents?: string;
   loveStoryText?: string;
   storyHashtag?: string;
+  fontTheme?: FontTheme;
 }
 
 export function CoupleProfile({
@@ -39,6 +42,7 @@ export function CoupleProfile({
   brideParents,
   loveStoryText,
   storyHashtag,
+  fontTheme = "classic",
 }: CoupleProfileProps) {
   const isSvgMode = coupleVisualMode === "svg";
 
@@ -59,6 +63,7 @@ export function CoupleProfile({
       <div className="w-[min(100%-2.75rem,980px)] mx-auto">
         <header className="text-center mb-12">
           <ScrollLinkedItem direction="down" offsetY={22}>
+            <JavaneseScriptAccent section="couple" fontTheme={fontTheme} className="mb-1.5 text-base sm:text-lg" />
             <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs mb-3">
               Bride &amp; Groom
             </span>

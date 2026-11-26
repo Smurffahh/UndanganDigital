@@ -60,6 +60,7 @@ export const weddingSettings = pgTable("wedding_settings", {
   tasyakuranAddress: text("tasyakuran_address").default(""),
   tasyakuranMapsUrl: text("tasyakuran_maps_url").default(""),
   showPublicPreviewWishes: boolean("show_public_preview_wishes").notNull().default(true),
+  fontTheme: varchar("font_theme", { length: 32 }).notNull().default("classic"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 

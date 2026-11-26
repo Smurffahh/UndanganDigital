@@ -15,6 +15,7 @@ import {
   createPhoneBlindIndex,
 } from "../crypto";
 import { formatGuestSlug } from "../guestUtils";
+import { normalizeFontTheme } from "../fontThemes";
 
 export type WeddingSettingsData = typeof DEFAULT_WEDDING_SETTINGS;
 export type GalleryPhotoData = typeof DEFAULT_GALLERY_PHOTOS[number];
@@ -210,6 +211,7 @@ function decryptSettingsRecord(row: any): WeddingSettingsData {
     tasyakuranAddress: strOrFallback(row.tasyakuranAddress, DEFAULT_WEDDING_SETTINGS.tasyakuranAddress),
     tasyakuranMapsUrl: strOrFallback(row.tasyakuranMapsUrl, DEFAULT_WEDDING_SETTINGS.tasyakuranMapsUrl),
     showPublicPreviewWishes: boolOrFallback(row.showPublicPreviewWishes, DEFAULT_WEDDING_SETTINGS.showPublicPreviewWishes),
+    fontTheme: normalizeFontTheme(row.fontTheme),
   });
 }
 
@@ -392,6 +394,7 @@ async function ensureSettingsColumns() {
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_address TEXT DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS tasyakuran_maps_url TEXT DEFAULT ''`;
     await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS show_public_preview_wishes BOOLEAN NOT NULL DEFAULT true`;
+    await sql`ALTER TABLE wedding_settings ADD COLUMN IF NOT EXISTS font_theme VARCHAR(32) NOT NULL DEFAULT 'classic'`;
     await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS owner_scope VARCHAR(50) NOT NULL DEFAULT 'couple'`;
     await sql`ALTER TABLE guests ADD COLUMN IF NOT EXISTS created_by VARCHAR(50)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_guests_owner_scope ON guests(owner_scope)`;
@@ -465,6 +468,7 @@ export async function getWeddingSettings(): Promise<WeddingSettingsData> {
         brideParents: DEFAULT_WEDDING_SETTINGS.brideParents,
         waMessageTemplate: DEFAULT_WEDDING_SETTINGS.waMessageTemplate,
         showPublicPreviewWishes: DEFAULT_WEDDING_SETTINGS.showPublicPreviewWishes,
+        fontTheme: DEFAULT_WEDDING_SETTINGS.fontTheme,
       }).returning();
       if (inserted) {
         return decryptSettingsRecord(inserted);
@@ -487,6 +491,9 @@ export async function updateWeddingSettings(updates: Partial<WeddingSettingsData
   }
   if (updates.giftAddress !== undefined) {
     dbUpdates.giftAddress = encryptField(JSON.stringify(updates.giftAddress));
+  }
+  if (updates.fontTheme !== undefined) {
+    dbUpdates.fontTheme = normalizeFontTheme(updates.fontTheme);
   }
 
   const db = getPostgresDb();

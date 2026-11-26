@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Great_Vibes, Plus_Jakarta_Sans, Amiri } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Great_Vibes,
+  Plus_Jakarta_Sans,
+  Amiri,
+  Noto_Sans_Javanese,
+  Philosopher,
+  Lora,
+  Playfair_Display,
+} from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -29,6 +38,39 @@ const amiri = Amiri({
   variable: "--font-arabic",
   weight: ["400"],
   display: "swap",
+});
+
+// Lazy theme fonts (preload: false) keep zero extra font downloads on default classic theme
+const notoSansJavanese = Noto_Sans_Javanese({
+  subsets: ["javanese"],
+  variable: "--font-javanese",
+  weight: ["400", "600", "700"],
+  display: "swap",
+  preload: false,
+});
+
+const philosopher = Philosopher({
+  subsets: ["latin"],
+  variable: "--font-philosopher",
+  weight: ["400", "700"],
+  display: "swap",
+  preload: false,
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-lora",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "600", "700"],
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -85,7 +127,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${cormorant.variable} ${greatVibes.variable} ${plusJakarta.variable} ${amiri.variable}`}
+      className={`${cormorant.variable} ${greatVibes.variable} ${plusJakarta.variable} ${amiri.variable} ${notoSansJavanese.variable} ${philosopher.variable} ${lora.variable} ${playfairDisplay.variable}`}
     >
       <body className="font-sans antialiased bg-cream text-ink min-h-screen">
         {children}

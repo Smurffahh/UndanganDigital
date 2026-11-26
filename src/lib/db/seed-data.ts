@@ -1,3 +1,5 @@
+import type { FontTheme } from "../fontThemes";
+
 export interface MusicPreset {
   id: string;
   title: string;
@@ -315,6 +317,7 @@ export const DEFAULT_WEDDING_SETTINGS = {
   tasyakuranAddress: "",
   tasyakuranMapsUrl: "",
   showPublicPreviewWishes: true,
+  fontTheme: "classic" as FontTheme,
   waMessageTemplate: `Kepada Yth.
 *{nama_tamu}*
 

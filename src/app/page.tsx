@@ -9,6 +9,7 @@ import {
 import { InvitationOrchestrator } from "@/components/invitation/InvitationOrchestrator";
 import { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 import { createRsvpTicket } from "@/lib/rsvpTicket";
+import { normalizeFontTheme } from "@/lib/fontThemes";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -104,6 +105,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
     groomName: (rawSettings.groomName || DEFAULT_WEDDING_SETTINGS.groomName).trim() || DEFAULT_WEDDING_SETTINGS.groomName,
     weddingDateIso: rawSettings.weddingDateIso || DEFAULT_WEDDING_SETTINGS.weddingDateIso,
     showPublicPreviewWishes: rawSettings.showPublicPreviewWishes !== false,
+    fontTheme: normalizeFontTheme(rawSettings.fontTheme),
   };
 
   const showWishesInPreview = settings.showPublicPreviewWishes !== false;
@@ -196,6 +198,7 @@ export default async function InvitationPage({ searchParams }: PageProps) {
         guestToken={null}
         rsvpTicket={rsvpTicket}
         showWishesInPreview={showWishesInPreview}
+        fontTheme={settings.fontTheme}
       />
     </>
   );

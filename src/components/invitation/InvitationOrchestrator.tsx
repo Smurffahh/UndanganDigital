@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { CoverGate } from "./CoverGate";
 import { FixedInvitationBackground } from "./FixedInvitationBackground";
 import type { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
+import { normalizeFontTheme, type FontTheme } from "@/lib/fontThemes";
 
 const FloatingFlowers = dynamic(() => import("./FloatingFlowers").then((m) => m.FloatingFlowers), {
   ssr: false,
@@ -65,6 +66,7 @@ interface InvitationOrchestratorProps {
   guestToken?: string | null;
   rsvpTicket?: string | null;
   showWishesInPreview?: boolean;
+  fontTheme?: FontTheme;
 }
 
 type RevealPhase = "cover" | "opening" | "assets-entering" | "content-ready";
@@ -78,7 +80,9 @@ export function InvitationOrchestrator({
   guestToken = null,
   rsvpTicket = null,
   showWishesInPreview = true,
+  fontTheme: rawFontTheme,
 }: InvitationOrchestratorProps) {
+  const fontTheme = normalizeFontTheme(rawFontTheme ?? settings.fontTheme);
   const [revealPhase, setRevealPhase] = useState<RevealPhase>("cover");
   const [shouldMountContent, setShouldMountContent] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -280,6 +284,7 @@ export function InvitationOrchestrator({
 
   return (
     <main
+      data-font-theme={fontTheme}
       className={`relative min-h-screen overflow-x-clip bg-transparent text-ink ${
         revealPhase === "content-ready" ? "royal-seq-active" : ""
       }`}
@@ -309,6 +314,7 @@ export function InvitationOrchestrator({
         eventDateLabel={settings.eventDateLabel}
         coupleVisualMode={settings.coupleVisualMode}
         svgCharacterPreset={settings.svgCharacterPreset}
+        fontTheme={fontTheme}
       />
 
       {/* Deferred below-the-fold content: pre-warmed on idle or mounted on opening */}
@@ -337,6 +343,7 @@ export function InvitationOrchestrator({
               eventDateLabel={settings.eventDateLabel}
               coupleVisualMode={settings.coupleVisualMode}
               svgCharacterPreset={settings.svgCharacterPreset}
+              fontTheme={fontTheme}
             />
 
             <CoupleProfile
@@ -354,6 +361,7 @@ export function InvitationOrchestrator({
               brideParents={settings.brideParents}
               loveStoryText={settings.loveStoryText}
               storyHashtag={settings.storyHashtag}
+              fontTheme={fontTheme}
             />
 
             {settings.isLoveStoryEnabled && (
@@ -383,6 +391,7 @@ export function InvitationOrchestrator({
               tasyakuranVenue={settings.tasyakuranVenue}
               tasyakuranAddress={settings.tasyakuranAddress}
               tasyakuranMapsUrl={settings.tasyakuranMapsUrl}
+              fontTheme={fontTheme}
             />
 
             {settings.isGalleryEnabled && <PhotoGallery photos={galleryPhotos} />}
@@ -393,6 +402,7 @@ export function InvitationOrchestrator({
                 ewallets={settings.ewallets}
                 giftAddress={settings.giftAddress}
                 qrisImageUrl={settings.qrisImageUrl}
+                fontTheme={fontTheme}
               />
             )}
 
@@ -404,12 +414,14 @@ export function InvitationOrchestrator({
               rsvpTicket={rsvpTicket}
               isVerifiedGuest={isVerifiedGuest}
               showWishesInPreview={showWishesInPreview}
+              fontTheme={fontTheme}
             />
 
             <ClosingFooter
               weddingDateIso={settings.weddingDateIso}
               coupleVisualMode={settings.coupleVisualMode}
               svgCharacterPreset={settings.svgCharacterPreset}
+              fontTheme={fontTheme}
             />
           </div>
 

@@ -10,6 +10,8 @@ import {
   formatTasyakuranCalendarUrl,
 } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface EventDetailsProps {
   akadTime: string;
@@ -31,6 +33,7 @@ interface EventDetailsProps {
   tasyakuranAddress?: string;
   tasyakuranMapsUrl?: string;
   isVerifiedGuest?: boolean;
+  fontTheme?: FontTheme;
 }
 
 const INDONESIAN_DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -59,6 +62,7 @@ export function EventDetails({
   tasyakuranAddress = "",
   tasyakuranMapsUrl = "",
   isVerifiedGuest = false,
+  fontTheme = "classic",
 }: EventDetailsProps) {
   const dateObj = parseEventDate(weddingDateIso);
   const dayNumber = dateObj.getDate();
@@ -122,6 +126,7 @@ export function EventDetails({
       <div className="w-[min(100%-2.75rem,560px)] md:w-[min(100%-2.75rem,880px)] mx-auto">
         <header className="text-center mb-10">
           <ScrollLinkedItem direction="down" offsetY={22}>
+            <JavaneseScriptAccent section="event" fontTheme={fontTheme} className="mb-1.5 text-base sm:text-lg" />
             <span className="inline-block px-4 py-1 rounded-full border border-[#C59B6D]/45 bg-[#FBF7F2]/90 typo-eyebrow text-[#C59B6D] tracking-[0.22em] uppercase shadow-xs mb-3">
               Save The Date
             </span>
@@ -157,7 +162,7 @@ export function EventDetails({
                     {tasyakuranDayHeader}
                   </span>
                   <div className="flex items-baseline justify-center">
-                    <span className="font-serif text-4xl sm:text-5xl font-bold tabular-nums text-[#6B1222] tracking-tight">
+                    <span className="typo-countdown-num text-4xl sm:text-5xl font-bold tabular-nums text-[#6B1222] tracking-tight">
                       {tasyakuranDateNumbers}
                     </span>
                   </div>
@@ -249,7 +254,7 @@ export function EventDetails({
                     <NumberFlow
                       value={dayNumber}
                       format={{ minimumIntegerDigits: 2 }}
-                      className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
+                      className="typo-countdown-num text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
                     />
                   </div>
                   <span className="typo-eyebrow text-[#6E4A50] tracking-[0.2em] uppercase text-xs mt-1">
@@ -346,7 +351,7 @@ export function EventDetails({
                     <NumberFlow
                       value={dayNumber}
                       format={{ minimumIntegerDigits: 2 }}
-                      className="font-serif text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
+                      className="typo-countdown-num text-5xl sm:text-6xl font-bold tabular-nums text-[#6B1222]"
                     />
                   </div>
                   <span className="typo-eyebrow text-[#6E4A50] tracking-[0.2em] uppercase text-xs mt-1">

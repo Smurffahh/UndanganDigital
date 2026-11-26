@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface WishItem {
   id: number;
@@ -33,6 +35,7 @@ interface RsvpGuestbookProps {
   rsvpTicket?: string | null;
   isVerifiedGuest?: boolean;
   showWishesInPreview?: boolean;
+  fontTheme?: FontTheme;
 }
 
 export function RsvpGuestbook({
@@ -43,6 +46,7 @@ export function RsvpGuestbook({
   rsvpTicket = null,
   isVerifiedGuest = false,
   showWishesInPreview = true,
+  fontTheme = "classic",
 }: RsvpGuestbookProps) {
   const [wishes, setWishes] = useState<WishItem[]>(initialWishes);
   const [nama, setNama] = useState(verifiedGuestName || defaultGuestName);
@@ -156,6 +160,7 @@ export function RsvpGuestbook({
       <div className="w-[min(100%-2.75rem,560px)] mx-auto">
         <header className="text-center mb-10">
           <ScrollLinkedItem direction="down" offsetY={22}>
+            <JavaneseScriptAccent section="rsvp" fontTheme={fontTheme} className="mb-1 text-base sm:text-lg" />
             <p className="typo-eyebrow text-[#C59B6D] mb-2">
               RSVP &amp; Prayers
             </p>
@@ -330,7 +335,9 @@ export function RsvpGuestbook({
                     Belum Ada Doa &amp; Ucapan
                   </h4>
                   <p className="font-sans text-xs text-[#6E4A50] max-w-sm mx-auto leading-relaxed">
-                    Jadilah yang pertama memberikan doa restu untuk Fauzan &amp; Sinta melalui formulir konfirmasi di atas.
+                    {isVerifiedGuest
+                      ? "Jadilah yang pertama memberikan doa restu untuk Fauzan & Sinta melalui formulir konfirmasi di atas."
+                      : "Belum ada doa dan ucapan yang masuk."}
                   </p>
                 </div>
               ) : (

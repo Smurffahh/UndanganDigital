@@ -5,6 +5,8 @@ import NumberFlow, { NumberFlowGroup } from "@number-flow/react";
 import { Divider } from "./Ornaments";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 
 interface CountdownHeroProps {
   weddingDateIso: string;
@@ -15,6 +17,7 @@ interface CountdownHeroProps {
   eventDateLabel?: string;
   coupleVisualMode?: CoupleVisualMode;
   svgCharacterPreset?: SvgCharacterPreset;
+  fontTheme?: FontTheme;
 }
 
 export function CountdownHero({
@@ -25,6 +28,7 @@ export function CountdownHero({
   isHeroReady,
   coupleVisualMode = "svg",
   svgCharacterPreset = "javanese-royal",
+  fontTheme = "classic",
 }: CountdownHeroProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -127,6 +131,7 @@ export function CountdownHero({
           data-seq-dir="top"
           style={getItemStyle("400ms", "top")}
         >
+          <JavaneseScriptAccent section="hero" fontTheme={fontTheme} className="mb-1 text-base sm:text-lg" />
           <p className="typo-eyebrow text-[#C59B6D] tracking-[0.25em]">
             THE WEDDING OF
           </p>
@@ -250,7 +255,7 @@ export function CountdownHero({
                       value={item.value}
                       format={{ minimumIntegerDigits: 2 }}
                       animated={hasMounted}
-                      className="font-serif text-2xl sm:text-4xl font-bold tabular-nums text-[#6B1222] leading-none tracking-tight"
+                      className="typo-countdown-num text-2xl sm:text-4xl font-bold tabular-nums text-[#6B1222] leading-none tracking-tight"
                       style={{ color: "#6B1222" }}
                     />
                     

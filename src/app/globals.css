@@ -900,3 +900,106 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Invitation Font Theme Scoping (Isolated to public invitation & dashboard preview cards) */
+[data-font-theme="classic"] {
+  --invitation-font-display: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+  --invitation-font-heading: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+  --invitation-font-body: var(--font-sans), "Plus Jakarta Sans", sans-serif;
+  --invitation-font-script: var(--font-script), "Great Vibes", cursive;
+}
+
+[data-font-theme="javanese"] {
+  --invitation-font-display: var(--font-philosopher), var(--font-serif), Georgia, serif;
+  --invitation-font-heading: var(--font-philosopher), var(--font-serif), Georgia, serif;
+  --invitation-font-body: var(--font-lora), Georgia, serif;
+  --invitation-font-script: var(--font-javanese), "Noto Sans Javanese", serif;
+  --font-serif: var(--font-philosopher), Georgia, serif;
+}
+
+[data-font-theme="latin"] {
+  --invitation-font-display: var(--font-script), "Great Vibes", cursive;
+  --invitation-font-heading: var(--font-playfair), Georgia, serif;
+  --invitation-font-body: var(--font-sans), "Plus Jakarta Sans", sans-serif;
+  --invitation-font-script: var(--font-script), "Great Vibes", cursive;
+  --font-serif: var(--font-playfair), Georgia, serif;
+}
+
+.font-invitation-display {
+  font-family: var(--invitation-font-display, var(--font-serif));
+}
+
+.font-invitation-heading {
+  font-family: var(--invitation-font-heading, var(--font-serif));
+}
+
+.font-invitation-body {
+  font-family: var(--invitation-font-body, var(--font-sans));
+}
+
+.font-invitation-javanese {
+  font-family: var(--font-javanese), "Noto Sans Javanese", serif;
+}
+
+[data-font-theme] .typo-display {
+  font-family: var(--invitation-font-display, var(--font-serif));
+}
+
+[data-font-theme] .typo-section-title {
+  font-family: var(--invitation-font-display, var(--font-serif));
+}
+
+[data-font-theme] .typo-card-title {
+  font-family: var(--invitation-font-heading, var(--font-serif));
+}
+
+[data-font-theme] .typo-body {
+  font-family: var(--invitation-font-body, var(--font-sans));
+}
+
+[data-font-theme="classic"] .typo-countdown-num {
+  font-family: var(--font-serif);
+}
+
+[data-font-theme="javanese"] .typo-countdown-num,
+[data-font-theme="latin"] .typo-countdown-num {
+  font-family: var(--font-sans), "Plus Jakarta Sans", sans-serif;
+}
+
+/* Prevent faux-bold and ascender/descender clipping on Great Vibes cursive display text */
+[data-font-theme="latin"] .font-invitation-display,
+[data-font-theme="latin"] .typo-display,
+[data-font-theme="latin"] .typo-section-title {
+  font-family: var(--invitation-font-display);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  line-height: 1.32;
+  padding-block: 0.1em;
+}
+
+[data-font-theme="latin"] .cover-couple-title {
+  font-size: 2rem;
+}
+
+[data-font-theme="latin"] .typo-display {
+  font-size: 2.5rem;
+}
+
+[data-font-theme="latin"] .typo-section-title {
+  font-size: 2.15rem;
+}
+
+@media (min-width: 640px) {
+  [data-font-theme="latin"] .cover-couple-title {
+    font-size: 2.35rem;
+  }
+
+  [data-font-theme="latin"] .typo-display {
+    font-size: 3.35rem;
+  }
+
+  [data-font-theme="latin"] .typo-section-title {
+    font-size: 2.65rem;
+  }
+}
+

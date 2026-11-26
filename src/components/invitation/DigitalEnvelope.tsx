@@ -5,6 +5,8 @@ import { WayangDivider, ChipMetallic } from "./Ornaments";
 import { Copy, Check, QrCode, MapPin, Download } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import type { FontTheme } from "@/lib/fontThemes";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +33,7 @@ interface DigitalEnvelopeProps {
   ewallets: AccountItem[];
   giftAddress: GiftAddress;
   qrisImageUrl?: string;
+  fontTheme?: FontTheme;
 }
 
 function AestheticGoldQRCode() {
@@ -51,6 +54,7 @@ export function DigitalEnvelope({
   ewallets,
   giftAddress,
   qrisImageUrl,
+  fontTheme = "classic",
 }: DigitalEnvelopeProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [showQrisModal, setShowQrisModal] = useState(false);
@@ -76,6 +80,7 @@ export function DigitalEnvelope({
       <div className="w-[min(100%-2.75rem,720px)] mx-auto">
         <header className="text-center mb-9">
           <ScrollLinkedItem direction="down" offsetY={22}>
+            <JavaneseScriptAccent section="envelope" fontTheme={fontTheme} className="mb-1 text-base sm:text-lg" />
             <p className="typo-eyebrow text-[#C59B6D] mb-2">
               Wedding Gift
             </p>

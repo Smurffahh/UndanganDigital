@@ -18,6 +18,7 @@ import {
   type MusicPreset,
 } from "@/lib/db/seed-data";
 import { normalizeUrlOrPath, isValidUrlOrLocalPath } from "@/lib/urlUtils";
+import { normalizeFontTheme } from "@/lib/fontThemes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -268,6 +269,7 @@ export function WeddingSettingsModule({
 
     const payload = {
       ...formData,
+      fontTheme: normalizeFontTheme(formData.fontTheme),
       musicUrl: normalizedMusicUrl,
       googleMapsUrl: normalizedMapsUrl,
       bridePhotoUrl: normalizedBridePhoto,

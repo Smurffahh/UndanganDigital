@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from "./auth-constants";
+import { SESSION_COOKIE_NAME, getSessionSecret } from "./auth-constants";
 
-export { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN };
+export { SESSION_COOKIE_NAME };
 
 export interface SessionUser {
   userId: number;
@@ -37,14 +37,15 @@ export function verifyPassword(password: string, storedHash: string): boolean {
 }
 
 export function createSessionToken(user: SessionUser): string {
+  const secret = getSessionSecret();
   const payload: SessionPayload = {
     ...user,
     tokenVersion: typeof user.tokenVersion === "number" ? user.tokenVersion : 1,
-    exp: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+    exp: Date.now() + 1000 * 60 * 60 * 24 * 7,
   };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const signature = crypto
-    .createHmac("sha256", SESSION_SECRET_TOKEN)
+    .createHmac("sha256", secret)
     .update(payloadB64)
     .digest("base64url");
   return `${payloadB64}.${signature}`;
@@ -58,8 +59,9 @@ export function verifySessionToken(token: string | null | undefined): SessionPay
   const [payloadB64, signature] = parts;
 
   try {
+    const secret = getSessionSecret();
     const expectedSig = crypto
-      .createHmac("sha256", SESSION_SECRET_TOKEN)
+      .createHmac("sha256", secret)
       .update(payloadB64)
       .digest("base64url");
 

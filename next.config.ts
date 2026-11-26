@@ -43,9 +43,14 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    const isDev = process.env.NODE_ENV === "development";
+    const scriptSrc = isDev
+      ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com"
+      : "script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com";
+
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com",
+      scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https://i.pinimg.com https://images.unsplash.com https://*.public.blob.vercel-storage.com https://*.google.com https://*.googleapis.com https://*.gstatic.com",

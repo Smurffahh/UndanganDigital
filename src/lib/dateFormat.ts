@@ -1,4 +1,4 @@
-export const DEFAULT_EVENT_DATE_ISO = "2027-01-03T08:00:00+07:00";
+const DEFAULT_EVENT_DATE_ISO = "2027-01-03T08:00:00+07:00";
 
 const INDONESIAN_DAYS = [
   "Minggu",
@@ -72,7 +72,7 @@ export function formatWaEventDate(isoString?: string): string {
   return formatEventCardDate(isoString);
 }
 
-export function getEventUtcTimestamps(weddingDateIso?: string) {
+function getEventUtcTimestamps(weddingDateIso?: string) {
   const d = parseEventDate(weddingDateIso);
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, "0");

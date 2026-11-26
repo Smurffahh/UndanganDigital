@@ -55,10 +55,6 @@ export function WayangDivider({ className = "my-4", light = false }: { className
   );
 }
 
-export function SectionOrnament({ className = "my-4" }: { className?: string }) {
-  return <WayangDivider className={className} />;
-}
-
 export function Divider({ className = "my-4", light = false }: { className?: string; light?: boolean }) {
   return <WayangDivider className={className} light={light} />;
 }

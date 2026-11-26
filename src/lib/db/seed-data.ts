@@ -16,7 +16,7 @@ export type SvgCharacterPreset =
   | "islamic-grace"
   | "casual-botanical";
 
-export interface SvgPresetInfo {
+interface SvgPresetInfo {
   id: SvgCharacterPreset;
   title: string;
   subtitle: string;
@@ -69,7 +69,7 @@ export const SVG_CHARACTER_PRESETS: SvgPresetInfo[] = [
   },
 ];
 
-export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
+export const AVAILABLE_WEDDING_TRACKS: MusicPreset[] = [
   {
     id: "preset-raim-laode-komang",
     title: "Raim Laode — Komang",
@@ -226,8 +226,6 @@ export const WEDDING_MUSIC_PRESETS: MusicPreset[] = [
     youtubeId: "In8kDy_WU4s",
   },
 ];
-
-export const AVAILABLE_WEDDING_TRACKS: MusicPreset[] = WEDDING_MUSIC_PRESETS;
 
 export const DEFAULT_WEDDING_SETTINGS = {
   brideName: "Sinta Maria Utami",
@@ -430,35 +428,5 @@ export const DEFAULT_GALLERY_PHOTOS = [
     caption: "Lilin rose gold untuk menghangatkan suasana",
     aspectRatio: "4/5",
     sortOrder: 11,
-  },
-];
-
-export const DEFAULT_RSVP_WISHES = [
-  {
-    id: 1,
-    guestName: "Alumni SMA Negeri",
-    attendanceStatus: "Hadir",
-    paxCount: 2,
-    message:
-      "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fii khoir. Selamat berbahagia Fauzan dan Sinta!",
-    createdAt: "2026-10-25T08:00:00.000Z",
-  },
-  {
-    id: 2,
-    guestName: "Keluarga Besar H. Ridwan",
-    attendanceStatus: "Hadir",
-    paxCount: 4,
-    message:
-      "Selamat menempuh bahtera rumah tangga yang sakinah mawaddah warahmah untuk ananda Fauzan dan ananda Sinta. Aamiin.",
-    createdAt: "2026-10-26T08:00:00.000Z",
-  },
-  {
-    id: 3,
-    guestName: "Rekan Kerja Divisi IT",
-    attendanceStatus: "Masih Ragu",
-    paxCount: 1,
-    message:
-      "Selamat bro Fauzan! Lancar sampai hari H ya, semoga menjadi keluarga yang bahagia selamanya.",
-    createdAt: "2026-10-27T08:00:00.000Z",
   },
 ];

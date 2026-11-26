@@ -18,6 +18,7 @@ import {
   type FontTheme,
 } from "@/lib/fontThemes";
 import { formatEventCardDate } from "@/lib/dateFormat";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -78,14 +79,14 @@ export function ThemeStudioModule({
   const brideFirstName = formData.brideName?.trim().split(/\s+/)[0] || "Sinta";
   const visualMode: CoupleVisualMode = formData.coupleVisualMode === "photo" ? "photo" : "svg";
   const presetId = (formData.svgCharacterPreset || "javanese-royal") as SvgCharacterPreset;
-  const coverPhotoSrc = formData.coverPhotoUrl || "/images/couple/cover.webp";
+  const coverPhotoSrc = sanitizeSafeMediaSrc(formData.coverPhotoUrl, "/assets/javanese/dua-pengantin.webp") || "/assets/javanese/dua-pengantin.webp";
 
   const isCurrentYouTube =
     formData.musicSourceType === "youtube" ||
     (typeof formData.musicUrl === "string" && formData.musicUrl.includes("youtube.com"));
 
   const effectiveAudioUrl = !isCurrentYouTube
-    ? formData.musicUrl || "/audio/raim-laode-komang.mp3"
+    ? sanitizeSafeMediaSrc(formData.musicUrl, "/audio/raim-laode-komang.mp3") || "/audio/raim-laode-komang.mp3"
     : "/audio/raim-laode-komang.mp3";
 
   const [isPlayingTest, setIsPlayingTest] = useState(false);

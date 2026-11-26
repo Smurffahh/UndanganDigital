@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Music2 } from "lucide-react";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 
 interface FloatingControlsProps {
   isOpened: boolean;
@@ -47,7 +48,7 @@ export function FloatingControls({
   const wasPlayingBeforeHiddenRef = useRef(false);
 
   const isYouTube = musicSourceType === "youtube";
-  const effectiveAudioUrl = musicUrl || DEFAULT_AUDIO_URL;
+  const effectiveAudioUrl = sanitizeSafeMediaSrc(musicUrl, DEFAULT_AUDIO_URL) || DEFAULT_AUDIO_URL;
 
   useEffect(() => {
     if (!isYouTube || !musicEnabled) return;

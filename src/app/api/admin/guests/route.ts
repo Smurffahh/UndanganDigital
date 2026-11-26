@@ -10,31 +10,30 @@ import {
   bulkDeleteGuests,
 } from "@/lib/db/store";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
+import { NO_CACHE_HEADERS } from "@/lib/httpHeaders";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
 
-const NO_CACHE_HEADERS = {
-  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
-};
+const cleanText = (v: string) => v.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
 
 const guestSchema = z
   .object({
-    name: z.string().trim().min(1, "Nama tamu wajib diisi").max(100),
-    whatsappNumber: z.string().optional().nullable(),
-    category: z.string().optional().default("Reguler"),
-    ownerScope: z.string().optional(),
+    name: z.string().transform(cleanText).pipe(z.string().min(1, "Nama tamu wajib diisi").max(100)),
+    whatsappNumber: z.string().max(32).optional().nullable(),
+    category: z.string().max(50).optional().default("Reguler"),
+    ownerScope: z.enum(["couple", "parent"]).optional(),
   })
   .strict();
 
 const updateGuestSchema = z
   .object({
     id: z.coerce.number().int().positive(),
-    name: z.string().trim().min(1).max(100).optional(),
-    whatsappNumber: z.string().optional().nullable(),
-    category: z.string().optional(),
+    name: z.string().transform(cleanText).pipe(z.string().min(1).max(100)).optional(),
+    whatsappNumber: z.string().max(32).optional().nullable(),
+    category: z.string().max(50).optional(),
     waSentStatus: z.boolean().optional(),
-    waSentAt: z.string().nullable().optional(),
+    waSentAt: z.string().max(64).nullable().optional(),
   })
   .strict();
 
@@ -42,26 +41,32 @@ const bulkUpdateSchema = z
   .object({
     ids: z.array(z.coerce.number().int().positive()).min(1).max(1000),
     waSentStatus: z.boolean(),
-    waSentAt: z.string().nullable().optional(),
+    waSentAt: z.string().max(64).nullable().optional(),
   })
   .strict();
 
 export async function GET(request: Request) {
   const session = await requireSession();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401, headers: NO_CACHE_HEADERS });
   }
 
-  const { searchParams } = new URL(request.url);
-  const requestedScope = searchParams.get("scope");
+  try {
+    const { searchParams } = new URL(request.url);
+    const requestedScope = searchParams.get("scope");
 
-  const effectiveScope =
-    session.role === "parent"
-      ? session.guestScope
-      : requestedScope || "all";
+    const effectiveScope =
+      session.role === "parent"
+        ? session.guestScope
+        : requestedScope === "couple" || requestedScope === "parent"
+        ? requestedScope
+        : "all";
 
-  const guests = await getGuests(effectiveScope);
-  return NextResponse.json({ success: true, data: guests }, { headers: NO_CACHE_HEADERS });
+    const guests = await getGuests(effectiveScope);
+    return NextResponse.json({ success: true, data: guests }, { headers: NO_CACHE_HEADERS });
+  } catch {
+    return NextResponse.json({ success: false, error: "Gagal memuat daftar tamu" }, { status: 500, headers: NO_CACHE_HEADERS });
+  }
 }
 
 export async function POST(request: Request) {
@@ -206,8 +211,9 @@ export async function DELETE(request: Request) {
     if (idsParam) {
       const idList = idsParam
         .split(",")
+        .slice(0, 1000)
         .map((s) => parseInt(s.trim(), 10))
-        .filter((n) => !isNaN(n) && n > 0);
+        .filter((n) => Number.isInteger(n) && n > 0);
       if (idList.length === 0) {
         return NextResponse.json({ success: false, error: "Daftar ID tamu tidak valid" }, { status: 400, headers: NO_CACHE_HEADERS });
       }
@@ -236,8 +242,9 @@ export async function DELETE(request: Request) {
     } catch {}
 
     if (bodyIds && bodyIds.length > 0) {
-      const count = await bulkDeleteGuests(bodyIds, expectedScope);
-      if (session.role === "parent" && count !== bodyIds.length) {
+      const cappedIds = bodyIds.slice(0, 1000);
+      const count = await bulkDeleteGuests(cappedIds, expectedScope);
+      if (session.role === "parent" && count !== cappedIds.length) {
         return NextResponse.json(
           {
             success: false,
@@ -257,6 +264,9 @@ export async function DELETE(request: Request) {
     }
 
     const idNum = parseInt(idParam, 10);
+    if (!Number.isInteger(idNum) || idNum <= 0) {
+      return NextResponse.json({ success: false, error: "ID tamu tidak valid" }, { status: 400, headers: NO_CACHE_HEADERS });
+    }
     const deleted = await deleteGuest(idNum, expectedScope);
     if (!deleted) {
       if (session.role === "parent") {

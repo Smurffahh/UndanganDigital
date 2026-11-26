@@ -6,6 +6,7 @@ import { Divider } from "./Ornaments";
 import { CoupleCharacterSvg } from "./CoupleCharacterSvg";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 import type { FontTheme } from "@/lib/fontThemes";
 
 interface CountdownHeroProps {
@@ -147,7 +148,7 @@ export function CountdownHero({
               className="arch w-48 h-60 sm:w-56 sm:h-70 mx-auto overflow-hidden shadow-[0_20px_48px_-12px_rgba(67,10,20,0.22)] bg-[#FBF7F2]/90 p-1.5 rounded-t-full rounded-b-2xl border border-[#C59B6D]/45 relative z-10 flex items-center justify-center select-none"
             >
               <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden border border-[#C59B6D]/30 relative flex items-end justify-center bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] pt-6 pb-2 px-4">
-                {coupleVisualMode === "svg" || !heroPhotoUrl ? (
+                {coupleVisualMode === "svg" || !sanitizeSafeMediaSrc(heroPhotoUrl, "") ? (
                   <CoupleCharacterSvg
                     preset={svgCharacterPreset}
                     variant="couple"
@@ -156,7 +157,7 @@ export function CountdownHero({
                 ) : (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={heroPhotoUrl}
+                    src={sanitizeSafeMediaSrc(heroPhotoUrl, "")}
                     alt="Fauzan dan Sinta"
                     className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-500"
                     loading="eager"

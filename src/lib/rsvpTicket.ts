@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { SESSION_SECRET_TOKEN } from "./session";
+import { getSessionSecret } from "./auth-constants";
 
 interface RsvpTicketPayload {
   gid: number;
@@ -17,6 +17,7 @@ export function createRsvpTicket({
   guestId: number;
   guestName: string;
 }): string {
+  const secret = getSessionSecret();
   const payload: RsvpTicketPayload = {
     gid: guestId,
     name: guestName.trim(),
@@ -25,7 +26,7 @@ export function createRsvpTicket({
 
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const signature = crypto
-    .createHmac("sha256", SESSION_SECRET_TOKEN)
+    .createHmac("sha256", secret)
     .update(`${TICKET_DOMAIN_SEPARATOR}${payloadB64}`)
     .digest("base64url");
 
@@ -42,8 +43,9 @@ export function verifyRsvpTicket(
   const [payloadB64, signature] = parts;
 
   try {
+    const secret = getSessionSecret();
     const expectedSig = crypto
-      .createHmac("sha256", SESSION_SECRET_TOKEN)
+      .createHmac("sha256", secret)
       .update(`${TICKET_DOMAIN_SEPARATOR}${payloadB64}`)
       .digest("base64url");
 

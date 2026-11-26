@@ -6,6 +6,7 @@ import { CoverGate } from "./CoverGate";
 import { FixedInvitationBackground } from "./FixedInvitationBackground";
 import type { DEFAULT_WEDDING_SETTINGS } from "@/lib/db/seed-data";
 import { normalizeFontTheme, type FontTheme } from "@/lib/fontThemes";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 
 const FloatingFlowers = dynamic(() => import("./FloatingFlowers").then((m) => m.FloatingFlowers), {
   ssr: false,
@@ -114,7 +115,9 @@ export function InvitationOrchestrator({
     };
   }, []);
 
-  const effectiveAudioUrl = settings.musicUrl || "/audio/raim-laode-komang.mp3";
+  const effectiveAudioUrl =
+    sanitizeSafeMediaSrc(settings.musicUrl, "/audio/raim-laode-komang.mp3") ||
+    "/audio/raim-laode-komang.mp3";
   const isYouTube = settings.musicSourceType === "youtube";
 
   const handleStartOpening = () => {

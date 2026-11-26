@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { WayangDivider } from "./Ornaments";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 import {
   Dialog,
   DialogContent,
@@ -107,7 +108,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                   <div className={`w-full ${aspectClass} rounded-2xl overflow-hidden relative`}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={item.imageUrl}
+                      src={sanitizeSafeMediaSrc(item.imageUrl, "")}
                       alt={item.caption || `Foto momen Fauzan dan Sinta #${idx + 1}`}
                       className="w-full h-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                       loading="lazy"
@@ -151,7 +152,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                 <div className="w-full flex justify-center items-center overflow-hidden rounded-xl">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={photos[activeIdx].imageUrl}
+                    src={sanitizeSafeMediaSrc(photos[activeIdx].imageUrl, "")}
                     alt={photos[activeIdx].caption || `Foto momen Fauzan dan Sinta #${activeIdx + 1}`}
                     className="max-w-full max-h-[75dvh] object-contain rounded-xl outline outline-1 -outline-offset-1 outline-white/10 shadow-2xl"
                   />

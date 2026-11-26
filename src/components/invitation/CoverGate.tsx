@@ -11,6 +11,7 @@ import { formatCoverDate } from "@/lib/dateFormat";
 import { usePrefersReducedMotion } from "@/hooks/useParallax";
 import type { CoupleVisualMode, SvgCharacterPreset } from "@/lib/db/seed-data";
 import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import { sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 import type { FontTheme } from "@/lib/fontThemes";
 
 interface CoverGateProps {
@@ -254,10 +255,10 @@ export function CoverGate({
             {/* Arch Frame & Dua Pengantin Character */}
             <div className="w-44 h-56 sm:w-52 sm:h-64 mx-auto rounded-t-full rounded-b-2xl p-1.5 bg-[#FBF7F2] shadow-sm border border-[#C59B6D]/45 shrink-0 mb-3 relative z-10 opacity-100 scale-100 translate-y-0">
               <div className="w-full h-full rounded-t-full rounded-b-xl overflow-hidden outline outline-1 -outline-offset-1 outline-black/10 bg-gradient-to-b from-[#FBF7F2] via-[#F8EFE4] to-[#F1E0CE] flex items-end justify-center pt-6 pb-2 px-4">
-                {coupleVisualMode === "photo" && coverPhotoUrl ? (
+                {coupleVisualMode === "photo" && sanitizeSafeMediaSrc(coverPhotoUrl, "") ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={coverPhotoUrl}
+                    src={sanitizeSafeMediaSrc(coverPhotoUrl, "")}
                     alt="Fauzan Ma'ruf & Sinta Maria Utami"
                     className="w-full h-full object-cover object-center"
                     fetchPriority="high"

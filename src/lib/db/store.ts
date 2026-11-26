@@ -6,7 +6,6 @@ import * as schema from "./schema";
 import {
   DEFAULT_WEDDING_SETTINGS,
   DEFAULT_GALLERY_PHOTOS,
-  DEFAULT_RSVP_WISHES,
 } from "./seed-data";
 import {
   encryptField,
@@ -315,37 +314,8 @@ function getLocalDb(): LocalDatabase {
       giftAddress: encryptField(JSON.stringify(DEFAULT_WEDDING_SETTINGS.giftAddress)),
     },
     gallery: [...DEFAULT_GALLERY_PHOTOS],
-    wishes: DEFAULT_RSVP_WISHES.map((w) => ({
-      ...w,
-      guestName: encryptField(w.guestName),
-      message: encryptField(w.message),
-    })),
-    guests: [
-      {
-        id: 1,
-        name: encryptField("Budi Santoso"),
-        slugQuery: "Budi+Santoso",
-        whatsappNumber: encryptField("6281234567890"),
-        category: encryptField("Keluarga"),
-        nameBindex: createBlindIndex("Budi Santoso"),
-        waBindex: createPhoneBlindIndex("6281234567890"),
-        waSentStatus: false,
-        waSentAt: null,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        name: encryptField("Siti Rahma"),
-        slugQuery: "Siti+Rahma",
-        whatsappNumber: encryptField("6289876543210"),
-        category: encryptField("Sahabat"),
-        nameBindex: createBlindIndex("Siti Rahma"),
-        waBindex: createPhoneBlindIndex("6289876543210"),
-        waSentStatus: true,
-        waSentAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    wishes: [],
+    guests: [],
   };
 
   saveLocalDb(initialData);
@@ -1202,16 +1172,12 @@ export async function getDashboardUserById(
 ): Promise<schema.DashboardUser | null> {
   const db = getPostgresDb();
   if (db) {
-    try {
-      const rows = await db
-        .select()
-        .from(schema.dashboardUsers)
-        .where(eq(schema.dashboardUsers.id, id))
-        .limit(1);
-      if (rows.length > 0) return rows[0];
-    } catch (e) {
-      console.warn("DB getDashboardUserById failed:", e);
-    }
+    const rows = await db
+      .select()
+      .from(schema.dashboardUsers)
+      .where(eq(schema.dashboardUsers.id, id))
+      .limit(1);
+    return rows[0] ?? null;
   }
 
   const local = getLocalDb();
@@ -1395,109 +1361,4 @@ export async function updateUserWaTemplate(username: string, waTemplate: string)
   local.users[idx].updatedAt = new Date();
   saveLocalDb(local);
   return true;
-}
-
-export async function getMusicTracks(): Promise<schema.MusicTrack[]> {
-  const db = getPostgresDb();
-  if (db) {
-    try {
-      const rows = await db
-        .select()
-        .from(schema.musicTracks)
-        .where(eq(schema.musicTracks.isActive, true))
-        .orderBy(schema.musicTracks.id);
-      if (rows.length > 0) return rows;
-    } catch {}
-  }
-
-  const local = getLocalDb();
-  if (local.musicTracks && local.musicTracks.length > 0) {
-    return local.musicTracks.filter((t) => t.isActive);
-  }
-
-  return [];
-}
-
-export async function syncMusicTracks(
-  trackList: Array<{
-    slug: string;
-    title: string;
-    artist: string;
-    url: string;
-    isActive?: boolean;
-  }>
-): Promise<number> {
-  const dbUrl = process.env.DATABASE_URL;
-  if (dbUrl) {
-    try {
-      const { neon } = await import("@neondatabase/serverless");
-      const sql = neon(dbUrl);
-      await sql`
-        CREATE TABLE IF NOT EXISTS music_tracks (
-          id SERIAL PRIMARY KEY,
-          slug VARCHAR(120) NOT NULL UNIQUE,
-          title VARCHAR(150) NOT NULL,
-          artist VARCHAR(150) NOT NULL,
-          url TEXT NOT NULL,
-          is_active BOOLEAN NOT NULL DEFAULT true,
-          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-        );
-      `;
-      await sql`
-        CREATE INDEX IF NOT EXISTS idx_music_tracks_slug ON music_tracks(slug);
-      `;
-      await sql`
-        CREATE INDEX IF NOT EXISTS idx_music_tracks_is_active ON music_tracks(is_active);
-      `;
-
-      for (const track of trackList) {
-        const isActive = track.isActive ?? true;
-        await sql`
-          INSERT INTO music_tracks (slug, title, artist, url, is_active, created_at)
-          VALUES (${track.slug}, ${track.title}, ${track.artist}, ${track.url}, ${isActive}, NOW())
-          ON CONFLICT (slug) DO UPDATE
-          SET title = EXCLUDED.title,
-              artist = EXCLUDED.artist,
-              url = EXCLUDED.url,
-              is_active = EXCLUDED.is_active;
-        `;
-      }
-    } catch (e) {
-      console.warn("DB music_tracks sync warning:", e);
-    }
-  }
-
-  const local = getLocalDb();
-  const existingMap = new Map<string, schema.MusicTrack>();
-  if (Array.isArray(local.musicTracks)) {
-    for (const t of local.musicTracks) {
-      existingMap.set(t.slug, t);
-    }
-  }
-
-  let nextId = Math.max(0, ...(local.musicTracks || []).map((t) => t.id)) + 1;
-  for (const track of trackList) {
-    const existing = existingMap.get(track.slug);
-    if (existing) {
-      existing.title = track.title;
-      existing.artist = track.artist;
-      existing.url = track.url;
-      existing.isActive = track.isActive ?? true;
-    } else {
-      existingMap.set(track.slug, {
-        id: nextId++,
-        slug: track.slug,
-        title: track.title,
-        artist: track.artist,
-        url: track.url,
-        isActive: track.isActive ?? true,
-        createdAt: new Date(),
-      });
-    }
-  }
-
-  local.musicTracks = Array.from(existingMap.values());
-  saveLocalDb(local);
-
-  return trackList.length;
 }

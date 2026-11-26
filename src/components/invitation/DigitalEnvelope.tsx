@@ -6,6 +6,7 @@ import { Copy, Check, QrCode, MapPin, Download } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import { sanitizeSafeHref, sanitizeSafeMediaSrc } from "@/lib/urlUtils";
 import type { FontTheme } from "@/lib/fontThemes";
 import {
   Dialog,
@@ -74,6 +75,8 @@ export function DigitalEnvelope({
   };
 
   const allAccounts = [...bankAccounts, ...ewallets];
+  const safeQrisImgSrc = sanitizeSafeMediaSrc(qrisImageUrl, "");
+  const safeQrisDownloadHref = sanitizeSafeHref(qrisImageUrl, "");
 
   return (
     <section id="amplop" className="py-20 relative bg-transparent" aria-label="Amplop Digital dan Hadiah Pernikahan">
@@ -247,10 +250,10 @@ export function DigitalEnvelope({
           </DialogHeader>
 
           <div className="w-56 h-56 mx-auto bg-white p-2.5 rounded-2xl border border-[#C59B6D]/40 shadow-inner grid place-items-center relative my-2">
-            {qrisImageUrl && !qrisImgError ? (
+            {safeQrisImgSrc && !qrisImgError ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={qrisImageUrl}
+                src={safeQrisImgSrc}
                 alt="Kode QRIS Fauzan Ma'ruf & Sinta Maria Utami"
                 className="w-full h-full object-contain rounded-xl outline outline-1 -outline-offset-1 outline-black/10"
                 onError={() => setQrisImgError(true)}
@@ -267,7 +270,7 @@ export function DigitalEnvelope({
           </p>
 
           <a
-            href={qrisImageUrl || "#"}
+            href={safeQrisDownloadHref || "/images/ornament-qris-gold.svg"}
             download="qris-fauzan-sinta.png"
             target="_blank"
             rel="noopener noreferrer"

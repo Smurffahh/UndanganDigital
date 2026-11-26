@@ -1,15 +1,36 @@
 import crypto from "crypto";
+import { formatGuestSlug } from "./guestUtils";
 
-const ENCRYPTION_SECRET =
-  process.env.ENCRYPTION_KEY || "fauzan-sinta-wedding-secure-encryption-key-2027-secret";
-const BLIND_INDEX_SECRET =
-  process.env.BLIND_INDEX_SECRET || "wedding-blind-index-salt-secret-fauzan-sinta";
+const DEV_FALLBACK_ENCRYPTION_KEY = "dev_only_encryption_key_do_not_use_in_prod";
+const DEV_FALLBACK_BLIND_INDEX_SECRET = "dev_only_blind_index_secret_do_not_use_in_prod";
 
 const CIPHER_ALGORITHM = "aes-256-gcm";
 const PREFIX = "enc:v1:";
 
+function getEncryptionSecret(): string {
+  const key = process.env.ENCRYPTION_KEY?.trim();
+  if (key && key.length > 0) {
+    return key;
+  }
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ENCRYPTION_KEY must be configured in production.");
+  }
+  return DEV_FALLBACK_ENCRYPTION_KEY;
+}
+
+function getBlindIndexSecret(): string {
+  const key = process.env.BLIND_INDEX_SECRET?.trim();
+  if (key && key.length > 0) {
+    return key;
+  }
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("BLIND_INDEX_SECRET must be configured in production.");
+  }
+  return DEV_FALLBACK_BLIND_INDEX_SECRET;
+}
+
 function getDerivedKey(): Buffer {
-  return crypto.createHash("sha256").update(ENCRYPTION_SECRET).digest();
+  return crypto.createHash("sha256").update(getEncryptionSecret()).digest();
 }
 
 export function encryptField(plainText: string | null | undefined): string {
@@ -21,24 +42,19 @@ export function encryptField(plainText: string | null | undefined): string {
     return plainText;
   }
 
-  try {
-    const iv = crypto.randomBytes(12);
-    const key = getDerivedKey();
-    const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, key, iv);
+  const iv = crypto.randomBytes(12);
+  const key = getDerivedKey();
+  const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, key, iv);
 
-    const stringVal = typeof plainText === "string" ? plainText : JSON.stringify(plainText);
-    const encrypted = Buffer.concat([
-      cipher.update(stringVal, "utf8"),
-      cipher.final(),
-    ]);
+  const stringVal = typeof plainText === "string" ? plainText : JSON.stringify(plainText);
+  const encrypted = Buffer.concat([
+    cipher.update(stringVal, "utf8"),
+    cipher.final(),
+  ]);
 
-    const authTag = cipher.getAuthTag();
+  const authTag = cipher.getAuthTag();
 
-    return `${PREFIX}${iv.toString("hex")}:${authTag.toString("hex")}:${encrypted.toString("hex")}`;
-  } catch (error) {
-    console.error("Encryption error, fallback to plaintext:", error);
-    return String(plainText);
-  }
+  return `${PREFIX}${iv.toString("hex")}:${authTag.toString("hex")}:${encrypted.toString("hex")}`;
 }
 
 export function decryptField(cipherText: string | null | undefined): string {
@@ -82,7 +98,7 @@ export function createBlindIndex(val: string | null | undefined): string {
   if (!val) return "";
   const normalized = String(val).trim().toLowerCase();
   return crypto
-    .createHmac("sha256", BLIND_INDEX_SECRET)
+    .createHmac("sha256", getBlindIndexSecret())
     .update(normalized)
     .digest("hex");
 }
@@ -96,22 +112,18 @@ export function createPhoneBlindIndex(phone: string | null | undefined): string 
     digits = "628" + digits.slice(1);
   }
   return crypto
-    .createHmac("sha256", BLIND_INDEX_SECRET)
+    .createHmac("sha256", getBlindIndexSecret())
     .update(digits)
     .digest("hex");
 }
 
-import { formatGuestSlug } from "./guestUtils";
-
-export interface PlainGuestInput {
+export function encryptGuestRecord(input: {
   name: string;
   whatsappNumber?: string | null;
   category?: string | null;
   waSentStatus?: boolean;
   waSentAt?: Date | string | null;
-}
-
-export function encryptGuestRecord(input: PlainGuestInput) {
+}) {
   const cleanName = input.name.trim();
   const slugQuery = formatGuestSlug(cleanName);
   const cleanPhone = input.whatsappNumber?.trim() || null;
@@ -138,15 +150,13 @@ export function decryptGuestRecord<T extends { name: string; whatsappNumber?: st
   };
 }
 
-export interface PlainWishInput {
+export function encryptWishRecord(input: {
   guestName: string;
   attendanceStatus: string;
   paxCount: number;
   message: string;
   isApproved?: boolean;
-}
-
-export function encryptWishRecord(input: PlainWishInput) {
+}) {
   return {
     guestName: encryptField(input.guestName.trim()),
     attendanceStatus: input.attendanceStatus,

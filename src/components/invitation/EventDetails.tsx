@@ -11,6 +11,7 @@ import {
 } from "@/lib/dateFormat";
 import { ScrollLinkedItem } from "./ScrollLinkedItem";
 import { JavaneseScriptAccent } from "./JavaneseScriptAccent";
+import { sanitizeSafeHref } from "@/lib/urlUtils";
 import type { FontTheme } from "@/lib/fontThemes";
 
 interface EventDetailsProps {
@@ -82,10 +83,26 @@ export function EventDetails({
       ? venueAddress
       : tasyakuranAddress;
 
-  const effectiveTasyakuranMapsUrl =
+  const effectiveTasyakuranMapsUrl = sanitizeSafeHref(
     tasyakuranSameLocation !== false || !tasyakuranMapsUrl?.trim()
       ? googleMapsUrl
-      : tasyakuranMapsUrl;
+      : tasyakuranMapsUrl,
+    ""
+  );
+  const safeGoogleMapsUrl = sanitizeSafeHref(googleMapsUrl, "");
+  const safeGoogleMapsEmbed = (() => {
+    const candidate = sanitizeSafeHref(googleMapsEmbed, "");
+    if (!candidate) return "";
+    try {
+      const parsed = new URL(candidate);
+      return parsed.protocol === "https:" &&
+        (parsed.hostname === "maps.google.com" || parsed.hostname === "www.google.com")
+        ? parsed.toString()
+        : "";
+    } catch {
+      return "";
+    }
+  })();
 
   const tasyakuranStartObj = parseEventDate(tasyakuranStartDate);
   const tasyakuranEndObj = parseEventDate(tasyakuranEndDate);
@@ -297,9 +314,9 @@ export function EventDetails({
 
               <div>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
-                  {isVerifiedGuest && googleMapsUrl && (
+                  {isVerifiedGuest && safeGoogleMapsUrl && (
                     <a
-                      href={googleMapsUrl}
+                      href={safeGoogleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
@@ -394,9 +411,9 @@ export function EventDetails({
 
               <div>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-[380px] mx-auto">
-                  {isVerifiedGuest && googleMapsUrl && (
+                  {isVerifiedGuest && safeGoogleMapsUrl && (
                     <a
-                      href={googleMapsUrl}
+                      href={safeGoogleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="typo-button inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#C59B6D]/50 bg-[#6B1222] text-[#FBF7F2] hover:bg-[#520D1A] active:scale-[0.96] transition-transform duration-150 shadow-sm min-h-11 cursor-pointer"
@@ -426,12 +443,12 @@ export function EventDetails({
         </div>
 
         {/* MAPS EMBED */}
-        {isVerifiedGuest && googleMapsEmbed && (
+        {isVerifiedGuest && safeGoogleMapsEmbed && (
           <ScrollLinkedItem offsetY={36} stage={3}>
             <div className="card-ornament bg-[#FBF7F2]/95 border border-[#6B1222]/16 rounded-2xl shadow-xs p-5 sm:p-6 text-center">
               <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden border border-[#C59B6D]/30 mb-4 shadow-inner">
                 <iframe
-                  src={googleMapsEmbed}
+                  src={safeGoogleMapsEmbed}
                   title={`Peta Lokasi Pernikahan Fauzan dan Sinta di ${venueName}`}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -439,16 +456,18 @@ export function EventDetails({
                 />
               </div>
 
-              <a
-                href={googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_12px_24px_-8px_rgba(107,18,34,0.4)] active:scale-[0.96] transition-transform duration-150 cursor-pointer"
-              >
-                <MapPin className="w-4 h-4" />
-                <span>Buka Google Maps</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-              </a>
+              {safeGoogleMapsUrl && (
+                <a
+                  href={safeGoogleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="typo-button inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6B1222] via-[#8C2D3E] to-[#6B1222] hover:from-[#520D1A] hover:to-[#520D1A] text-[#FBF7F2] uppercase shadow-[0_12px_24px_-8px_rgba(107,18,34,0.4)] active:scale-[0.96] transition-transform duration-150 cursor-pointer"
+                >
+                  <MapPin className="w-4 h-4" />
+                  <span>Buka Google Maps</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                </a>
+              )}
             </div>
           </ScrollLinkedItem>
         )}

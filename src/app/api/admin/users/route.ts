@@ -10,16 +10,20 @@ import {
   deleteDashboardUser,
 } from "@/lib/db/store";
 import { DEFAULT_COUPLE_WA_TEMPLATE, DEFAULT_PARENT_WA_TEMPLATE } from "@/lib/guestTemplate";
+import { NO_CACHE_HEADERS } from "@/lib/httpHeaders";
+
+export const dynamic = "force-dynamic";
 
 const createUserSchema = z
   .object({
     username: z
       .string()
       .trim()
+      .toLowerCase()
       .min(3, "Username minimal 3 karakter")
       .max(50, "Username maksimal 50 karakter")
       .regex(/^[a-zA-Z0-9_-]+$/, "Username hanya boleh huruf, angka, strip, dan garis bawah"),
-    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter"),
+    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter").max(128),
     displayName: z.string().trim().min(2, "Nama tampilan minimal 2 karakter").max(100),
     role: z.enum(["admin", "parent"]).default("parent"),
     guestScope: z.enum(["couple", "parent"]).default("parent"),
@@ -30,7 +34,7 @@ const createUserSchema = z
 const updateUserSchema = z
   .object({
     id: z.coerce.number().int().positive("ID pengguna tidak valid"),
-    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter").optional(),
+    password: z.string().trim().min(8, "Kata sandi minimal 8 karakter").max(128).optional(),
     displayName: z.string().trim().min(2).max(100).optional(),
     role: z.enum(["admin", "parent"]).optional(),
     guestScope: z.enum(["couple", "parent"]).optional(),
@@ -44,12 +48,19 @@ export async function GET() {
   if (!admin) {
     return NextResponse.json(
       { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
-  const users = await getDashboardUsers();
-  return NextResponse.json({ success: true, data: users });
+  try {
+    const users = await getDashboardUsers();
+    return NextResponse.json({ success: true, data: users }, { headers: NO_CACHE_HEADERS });
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Gagal memuat daftar pengguna" },
+      { status: 500, headers: NO_CACHE_HEADERS }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -91,12 +102,12 @@ export async function POST(request: Request) {
       waTemplate: waTemplate || (role === "parent" ? DEFAULT_PARENT_WA_TEMPLATE : DEFAULT_COUPLE_WA_TEMPLATE),
     });
 
-    return NextResponse.json({ success: true, data: newUser }, { status: 201 });
+    return NextResponse.json({ success: true, data: newUser }, { status: 201, headers: NO_CACHE_HEADERS });
   } catch (err) {
     console.error("Failed to create dashboard user:", err);
     return NextResponse.json(
       { success: false, error: "Gagal membuat akun pengguna" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -106,7 +117,7 @@ export async function PATCH(request: Request) {
   if (!admin) {
     return NextResponse.json(
       { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
@@ -155,22 +166,22 @@ export async function PATCH(request: Request) {
     if (waTemplate !== undefined) updates.waTemplate = waTemplate;
     if (isActive !== undefined) updates.isActive = isActive;
 
-    const currentTokenVersion = (target as any).tokenVersion || 1;
+    const currentTokenVersion = target.tokenVersion || 1;
     if (password || isActive === false) {
       updates.tokenVersion = currentTokenVersion + 1;
     }
 
     const updated = await updateDashboardUser(id, updates);
     if (!updated) {
-      return NextResponse.json({ success: false, error: "Pengguna tidak ditemukan" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "Pengguna tidak ditemukan" }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
-    return NextResponse.json({ success: true, data: updated });
+    return NextResponse.json({ success: true, data: updated }, { headers: NO_CACHE_HEADERS });
   } catch (err) {
     console.error("Failed to update dashboard user:", err);
     return NextResponse.json(
       { success: false, error: "Gagal memperbarui akun pengguna" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -180,7 +191,7 @@ export async function DELETE(request: Request) {
   if (!admin) {
     return NextResponse.json(
       { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
@@ -217,12 +228,12 @@ export async function DELETE(request: Request) {
     }
 
     await deleteDashboardUser(id);
-    return NextResponse.json({ success: true, message: `Akun "${target.displayName}" berhasil dihapus.` });
+    return NextResponse.json({ success: true, message: `Akun "${target.displayName}" berhasil dihapus.` }, { headers: NO_CACHE_HEADERS });
   } catch (err) {
     console.error("Failed to delete dashboard user:", err);
     return NextResponse.json(
       { success: false, error: "Gagal menghapus akun pengguna" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }

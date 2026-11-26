@@ -1,22 +1,30 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
+import { NO_CACHE_HEADERS } from "@/lib/httpHeaders";
+
+const resolveMapsBodySchema = z
+  .object({
+    url: z.string().trim().min(1, "Field url Google Maps diperlukan").max(2048),
+  })
+  .strict();
 
 export async function GET(request: Request) {
   const admin = await requireAdmin();
   if (!admin) {
     return NextResponse.json(
       { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
   const { searchParams } = new URL(request.url);
   const rawUrl = searchParams.get("url");
 
-  if (!rawUrl || !rawUrl.trim()) {
+  if (!rawUrl || !rawUrl.trim() || rawUrl.length > 2048) {
     return NextResponse.json(
       { success: false, error: "Parameter url Google Maps diperlukan" },
-      { status: 400 }
+      { status: 400, headers: NO_CACHE_HEADERS }
     );
   }
 
@@ -28,24 +36,23 @@ export async function POST(request: Request) {
   if (!admin) {
     return NextResponse.json(
       { success: false, code: "FORBIDDEN", error: "Akses ditolak. Fitur ini hanya tersedia untuk admin." },
-      { status: 403 }
+      { status: 403, headers: NO_CACHE_HEADERS }
     );
   }
 
   try {
     const body = await request.json();
-    const rawUrl = body.url;
-
-    if (!rawUrl || typeof rawUrl !== "string" || !rawUrl.trim()) {
+    const parsed = resolveMapsBodySchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Field url Google Maps diperlukan" },
-        { status: 400 }
+        { success: false, error: parsed.error.issues[0]?.message || "Field url Google Maps tidak valid" },
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
-    return resolveGoogleMapsUrl(rawUrl.trim());
+    return resolveGoogleMapsUrl(parsed.data.url);
   } catch {
-    return NextResponse.json({ success: false, error: "Format request tidak valid" }, { status: 400 });
+    return NextResponse.json({ success: false, error: "Format request tidak valid" }, { status: 400, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -198,28 +205,34 @@ async function resolveGoogleMapsUrl(targetUrl: string) {
 
     if (lat && lng) {
       const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
-      return NextResponse.json({
-        success: true,
-        latitude: lat,
-        longitude: lng,
-        embedUrl,
-        finalUrl,
-      });
+      return NextResponse.json(
+        {
+          success: true,
+          latitude: lat,
+          longitude: lng,
+          embedUrl,
+          finalUrl,
+        },
+        { headers: NO_CACHE_HEADERS }
+      );
     }
 
     const fallbackEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(targetUrl)}&z=17&output=embed`;
-    return NextResponse.json({
-      success: true,
-      latitude: null,
-      longitude: null,
-      embedUrl: fallbackEmbed,
-      finalUrl,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        latitude: null,
+        longitude: null,
+        embedUrl: fallbackEmbed,
+        finalUrl,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (error) {
     console.error("Failed to resolve Google Maps link:", error);
     return NextResponse.json(
       { success: false, error: "Gagal memproses tautan Google Maps. Periksa koneksi atau URL." },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }

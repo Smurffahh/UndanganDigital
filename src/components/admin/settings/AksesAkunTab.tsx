@@ -101,8 +101,8 @@ export function AksesAkunTab({ initialUsers = [] }: AksesAkunTabProps) {
       return;
     }
 
-    if (newPassword.length < 6) {
-      toast.error("Kata sandi minimal 6 karakter.");
+    if (newPassword.length < 8) {
+      toast.error("Kata sandi minimal 8 karakter.");
       return;
     }
 
@@ -143,8 +143,8 @@ export function AksesAkunTab({ initialUsers = [] }: AksesAkunTabProps) {
     e.preventDefault();
     if (!resetTargetUser || !resetNewPassword.trim()) return;
 
-    if (resetNewPassword.length < 6) {
-      toast.error("Kata sandi baru minimal 6 karakter.");
+    if (resetNewPassword.length < 8) {
+      toast.error("Kata sandi baru minimal 8 karakter.");
       return;
     }
 

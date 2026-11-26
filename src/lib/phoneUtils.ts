@@ -47,12 +47,6 @@ export function normalizePhoneNumber(raw: unknown): string {
   return "";
 }
 
-export function isValidPhoneNumber(phone: unknown): boolean {
-  if (!phone) return false;
-  const normalized = normalizePhoneNumber(phone);
-  return normalized.length >= 10 && normalized.length <= 15;
-}
-
 export function formatPhoneDisplay(phone: unknown): string {
   const normalized = normalizePhoneNumber(phone);
   if (!normalized) return phone ? String(phone) : "—";

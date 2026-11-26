@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import crypto from "crypto";
 import {
   SESSION_COOKIE_NAME,
-  SESSION_SECRET_TOKEN,
   SessionUser,
   SessionPayload,
   createSessionToken,
@@ -13,7 +12,6 @@ import { getDashboardUserByUsername, getDashboardUserById } from "./db/store";
 
 export {
   SESSION_COOKIE_NAME,
-  SESSION_SECRET_TOKEN,
   createSessionToken,
   verifySessionToken,
 };
@@ -25,16 +23,25 @@ const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 
 function safeCompare(a: string, b: string): boolean {
   try {
-    const bufA = Buffer.from(a);
-    const bufB = Buffer.from(b);
-    if (bufA.length !== bufB.length) return false;
-    return crypto.timingSafeEqual(bufA, bufB);
+    const hashA = crypto.createHmac("sha256", "auth-constant-time").update(a).digest();
+    const hashB = crypto.createHmac("sha256", "auth-constant-time").update(b).digest();
+    return crypto.timingSafeEqual(hashA, hashB);
   } catch {
     return false;
   }
 }
 
+const MAX_RATE_LIMIT_ENTRIES = 1000;
 const loginAttemptsMap = new Map<string, { count: number; resetAt: number }>();
+
+function pruneExpiredAttempts(now: number): void {
+  if (loginAttemptsMap.size <= MAX_RATE_LIMIT_ENTRIES) return;
+  for (const [key, entry] of loginAttemptsMap) {
+    if (now > entry.resetAt) {
+      loginAttemptsMap.delete(key);
+    }
+  }
+}
 
 export function checkLoginRateLimit(identifier: string): { allowed: boolean; waitSeconds?: number } {
   const now = Date.now();
@@ -51,6 +58,7 @@ export function checkLoginRateLimit(identifier: string): { allowed: boolean; wai
 
 export function recordFailedLogin(identifier: string): void {
   const now = Date.now();
+  pruneExpiredAttempts(now);
   const entry = loginAttemptsMap.get(identifier);
   if (!entry || now > entry.resetAt) {
     loginAttemptsMap.set(identifier, { count: 1, resetAt: now + 60000 });
@@ -63,7 +71,7 @@ export function resetLoginAttempts(identifier: string): void {
   loginAttemptsMap.delete(identifier);
 }
 
-export function checkCredentials(user: string, pass: string): boolean {
+function checkCredentials(user: string, pass: string): boolean {
   const trimmedUser = user.trim().toLowerCase();
   const trimmedPass = pass.trim();
 
@@ -115,7 +123,7 @@ export async function authenticateUser(
   if (checkCredentials(user, pass)) {
     return {
       userId: 1,
-      username: "admin",
+      username: ADMIN_USERNAME,
       role: "admin",
       displayName: "Mempelai (Admin)",
       guestScope: "couple",
@@ -138,17 +146,6 @@ export async function setSessionCookie(user: SessionUser) {
   });
 }
 
-export async function setAdminSession() {
-  await setSessionCookie({
-    userId: 1,
-    username: "admin",
-    role: "admin",
-    displayName: "Mempelai (Admin)",
-    guestScope: "couple",
-    tokenVersion: 1,
-  });
-}
-
 export async function clearSessionCookie() {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, "", {
@@ -158,10 +155,6 @@ export async function clearSessionCookie() {
     path: "/",
     maxAge: 0,
   });
-}
-
-export async function clearAdminSession() {
-  await clearSessionCookie();
 }
 
 export async function getServerSession(): Promise<SessionPayload | null> {
@@ -177,7 +170,8 @@ export async function getServerSession(): Promise<SessionPayload | null> {
         session.userId === 1 &&
         session.role === "admin" &&
         Boolean(ADMIN_USERNAME) &&
-        session.username.toLowerCase() === ADMIN_USERNAME
+        session.username.toLowerCase() === ADMIN_USERNAME &&
+        session.tokenVersion === 1
       ) {
         return session;
       }
@@ -187,14 +181,6 @@ export async function getServerSession(): Promise<SessionPayload | null> {
     if (dbUser.tokenVersion !== session.tokenVersion) return null;
   } catch (err) {
     console.warn("DB user session validation error:", err);
-    if (
-      session.userId === 1 &&
-      session.role === "admin" &&
-      Boolean(ADMIN_USERNAME) &&
-      session.username.toLowerCase() === ADMIN_USERNAME
-    ) {
-      return session;
-    }
     return null;
   }
 
@@ -211,9 +197,4 @@ export async function requireAdmin(): Promise<SessionPayload | null> {
     return null;
   }
   return session;
-}
-
-export async function isAuthenticated(): Promise<boolean> {
-  const session = await getServerSession();
-  return session !== null;
 }

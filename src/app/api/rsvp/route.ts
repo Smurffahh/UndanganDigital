@@ -9,19 +9,16 @@ import {
 } from "@/lib/db/store";
 import { verifyRsvpTicket } from "@/lib/rsvpTicket";
 import { getServerSession } from "@/lib/auth";
+import { NO_CACHE_HEADERS } from "@/lib/httpHeaders";
 
 export const dynamic = "force-dynamic";
 
-const NO_CACHE_HEADERS = {
-  "Cache-Control": "private, no-cache, no-store, max-age=0, must-revalidate",
-};
-
 const rsvpInputSchema = z
   .object({
-    rsvpTicket: z.string().trim().optional(),
+    rsvpTicket: z.string().trim().max(512).optional(),
     name: z.string().trim().max(60).optional(),
     guestName: z.string().trim().max(60).optional(),
-    guestToken: z.string().trim().optional(),
+    guestToken: z.string().trim().max(64).optional(),
     attend: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
     attendanceStatus: z.enum(["Hadir", "Berhalangan", "Masih Ragu"]).optional(),
     guests: z.coerce.number().int().min(0).max(10).optional(),
@@ -34,10 +31,16 @@ const rsvpInputSchema = z
   })
   .strict();
 
+const MAX_RATE_LIMIT_ENTRIES = 1000;
 const rsvpRateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRsvpRateLimit(ip: string): boolean {
   const now = Date.now();
+  if (rsvpRateLimitMap.size > MAX_RATE_LIMIT_ENTRIES) {
+    for (const [k, v] of rsvpRateLimitMap) {
+      if (now > v.resetAt) rsvpRateLimitMap.delete(k);
+    }
+  }
   const entry = rsvpRateLimitMap.get(ip);
   if (!entry || now > entry.resetAt) {
     rsvpRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
@@ -90,7 +93,7 @@ export async function POST(request: Request) {
     if (!checkRsvpRateLimit(ip)) {
       return NextResponse.json(
         { success: false, error: "Terlalu banyak permintaan ucapan. Silakan coba lagi nanti." },
-        { status: 429 }
+        { status: 429, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -99,7 +102,7 @@ export async function POST(request: Request) {
 
     if (!parsed.success) {
       const firstError = parsed.error.issues[0]?.message || "Format data tidak valid";
-      return NextResponse.json({ success: false, error: firstError }, { status: 400 });
+      return NextResponse.json({ success: false, error: firstError }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
     const rawTicket = parsed.data.rsvpTicket || request.headers.get("x-rsvp-ticket");
@@ -110,7 +113,7 @@ export async function POST(request: Request) {
           success: false,
           error: "Konfirmasi kehadiran dan ucapan hanya dapat dikirim melalui tautan undangan pribadi yang valid.",
         },
-        { status: 403 }
+        { status: 403, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -121,7 +124,7 @@ export async function POST(request: Request) {
           success: false,
           error: "Konfirmasi kehadiran dan ucapan hanya dapat dikirim melalui tautan undangan pribadi yang valid.",
         },
-        { status: 403 }
+        { status: 403, headers: NO_CACHE_HEADERS }
       );
     }
 

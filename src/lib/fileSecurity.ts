@@ -1,14 +1,34 @@
 import crypto from "crypto";
 
-export interface FileValidationResult {
-  valid: boolean;
-  detectedType?: string;
-  error?: string;
-}
+const BLOCKED_EXTENSIONS = new Set([
+  "svg",
+  "html",
+  "htm",
+  "js",
+  "mjs",
+  "cjs",
+  "php",
+  "phtml",
+  "exe",
+  "sh",
+  "bat",
+  "cmd",
+  "vbs",
+  "jsp",
+  "asp",
+  "aspx",
+  "cgi",
+]);
 
-export interface SecurityScanResult {
-  safe: boolean;
-  reason?: string;
+export function hasBlockedFileExtension(fileName: string): string | null {
+  const leaf = fileName.replace(/\\/g, "/").split("/").pop() || "";
+  const parts = leaf.toLowerCase().split(".").slice(1);
+  for (const seg of parts) {
+    if (BLOCKED_EXTENSIONS.has(seg)) {
+      return seg;
+    }
+  }
+  return null;
 }
 
 export function sanitizeUploadFileName(fileName: string): string {
@@ -28,7 +48,7 @@ export function sanitizeUploadFileName(fileName: string): string {
 export function validateFileMagicBytes(
   buffer: Buffer,
   category: "image" | "audio" | "excel" | "csv"
-): FileValidationResult {
+): { valid: boolean; detectedType?: string; error?: string } {
   if (!buffer || buffer.length < 4) {
     return { valid: false, error: "Ukuran file terlalu kecil atau file kosong." };
   }
@@ -136,7 +156,7 @@ export function validateFileMagicBytes(
   return { valid: false, error: "Kategori file tidak didukung." };
 }
 
-export function scanFileForMaliciousPayload(buffer: Buffer): SecurityScanResult {
+export function scanFileForMaliciousPayload(buffer: Buffer): { safe: boolean; reason?: string } {
   if (!buffer || buffer.length === 0) {
     return { safe: false, reason: "File kosong" };
   }

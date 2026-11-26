@@ -1,10 +1,8 @@
-import { neon, Pool } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { drizzle as drizzleHttp } from "drizzle-orm/neon-http";
-import { drizzle as drizzleServerless } from "drizzle-orm/neon-serverless";
 import * as schema from "./schema";
 
 const rawDatabaseUrl = process.env.DATABASE_URL;
-const rawUnpooledDatabaseUrl = process.env.DATABASE_URL_UNPOOLED;
 
 function enforceSsl(url?: string): string | undefined {
   if (!url) return undefined;
@@ -14,11 +12,6 @@ function enforceSsl(url?: string): string | undefined {
 }
 
 const databaseUrl = enforceSsl(rawDatabaseUrl);
-const unpooledDatabaseUrl = enforceSsl(rawUnpooledDatabaseUrl);
-
-export function isDatabaseConfigured(): boolean {
-  return Boolean(databaseUrl && databaseUrl.trim().length > 0);
-}
 
 let httpDbInstance: ReturnType<typeof drizzleHttp<typeof schema>> | null = null;
 
@@ -36,26 +29,6 @@ export function getDb() {
     }
   }
   return httpDbInstance;
-}
-
-let poolInstance: Pool | null = null;
-let pooledDbInstance: ReturnType<typeof drizzleServerless<typeof schema>> | null = null;
-
-export function getPooledDb() {
-  const connString = unpooledDatabaseUrl || databaseUrl;
-  if (!connString) {
-    return null;
-  }
-  if (!pooledDbInstance) {
-    try {
-      poolInstance = new Pool({ connectionString: connString });
-      pooledDbInstance = drizzleServerless(poolInstance, { schema });
-    } catch (error) {
-      console.error("[Database] Gagal menginisialisasi Neon Pooled client:", error);
-      pooledDbInstance = null;
-    }
-  }
-  return pooledDbInstance;
 }
 
 export const db = getDb();
